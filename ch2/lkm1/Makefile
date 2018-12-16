@@ -1,4 +1,4 @@
-# Makefile ver 1
+# ch2/lkm1/Makefile
 
 obj-m += hello.o
 

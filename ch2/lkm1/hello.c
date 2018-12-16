@@ -1,17 +1,19 @@
 /*
- * ch2/hello.c
+ * ch2/lkm1/hello.c
  ***************************************************************
  * This program is part of the source code released for the book
  *  "Linux Kernel Development Cookbook"
  *  (c) Author: Kaiwan N Billimoria
  *  Publisher:  Packt
  *  GitHub repository:
- *    https://github.com/PacktPublishing/--fill-in--
+ *  https://github.com/PacktPublishing/Linux-Kernel-Development-Cookbook
  *
  * From: Ch 2: Writing your First Kernel Module-the LKM Framework
  ****************************************************************
  * Brief Description:
- *
+ * Our very first kernel module, the 'Hello, world' of course! The
+ * idea being to explain the essentials of the Linux kernel's LKM
+ * framework.
  *
  * For details, please refer the book, Ch 2.
  */
