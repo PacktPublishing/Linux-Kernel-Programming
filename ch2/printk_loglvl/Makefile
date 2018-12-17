@@ -1,6 +1,10 @@
 # ch2/printk_loglvl/Makefile
 
-obj-m += printk_loglvl.o
+obj-m        += printk_loglvl.o
+
+# Enable the pr_debug() as well (rm the comment from the line below)
+#EXTRA_CFLAGS += -DDEBUG
+#CFLAGS_printk_loglvl.o := -DDEBUG
 
 all:
 	make -C /lib/modules/$(shell uname -r)/build/ M=$(PWD) modules
