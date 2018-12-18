@@ -21,7 +21,7 @@
 #include <linux/module.h>
 
 MODULE_AUTHOR("<insert your name here>");
-MODULE_DESCRIPTION("LKDC book:ch2: hello, world, our first LKM");
+MODULE_DESCRIPTION("LKDC book:ch2/lkm1: hello, world, our first LKM");
 MODULE_LICENSE("Dual MIT/GPL");
 MODULE_VERSION("0.1");
 

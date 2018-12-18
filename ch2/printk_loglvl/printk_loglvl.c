@@ -21,7 +21,10 @@
 #include <linux/init.h>
 #include <linux/module.h>
 
+MODULE_AUTHOR("<insert your name here>");
+MODULE_DESCRIPTION("LKDC book:ch2/printk_loglvl: print at each kernel log level");
 MODULE_LICENSE("Dual MIT/GPL");
+MODULE_VERSION("0.1");
 
 static int __init hello_init(void)
 {
