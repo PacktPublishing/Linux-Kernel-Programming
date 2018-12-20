@@ -1,0 +1,53 @@
+#!/bin/bash
+# lkm : a silly kernel module dev - build, load, unload - helper wrapper script
+# License: MIT
+unset ARCH
+unset CROSS_COMPILE
+name=$(basename $0)
+
+#-------------- r u n c m d -------------------------------------------
+# Display and run the provided command.
+# Parameter 1 : the command to run
+runcmd()
+{
+local SEP="------------------------------"
+[ $# -eq 0 ] && return
+echo "${SEP}
+$@
+${SEP}"
+eval "$@"
+[ $? -ne 0 ] && echo " ^--[FAILED]"
+}
+
+### "main" here
+
+[ $# -ne 1 ] && {
+	echo "Usage: ${name} name-of-kernel-module-file (without the .c)"
+	exit 1
+}
+[[ "${1}" = *"."* ]] && {
+	echo "Usage: ${name} name-of-kernel-module-file ONLY (do NOT put any extension)."
+	exit 1
+}
+
+echo "Version info:"
+which lsb_release >/dev/null 2>&1 && {
+  echo -n "Distro: "
+  lsb_release -a 2>/dev/null |grep "Description" |awk -F':' '{print $2}'
+}
+echo -n "Kernel: " ; uname -r
+
+runcmd "sudo rmmod $1 2> /dev/null"
+runcmd "make clean"
+runcmd "sudo dmesg -C"
+runcmd "make || exit 1"
+ # TODO - the '|| exit 1' does not seem to work
+
+[ ! -f $1.ko ] && {
+  echo "[!] ${name}: $1.ko has not been built, aborting..."
+  exit 1
+}
+
+runcmd "sudo insmod ./$1.ko && lsmod|grep $1"
+runcmd dmesg
+exit 0
