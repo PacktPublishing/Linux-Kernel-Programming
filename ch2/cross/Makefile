@@ -1,10 +1,16 @@
 # ch2/cross/Makefile: To support cross-compiling for the ARM:
-# Invoke as :
-#  make ARCH=arm CROSS_COMPILE=arm-none-linux-gnueabi- 
+#
+# To cross compile our simple kernel module for the Raspberry Pi (an ARM-based
+# system), invoke the build like this:
+#  make ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf-
+# (We expect that the toolchain is installed and in the PATH, and the env
+# var RPI_STG is set to the 'staging folder' containing all the R Pi stuff.
+
+# Specify the kernel this module will be built against:
 ifeq ($(ARCH),arm)
     # *UPDATE* 'KDIR' below to point to the ARM Linux kernel 
     # source tree on your box
-    KDIR ?= ~/kernel/4.14.52_arm   # for example
+    KDIR ?= ~/rpi_work/kernel_rpi  # the R Pi kernel
 else ifeq ($(ARCH),powerpc)
     # *UPDATE* 'KDIR' below to point to the PPC64 Linux kernel
     # source tree on your box
