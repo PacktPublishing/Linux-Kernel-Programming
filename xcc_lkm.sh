@@ -86,7 +86,7 @@ else ifeq (\$(ARCH),powerpc)
     KDIR ?= ${KSRC_PPC64_TARGET}
 else
     # *UPDATE* 'KDIR' below to point to the x86_64 Linux kernel source tree on your box
-    KDIR ?= ${KSRC_X86_64_TARGET}
+    KDIR ?= ${KSRC_X86_TARGET}
 endif
 
 obj-m          += $1.o
