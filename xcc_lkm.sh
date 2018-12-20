@@ -4,6 +4,17 @@ name=$(basename $0)
 # set to 1 for verbose build
 VERBOSE=0
 
+# *** IMP! UPDATE as required ***
+# Kernel source tree locations for various targets
+KSRC_ARM_TARGET=~/kernel/4.14.52_arm
+KSRC_PPC64_TARGET=~/kernel/linux-4.9.1
+KSRC_X86_TARGET=/lib/modules/$(uname -r)/build      # always
+
+# Toolchain prefixes for various targets
+ARM_CXX=arm-linux-gnueabi-
+PPC_CXX=powerpc64-linux-
+#---
+
 usage()
 {
  echo "Usage: ${name} name-of-kernel-module-file (without any externsion)
@@ -68,12 +79,13 @@ cat > Makefile << EOF
 # make ARCH=<arch> CROSS_COMPILE=<cross-compiler-prefix> 
 ifeq (\$(ARCH),arm)
     # *UPDATE* 'KDIR' below to point to the ARM Linux kernel source tree on your box
-    KDIR ?= ~/scratchpad/SEALS_staging/SEALS_staging_vexpress/linux-4.14.52
+    KDIR ?= ${KSRC_ARM_TARGET}
 else ifeq (\$(ARCH),powerpc)
     # *UPDATE* 'KDIR' below to point to the PPC64 Linux kernel source tree on your box
-    KDIR ?= ~/kernel/linux-4.9.1
+    KDIR ?= ${KSRC_PPC64_TARGET}
 else
-   KDIR ?= /lib/modules/\$(shell uname -r)/build 
+    # *UPDATE* 'KDIR' below to point to the x86_64 Linux kernel source tree on your box
+    KDIR ?= ${KSRC_X86_64_TARGET}
 endif
 
 obj-m          += $1.o
