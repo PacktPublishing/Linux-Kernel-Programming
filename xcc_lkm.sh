@@ -1,6 +1,10 @@
 #!/bin/bash
-
+# xcc_lkm.sh
+# Part of the source code for the book 'Linux Kernel Development Cookbook',
+# by Kaiwan N Billimoria, Packt.
 name=$(basename $0)
+
+#--- Global config
 # set to 1 for verbose build
 VERBOSE=0
 
@@ -26,22 +30,19 @@ usage()
  To select which architecture (cpu) the kernel module is to be (cross) compiled
  for, pl set the environment variable ARCH=<arch>. Currently, we support (cross)
  compiling for:
-  x86_64 : ARCH=(null)    [default]
-  ARM-32 : ARCH=arm
-  PPC-64 : ARCH=powerpc
+  x86[_64] : ARCH=(null)    [default]
+  ARM-32   : ARCH=arm
+  PPC-64   : ARCH=powerpc
 
  Eg. ARCH=powerpc ${name} <lkm-name>
  Tip: the build 'verbose' switch is currently ${VERBOSE}; (you can toggle it).
 
  Obviously, we expect:
  - an installed and working cross compiler toolchain(s)
- - kernel source tree to build against; for the x86_64, we shall default to the
-   running kernel's 'build' folder, for the ARM and PPC-64, we have hard-coded
-   paths into the Makefile; please change it as required."
+ - kernel source tree to build against; for the x86[_64], we shall default to
+   the running kernel's 'build' folder, for the ARM and PPC-64, we have
+   hard-coded paths into the Makefile; please change it as required."
 }
-
-ARM_CXX=arm-linux-gnueabi-
-PPC_CXX=powerpc64-linux-
 
 [ $# -ne 1 ] && {
  usage
@@ -53,7 +54,7 @@ PPC_CXX=powerpc64-linux-
 }
 
 if [ "${ARCH}" != "arm" -a "${ARCH}" != "powerpc" -a ! -z "${ARCH}" ] ; then
- echo "[!] ${name}: ARCH has to be either 'arm' or 'powerpc' or NULL (for x86_64, the default)"
+ echo "[!] ${name}: ARCH has to be either 'arm' or 'powerpc' or NULL (for x86, the default)"
  usage
  exit 1
 fi
@@ -113,7 +114,7 @@ elif [ "${ARCH}" = "powerpc" ]; then
   echo; echo "[+] ------ PowerPC64 build :: make V=${VERBOSE} ARCH=${ARCH} CROSS_COMPILE=${CROSS_COMPILE}"
   make V=${VERBOSE} ARCH=${ARCH} CROSS_COMPILE=${CROSS_COMPILE}
 else
-  echo; echo "[+] ------ x86_64 build :: make V=${VERBOSE}"
+  echo; echo "[+] ------ x86[_64] build :: make V=${VERBOSE}"
   make V=${VERBOSE}
 fi
 
@@ -126,4 +127,3 @@ echo
   ls -l $1.ko
 }
 exit 0
-
