@@ -31,6 +31,54 @@ static int exp_int = 200;
 EXPORT_SYMBOL_GPL(exp_int);
 
 /* Functions to be called from other LKMs */
+
+static void lkdc_sysinfo(void)
+{
+	char msg[128];
+
+	memset(msg, 0, strlen(msg));
+	snprintf(msg, 47, "%s(): minimal Platform Info:\nCPU: ", __func__);
+
+	/* Strictly speaking, all this #if... is considered ugly and should be
+	   isolated as far as is possible */
+#ifdef CONFIG_X86
+#if(BITS_PER_LONG == 32)
+	strncat(msg, "x86-32, ", 9);
+#else
+	strncat(msg, "x86_64, ", 9);
+#endif
+#endif
+#ifdef CONFIG_ARM
+	strncat(msg, "ARM-32, ", 9);
+#endif
+#ifdef CONFIG_ARM64
+	strncat(msg, "Aarch64, ", 10);
+#endif
+#ifdef CONFIG_MIPS
+	strncat(msg, "MIPS, ", 7);
+#endif
+#ifdef CONFIG_PPC
+	strncat(msg, "PowerPC, ", 10);
+#endif
+#ifdef CONFIG_S390
+	strncat(msg, "IBM S390, ", 11);
+#endif
+
+#ifdef __BIG_ENDIAN
+	strncat(msg, "big-endian; ", 13);
+#else
+	strncat(msg, "little-endian; ", 16);
+#endif
+
+#if(BITS_PER_LONG == 32)
+	strncat(msg, "32-bit OS.\n", 12);
+#elif(BITS_PER_LONG == 64)
+	strncat(msg, "64-bit OS.\n", 12);
+#endif
+	pr_info("%s", msg);
+}
+EXPORT_SYMBOL(lkdc_sysinfo);
+
 #if(BITS_PER_LONG == 32)
 static u32 get_skey(int p)
 #else   // 64-bit
