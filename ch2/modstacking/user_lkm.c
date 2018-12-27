@@ -30,6 +30,7 @@ MODULE_LICENSE("Dual MIT/GPL");
 MODULE_LICENSE("MIT");
 #endif
 
+extern void lkdc_sysinfo(void);
 extern int xfunc(void);
 extern long get_skey(int);
 extern int exp_int;
@@ -41,11 +42,12 @@ static int __init ontop_init(void)
 
 	pr_info("%s: successfully inserted\n", MODNAME);
 
-	/* Call a function in the 'core' module */
+	/* Call functions within the 'core' module */
 	pr_debug("%s: Called xfunc(), ret = %d\n", MODNAME, xfunc());
 	pr_debug("%s: Called get_skey(), ret = 0x%llx = %llu\n",
 			MODNAME, sk, sk);
 	pr_debug("%s: exp_int = %d\n", MODNAME, exp_int);
+	lkdc_sysinfo();
 
 	return 0;
 }
