@@ -31,9 +31,17 @@ static int exp_int = 200;
 EXPORT_SYMBOL_GPL(exp_int);
 
 /* Functions to be called from other LKMs */
+#if(BITS_PER_LONG == 32)
+static u32 get_skey(int p)
+#else   // 64-bit
 static u64 get_skey(int p)
+#endif
 {
+#if(BITS_PER_LONG == 32)
+	u32 secret = 0x567def;
+#else   // 64-bit
 	u64 secret = 0x123abc567def;
+#endif
 	if (p == THE_ONE)
 		return secret;
 	return 0;
