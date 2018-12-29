@@ -29,7 +29,7 @@ MODULE_VERSION("0.1");
 
 static void lkdc_sysinfo(void)
 {
-	char msg[256];
+	char msg[128];
 
 	memset(msg, 0, strlen(msg));
 	snprintf(msg, 47, "%s(): minimal Platform Info:\nCPU: ", __func__);
@@ -54,6 +54,9 @@ static void lkdc_sysinfo(void)
 #endif
 #ifdef CONFIG_PPC
 	strncat(msg, "PowerPC, ", 10);
+#endif
+#ifdef CONFIG_S390
+	strncat(msg, "IBM S390, ", 11);
 #endif
 
 #ifdef __BIG_ENDIAN
