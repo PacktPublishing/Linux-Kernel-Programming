@@ -27,6 +27,11 @@ MODULE_DESCRIPTION
 MODULE_LICENSE("Dual MIT/GPL");
 MODULE_VERSION("0.1");
 
+/* lkdc_sysinfo2:
+ * a more security-aware version of the lkdc_sysinfo routine. We use
+ * David Wheeler's flawfinder(1) tool to detect possible vulnerabilities;
+ * so, we change the strlen, and replace the strncat with strlcat.
+ */
 static void lkdc_sysinfo2(void)
 {
 #define MSGLEN   128
@@ -39,37 +44,37 @@ static void lkdc_sysinfo2(void)
 	   isolated as far as is possible */
 #ifdef CONFIG_X86
 #if(BITS_PER_LONG == 32)
-	strlcat(msg, "x86-32, ", 9);
+	strlcat(msg, "x86-32, ", MSGLEN);
 #else
-	strlcat(msg, "x86_64, ", 9);
+	strlcat(msg, "x86_64, ", MSGLEN);
 #endif
 #endif
 #ifdef CONFIG_ARM
-	strlcat(msg, "ARM-32, ", 9);
+	strlcat(msg, "ARM-32, ", MSGLEN);
 #endif
 #ifdef CONFIG_ARM64
-	strlcat(msg, "Aarch64, ", 10);
+	strlcat(msg, "Aarch64, ", MSGLEN);
 #endif
 #ifdef CONFIG_MIPS
-	strlcat(msg, "MIPS, ", 7);
+	strlcat(msg, "MIPS, ", MSGLEN);
 #endif
 #ifdef CONFIG_PPC
-	strlcat(msg, "PowerPC, ", 10);
+	strlcat(msg, "PowerPC, ", MSGLEN);
 #endif
 #ifdef CONFIG_S390
-	strlcat(msg, "IBM S390, ", 11);
+	strlcat(msg, "IBM S390, ", MSGLEN);
 #endif
 
 #ifdef __BIG_ENDIAN
-	strlcat(msg, "big-endian; ", 13);
+	strlcat(msg, "big-endian; ", MSGLEN);
 #else
-	strlcat(msg, "little-endian; ", 16);
+	strlcat(msg, "little-endian; ", MSGLEN);
 #endif
 
 #if(BITS_PER_LONG == 32)
-	strlcat(msg, "32-bit OS.\n", 12);
+	strlcat(msg, "32-bit OS.\n", MSGLEN);
 #elif(BITS_PER_LONG == 64)
-	strlcat(msg, "64-bit OS.\n", 12);
+	strlcat(msg, "64-bit OS.\n", MSGLEN);
 #endif
 	pr_info("%s", msg);
 }
