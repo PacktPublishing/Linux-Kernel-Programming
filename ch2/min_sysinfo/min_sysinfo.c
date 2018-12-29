@@ -122,17 +122,17 @@ static void lkdc_sysinfo(void)
 }
 EXPORT_SYMBOL(lkdc_sysinfo);
 
-static int __init hello_lkdc_init(void)
+static int __init min_sysinfo_init(void)
 {
 	pr_info("%s: inserted\n", MYMODNAME);
 	lkdc_sysinfo();
 	return 0;	/* success */
 }
 
-static void __exit hello_lkdc_exit(void)
+static void __exit min_sysinfo_exit(void)
 {
 	pr_info("%s: removed\n", MYMODNAME);
 }
 
-module_init(hello_lkdc_init);
-module_exit(hello_lkdc_exit);
+module_init(min_sysinfo_init);
+module_exit(min_sysinfo_exit);
