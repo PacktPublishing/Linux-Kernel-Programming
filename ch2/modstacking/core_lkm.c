@@ -96,24 +96,16 @@ static u64 get_skey(int p)
 }
 EXPORT_SYMBOL(get_skey);
 
-static int xfunc(void)
+static int __init core_lkm_init(void)
 {
-	pr_info("%s: %s:%s():%d: I've been called\n",
-		MODNAME, __FILE__, __FUNCTION__, __LINE__);
-	return exp_int;
-}
-EXPORT_SYMBOL(xfunc);
-
-static int __init core_init(void)
-{
-	pr_info("%s: successfully inserted\n", MODNAME);
+	pr_info("%s: inserted\n", MODNAME);
 	return 0;
 }
 
-static void __exit core_exit(void)
+static void __exit core_lkm_exit(void)
 {
 	pr_info("%s: bids you adieu\n", MODNAME);
 }
 
-module_init(core_init);
-module_exit(core_exit);
+module_init(core_lkm_init);
+module_exit(core_lkm_exit);
