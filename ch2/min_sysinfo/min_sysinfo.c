@@ -131,6 +131,7 @@ static int __init min_sysinfo_init(void)
 {
 	pr_info("%s: inserted\n", MYMODNAME);
 	lkdc_sysinfo();
+	lkdc_sysinfo2();
 	return 0;	/* success */
 }
 
