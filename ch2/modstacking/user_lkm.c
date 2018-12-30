@@ -30,32 +30,29 @@ MODULE_LICENSE("Dual MIT/GPL");
 MODULE_LICENSE("MIT");
 #endif
 
-extern void lkdc_sysinfo(void);
-extern int xfunc(void);
+extern void lkdc_sysinfo2(void);
 extern long get_skey(int);
 extern int exp_int;
 
-static int __init ontop_init(void)
+/* Call some functions within the 'core' module */
+static int __init user_lkm_init(void)
 {
 #define THE_ONE   0xfedface
 	u64 sk = get_skey(THE_ONE);
 
-	pr_info("%s: successfully inserted\n", MODNAME);
-
-	/* Call functions within the 'core' module */
-	pr_debug("%s: Called xfunc(), ret = %d\n", MODNAME, xfunc());
+	pr_info("%s: inserted\n", MODNAME);
 	pr_debug("%s: Called get_skey(), ret = 0x%llx = %llu\n",
 			MODNAME, sk, sk);
 	pr_debug("%s: exp_int = %d\n", MODNAME, exp_int);
-	lkdc_sysinfo();
+	lkdc_sysinfo2();
 
 	return 0;
 }
 
-static void __exit ontop_exit(void)
+static void __exit user_lkm_exit(void)
 {
 	pr_info("%s: bids you adieu\n", MODNAME);
 }
 
-module_init(ontop_init);
-module_exit(ontop_exit);
+module_init(user_lkm_init);
+module_exit(user_lkm_exit);
