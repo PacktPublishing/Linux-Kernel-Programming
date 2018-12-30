@@ -32,52 +32,58 @@ EXPORT_SYMBOL_GPL(exp_int);
 
 /* Functions to be called from other LKMs */
 
-static void lkdc_sysinfo(void)
+/* lkdc_sysinfo2:
+ * a more security-aware version of the lkdc_sysinfo routine. We use
+ * David Wheeler's flawfinder(1) tool to detect possible vulnerabilities;
+ * so, we change the strlen, and replace the strncat with strlcat.
+ */
+static void lkdc_sysinfo2(void)
 {
-	char msg[128];
+#define MSGLEN   128
+	char msg[MSGLEN];
 
-	memset(msg, 0, strlen(msg));
-	snprintf(msg, 47, "%s(): minimal Platform Info:\nCPU: ", __func__);
+	memset(msg, 0, MSGLEN);
+	snprintf(msg, 48, "%s(): minimal Platform Info:\nCPU: ", __func__);
 
 	/* Strictly speaking, all this #if... is considered ugly and should be
 	   isolated as far as is possible */
 #ifdef CONFIG_X86
 #if(BITS_PER_LONG == 32)
-	strncat(msg, "x86-32, ", 9);
+	strlcat(msg, "x86-32, ", MSGLEN);
 #else
-	strncat(msg, "x86_64, ", 9);
+	strlcat(msg, "x86_64, ", MSGLEN);
 #endif
 #endif
 #ifdef CONFIG_ARM
-	strncat(msg, "ARM-32, ", 9);
+	strlcat(msg, "ARM-32, ", MSGLEN);
 #endif
 #ifdef CONFIG_ARM64
-	strncat(msg, "Aarch64, ", 10);
+	strlcat(msg, "Aarch64, ", MSGLEN);
 #endif
 #ifdef CONFIG_MIPS
-	strncat(msg, "MIPS, ", 7);
+	strlcat(msg, "MIPS, ", MSGLEN);
 #endif
 #ifdef CONFIG_PPC
-	strncat(msg, "PowerPC, ", 10);
+	strlcat(msg, "PowerPC, ", MSGLEN);
 #endif
 #ifdef CONFIG_S390
-	strncat(msg, "IBM S390, ", 11);
+	strlcat(msg, "IBM S390, ", MSGLEN);
 #endif
 
 #ifdef __BIG_ENDIAN
-	strncat(msg, "big-endian; ", 13);
+	strlcat(msg, "big-endian; ", MSGLEN);
 #else
-	strncat(msg, "little-endian; ", 16);
+	strlcat(msg, "little-endian; ", MSGLEN);
 #endif
 
 #if(BITS_PER_LONG == 32)
-	strncat(msg, "32-bit OS.\n", 12);
+	strlcat(msg, "32-bit OS.\n", MSGLEN);
 #elif(BITS_PER_LONG == 64)
-	strncat(msg, "64-bit OS.\n", 12);
+	strlcat(msg, "64-bit OS.\n", MSGLEN);
 #endif
 	pr_info("%s", msg);
 }
-EXPORT_SYMBOL(lkdc_sysinfo);
+EXPORT_SYMBOL(lkdc_sysinfo2);
 
 #if(BITS_PER_LONG == 32)
 static u32 get_skey(int p)
@@ -90,6 +96,8 @@ static u64 get_skey(int p)
 #else   // 64-bit
 	u64 secret = 0x123abc567def;
 #endif
+	pr_info("%s: %s:%s():%d: I've been called\n",
+		MODNAME, __FILE__, __FUNCTION__, __LINE__);
 	if (p == THE_ONE)
 		return secret;
 	return 0;
