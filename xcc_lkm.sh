@@ -10,7 +10,7 @@ VERBOSE=0
 
 # *** IMP! UPDATE as required ***
 # Kernel source tree locations for various targets
-KSRC_ARM_TARGET=~/kernel/4.14.52_arm
+KSRC_ARM_TARGET=~/rpi_work/rpi_kernel
 KSRC_PPC64_TARGET=~/kernel/linux-4.9.1
 KSRC_X86_TARGET=/lib/modules/$(uname -r)/build      # always
 
@@ -21,7 +21,7 @@ PPC_CXX=powerpc64-linux-
 
 usage()
 {
- echo "Usage: ${name} name-of-kernel-module-file (without any externsion)
+ echo "Usage: ${name} name-of-kernel-module-file (without any extension)
 
  This script generates a Makefile to build the given kernel module (works only
  for simple cases). Once generated, it builds the kernel module by invoking
@@ -91,7 +91,7 @@ endif
 
 obj-m          += $1.o
 EXTRA_CFLAGS   += -DDEBUG
-#\$(info Building for: ARCH=${ARCH} CROSS_COMPILE=${CROSS_COMPILE} EXTRA_CFLAGS=${EXTRA_CFLAGS})
+\$(info Building for: ARCH=\${ARCH} CROSS_COMPILE=\${CROSS_COMPILE} EXTRA_CFLAGS=\${EXTRA_CFLAGS})
 
 all:
 	make -C \$(KDIR) M=\$(PWD) modules
