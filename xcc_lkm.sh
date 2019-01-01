@@ -2,6 +2,9 @@
 # xcc_lkm.sh
 # Part of the source code for the book 'Linux Kernel Development Cookbook',
 # by Kaiwan N Billimoria, Packt.
+#
+# Currently we support cross-compiling for the ARM-32 and PowerPC (64-bit)
+# archs, and 'normal' build for the x86[_64].
 name=$(basename $0)
 
 #--- Global config
@@ -12,7 +15,6 @@ VERBOSE=0
 # Kernel source tree locations for various targets
 KSRC_ARM_TARGET=~/rpi_work/rpi_kernel
 KSRC_PPC64_TARGET=~/kernel/linux-4.9.1
-KSRC_X86_TARGET=/lib/modules/$(uname -r)/build      # always
 
 # Toolchain prefixes for various targets
 ARM_CXX=arm-linux-gnueabi-
@@ -85,8 +87,8 @@ else ifeq (\$(ARCH),powerpc)
     # *UPDATE* 'KDIR' below to point to the PPC64 Linux kernel source tree on your box
     KDIR ?= ${KSRC_PPC64_TARGET}
 else
-    # *UPDATE* 'KDIR' below to point to the x86_64 Linux kernel source tree on your box
-    KDIR ?= ${KSRC_X86_TARGET}
+    # x86[_64]: 'KDIR' is the Linux kernel source tree (headers) on your box
+    KDIR ?= /lib/modules/\$(shell uname -r)/build
 endif
 
 obj-m          += $1.o
