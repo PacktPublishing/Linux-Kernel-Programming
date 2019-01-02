@@ -15,7 +15,7 @@
  * idea being to explain the essentials of the Linux kernel's LKM
  * framework.
  * This time, we're attempting to cross compile and run it on the
- * Raspberry Pi SBC! This does not affect the code in any way, of course,
+ * Raspberry Pi SBC! This does not affect the code in any major way, of course,
  * but *does* affect the Makefile. Check out the new and enhanced Makefile
  * carefully.
  *
@@ -25,7 +25,7 @@
 #include <linux/module.h>
 
 MODULE_AUTHOR("<insert your name here>");
-MODULE_DESCRIPTION("LKDC book:ch2/cross: hello, world, our first R Pi LKM");
+MODULE_DESCRIPTION("LKDC book:ch2/cross: hello, world, our first Raspberry Pi LKM");
 MODULE_LICENSE("Dual MIT/GPL");
 MODULE_VERSION("0.1");
 
