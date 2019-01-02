@@ -1,5 +1,7 @@
 # ch2/lkm1/Makefile
+# Simplest kernel module Makefile
 
+PWD   := $(shell pwd)
 obj-m += hello.o
 
 all:

@@ -19,6 +19,7 @@ else   # it's x86, the 'default'
     KDIR ?= /lib/modules/$(shell uname -r)/build 
 endif
 
+PWD	     := $(shell pwd)
 obj-m        += hello.o
 EXTRA_CFLAGS += -DDEBUG
 $(info Building for: ARCH=${ARCH} CROSS_COMPILE=${CROSS_COMPILE} EXTRA_CFLAGS=${EXTRA_CFLAGS})

@@ -1,5 +1,7 @@
 # ch2/printk_loglvl/Makefile
+# Simplest kernel module Makefile
 
+PWD          := $(shell pwd)
 obj-m        += printk_loglvl.o
 
 # Enable the pr_debug() as well (rm the comment from the line below)
