@@ -25,7 +25,7 @@ MODULE_LICENSE("Dual MIT/GPL");
 MODULE_VERSION("0.1");
 
 /* Module parameters */
-static int mp_debug_level = 0;
+static int mp_debug_level;
 module_param(mp_debug_level, int, 0660);
 MODULE_PARM_DESC(mp_debug_level,
 	"Debug level [0-2]; 0 => no debug messages, 2 => high verbosity");

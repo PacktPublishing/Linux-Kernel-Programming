@@ -27,7 +27,7 @@ MODULE_LICENSE("Dual MIT/GPL");
 MODULE_VERSION("0.1");
 
 /* Module parameters */
-static int mp_debug_level=0;
+static int mp_debug_level;
 module_param(mp_debug_level, int, 0660);
 MODULE_PARM_DESC(mp_debug_level,
 	"Debug level [0-2]; 0 => no debug messages, 2 => high verbosity");
@@ -36,7 +36,7 @@ static char *mp_strparam = "My string param";
 module_param(mp_strparam, charp, 0660);
 MODULE_PARM_DESC(mp_strparam, "A demo string parameter");
 
-static int control1=0;
+static int control1;
 module_param(control1, int, 0660);
 MODULE_PARM_DESC(control1, "Set to the project's control level [1-5]. MANDATORY");
 
@@ -44,8 +44,8 @@ static int __init modparams1_init(void)
 {
 	pr_info("%s: inserted\n", OUR_MODNAME);
 	if (mp_debug_level > 0)
-		pr_info("module parameters passed: mp_debug_level=%d mp_strparam=%s\n"
-		"control1=%d\n",
+		pr_info("module parameters passed: "
+		"mp_debug_level=%d mp_strparam=%s\ncontrol1=%d\n",
 		mp_debug_level, mp_strparam, control1);
 
 	/* param 'control1': if it hasn't been passed (implicit guess), or is
