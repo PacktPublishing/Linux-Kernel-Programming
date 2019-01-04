@@ -113,6 +113,14 @@ clean:
 EOF
 
 echo "[+] Makefile generated; verbose=${VERBOSE}"
+ls -l Makefile
+
+BUILD_LKM=0   # set to 1 to build it
+[ ${BUILD_LKM} -ne 1 ] && {
+  echo "${name}: BUILD_LKM setting Off, done"
+  exit 0
+}
+
 echo "[+] make clean"
 make clean
 
