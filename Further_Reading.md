@@ -8,9 +8,9 @@ Here, we present, in a chapter-wise format, additional online as well as book re
 
 For the reader's convenience, below are chapter-wise links to the *Further Reading* notes:
 
- - [Ch 1, Building the Kernel From Source](https://github.com/PacktPublishing/Hands-on-System-Programming-with-Linux/blob/master/Further_reading.md#chapter-1-linux-system-architecture--further-reading)
- - [Ch 2. Writing your first Kernel Module - the LKM Framework](https://github.com/PacktPublishing/Linux-Kernel-Development-Cookbook/blob/master/Further_reading.md#chapter-2-writing-your-first-kernel-module-the-lkm-framework-further-reading)
- - 
+ - [Ch 1, Building the Kernel From Source](https://github.com/PacktPublishing/Linux-Kernel-Development-Cookbook/blob/master/Further_Reading.md#chapter-1-building-the-linux-kernel-from-source--further-reading) 
+ - [Ch 2. Writing your first Kernel Module - the LKM Framework](https://github.com/PacktPublishing/Linux-Kernel-Development-Cookbook/blob/master/Further_Reading.md#chapter-2-writing-your-first-kernel-module-the-lkm-framework-further-reading)
+ - c
 
 - *Online Chapters*
 	 - [A: File IO Essentials](https://github.com/PacktPublishing/Hands-on-System-Programming-with-Linux/blob/master/Further_reading.md#a-file-io-essentials--further-reading)
@@ -57,10 +57,21 @@ For the reader's convenience, below are chapter-wise links to the *Further Readi
 	- Blog article: ["Static analysis on the Linux kernel"](http://smackerelofopinion.blogspot.com/2017/09/static-analysis-on-linux-kernel.html)
 	- PDF: ["Static code checking In the Linux kernel", Arnd Bergmann, Linaro](https://elinux.org/images/d/d3/Bargmann.pdf)
 	- Thesis paper: ["Automatic Bug-finding Techniques for Large Software Projects", Jiri Slaby](https://www.fi.muni.cz/~xslaby/sklad/dis.pdf)
-- Linux Kernel Exploitation
-	- [Linux Kernel Exploitation GitHub blog - a long list of kernel exploitation resources](https://github.com/xairy/linux-kernel-exploitation)
-	- The [Kernel Self Protection Project](https://kernsec.org/wiki/index.php/Kernel_Self_Protection_Project)  (KSPP, Kees Cook)
 - Blog article: ["LINUX KERNEL DEVELOPMENT – KERNEL MODULE PARAMETERS", Liran B.H.](http://devarea.com/linux-kernel-development-kernel-module-parameters/)
+- Useful Arch Linux Wiki on kernel module - gathering info, auto-loading, aliasing, blacklisting, etc: ["Kernel module"](https://wiki.archlinux.org/index.php/Kernel_module)
+- StackOverflow Q&A: ["Where does modprobe load a driver that udev requests?"](https://unix.stackexchange.com/questions/330186/where-does-modprobe-load-a-driver-that-udev-requests)
+- DKMS: Dynamic Kernel Module Support
+	- AskUbuntu: ["What does DKMS do? How do I use it?"](https://askubuntu.com/questions/408605/what-does-dkms-do-how-do-i-use-it)
+	- dkms(8) man page](https://linux.die.net/man/8/dkms)
+- - Linux Kernel Security
+	- The [Kernel Self Protection Project](https://kernsec.org/wiki/index.php/Kernel_Self_Protection_Project)  (KSPP, Kees Cook)
+	- Arch Linux wiki: ["Security / Kernel hardening"](https://wiki.archlinux.org/index.php/security#Kernel_hardening)
+	- ["The status of kernel hardening", LWN, Nov 2016](https://lwn.net/Articles/705262/)
+	- Blog article: ["Effectively bypassing kptr_restrict on Android"](http://bits-please.blogspot.com/2015/08/effectively-bypassing-kptrrestrict-on.html)
+	- Quora: ["What are some of the best resources for Kernel exploitation on Linux?"](https://www.quora.com/What-are-some-of-the-best-resources-for-Kernel-exploitation-on-Linux/answer/Kaiwan-N-Billimoria)
+	- [Linux Kernel Exploitation GitHub blog - a long list of kernel exploitation resources](https://github.com/xairy/linux-kernel-exploitation)
+	- ["Hardened GNU/Linux - Linux kernel mitigation checklist"](https://hardenedlinux.github.io/system-security/2016/12/13/kernel_mitigation_checklist.html)
+	- ["Loading signed kernel modules", LWN, Dec 2011](https://lwn.net/Articles/470906/)
 - b
 
 
