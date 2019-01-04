@@ -72,6 +72,13 @@ fi
     exit 1
   }
 }
+[ -z "${ARCH}" ] && {    # x86[_64]
+  [ ! -d /lib/modules/$(uname -r)/build/ ] && {
+    echo "[!] x86[_64]: failed to locate /lib/modules/$(uname -r)/build/.
+Package kernel-headers required to be installed? Aborting..."
+    exit 1
+  }
+}
 
 [ -f Makefile ] && cp -f Makefile Makefile.bkp
 cat > Makefile << EOF
