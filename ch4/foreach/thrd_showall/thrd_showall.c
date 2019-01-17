@@ -34,7 +34,9 @@ static int showthrds(void)
 {
 	struct task_struct *g, *t;	// 'g' : process ptr; 't': thread ptr
 	int nr_thrds = 1, total = 0;
-	char buf[256], tmp[128];
+#define BUFMAX		256
+#define TMPMAX		128
+	char buf[BUFMAX], tmp[TMPMAX];
 
 	pr_info
 	    ("----------------------------------------------------------------------------\n"
@@ -44,13 +46,13 @@ static int showthrds(void)
 	do_each_thread(g, t) {
 		task_lock(t);
 
-		snprintf(buf, 256, "%6d %6d ", g->tgid, t->pid);
+		snprintf(buf, BUFMAX-1, "%6d %6d ", g->tgid, t->pid);
 		if (!g->mm) {	// kernel thread
-			snprintf(tmp, 128, "[%30s]", t->comm);
+			snprintf(tmp, TMPMAX-1, " [%30s]", t->comm);
 		} else {
-			snprintf(tmp, 128, " %30s ", t->comm);
+			snprintf(tmp, TMPMAX-1, "  %30s ", t->comm);
 		}
-		strncat(buf, tmp, 128);
+		strncat(buf, tmp, TMPMAX);
 
 		/* Is this the "main" thread of a multithreaded process?
 		 * (we check by seeing if (a) it's a userspace thread, 
@@ -61,8 +63,8 @@ static int showthrds(void)
 		 */
 		nr_thrds = get_nr_threads(g);
 		if (g->mm && (g->tgid == t->pid) && (nr_thrds > 1)) {
-			snprintf(tmp, 128, "    %4d", nr_thrds);
-			strncat(buf, tmp, 128);
+			snprintf(tmp, TMPMAX-1, "    %4d", nr_thrds);
+			strncat(buf, tmp, TMPMAX);
 		}
 
 		snprintf(tmp, 2, "\n");
