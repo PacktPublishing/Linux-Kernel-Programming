@@ -39,14 +39,22 @@ static int showthrds(void)
 	char buf[BUFMAX], tmp[TMPMAX];
 
 	pr_info
-	    ("----------------------------------------------------------------------------\n"
-	     "    TGID   PID               Thread Name        # Threads\n"
-	     "----------------------------------------------------------------------------\n");
+	    ("------------------------------------------------------------------------------------------------------\n"
+	     "    TGID   PID        current          stack-start                Thread Name            MT? # Threads\n"
+	     "------------------------------------------------------------------------------------------------------\n");
+	   //"    TGID   PID               Thread Name        # Threads\n"
 
 	do_each_thread(g, t) {
 		task_lock(t);
 
 		snprintf(buf, BUFMAX-1, "%6d %6d ", g->tgid, t->pid);
+
+		// task_struct addr and kernel-mode stack addr
+		snprintf(tmp, TMPMAX-1, "  0x%16pK", t);
+		strncat(buf, tmp, TMPMAX);
+		snprintf(tmp, TMPMAX-1, "  0x%16pK", t->stack);
+		strncat(buf, tmp, TMPMAX);
+
 		if (!g->mm) {	// kernel thread
 			snprintf(tmp, TMPMAX-1, " [%30s]", t->comm);
 		} else {
