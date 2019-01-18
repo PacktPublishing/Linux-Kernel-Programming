@@ -15,19 +15,20 @@
 #define OURMODNAME    "lowlevel_mem"
 
 static const void *gptr1, *gptr2, *gptr3, *gptr4, *gptr5;
-static int bsa_alloc_order=5;
-module_param_named(order, bsa_alloc_order, int, S_IRUSR|S_IWUSR|S_IRGRP|S_IWGRP);
+static int bsa_alloc_order = 5;
+module_param_named(order, bsa_alloc_order, int, 0660);
 MODULE_PARM_DESC(order, "Order of the allocation (power-to-raise-2-to)");
 
 /*
  * powerof(base, exponent)
- * Simple 'library' function to calculate and return @base to-the-power-of @exponent
+ * Simple 'library' function to calculate and return
+ *  @base to-the-power-of @exponent
  * f.e. powerof(2, 5) returns 2^5 = 32.
  * Returns -1UL on failure.
  */
 static u64 powerof(int base, int exponent)
 {
-	u64 res=1;
+	u64 res = 1;
 
 	if (base == 0)		// 0^e = 0
 		return 0;
@@ -35,7 +36,7 @@ static u64 powerof(int base, int exponent)
 		return -1UL;
 	if (exponent == 0)	// b^0 = 1
 		return 1;
-	while (exponent --)
+	while (exponent--)
 		res *= base;
 	return res;
 }
@@ -82,9 +83,11 @@ static int bsa_alloc(void)
 		OURMODNAME, gptr3);
 
 	/* 4. Allocate and init one page with the get_zeroed_page() API.
-	   Careful! It does not return the alloc'ed page ptr but rather the ptr
-	   to the metadata structure 'page' representing the allocated page:
-		struct page * alloc_page(gfp_mask);
+	 * Careful! It does not return the alloc'ed page ptr but rather the ptr
+	 * to the metadata structure 'page' representing the allocated page:
+	 *    struct page * alloc_page(gfp_mask);
+	 * So, we use the page_address() helper to convert it to a kva (kernel
+	 * virtual address).
 	 */
 	pg_ptr1 = alloc_page(GFP_KERNEL);
 	if (!pg_ptr1) {
@@ -97,9 +100,7 @@ static int bsa_alloc(void)
 		OURMODNAME, (void *)gptr4, pg_ptr1);
 
 	/* 5. Allocate and init 2^3 = 8 pages with the alloc_pages() API.
-	   Careful! It does not return the alloc'ed page ptr but rather the ptr
-	   to the metadata structure 'page' representing the allocated page:
-		struct page * alloc_pages(gfp_mask, order);
+	 * < Same warning as above applies here too! >
 	 */
 	pg_ptr2 = alloc_pages(GFP_KERNEL, 3);
 	if (!pg_ptr2) {
@@ -109,7 +110,7 @@ static int bsa_alloc(void)
 	gptr5 = page_address(pg_ptr2);
 	pr_info("%s: 5. alloc_pages() alloc'ed %lld pages from the BSA @ %pK\n"
 		" (page addr=%pK)\n",
-		OURMODNAME, powerof(2,3), (void *)gptr4, pg_ptr1);
+		OURMODNAME, powerof(2, 3), (void *)gptr4, pg_ptr1);
 
 	return 0;
 out5:
@@ -143,8 +144,7 @@ static void __exit lowlevel_mem_exit(void)
 module_init(lowlevel_mem_init);
 module_exit(lowlevel_mem_exit);
 
-MODULE_DESCRIPTION("Simple check to see if __free_pages() cleans and frees memory. \
-We use KGDB (via qemu) to check");
-MODULE_AUTHOR("Kaiwan N Billimoria <kaiwan at kaiwantech dot com>");
+MODULE_DESCRIPTION("Simple check to see if __free_pages() cleans and frees memory."
+		   "We use KGDB (via qemu) to check");
+MODULE_AUTHOR("<insert your name here>");
 MODULE_LICENSE("MIT");
-//MODULE_LICENSE("Dual GPL/MIT");
