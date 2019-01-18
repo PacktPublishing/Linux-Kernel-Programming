@@ -28,14 +28,20 @@ MODULE_VERSION("0.1");
 static int __init current_affairs_init(void)
 {
 	pr_debug("%s: inserted\n", OURMODNAME);
-	pr_info("current (ptr to our process context's task_struct) : 0x%pK\n",
-		current);
-	pr_info(" PID         : %6d\n"
+
+	if (likely(!in_interrupt())) {
+		pr_info(
+		"%s: in process context ::\n"
+		" PID         : %6d\n"
 		" TGID        : %6d\n"
-		" stack start : 0x%16pK\n"
-		" name        : %15s\n",
-		current->pid, current->tgid,
-		current->stack, current->comm);
+		" name        : %15s\n"
+		" current (ptr to our process context's task_struct) : 0x%pK\n"
+		" stack start : 0x%16pK\n",
+		OURMODNAME, current->pid, current->tgid, current->comm,
+		current, current->stack);
+	} else
+		pr_alert("%s: in interrupt context [Should NOT Happen here!]\n",
+			OURMODNAME);
 	return 0;		/* success */
 }
 
