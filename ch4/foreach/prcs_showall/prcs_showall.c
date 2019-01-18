@@ -1,5 +1,5 @@
 /*
- * prcs_showall.c
+ * ch4/foreach/prcs_showall.c
  ***************************************************************
  * This program is part of the source code released for the book
  *  "Linux Kernel Development Cookbook"
@@ -8,11 +8,14 @@
  *  GitHub repository:
  *  https://github.com/PacktPublishing/Linux-Kernel-Development-Cookbook
  *
- * From: Ch : 
+ * From: Ch 4 : Memory Allocation for Module Authors
  ****************************************************************
  * Brief Description:
+ * This kernel module iterates over the task structures of all *processes*
+ * currently alive on the box, printing out some details.
+ * We use the for_each_process() macro to do so here.
  *
- * For details, please refer the book, Ch .
+ * For details, please refer the book, Ch 4.
  */
 #include <linux/init.h>
 #include <linux/module.h>
