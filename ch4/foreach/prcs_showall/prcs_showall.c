@@ -23,7 +23,7 @@
 #include <linux/sched.h>
 
 #include <linux/version.h>
-#if LINUX_VERSION_CODE >= KERNEL_VERSION(4,11,0)
+#if LINUX_VERSION_CODE > KERNEL_VERSION(4, 10, 0)
 #include <linux/sched/signal.h>	/* for_each_xxx, ... */
 #endif
 #include <linux/fs.h>		/* no_llseek */
@@ -44,31 +44,28 @@ static int show_prcs_in_tasklist(void)
 	struct task_struct *p;
 #define MAXLEN   128
 	char tmp[MAXLEN];
-	int numread=0, n=0, total=0;
+	int numread = 0, n = 0, total = 0;
 	char hdr[] = "     Name       | TGID  |  PID  | RUID  | EUID";
 
 	pr_info("%s\n", &hdr[0]);
 	for_each_process(p) {
 		memset(tmp, 0, 128);
-		n = snprintf(tmp, 128, "\
-%-16s|%7d|%7d|%7u|%7u\n",
+		n = snprintf(tmp, 128, "%-16s|%7d|%7d|%7u|%7u\n",
 			p->comm, p->tgid, p->pid,
 			/* (old way): p->uid, p->euid
-			current_uid().val, current_euid().val */
-			__kuid_val(p->cred->uid),
-			__kuid_val(p->cred->euid)
-		);
+		        current_uid().val, current_euid().val */
+		     __kuid_val(p->cred->uid), __kuid_val(p->cred->euid)
+		    );
 		numread += n;
 		pr_info("%s", tmp);
 		//pr_debug("n=%d numread=%d tmp=%s\n", n, numread, tmp);
 
 		cond_resched();
-		total ++;
-	} // for_each_process()
+		total++;
+	}			// for_each_process()
 
 	return total;
 }
-
 
 static int __init prcs_showall_init(void)
 {
