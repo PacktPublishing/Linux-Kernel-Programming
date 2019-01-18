@@ -1,11 +1,21 @@
 /*
- * gfp_memclear.c
+ * ch4/lowlevel_mem/lowlevel_mem.c
+ ***************************************************************
+ * This program is part of the source code released for the book
+ *  "Linux Kernel Development Cookbook"
+ *  (c) Author: Kaiwan N Billimoria
+ *  Publisher:  Packt
+ *  GitHub repository:
+ *  https://github.com/PacktPublishing/Linux-Kernel-Development-Cookbook
  *
- * Simple check to see if __free_pages() cleans and frees memory.
- * We use KGDB (via qemu) to check.
+ * From: Ch 4: Memory Allocation for Module Authors
+ ****************************************************************
+ * Brief Description:
+ * A quick demo of the essential 'low-level' / page allocator / Buddy System
+ * Allocator (BSA) APIs for allocating and freeing memory chunks in kernel
+ * space.
  *
- * (c) Kaiwan NB, kaiwanTECH.
- * License: MIT / GPL
+ * For details, please refer the book, Ch 4.
  */
 #include <linux/init.h>
 #include <linux/module.h>
@@ -144,7 +154,6 @@ static void __exit lowlevel_mem_exit(void)
 module_init(lowlevel_mem_init);
 module_exit(lowlevel_mem_exit);
 
-MODULE_DESCRIPTION("Simple check to see if __free_pages() cleans and frees memory."
-		   "We use KGDB (via qemu) to check");
+MODULE_DESCRIPTION("Demo kernel module to exercise essential page allocator APIs."
 MODULE_AUTHOR("<insert your name here>");
 MODULE_LICENSE("MIT");
