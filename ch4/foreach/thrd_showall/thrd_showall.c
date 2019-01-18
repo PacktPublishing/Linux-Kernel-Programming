@@ -1,5 +1,5 @@
 /*
- * thrd_showall.c
+ * ch4/foreach/thrd_showall/thrd_showall.c
  ***************************************************************
  * This program is part of the source code released for the book
  *  "Linux Kernel Development Cookbook"
@@ -11,6 +11,10 @@
  * From: Ch 4 : Memory Allocation for Module Authors
  ****************************************************************
  * Brief Description:
+ * This kernel module iterates over the task structures of all *threads*
+ * currently alive on the box, printing out some details.
+ * We use the do_each_thread() { ... } while_each_thread() macros to do
+ * so here.
  *
  * For details, please refer the book, Ch 4.
  */
@@ -18,7 +22,7 @@
 #include <linux/module.h>
 #include <linux/sched.h>
 #include <linux/version.h>
-#if LINUX_VERSION_CODE >= KERNEL_VERSION(4,11,0)
+#if LINUX_VERSION_CODE > KERNEL_VERSION(4, 10, 0)
 #include <linux/sched/signal.h>
 #endif
 
@@ -42,7 +46,6 @@ static int showthrds(void)
 	    ("------------------------------------------------------------------------------------------------------\n"
 	     "    TGID   PID        current          stack-start                Thread Name            MT? # Threads\n"
 	     "------------------------------------------------------------------------------------------------------\n");
-	   //"    TGID   PID               Thread Name        # Threads\n"
 
 	do_each_thread(g, t) {
 		task_lock(t);
@@ -63,7 +66,7 @@ static int showthrds(void)
 		strncat(buf, tmp, TMPMAX);
 
 		/* Is this the "main" thread of a multithreaded process?
-		 * (we check by seeing if (a) it's a userspace thread, 
+		 * (we check by seeing if (a) it's a userspace thread,
 		 * (b) it's TGID == it's PID, and (c), there are >1 threads in
 		 * the process.
 		 * If so, display the number of threads in the overall process
