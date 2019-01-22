@@ -20,7 +20,7 @@
  */
 #include <linux/kernel.h>
 #include <linux/module.h>
-#include <linux/sched.h>
+#include <linux/sched.h>     /* current */
 #include <linux/version.h>
 #if LINUX_VERSION_CODE > KERNEL_VERSION(4, 10, 0)
 #include <linux/sched/signal.h>
@@ -41,32 +41,32 @@ static int showthrds(void)
 #define BUFMAX		256
 #define TMPMAX		128
 	char buf[BUFMAX], tmp[TMPMAX];
+	const char hdr[] =
+"------------------------------------------------------------------------------------\n"
+"    TGID   PID        current          stack-start       Thread Name     MT? # thrds\n"
+"------------------------------------------------------------------------------------\n";
 
-	pr_info
-	    ("------------------------------------------------------------------------------------------------------\n"
-	     "    TGID   PID        current          stack-start                Thread Name            MT? # Threads\n"
-	     "------------------------------------------------------------------------------------------------------\n");
-
+	pr_info("%s", hdr);
 	do_each_thread(g, t) {
 		task_lock(t);
 
 		snprintf(buf, BUFMAX-1, "%6d %6d ", g->tgid, t->pid);
 
-		// task_struct addr and kernel-mode stack addr
+		/* task_struct addr and kernel-mode stack addr */
 		snprintf(tmp, TMPMAX-1, "  0x%16pK", t);
 		strncat(buf, tmp, TMPMAX);
 		snprintf(tmp, TMPMAX-1, "  0x%16pK", t->stack);
 		strncat(buf, tmp, TMPMAX);
 
 		if (!g->mm) {	// kernel thread
-			snprintf(tmp, TMPMAX-1, " [%30s]", t->comm);
+			snprintf(tmp, TMPMAX-1, " [%16s]", t->comm);
 		} else {
-			snprintf(tmp, TMPMAX-1, "  %30s ", t->comm);
+			snprintf(tmp, TMPMAX-1, "  %16s ", t->comm);
 		}
 		strncat(buf, tmp, TMPMAX);
 
 		/* Is this the "main" thread of a multithreaded process?
-		 * (we check by seeing if (a) it's a userspace thread,
+		 * We check by seeing if (a) it's a userspace thread,
 		 * (b) it's TGID == it's PID, and (c), there are >1 threads in
 		 * the process.
 		 * If so, display the number of threads in the overall process
@@ -74,7 +74,7 @@ static int showthrds(void)
 		 */
 		nr_thrds = get_nr_threads(g);
 		if (g->mm && (g->tgid == t->pid) && (nr_thrds > 1)) {
-			snprintf(tmp, TMPMAX-1, "    %4d", nr_thrds);
+			snprintf(tmp, TMPMAX-1, " %3d", nr_thrds);
 			strncat(buf, tmp, TMPMAX);
 		}
 
