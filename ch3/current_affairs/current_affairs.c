@@ -8,11 +8,11 @@
  *  GitHub repository:
  *  https://github.com/PacktPublishing/Linux-Kernel-Development-Cookbook
  *
- * From: Ch 4: Memory Allocation for Module Authors
+ * From: Ch 3: Kernel and Memory Management Internals -Essentials
  ****************************************************************
  * Brief Description:
  *
- * For details, please refer the book, Ch .
+ * For details, please refer the book, Ch 3.
  */
 #include <linux/init.h>
 #include <linux/module.h>
