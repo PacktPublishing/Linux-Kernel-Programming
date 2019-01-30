@@ -72,6 +72,9 @@ static int __init kernel_seg_init(void)
     "\nSome Kernel Details [sorted by decreasing address] -------------------\n"
 #ifdef CONFIG_X86
 	" FIXADDR_START       = 0x" FMTSPC "\n"
+#if(BITS_PER_LONG == 32)
+	" PKMAP_BASE          = 0x" FMTSPC "\n"
+#endif
 #endif
 	" MODULES_END         = 0x" FMTSPC "\n"
 	" MODULES_VADDR       = 0x" FMTSPC " [modules range: " FMTSPC_DEC " MB]\n"
@@ -84,6 +87,9 @@ static int __init kernel_seg_init(void)
 	" PAGE_OFFSET         = 0x" FMTSPC " [lowmem region: start of all phy mapped RAM (here to RAM-size)]\n",
 #ifdef CONFIG_X86
 		(TYPECST)FIXADDR_START,
+#if(BITS_PER_LONG == 32)
+		(TYPECST)PKMAP_BASE,
+#endif
 #endif
 		(TYPECST)MODULES_END, (TYPECST)MODULES_VADDR,
 		 (TYPECST)((MODULES_END-MODULES_VADDR)/(1024*1024)),
