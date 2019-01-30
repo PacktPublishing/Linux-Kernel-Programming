@@ -26,8 +26,10 @@ usage()
  echo "Usage: ${name} name-of-kernel-module-file (without any extension)
 
  This script generates a Makefile to build the given kernel module (works only
- for simple cases). Once generated, it builds the kernel module by invoking
- 'make' with ARCH and CROSS_COMPILE set appropriately.
+ for simple cases). Once generated, it can also build the kernel module by
+ invoking 'make' with ARCH and CROSS_COMPILE set appropriately; we keep the 
+ LKM build OFF by default; one can set it ON by updating the variable BUILD_LKM
+ to 1.
 
  To select which architecture (cpu) the kernel module is to be (cross) compiled
  for, pl set the environment variable ARCH=<arch>. Currently, we support (cross)
