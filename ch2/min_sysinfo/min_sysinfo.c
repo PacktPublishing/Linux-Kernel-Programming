@@ -28,7 +28,7 @@ MODULE_LICENSE("Dual MIT/GPL");
 MODULE_VERSION("0.1");
 
 /* lkdc_sysinfo2:
- * a more security-aware version of the lkdc_sysinfo routine. We use
+ * A more security-aware version of the lkdc_sysinfo routine. We used
  * David Wheeler's flawfinder(1) tool to detect possible vulnerabilities;
  * so, we change the strlen, and replace the strncat with strlcat.
  */

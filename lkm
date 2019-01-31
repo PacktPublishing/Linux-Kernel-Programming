@@ -7,7 +7,7 @@ name=$(basename $0)
 
 #-------------- r u n c m d -------------------------------------------
 # Display and run the provided command.
-# Parameter 1 : the command to run
+# Parameter(s): the command to run
 runcmd()
 {
 local SEP="------------------------------"
