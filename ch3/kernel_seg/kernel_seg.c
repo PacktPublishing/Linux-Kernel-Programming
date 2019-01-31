@@ -69,38 +69,20 @@ static int __init kernel_seg_init(void)
 	lkdc_sysinfo2();
 
 	pr_info(
-    "\nSome Kernel Details [sorted by decreasing address] -------------------\n"
-#ifdef CONFIG_X86
-	" FIXADDR_START       = 0x" FMTSPC "\n"
-#if(BITS_PER_LONG == 32)
-	" PKMAP_BASE          = 0x" FMTSPC "\n"
-#endif
-#endif
+    "\nSome Kernel Details -------------------\n"
 	" MODULES_END         = 0x" FMTSPC "\n"
 	" MODULES_VADDR       = 0x" FMTSPC " [modules range: " FMTSPC_DEC " MB]\n"
-#ifdef CONFIG_X86
-	" CPU_ENTRY_AREA_BASE = 0x" FMTSPC "\n"
-	" VMEMMAP_START       = 0x" FMTSPC "\n"
-#endif
 	" VMALLOC_END         = 0x" FMTSPC "\n"
 	" VMALLOC_START       = 0x" FMTSPC " [vmalloc range: " FMTSPC_DEC " MB =" FMTSPC_DEC " GB]" "\n"
-	" PAGE_OFFSET         = 0x" FMTSPC " [lowmem region: start of all phy mapped RAM (here to RAM-size)]\n",
-#ifdef CONFIG_X86
-		(TYPECST)FIXADDR_START,
-#if(BITS_PER_LONG == 32)
-		(TYPECST)PKMAP_BASE,
-#endif
-#endif
+	" PAGE_OFFSET         = 0x" FMTSPC " [lowmem region: start of all phy mapped RAM (here to RAM-size)]\n"
+	" TASK_SIZE           = 0x" FMTSPC " [size of user VAS]\n",
 		(TYPECST)MODULES_END, (TYPECST)MODULES_VADDR,
 		 (TYPECST)((MODULES_END-MODULES_VADDR)/(1024*1024)),
-#ifdef CONFIG_X86
-		(TYPECST)CPU_ENTRY_AREA_BASE,
-		(TYPECST)VMEMMAP_START,
-#endif
 		(TYPECST)VMALLOC_END, (TYPECST)VMALLOC_START,
 		 (TYPECST)((VMALLOC_END-VMALLOC_START)/(1024*1024)), 
 		 (TYPECST)((VMALLOC_END-VMALLOC_START)/(1024*1024*1024)),
-		(TYPECST)PAGE_OFFSET);
+		(TYPECST)PAGE_OFFSET,
+		(TYPECST)TASK_SIZE);
 
 #ifdef CONFIG_KASAN
 	pr_info("\nKASAN_SHADOW_START = 0x" FMTSPC " KASAN_SHADOW_END = 0x" FMTSPC "\n",
