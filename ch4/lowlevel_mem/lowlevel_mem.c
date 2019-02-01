@@ -8,7 +8,7 @@
  *  GitHub repository:
  *  https://github.com/PacktPublishing/Linux-Kernel-Development-Cookbook
  *
- * From: Ch 4: Memory Allocation for Module Authors
+ * From: Ch 4: Kernel Memory Allocation for Module Authors
  ****************************************************************
  * Brief Description:
  * A quick demo of the essential 'low-level' / page allocator / Buddy System
@@ -23,6 +23,10 @@
 #include <linux/mm.h>
 
 #define OURMODNAME    "lowlevel_mem"
+
+MODULE_DESCRIPTION("Demo kernel module to exercise essential page allocator APIs.");
+MODULE_AUTHOR("Kaiwan N Billimoria");
+MODULE_LICENSE("MIT");
 
 static const void *gptr1, *gptr2, *gptr3, *gptr4, *gptr5;
 static int bsa_alloc_order = 5;
@@ -53,13 +57,14 @@ static u64 powerof(int base, int exponent)
 EXPORT_SYMBOL(powerof);
 
 /*
- * bsa_alloc : test some of the bsa (buddy system allocator) APIs
+ * bsa_alloc : test some of the bsa (buddy system allocator
+ * aka page allocator) APIs
  */
 static int bsa_alloc(void)
 {
 	int stat = -ENOMEM;
 	u64 numpg2alloc = 0;
-	const struct page *pg_ptr1, *pg_ptr2;
+	const struct page *pg_ptr1;
 
 	/* 1. Allocate one page with the __get_free_page() API */
 	gptr1 = (void *) __get_free_page(GFP_KERNEL);
@@ -92,12 +97,12 @@ static int bsa_alloc(void)
 	pr_info("%s: 3. get_zeroed_page() alloc'ed 1 page from the BSA @ %pK\n",
 		OURMODNAME, gptr3);
 
-	/* 4. Allocate and init one page with the get_zeroed_page() API.
+	/* 4. Allocate and init one page with the alloc_page() API.
 	 * Careful! It does not return the alloc'ed page ptr but rather the ptr
 	 * to the metadata structure 'page' representing the allocated page:
 	 *    struct page * alloc_page(gfp_mask);
-	 * So, we use the page_address() helper to convert it to a kva (kernel
-	 * virtual address).
+	 * So, we use the page_address() helper to convert it to a kernel
+	 * logical (or virtual) address.
 	 */
 	pg_ptr1 = alloc_page(GFP_KERNEL);
 	if (!pg_ptr1) {
@@ -112,15 +117,13 @@ static int bsa_alloc(void)
 	/* 5. Allocate and init 2^3 = 8 pages with the alloc_pages() API.
 	 * < Same warning as above applies here too! >
 	 */
-	pg_ptr2 = alloc_pages(GFP_KERNEL, 3);
-	if (!pg_ptr2) {
+	gptr5 = page_address(alloc_pages(GFP_KERNEL, 3));
+	if (!gptr5) {
 		pr_warn("%s: alloc_pages() failed!\n", OURMODNAME);
 		goto out5;
 	}
-	gptr5 = page_address(pg_ptr2);
-	pr_info("%s: 5. alloc_pages() alloc'ed %lld pages from the BSA @ %pK\n"
-		" (page addr=%pK)\n",
-		OURMODNAME, powerof(2, 3), (void *)gptr4, pg_ptr1);
+	pr_info("%s: 5. alloc_pages() alloc'ed %lld pages from the BSA @ %pK\n",
+		OURMODNAME, powerof(2, 3), (void *)gptr5);
 
 	return 0;
 out5:
@@ -153,7 +156,3 @@ static void __exit lowlevel_mem_exit(void)
 
 module_init(lowlevel_mem_init);
 module_exit(lowlevel_mem_exit);
-
-MODULE_DESCRIPTION("Demo kernel module to exercise essential page allocator APIs."
-MODULE_AUTHOR("<insert your name here>");
-MODULE_LICENSE("MIT");
