@@ -35,8 +35,6 @@ static struct myctx *ctx;
 
 static int __init slab1_init(void)
 {
-	pr_debug("%s: inserted\n", OURMODNAME);
-
 	/* 1. Allocate slab memory for 1 KB using the kmalloc() */
 	gkptr = kmalloc(1024, GFP_KERNEL);
 	if (!gkptr) {
@@ -53,9 +51,8 @@ static int __init slab1_init(void)
 		pr_warn("%s: kzalloc failed!\n", OURMODNAME);
 		goto out_fail2;
 	}
-	pr_info("%s: context struct alloc'ed and initialized (size=%ld, ksize = %ld)\n",
-		OURMODNAME, sizeof(ctx), ksize(ctx));
-	print_hex_dump_bytes("ctx: ", DUMP_PREFIX_OFFSET, ctx, 32); //sizeof(struct myctx));
+	pr_info("%s: context struct alloc'ed and initialized)\n", OURMODNAME);
+	print_hex_dump_bytes("ctx: ", DUMP_PREFIX_OFFSET, ctx, 32);
 
 	return 0;		/* success */
 
