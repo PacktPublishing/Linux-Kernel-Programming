@@ -25,9 +25,14 @@ MODULE_DESCRIPTION("LKDC book:ch/: hello, world");
 MODULE_LICENSE("Dual MIT/GPL");
 MODULE_VERSION("0.1");
 
+static int stepsz = 200000;
+module_param(stepsz, int, 0644);
+MODULE_PARM_DESC(stepsz,
+ "Amount to increase allocation by on each loop iteration (default=200000");
+
 static int test_maxallocsz(void)
 {
-	size_t size2alloc = 0, stepsz = 200000;
+	size_t size2alloc = 0;
 	void *p;
 
 	while (1) {
