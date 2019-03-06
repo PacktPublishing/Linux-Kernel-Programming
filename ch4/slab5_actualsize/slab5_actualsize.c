@@ -49,7 +49,7 @@ static int test_maxallocsz(void)
 		 */
 		pr_info("kmalloc(%7ld) : %7ld : %7ld : %3ld%%\n",
                         size2alloc, actual_alloc, (actual_alloc-size2alloc),
-			(((actual_alloc-size2alloc)*100/actual_alloc)));
+			(((actual_alloc-size2alloc)*100/size2alloc)));
 		kfree(p);
 		size2alloc += stepsz;
 	}
