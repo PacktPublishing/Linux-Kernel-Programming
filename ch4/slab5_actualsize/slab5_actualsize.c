@@ -1,5 +1,5 @@
 /*
- * ch4/slab6_actualsize/slab6_actualsize.c
+ * ch4/slab5_actualsize/slab5_actualsize.c
  ***************************************************************
  * This program is part of the source code released for the book
  *  "Linux Kernel Development Cookbook"
@@ -18,10 +18,10 @@
 #include <linux/module.h>
 #include <linux/slab.h>
 
-#define OURMODNAME   "slab6_actualsize"
+#define OURMODNAME   "slab5_actualsize"
 
 MODULE_AUTHOR("Kaiwan N Billimoria");
-MODULE_DESCRIPTION("LKDC book:ch4/slab6_actualsize: test slab alloc with the ksize()");
+MODULE_DESCRIPTION("LKDC book:ch4/slab5_actualsize: test slab alloc with the ksize()");
 MODULE_LICENSE("Dual MIT/GPL");
 MODULE_VERSION("0.1");
 
@@ -56,15 +56,15 @@ static int test_maxallocsz(void)
 	return 0;
 }
 
-static int __init slab6_actualsize_init(void)
+static int __init slab5_actualsize_init(void)
 {
 	pr_debug("%s: inserted\n", OURMODNAME);
 	return test_maxallocsz();
 }
-static void __exit slab6_actualsize_exit(void)
+static void __exit slab5_actualsize_exit(void)
 {
 	pr_debug("%s: removed\n", OURMODNAME);
 }
 
-module_init(slab6_actualsize_init);
-module_exit(slab6_actualsize_exit);
+module_init(slab5_actualsize_init);
+module_exit(slab5_actualsize_exit);

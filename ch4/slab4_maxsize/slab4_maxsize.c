@@ -1,5 +1,5 @@
 /*
- * ch4/slab5_maxsize/slab5_maxsize.c
+ * ch4/slab4_maxsize/slab4_maxsize.c
  ***************************************************************
  * This program is part of the source code released for the book
  *  "Linux Kernel Development Cookbook"
@@ -18,7 +18,7 @@
 #include <linux/module.h>
 #include <linux/slab.h>
 
-#define OURMODNAME   "slab5_maxsize"
+#define OURMODNAME   "slab4_maxsize"
 
 MODULE_AUTHOR("Kaiwan N Billimoria");
 MODULE_DESCRIPTION("LKDC book:ch/: hello, world");
@@ -48,15 +48,15 @@ static int test_maxallocsz(void)
 	return 0;
 }
 
-static int __init slab5_maxsize_init(void)
+static int __init slab4_maxsize_init(void)
 {
 	pr_debug("%s: inserted\n", OURMODNAME);
 	return test_maxallocsz();
 }
-static void __exit slab5_maxsize_exit(void)
+static void __exit slab4_maxsize_exit(void)
 {
 	pr_debug("%s: removed\n", OURMODNAME);
 }
 
-module_init(slab5_maxsize_init);
-module_exit(slab5_maxsize_exit);
+module_init(slab4_maxsize_init);
+module_exit(slab4_maxsize_exit);
