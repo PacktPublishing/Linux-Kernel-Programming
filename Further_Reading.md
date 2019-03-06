@@ -1,4 +1,4 @@
-﻿# Further Reading
+# Further Reading
 *For the book "Linux Kernel Development Cookbook", Kaiwan N Billimoria, Packt (2019).*
 
 *Book GitHub repo*: https://github.com/PacktPublishing/Linux-Kernel-Development-Cookbook
@@ -20,10 +20,11 @@ For the reader's convenience, below are chapter-wise links to the *Further Readi
 
 ## Chapter 1, Building the Linux Kernel From Source : Further Reading
 
-- Official Kernel Documentation : the modern Linux kernel documentation is very well written and [available online here](https://www.kernel.org/doc/html/latest/index.html)
+- **[Official Kernel Documentation](https://www.kernel.org/doc/html/latest/index.html)** : the modern Linux kernel documentation is very well written and presented here
 	- ["2. How the development process works"](https://www.kernel.org/doc/html/latest/process/2.Process.html#how-the-development-process-works)
 	- [The Linux kernel build system - kbuild - infrastructure](https://www.kernel.org/doc/Documentation/kbuild/)
 - [Linux Kernel Release Model, Greg Kroah-Hartman, Feb 2018](http://kroah.com/log/blog/2018/02/05/linux-kernel-release-model/)
+- ["LTSI	Project	update - Long Term Support Initiative"](https://events.linuxfoundation.org/wp-content/uploads/2017/11/Using-Linux-for-Long-Term-Community-Status-and-the-Way-We-Go-OSS-Tsugikazu-Shibata.pdf) - slide deck, Open Source Summit Japan, June 2018
 - [Linux kernel versions with detailed notes on new features, kernelnewbies](https://kernelnewbies.org/LinuxVersions)
 - Licensing
 	-   [The differences between the GPL, LGPL and the BSD](https://fosswire.com/post/2007/04/the-differences-between-the-gpl-lgpl-and-the-bsd/)
@@ -76,15 +77,48 @@ For the reader's convenience, below are chapter-wise links to the *Further Readi
 	- ["Loading signed kernel modules", LWN, Dec 2011](https://lwn.net/Articles/470906/)
 - [The Eudyptula Challenge](http://eudyptula-challenge.org/): "The Eudyptula Challenge was a series of programming exercises for the Linux kernel, that started from a very basic "Hello world" kernel module, moving on up in complexity to getting patches accepted into the main Linux kernel source tree." It's really cool but NOT active as of this writing though.
 
-## Chapter 4, Kernel Memory Allocation for Module Authors
-- Book: [Hands-On System Programming with Linux", Kaiwan N Billimoria, Packt](https://www.packtpub.com/networking-and-servers/hands-system-programming-linux)
-- Linux kernel memory management Internals - Books
+## Chapter 3, Kernel and Memory Management Internals -Essentials
+- Book: [Hands-On System Programming with Linux", Kaiwan N Billimoria, Packt](https://www.packtpub.com/networking-and-servers/hands-system-programming-linux). Prerequisites to this chapter (essential reading, really):
+	- Ch 1 : Linux System Architecture
+	- Ch 2 : Virtual Memory
+- Books: Linux kernel memory management Internals
 	- ['Professional Linux Kernel Architecture', Mauerer, Wrox Press](https://www.amazon.in/Professional-Linux-Kernel-Architecture-Programmer/dp/0470343435/ref=sr_1_1?ie=UTF8&qid=1547525512&sr=8-1&keywords=Professional%20Linux%20Kernel%20Architecture%27)
 	- ['Understanding the Linux Virtual Memory Manager', Mel Gorman (Bruce Perens Open Source)](https://www.amazon.in/Understanding-Virtual-Memory-Manager-Perens/dp/0131453483/ref=sr_1_1?ie=UTF8&qid=1547529951&sr=8-1&keywords=mel%20gorman)
-	- 
+
+-   CPU ABI (Application Binary Interface) documentation, blog article : 'APPLICATION BINARY INTERFACE (ABI) DOCS AND THEIR MEANING' :  [https://kaiwantech.wordpress.com/2018/05/07/application-binary-interface-abi-docs-and-their-meaning/](https://kaiwantech.wordpress.com/2018/05/07/application-binary-interface-abi-docs-and-their-meaning/)
+- Deep detail on MM and paging on the Intel processors can be found in their excellent manuals here (Ch 4, Paging): [Intel® 64 and IA-32 Architectures
+Software Developer’s Manual. Volume 3 (3A, 3B & 3C): System Programming Guide](https://software.intel.com/en-us/download/intel-64-and-ia-32-architectures-sdm-combined-volumes-3a-3b-3c-and-3d-system-programming-guide)
+	- [All Intel 64 and IA-32 architecture and programming environment manuals](https://software.intel.com/en-us/articles/intel-sdm): 
 - [un]likely() macros:
 	- [likely()/unlikely() macros in the Linux kernel - how do they work? What's their benefit?](https://stackoverflow.com/questions/109710/likely-unlikely-macros-in-the-linux-kernel-how-do-they-work-whats-their)
 	- [Why do we use __builtin_expect when a straightforward way is to use if-else](https://stackoverflow.com/questions/7346929/why-do-we-use-builtin-expect-when-a-straightforward-way-is-to-use-if-else)
+
+- vsyscall, vdso and VVAR
+    - ["On vsyscalls and the vDSO"](https://lwn.net/Articles/446528/), LWN, Jon Corbet, June 2011
+    - ["Are system calls the only way to interact with the Linux kernel from user land?", StackExchange, Apr 2014](https://unix.stackexchange.com/questions/124928/are-system-calls-the-only-way-to-interact-with-the-linux-kernel-from-user-land)
+
+- Kernel memory optimization techniques
+	- [THP (Transparent Huge Pages)](https://www.kernel.org/doc/html/latest/admin-guide/mm/transhuge.html#admin-guide-transhuge)
+	- [KSM (Kernel Samepage Merging)](https://www.kernel.org/doc/html/latest/admin-guide/mm/ksm.html)
+- ['Virtual Memory and Linux', PDF, Matt Porter, Alan Ott](https://elinux.org/images/b/b0/Introduction_to_Memory_Management_in_Linux.pdf)
+
+
+## Chapter 4, Kernel Memory Allocation for Module Authors
+
+- Book: [Hands-On System Programming with Linux", Kaiwan N Billimoria, Packt](https://www.packtpub.com/networking-and-servers/hands-system-programming-linux). Prerequisites to this chapter (essential reading, really):
+	- Ch 1 : Linux System Architecture
+	- Ch 2 : Virtual Memory
+
+- Information regarding GFP flags internal usage, etc: ['Memory management when failure is not an option', LWN, Mar 2015](https://lwn.net/Articles/635354/)
+
+- CPU Caches
+    - ["How L1 and L2 CPU Caches Work, and Why They’re an Essential Part of Modern Chips", Joel Hruska, Aug 2018](http://www.extremetech.com/extreme/188776-how-l1-and-l2-cpu-caches-work-and-why-theyre-an-essential-part-of-modern-chips)
+    - An example diagram of CPU (cache) hierarchy: ["Memory hierarchy of an AMD Bulldozer server"](https://en.wikipedia.org/wiki/CPU_cache#/media/File:Hwloc.png)
+
+- Slab layer - performance, etc
+    -   ['Toward a more efficient slab allocator', LWN, Jon Corbet, Jan 2015](https://lwn.net/Articles/629152/)
+    -   Blog article ['INTERESTING NUMBERS'](https://kaiwantech.wordpress.com/2015/05/01/interesting-numbers/); see the section on *Networking* for some information on how the network subsystem has time critical code paths (and the resource links that follow)
+- ["GNUPLOT 4.2 - A Brief Manual and Tutorial", Duke University](https://people.duke.edu/~hpgavin/gnuplot.html)
 - b
 
 	 
