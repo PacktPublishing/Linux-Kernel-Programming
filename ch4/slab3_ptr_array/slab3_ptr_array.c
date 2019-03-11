@@ -60,12 +60,12 @@ static int __init slab2_ptr_array_init(void)
 		}
 		memset(gkptr[i], i+0x61, 1024); // 0x61 = 'a'
 		print_hex_dump_bytes("gkptr: ", DUMP_PREFIX_NONE, gkptr[i], 16);
-		i ++;
+		i++;
 	}
 
 	return 0;		/* success */
 cleanup:
-	for (j=i; j>0; j--) {
+	for (j = i; j > 0; j--) {
 		pr_debug(" freeing gkptr[%d]\n", j);
 		kfree(gkptr[j]);
 	}
@@ -75,7 +75,8 @@ cleanup:
 static void __exit slab2_ptr_array_cleanup(void)
 {
 	int i;
-	for (i=0; i < SLAB2_MAXLOOP; i++) {
+
+	for (i = 0; i < SLAB2_MAXLOOP; i++) {
 		pr_debug("%s:%s(): freeing gkptr[%d]\n",
 			OURMODNAME, __func__, i);
 		kfree(gkptr[i]);
