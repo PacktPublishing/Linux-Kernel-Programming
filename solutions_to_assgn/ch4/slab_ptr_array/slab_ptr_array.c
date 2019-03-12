@@ -1,5 +1,5 @@
 /*
- * ch4/slab3_ptr_array/slab3_ptr_array.c
+ * solutions_to_assgn/ch4/slab_ptr_array/slab_ptr_array.c
  ***************************************************************
  * This program is part of the source code released for the book
  *  "Linux Kernel Development Cookbook"
@@ -33,23 +33,23 @@
 #include <linux/module.h>
 #include <linux/slab.h>
 
-#define OURMODNAME   "slab2_correct"
-#define SLAB2_MAXLOOP    5
+#define OURMODNAME       "slab_ptr_array"
+#define SLAB_MAXLOOP    5
 
 MODULE_AUTHOR("Kaiwan N Billimoria");
-MODULE_DESCRIPTION("LKDC book:ch4/slab2_correct: fix the bugs in ch4/slab2_buggy");
+MODULE_DESCRIPTION("LKDC book:solutions_to_assgn/ch4/slab_ptr_array/: assignment solution");
 MODULE_LICENSE("Dual MIT/GPL");
 MODULE_VERSION("0.1");
 
-static char *gkptr[SLAB2_MAXLOOP];
+static char *gkptr[SLAB_MAXLOOP];
 
-static int __init slab2_ptr_array_init(void)
+static int __init slab_ptr_array_init(void)
 {
 	int i = 0, j;
 
 	pr_debug("%s: inserted\n", OURMODNAME);
 
-	while (i < SLAB2_MAXLOOP) {
+	while (i < SLAB_MAXLOOP) {
 		gkptr[i] = kmalloc(1024, GFP_KERNEL);
 		if (!gkptr[i]) {
 			pr_warn("%s: kmalloc iter %d failed!\n", OURMODNAME, i);
@@ -72,11 +72,11 @@ cleanup:
 	return -ENOMEM;
 }
 
-static void __exit slab2_ptr_array_cleanup(void)
+static void __exit slab_ptr_array_cleanup(void)
 {
 	int i;
 
-	for (i = 0; i < SLAB2_MAXLOOP; i++) {
+	for (i = 0; i < SLAB_MAXLOOP; i++) {
 		pr_debug("%s:%s(): freeing gkptr[%d]\n",
 			OURMODNAME, __func__, i);
 		kfree(gkptr[i]);
@@ -84,5 +84,5 @@ static void __exit slab2_ptr_array_cleanup(void)
 	pr_debug("%s: freed memory, removed\n", OURMODNAME);
 }
 
-module_init(slab2_ptr_array_init);
-module_exit(slab2_ptr_array_cleanup);
+module_init(slab_ptr_array_init);
+module_exit(slab_ptr_array_cleanup);
