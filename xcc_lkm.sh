@@ -13,8 +13,8 @@ VERBOSE=0
 
 # *** IMP! UPDATE as required ***
 # Kernel source tree locations for various targets
-KSRC_ARM_TARGET="~/rpi_work/rpi_kernel"
-KSRC_PPC64_TARGET="~/kernel/linux-4.9.1"
+KSRC_ARM_TARGET="~/rpi_kernel"
+KSRC_PPC64_TARGET="~/linux-4.9.1"
 
 # Toolchain prefixes for various targets
 ARM_CXX=arm-linux-gnueabi-

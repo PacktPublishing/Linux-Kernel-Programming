@@ -76,7 +76,7 @@ static int bsa_alloc(void)
 		OURMODNAME, gptr1);
 
 	/* 2. Allocate 2^bsa_alloc_order pages with the __get_free_pages() API */
-	numpg2alloc = powerof(2, bsa_alloc_order);
+	numpg2alloc = powerof(2, bsa_alloc_order); // returns 2^bsa_alloc_order
 	gptr2 = (void *) __get_free_pages(GFP_KERNEL, bsa_alloc_order);
 	if (!gptr2) {
 		pr_warn("%s: __get_free_pages() failed!\n", OURMODNAME);
@@ -146,6 +146,7 @@ static int __init lowlevel_mem_init(void)
 static void __exit lowlevel_mem_exit(void)
 {
 	pr_info("%s: free-ing up the BSA memory chunks...\n", OURMODNAME);
+	/* Free 'em! */
 	free_page((unsigned long) gptr1);
 	free_pages((unsigned long) gptr2, bsa_alloc_order);
 	free_page((unsigned long) gptr3);

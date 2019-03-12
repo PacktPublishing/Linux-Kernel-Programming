@@ -51,7 +51,7 @@ static int __init slab1_init(void)
 		pr_warn("%s: kzalloc failed!\n", OURMODNAME);
 		goto out_fail2;
 	}
-	pr_info("%s: context struct alloc'ed and initialized)\n", OURMODNAME);
+	pr_info("%s: context struct alloc'ed and initialized\n", OURMODNAME);
 	print_hex_dump_bytes("ctx: ", DUMP_PREFIX_OFFSET, ctx, 32);
 
 	return 0;		/* success */

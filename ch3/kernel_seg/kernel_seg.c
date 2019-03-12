@@ -84,7 +84,7 @@ static int __init kernel_seg_init(void)
 		(TYPECST)PAGE_OFFSET,
 		(TYPECST)TASK_SIZE);
 
-#ifdef CONFIG_KASAN
+#ifdef CONFIG_KASAN  // Kernel Address SANitizer
 	pr_info("\nKASAN_SHADOW_START = 0x" FMTSPC " KASAN_SHADOW_END = 0x" FMTSPC "\n",
 		(TYPECST)KASAN_SHADOW_START, (TYPECST)KASAN_SHADOW_END);
 #endif
