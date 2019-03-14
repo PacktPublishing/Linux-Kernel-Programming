@@ -16,9 +16,10 @@ else
     KDIR ?= /lib/modules/$(shell uname -r)/build
 endif
 
-PWD	       := $(shell pwd)
-obj-m          += page_exact.o
-EXTRA_CFLAGS   += -DDEBUG
+PWD	            := $(shell pwd)
+obj-m               += page_exact_chk.o
+page_exact_chk-objs := page_exact.o ../../klib_lkdc.o
+EXTRA_CFLAGS        += -DDEBUG
 $(info Building for: ARCH=${ARCH} CROSS_COMPILE=${CROSS_COMPILE} EXTRA_CFLAGS=${EXTRA_CFLAGS})
 
 all:
