@@ -36,7 +36,7 @@ MODULE_PARM_DESC(kvn,
 #define KVN_MIN_BYTES    8
 #define DISP_BYTES      16 
 
-static void *vptr_rndm, *vptr_init, *kv, *kvarr;
+static void *vptr_rndm, *vptr_init, *kv, *kvarr, *vrx;
 
 static int vmalloc_try(void)
 {
@@ -75,7 +75,25 @@ static int vmalloc_try(void)
 	pr_info("kcalloc(): kvarr = %pK\n", kvarr);
 	print_hex_dump_bytes(" kvarr: ", DUMP_PREFIX_NONE, kvarr, DISP_BYTES);
 
+	/* 5. __vmalloc(): allocate some 42 pages and set protections to RO */
+#undef WR2ROMEM_BUG
+/* #define WR2ROMEM_BUG */  /* Keep this commented out, else we wil crash! Read the
+                         book, Ch 6, for details  :-) */
+	if (!(vrx = __vmalloc(42*PAGE_SIZE, GFP_KERNEL, PAGE_KERNEL_RX))) {
+		pr_warn("%s: __vmalloc failed\n", OURMODNAME);
+		goto err_out5;
+	}
+	pr_info("__vmalloc(): vrx = %pK\n", vrx);
+	/* Try reading the memory, should be fine */
+	print_hex_dump_bytes(" vrx: ", DUMP_PREFIX_NONE, vrx, DISP_BYTES);
+#ifdef WR2ROMEM_BUG
+	/* Try writing to the RO memory! We find that the kernel crashes
+	 * (emits an Oops!) */
+	*(u64 *)(vrx+4) = 0xba;
+#endif
 	return 0;
+err_out5:
+	vfree(kvarr);
 err_out4:
 	vfree(kv);
 err_out3:
@@ -99,6 +117,7 @@ static int __init vmalloc_demo_init(void)
 
 static void __exit vmalloc_demo_exit(void)
 {
+	vfree(vrx);
 	kvfree(kvarr);
 	kvfree(kv);
 	vfree(vptr_init);
