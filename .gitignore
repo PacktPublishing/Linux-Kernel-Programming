@@ -56,6 +56,7 @@ stanly_reports/*
 stanly_reports*
 .*.swp
 *.*.swp
+*.*.swo
 *.cache*
 *.bkp
 *.orig
