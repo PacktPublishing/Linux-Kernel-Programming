@@ -36,7 +36,7 @@ void show_phy(void *kaddr, size_t len, bool contiguity_check)
 #if(BITS_PER_LONG == 32)
 	const char *hdr = "  pg#   va    pa     PFN   (0xPFN)\n";
 #else // 64-bit
-	const char *hdr = "-pg#-  --------va--------   ----pa----  -PFN- -(0xPFN)-\n";
+	const char *hdr = "-pg#-  --------va--------   ----pa----   --PFN- -(0xPFN)-\n";
 #endif
 	phys_addr_t pa;
 	int i;

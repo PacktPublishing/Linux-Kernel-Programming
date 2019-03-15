@@ -23,8 +23,24 @@ For the reader's convenience, below are chapter-wise links to the *Further Readi
 - **[Official Kernel Documentation](https://www.kernel.org/doc/html/latest/index.html)** : the modern Linux kernel documentation is very well written and presented here
 	- ["2. How the development process works"](https://www.kernel.org/doc/html/latest/process/2.Process.html#how-the-development-process-works)
 	- [The Linux kernel build system - kbuild - infrastructure](https://www.kernel.org/doc/Documentation/kbuild/)
+- Git
+    - [Firstly, A Gentle Introduction to Version Control](http://chronicle.com/blogs/profhacker/a-gentle-introduction-to-version-control/23064)
+    - [Resources to Learn Git](http://try.github.io/)
+    - [The “official” git website](http://git-scm.com/)
+    - [Try Git in your browser – interactive tutorial!](https://try.github.io/levels/1/challenges/1)
+    - [Most commonly used git tips and tricks on github](https://github.com/git-tips/tips)
+    - [The "Git Magic" book, by Ben Lynn (PDF)](http://www-cs-students.stanford.edu/~blynn/gitmagic/book.pdf)
+    - [Aha! Moments when learning Git](http://betterexplained.com/articles/aha-moments-when-learning-git/)
+    - [How not to be afraid of Git anymore](https://medium.freecodecamp.org/how-not-to-be-afraid-of-git-anymore-fe1da7415286)
+    - [Getting Git Right, Atlassian.com](https://www.atlassian.com/git/) 
+    - [... and many more](https://www.google.com/search?q=learning+to+use+git)
+
 - [Linux Kernel Release Model, Greg Kroah-Hartman, Feb 2018](http://kroah.com/log/blog/2018/02/05/linux-kernel-release-model/)
 - ["LTSI	Project	update - Long Term Support Initiative"](https://events.linuxfoundation.org/wp-content/uploads/2017/11/Using-Linux-for-Long-Term-Community-Status-and-the-Way-We-Go-OSS-Tsugikazu-Shibata.pdf) - slide deck, Open Source Summit Japan, June 2018
+- Linux kernel upstream development
+    - [Working with the kernel development community](https://www.kernel.org/doc/html/latest/process/index.html#working-with-the-kernel-development-community)
+    - [Working with linux-next](https://www.kernel.org/doc/man-pages/linux-next.html)
+
 - [Linux kernel versions with detailed notes on new features, kernelnewbies](https://kernelnewbies.org/LinuxVersions)
 - Licensing
 	-   [The differences between the GPL, LGPL and the BSD](https://fosswire.com/post/2007/04/the-differences-between-the-gpl-lgpl-and-the-bsd/)
@@ -44,6 +60,7 @@ For the reader's convenience, below are chapter-wise links to the *Further Readi
 ## Chapter 2, Writing your first Kernel Module-the LKM framework: Further Reading
 
 - [Official Kernel Documentation : kernel parameters](https://www.kernel.org/doc/html/latest/admin-guide/kernel-parameters.html)
+- ['How to get printk format specifiers right', Linux kernel doc](https://www.kernel.org/doc/html/latest/core-api/printk-formats.html?highlight=dma)
 - ['What are the __init* and __exit* macros ?', kernelnewbies](https://kernelnewbies.org/FAQ/InitExitMacros)
 - Systemd
 	-   Article: ['Systemd Essentials: Working with Services, Units, and the Journal', DigitalOcean](https://www.digitalocean.com/community/tutorials/systemd-essentials-working-with-services-units-and-the-journal)
@@ -119,9 +136,26 @@ Software Developer’s Manual. Volume 3 (3A, 3B & 3C): System Programming Guide]
     -   ['Toward a more efficient slab allocator', LWN, Jon Corbet, Jan 2015](https://lwn.net/Articles/629152/)
     -   Blog article ['INTERESTING NUMBERS'](https://kaiwantech.wordpress.com/2015/05/01/interesting-numbers/); see the section on *Networking* for some information on how the network subsystem has time critical code paths (and the resource links that follow)
 - ["GNUPLOT 4.2 - A Brief Manual and Tutorial", Duke University](https://people.duke.edu/~hpgavin/gnuplot.html)
+- ['Object-oriented design patterns in the kernel, part 1', Neil Brown, LWN, June 2011](https://lwn.net/Articles/444910/)
+- ['kvmalloc()', Jon Corbet, LWN, Jan 2017](https://lwn.net/Articles/711653/)
+- ['The "too small to fail" memory-allocation rule', Jon Corbet, LWN, Dec 2014](https://lwn.net/Articles/627419/)
+- Blog article: ['linux slab poisoning 101', Mar 2009](http://www.chizang.net/alex/2009/03/11/linux-slab-poisoning-101/)
+- ['The slab and protected-memory allocators', LWN, May 2018](https://lwn.net/Articles/753154/)
+- DMA - Direct Memory Access
+    - Books: 'Essential Linux Device Drivers', S Venkateswaran, and 'Linux Device Drivers', Rubini, Corbet & Hartman
+    - ['DMAEngine documentation', Linux kernel](https://www.kernel.org/doc/html/latest/driver-api/dmaengine/index.html#dmaengine-documentation)
+    - ['A deep dive into CMA', LWN, Mar 2012](https://lwn.net/Articles/486301/)
+    - A quite simple and interesting example of a “DMA test application” device driver is from Xilinx (for it's Zynq PL330 DMA controller); [wiki page here](http://www.wiki.xilinx.com/Zynq+Linux+pl330+DMA)
+    - [Q&A on SO: Linux DMA: Using the DMAengine for scatter-gather transactions, May 2016](http://stackoverflow.com/questions/37119332/linux-dma-using-the-dmaengine-for-scatter-gather-transactions)
 - b
 
-	 
+
+## Ch 11 : Kernel Debug
+
+- Blog article (medium): ['A Short Guide to Kernel Debugging
+A story about finding a kernel bug on a production system', Wester, Oct 2015](https://medium.com/square-corner-blog/a-short-guide-to-kernel-debugging-e6fdbe7bfcdf)
+- a
+
 
 
 [\[Top\]](https://github.com/PacktPublishing/Linux-Kernel-Development-Cookbook/blob/master/Further_Reading.md#further-reading)
