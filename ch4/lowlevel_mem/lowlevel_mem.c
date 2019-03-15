@@ -43,30 +43,9 @@ static int bsa_alloc_order = 5;
 module_param_named(order, bsa_alloc_order, int, 0660);
 MODULE_PARM_DESC(order, "Order of the allocation (power-to-raise-2-to)");
 
+/* From our klib_lkdc 'library' */
+u64 powerof(int base, int exponent);
 void show_phy_pages(const void *kaddr, size_t len, bool contiguity_check);
-
-/*
- * powerof(base, exponent)
- * Simple 'library' function to calculate and return
- *  @base to-the-power-of @exponent
- * f.e. powerof(2, 5) returns 2^5 = 32.
- * Returns -1UL on failure.
- */
-static u64 powerof(int base, int exponent)
-{
-	u64 res = 1;
-
-	if (base == 0)		// 0^e = 0
-		return 0;
-	if (base <= 0 || exponent < 0)
-		return -1UL;
-	if (exponent == 0)	// b^0 = 1
-		return 1;
-	while (exponent--)
-		res *= base;
-	return res;
-}
-EXPORT_SYMBOL(powerof);
 
 /*
  * bsa_alloc : test some of the bsa (buddy system allocator
@@ -131,7 +110,7 @@ static int bsa_alloc(void)
 	}
 	gptr4 = page_address(pg_ptr1);
 	pr_info("%s: 4. alloc_page() alloc'ed 1 page from the BSA @ %pK (%016llx)\n"
-		" (page addr=%pK (%016llx)\n)",
+		" (page addr=%pK (%016llx)\n",
 		OURMODNAME, (void *)gptr4, (void *)gptr4, pg_ptr1, pg_ptr1);
 
 	/* 5. Allocate and init 2^3 = 8 pages with the alloc_pages() API.

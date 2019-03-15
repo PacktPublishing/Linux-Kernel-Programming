@@ -70,3 +70,25 @@ void show_phy_pages(const void *kaddr, size_t len, bool contiguity_check)
 	}
 }
 
+/*
+ * powerof(base, exponent)
+ * Simple 'library' function to calculate and return
+ *  @base to-the-power-of @exponent
+ * f.e. powerof(2, 5) returns 2^5 = 32.
+ * Returns -1UL on failure.
+ */
+u64 powerof(int base, int exponent)
+{
+	u64 res = 1;
+
+	if (base == 0)		// 0^e = 0
+		return 0;
+	if (base <= 0 || exponent < 0)
+		return -1UL;
+	if (exponent == 0)	// b^0 = 1
+		return 1;
+	while (exponent--)
+		res *= base;
+	return res;
+}
+
