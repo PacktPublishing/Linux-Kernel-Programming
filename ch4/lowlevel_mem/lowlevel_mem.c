@@ -15,6 +15,16 @@
  * Allocator (BSA) APIs for allocating and freeing memory chunks in kernel
  * space.
  *
+ * As an interesting point, we show the virt, phy addr and PFN (page frame
+ * numbers) of each page in the memory range. The function show_phy_pages()
+ * is in our 'library' code here: ../../klib_lkdc.c
+ * This way, we can see if the page allocated really are physically
+ * contiguous.
+ *
+ * Also, in the printks below, we use the %[ll]x fprmat specifier in addition
+ * to the 'correct' %pK style (for security). We do this here tp see the actual
+ * virtual addresses (and not some hashed value). Don't do this in production.
+ *
  * For details, please refer the book, Ch 4.
  */
 #include <linux/init.h>
