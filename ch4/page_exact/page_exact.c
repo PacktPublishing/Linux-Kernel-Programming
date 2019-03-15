@@ -24,7 +24,7 @@ MODULE_DESCRIPTION("LKDC book:ch4/: demo using the superior [alloc|free]_pages_e
 MODULE_LICENSE("Dual MIT/GPL");
 MODULE_VERSION("0.1");
 
-void show_phy(void *kaddr, size_t len, bool contiguity_check);
+void show_phy_pages(const void *kaddr, size_t len, bool contiguity_check);
 
 static const size_t gsz = 161*PAGE_SIZE;
 static void *gptr;
@@ -42,7 +42,7 @@ static int __init page_exact_init(void)
 	// lets 'poison' it..
 	memset(gptr, 'x', gsz);
 
-	show_phy(gptr, gsz, 1);
+	show_phy_pages(gptr, gsz, 1);
 
 	return 0;		/* success */
 }
