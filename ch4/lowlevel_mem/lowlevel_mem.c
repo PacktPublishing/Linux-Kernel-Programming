@@ -33,6 +33,8 @@ static int bsa_alloc_order = 5;
 module_param_named(order, bsa_alloc_order, int, 0660);
 MODULE_PARM_DESC(order, "Order of the allocation (power-to-raise-2-to)");
 
+void show_phy_pages(const void *kaddr, size_t len, bool contiguity_check);
+
 /*
  * powerof(base, exponent)
  * Simple 'library' function to calculate and return
@@ -72,8 +74,8 @@ static int bsa_alloc(void)
 		pr_warn("%s: __get_free_page() failed!\n", OURMODNAME);
 		goto out1;
 	}
-	pr_info("%s: 1. __get_free_page() alloc'ed 1 page from the BSA @ %pK\n",
-		OURMODNAME, gptr1);
+	pr_info("%s: 1. __get_free_page() alloc'ed 1 page from the BSA @ %pK (%016llx)\n",
+		OURMODNAME, gptr1, gptr1);
 
 	/* 2. Allocate 2^bsa_alloc_order pages with the __get_free_pages() API */
 	numpg2alloc = powerof(2, bsa_alloc_order); // returns 2^bsa_alloc_order
@@ -83,10 +85,18 @@ static int bsa_alloc(void)
 		goto out2;
 	}
 	pr_info("%s: 2. __get_free_pages() alloc'ed 2^%d = %lld page(s) = %lld bytes\n"
-		" from the BSA @ %pK\n",
+		" from the BSA @ %pK (%016llx)\n",
 		OURMODNAME, bsa_alloc_order, powerof(2, bsa_alloc_order),
-		numpg2alloc * PAGE_SIZE, gptr2);
+		numpg2alloc * PAGE_SIZE, gptr2, gptr2);
 	pr_info(" (PAGE_SIZE = %ld bytes)\n", PAGE_SIZE);
+
+	/* SEE THIS!
+	 * Show the virt, phy addr and PFN (page frame numbers).
+	 * This function is in our 'library' code here: ../../klib_lkdc.c
+	 * This way, we can see if the page allocated really are physically
+	 * contiguous.
+	 */
+	show_phy_pages(gptr2, numpg2alloc * PAGE_SIZE, 1);
 
 	/* 3. Allocate and init one page with the get_zeroed_page() API */
 	gptr3 = (void *) get_zeroed_page(GFP_KERNEL);
@@ -94,8 +104,8 @@ static int bsa_alloc(void)
 		pr_warn("%s: get_zeroed_page() failed!\n", OURMODNAME);
 		goto out3;
 	}
-	pr_info("%s: 3. get_zeroed_page() alloc'ed 1 page from the BSA @ %pK\n",
-		OURMODNAME, gptr3);
+	pr_info("%s: 3. get_zeroed_page() alloc'ed 1 page from the BSA @ %pK (%016llx)\n",
+		OURMODNAME, gptr3, gptr3);
 
 	/* 4. Allocate and init one page with the alloc_page() API.
 	 * Careful! It does not return the alloc'ed page ptr but rather the ptr
@@ -110,9 +120,9 @@ static int bsa_alloc(void)
 		goto out4;
 	}
 	gptr4 = page_address(pg_ptr1);
-	pr_info("%s: 4. alloc_page() alloc'ed 1 page from the BSA @ %pK\n"
-		" (page addr=%pK\n)",
-		OURMODNAME, (void *)gptr4, pg_ptr1);
+	pr_info("%s: 4. alloc_page() alloc'ed 1 page from the BSA @ %pK (%016llx)\n"
+		" (page addr=%pK (%016llx)\n)",
+		OURMODNAME, (void *)gptr4, (void *)gptr4, pg_ptr1, pg_ptr1);
 
 	/* 5. Allocate and init 2^3 = 8 pages with the alloc_pages() API.
 	 * < Same warning as above applies here too! >
@@ -122,8 +132,8 @@ static int bsa_alloc(void)
 		pr_warn("%s: alloc_pages() failed!\n", OURMODNAME);
 		goto out5;
 	}
-	pr_info("%s: 5. alloc_pages() alloc'ed %lld pages from the BSA @ %pK\n",
-		OURMODNAME, powerof(2, 3), (void *)gptr5);
+	pr_info("%s: 5. alloc_pages() alloc'ed %lld pages from the BSA @ %pK (%016llx)\n",
+		OURMODNAME, powerof(2, 3), (void *)gptr5, (void *)gptr5);
 
 	return 0;
 out5:
