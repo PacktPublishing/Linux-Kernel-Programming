@@ -17,6 +17,7 @@
  */
 #include <linux/init.h>
 #include <linux/module.h>
+#include <asm/memory.h>
 #include <asm/io.h>
 
 /* 
@@ -30,20 +31,21 @@
  * page), printing the virt and physical address (& PFN- page frame number).
  * This way, we can see if the memory really is *physically* contiguous or not
  */
-//static void show_phy(void *kaddr, size_t len, bool contiguity_check)
 void show_phy(void *kaddr, size_t len, bool contiguity_check)
 {
-#if(BITS_PER_LONG == 32)
-	const char *hdr = "  pg#   va    pa     PFN   (0xPFN)\n";
-#else // 64-bit
-	const char *hdr = "-pg#-  --------va--------   ----pa----   --PFN- -(0xPFN)-\n";
+#if(BITS_PER_LONG == 64)
+	const char *hdr = "-pg#-  --------va--------   ----pa----   -PFN--\n";
+#else // 32-bit
+	const char *hdr = "-pg#-  ----va----   ----pa----   -PFN--\n";
 #endif
 	phys_addr_t pa;
 	int i;
 	long pfn, prev_pfn = 1;
 	
+#ifdef CONFIG_X86
 	if (!virt_addr_valid(kaddr))
 		return;
+#endif
 
 	pr_info("%s", hdr);
 	for (i = 0; i < len/PAGE_SIZE; i++) {
@@ -55,8 +57,12 @@ void show_phy(void *kaddr, size_t len, bool contiguity_check)
 				pr_notice(" *** physical NON-contiguity detected ***\n");
 		}
 
-		pr_info("%05d  0x%pK   0x%llx   %ld (0x%lx)\n",
-			i, kaddr+(i*PAGE_SIZE), pa, pfn, pfn);
+#if(BITS_PER_LONG == 64)
+		pr_info("%05d  0x%pK   0x%llx   %ld\n",
+#else   // 32-bit
+		pr_info("%05d  0x%pK   0x%x   %ld\n",
+#endif
+			i, kaddr+(i*PAGE_SIZE), pa, pfn);
 		if (!!contiguity_check)
 			prev_pfn = pfn;
 	}

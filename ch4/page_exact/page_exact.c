@@ -16,7 +16,6 @@
  */
 #include <linux/init.h>
 #include <linux/module.h>
-#include <asm/io.h>
 
 #define OURMODNAME   "page_exact"
 
@@ -38,7 +37,7 @@ static int __init page_exact_init(void)
 		pr_warn("%s: alloc_pages_exact() failed!\n", OURMODNAME);
 		return -ENOMEM;
 	}
-	pr_info("%s: alloc_pages_exact() alloc'ed %ld bytes memory from the BSA @ %pK\n",
+	pr_info("%s: alloc_pages_exact() alloc'ed %zu bytes memory from the BSA @ %pK\n",
 		OURMODNAME, gsz, gptr);
 	// lets 'poison' it..
 	memset(gptr, 'x', gsz);
