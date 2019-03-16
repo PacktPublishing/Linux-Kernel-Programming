@@ -17,8 +17,8 @@ else
 endif
 
 PWD	              := $(shell pwd)
-obj-m                 += lowlevel_mem_try.o
-lowlevel_mem_try-objs := lowlevel_mem.o ../../klib_lkdc.o
+obj-m                 += lowlevel_mem_lib.o
+lowlevel_mem_lib-objs := lowlevel_mem.o ../../klib_lkdc.o
 EXTRA_CFLAGS          += -DDEBUG -Wformat=0
   # above, we use -Wformat=0 here to turn Off some printk warnings reg the use
   # of %p instead of %016llx ...; we do so so that we can see the actual virt
