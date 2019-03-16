@@ -24,7 +24,7 @@
 #define OURMODNAME   "vmalloc_demo"
 
 MODULE_AUTHOR("Kaiwan N Billimoria");
-MODULE_DESCRIPTION("LKDC book:ch4/vmalloc_demo/: simple vmalloc() demo lkm");
+MODULE_DESCRIPTION("LKDC book:ch4/vmalloc_demo/: simple vmalloc() and friends demo lkm");
 MODULE_LICENSE("Dual MIT/GPL");
 MODULE_VERSION("0.1");
 
@@ -53,7 +53,7 @@ static int vmalloc_try(void)
 		pr_warn("%s: vzalloc failed\n", OURMODNAME);
 		goto err_out2;
 	}
-	pr_info("vzalloc(): vptr_init = %pK\n", vptr_init);
+	pr_info("vzalloc(): vptr_init = %p (0x%llx)\n", vptr_init, vptr_init);
 	print_hex_dump_bytes(" vptr_init: ", DUMP_PREFIX_NONE, vptr_init, DISP_BYTES);
 
 	/* 3. kvmalloc(): allocate 'kvn' bytes with the kvmalloc(); if kvn is
@@ -77,8 +77,8 @@ static int vmalloc_try(void)
 
 	/* 5. __vmalloc(): allocate some 42 pages and set protections to RO */
 #undef WR2ROMEM_BUG
-/* #define WR2ROMEM_BUG */  /* Keep this commented out, else we wil crash! Read the
-                         book, Ch 6, for details  :-) */
+/* #define WR2ROMEM_BUG */  /* Keep this commented out, else we will crash!
+			       read the book, Ch 6, for details  :-) */
 	if (!(vrx = __vmalloc(42*PAGE_SIZE, GFP_KERNEL, PAGE_KERNEL_RX))) {
 		pr_warn("%s: __vmalloc failed\n", OURMODNAME);
 		goto err_out5;
@@ -87,7 +87,7 @@ static int vmalloc_try(void)
 	/* Try reading the memory, should be fine */
 	print_hex_dump_bytes(" vrx: ", DUMP_PREFIX_NONE, vrx, DISP_BYTES);
 #ifdef WR2ROMEM_BUG
-	/* Try writing to the RO memory! We find that the kernel crashes
+	/* Try writing to the R-X memory! We find that the kernel crashes
 	 * (emits an Oops!) */
 	*(u64 *)(vrx+4) = 0xba;
 #endif
