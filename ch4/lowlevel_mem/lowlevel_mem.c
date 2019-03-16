@@ -31,6 +31,7 @@
 #include <linux/module.h>
 #include <linux/kernel.h>
 #include <linux/mm.h>
+#include "../../klib_lkdc.h"
 
 #define OURMODNAME    "lowlevel_mem"
 
@@ -42,10 +43,6 @@ static const void *gptr1, *gptr2, *gptr3, *gptr4, *gptr5;
 static int bsa_alloc_order = 5;
 module_param_named(order, bsa_alloc_order, int, 0660);
 MODULE_PARM_DESC(order, "Order of the allocation (power-to-raise-2-to)");
-
-/* From our klib_lkdc 'library' */
-u64 powerof(int base, int exponent);
-void show_phy_pages(const void *kaddr, size_t len, bool contiguity_check);
 
 /*
  * bsa_alloc : test some of the bsa (buddy system allocator
