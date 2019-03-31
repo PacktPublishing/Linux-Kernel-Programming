@@ -1,5 +1,5 @@
 /*
- * ch2/cross/hello.c
+ * ch3/cross/hello.c
  ***************************************************************
  * This program is part of the source code released for the book
  *  "Linux Kernel Development Cookbook"
@@ -8,7 +8,7 @@
  *  GitHub repository:
  *  https://github.com/PacktPublishing/Linux-Kernel-Development-Cookbook
  *
- * From: Ch 2: Writing your First Kernel Module-the LKM Framework
+ * From: Ch 3 : Writing your First Kernel Module-the LKM Framework
  ****************************************************************
  * Brief Description:
  * Our very first kernel module, the 'Hello, world' of course! The
@@ -19,13 +19,13 @@
  * but *does* affect the Makefile. Check out the new and enhanced Makefile
  * carefully.
  *
- * For details, please refer the book, Ch 2.
+ * For details, please refer the book, Ch 3.
  */
 #include <linux/init.h>
 #include <linux/module.h>
 
 MODULE_AUTHOR("<insert your name here>");
-MODULE_DESCRIPTION("LKDC book:ch2/cross: hello, world, our first Raspberry Pi LKM");
+MODULE_DESCRIPTION("LKDC book:ch3/cross: hello, world, our first Raspberry Pi LKM");
 MODULE_LICENSE("Dual MIT/GPL");
 MODULE_VERSION("0.1");
 

@@ -1,4 +1,4 @@
-# ch2/cross/Makefile: To support cross-compiling for the ARM:
+# ch3/cross/Makefile: To support cross-compiling for the ARM:
 #
 # To cross compile our simple kernel module for the Raspberry Pi (an ARM-based
 # system), invoke the build like this:
