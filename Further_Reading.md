@@ -48,6 +48,8 @@ For the reader's convenience, below are chapter-wise links to the *Further Readi
 	- [Choose an open source license](https://choosealicense.com/)
 	- [Legal Risks of Open Source – GPL/Linux Loadable Kernel Modules](http://sourceauditor.com/blog/legal-risks-of-open-source-gpllinux-loadable-kernel-modules/)
 	- [Linux kernel licensing rules](https://www.kernel.org/doc/html/latest/process/license-rules.html#linux-kernel-licensing-rules)
+	- [MIT vs. BSD vs. Dual License](https://softwareengineering.stackexchange.com/questions/121998/mit-vs-bsd-vs-dual-license)
+	
 - [Configuring the kernel](https://www.kernel.org/doc/html/latest/admin-guide/README.html#configuring-the-kernel)
 - Detailed article: [Exploring the Linux kernel: The secrets of Kconfig/kbuild](https://opensource.com/article/18/10/kbuild-and-kconfig)
 - Initrd / initramfs article: [Opening and modifying the initrd](http://www.alexonlinux.com/opening-and-modifying-the-initrd)
@@ -105,7 +107,8 @@ For the reader's convenience, below are chapter-wise links to the *Further Readi
 -   CPU ABI (Application Binary Interface) documentation, blog article : 'APPLICATION BINARY INTERFACE (ABI) DOCS AND THEIR MEANING' :  [https://kaiwantech.wordpress.com/2018/05/07/application-binary-interface-abi-docs-and-their-meaning/](https://kaiwantech.wordpress.com/2018/05/07/application-binary-interface-abi-docs-and-their-meaning/)
 - Deep detail on MM and paging on the Intel processors can be found in their excellent manuals here (Ch 4, Paging): [Intel® 64 and IA-32 Architectures
 Software Developer’s Manual. Volume 3 (3A, 3B & 3C): System Programming Guide](https://software.intel.com/en-us/download/intel-64-and-ia-32-architectures-sdm-combined-volumes-3a-3b-3c-and-3d-system-programming-guide)
-	- [All Intel 64 and IA-32 architecture and programming environment manuals](https://software.intel.com/en-us/articles/intel-sdm): 
+	- [All Intel 64 and IA-32 architecture and programming environment manuals](https://software.intel.com/en-us/articles/intel-sdm)
+- Blog article: ['Some Tricks used by the Linux kernel'](https://geeksww.com/tutorials/operating_systems/linux/tips_and_tricks/some_tricks_used_by_the_linux_kernel.php)
 - [un]likely() macros:
 	- [likely()/unlikely() macros in the Linux kernel - how do they work? What's their benefit?](https://stackoverflow.com/questions/109710/likely-unlikely-macros-in-the-linux-kernel-how-do-they-work-whats-their)
 	- [Why do we use __builtin_expect when a straightforward way is to use if-else](https://stackoverflow.com/questions/7346929/why-do-we-use-builtin-expect-when-a-straightforward-way-is-to-use-if-else)
@@ -122,7 +125,7 @@ Software Developer’s Manual. Volume 3 (3A, 3B & 3C): System Programming Guide]
 
 ## Chapter 4, Kernel Memory Allocation for Module Authors
 
-- Book: [Hands-On System Programming with Linux", Kaiwan N Billimoria, Packt](https://www.packtpub.com/networking-and-servers/hands-system-programming-linux). Prerequisites to this chapter (essential reading, really):
+- Book: ['Hands-On System Programming with Linux', Kaiwan N Billimoria, Packt](https://www.packtpub.com/networking-and-servers/hands-system-programming-linux). Prerequisites to this chapter (essential reading, really):
 	- Ch 1 : Linux System Architecture
 	- Ch 2 : Virtual Memory
 
@@ -147,6 +150,11 @@ Software Developer’s Manual. Volume 3 (3A, 3B & 3C): System Programming Guide]
     - ['A deep dive into CMA', LWN, Mar 2012](https://lwn.net/Articles/486301/)
     - A quite simple and interesting example of a “DMA test application” device driver is from Xilinx (for it's Zynq PL330 DMA controller); [wiki page here](http://www.wiki.xilinx.com/Zynq+Linux+pl330+DMA)
     - [Q&A on SO: Linux DMA: Using the DMAengine for scatter-gather transactions, May 2016](http://stackoverflow.com/questions/37119332/linux-dma-using-the-dmaengine-for-scatter-gather-transactions)
+- VM Overcommit
+    - [Quora: What are the disadvantages of disabling memory overcommit in Linux?](https://www.quora.com/What-are-the-disadvantages-of-disabling-memory-overcommit-in-Linux)
+    - [Linux kernel documentation](https://www.kernel.org/doc/Documentation/vm/overcommit-accounting)
+    - Blog article: ['Virtual memory settings in Linux - The Problem with Overcommit'](http://engineering.pivotal.io/post/virtual_memory_settings_in_linux_-_the_problem_with_overcommit/)
+    - RHEL specific but useful: ['Interpreting /proc/meminfo and free output for Red Hat Enterprise Linux 5, 6 and 7'](https://access.redhat.com/solutions/406773)
 - b
 
 

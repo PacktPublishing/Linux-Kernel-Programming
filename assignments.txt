@@ -44,6 +44,9 @@ In the cleanup code, free up the memory. Tip: take care to handle the error
 case where a memory allocation fails - don't forget to free the allocations
 already performed!
 
+4.2 : Rework the oom_killer_try program; set it up such that it cannot be
+selected as the victim process when the OOM killer comes knocking. Run the
+program, have the oom killer invoked and see what happens.
 
 -----------------------------------------------------------------------
 Ch _ :
