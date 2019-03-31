@@ -77,17 +77,18 @@ static int vmalloc_try(void)
 
 	/* 5. __vmalloc(): allocate some 42 pages and set protections to RO */
 #undef WR2ROMEM_BUG
-/* #define WR2ROMEM_BUG */  /* Keep this commented out, else we will crash!
-			       read the book, Ch 6, for details  :-) */
-	if (!(vrx = __vmalloc(42*PAGE_SIZE, GFP_KERNEL, PAGE_KERNEL_RX))) {
+/* #define WR2ROMEM_BUG */   /* 'Normal' usage: keep this commented out, else
+		      we will crash! Read the book, Ch 6, for details  :-) */
+	if (!(vrx = __vmalloc(42*PAGE_SIZE, GFP_KERNEL, PAGE_KERNEL_RO))) {
 		pr_warn("%s: __vmalloc failed\n", OURMODNAME);
 		goto err_out5;
 	}
 	pr_info("__vmalloc(): vrx = %pK\n", vrx);
+
 	/* Try reading the memory, should be fine */
 	print_hex_dump_bytes(" vrx: ", DUMP_PREFIX_NONE, vrx, DISP_BYTES);
 #ifdef WR2ROMEM_BUG
-	/* Try writing to the R-X memory! We find that the kernel crashes
+	/* Try writing to the RO memory! We find that the kernel crashes
 	 * (emits an Oops!) */
 	*(u64 *)(vrx+4) = 0xba;
 #endif
