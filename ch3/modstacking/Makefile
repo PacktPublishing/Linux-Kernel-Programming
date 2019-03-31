@@ -1,4 +1,4 @@
-# ch2/modstacking/Makefile
+# ch3/modstacking/Makefile
 #
 # To cross compile our simple kernel module for the Raspberry Pi (an ARM-based
 # system), invoke the build like this:

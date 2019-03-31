@@ -8,7 +8,7 @@
  *  GitHub repository:
  *  https://github.com/PacktPublishing/Linux-Kernel-Development-Cookbook
  *
- * From: Ch 2: Writing your First Kernel Module-the LKM Framework
+ * From: Ch 2: Writing your First Kernel Module - LKMs Part 1
  ****************************************************************
  * Brief Description:
  * Our very first kernel module, the 'Hello, world' of course! The

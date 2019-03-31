@@ -8,7 +8,7 @@
  *  GitHub repository:
  *  https://github.com/PacktPublishing/Linux-Kernel-Development-Cookbook
  *
- * From: Ch 2: Writing your First Kernel Module-the LKM Framework
+ * From: Ch 2: Writing your First Kernel Module - LKMs Part 1
  ****************************************************************
  * Brief Description:
  * Quick test to see kernel printk's at all 8 log levels; when run on a

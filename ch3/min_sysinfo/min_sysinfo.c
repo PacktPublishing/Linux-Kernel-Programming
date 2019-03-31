@@ -1,5 +1,5 @@
 /*
- * ch2/min_sysinfo/min_sysinfo.c
+ * ch3/min_sysinfo/min_sysinfo.c
  ***************************************************************
  * This program is part of the source code released for the book
  *  "Linux Kernel Development Cookbook"
@@ -8,14 +8,14 @@
  *  GitHub repository:
  *  https://github.com/PacktPublishing/Linux-Kernel-Development-Cookbook
  *
- * From: Ch 2: Writing your First Kernel Module-the LKM Framework
+ * From: Ch 3: Writing your First Kernel Module - LKMs Part 2
  ****************************************************************
  * Brief Description:
  * Make use of some convenience macros provided by the kernel to glean and
  * print some minimal CPU, OS details. Can be cross-compiled and tried out
  * on various Linux systems.
  *
- * For details, please refer the book, Ch 2.
+ * For details, please refer the book, Ch 3.
  */
 #include <linux/init.h>
 #include <linux/module.h>
@@ -23,7 +23,7 @@
 #define MYMODNAME   "min_sysinfo"
 MODULE_AUTHOR("<insert your name here>");
 MODULE_DESCRIPTION
-    ("LKDC book:ch2/min_sysinfo: print some minimal system info");
+    ("LKDC book:ch3/min_sysinfo: print some minimal system info");
 MODULE_LICENSE("Dual MIT/GPL");
 MODULE_VERSION("0.1");
 

@@ -1,5 +1,5 @@
 /*
- * ch2/modparams/modparams2/modparams2.c
+ * ch3/modparams/modparams2/modparams2.c
  ***************************************************************
  * This program is part of the source code released for the book
  *  "Linux Kernel Development Cookbook"
@@ -8,21 +8,21 @@
  *  GitHub repository:
  *  https://github.com/PacktPublishing/Linux-Kernel-Development-Cookbook
  *
- * From: Ch 2: Writing your First Kernel Module-the LKM Framework
+ * From: Ch 3: Writing your First Kernel Module- LKMs Part 2
  ****************************************************************
  * Brief Description:
  * Same as modparams1, plus, we do some checks: here, we propose that
  * the newly introduced parameter 'control1' is mandatory to be passed
- by the user; this module aborts if it isn't explicityl passed along.
+ * by the user; this module aborts if it isn't explicityl passed along.
  *
- * For details, please refer the book, Ch 2.
+ * For details, please refer the book, Ch 3.
  */
 #include <linux/init.h>
 #include <linux/module.h>
 
 #define OUR_MODNAME    "modparams2"
 MODULE_AUTHOR("<insert your name here>");
-MODULE_DESCRIPTION("LKDC book:ch2/modparams/modparams2: module parameters");
+MODULE_DESCRIPTION("LKDC book:ch3/modparams/modparams2: module parameters");
 MODULE_LICENSE("Dual MIT/GPL");
 MODULE_VERSION("0.1");
 

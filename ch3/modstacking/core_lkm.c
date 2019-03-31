@@ -1,5 +1,5 @@
 /*
- * ch2/modstacking/core_lkm.c
+ * ch3/modstacking/core_lkm.c
  ***************************************************************
  * This program is part of the source code released for the book
  *  "Linux Kernel Development Cookbook"
@@ -8,17 +8,17 @@
  *  GitHub repository:
  *  https://github.com/PacktPublishing/Linux-Kernel-Development-Cookbook
  *
- * From: Ch 2: Writing your First Kernel Module-the LKM Framework
+ * From: Ch 3: Writing your First Kernel Module- LKMs Part 2
  ****************************************************************
  * Brief Description:
  * This kernel module - core_lkm - is part of the 'modstacking' POC project:
  *    user_lkm
  *        |
- *    core_lkm
+ *    core_lkm           [<--- this code]
  * The user_lkm kernel module calls an (exported) function that resides 
  * in the core_lkm kernel module.
  *
- * For details, please refer the book, Ch 2.
+ * For details, please refer the book, Ch 3.
  */
 #include <linux/init.h>
 #include <linux/module.h>
