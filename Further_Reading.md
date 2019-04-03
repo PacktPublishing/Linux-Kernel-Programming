@@ -59,7 +59,7 @@ For the reader's convenience, below are chapter-wise links to the *Further Readi
 	- - [Wiki pages](https://github.com/kaiwan/seals/wiki)
 - [Raspberry Pi kernel build: official doc](https://www.raspberrypi.org/documentation/linux/kernel/building.md)
 
-## Chapter 2, Writing your first Kernel Module-the LKM framework: Further Reading
+## Chapter 2, Writing your first Kernel Module-LKMs Part 1 : Further Reading
 
 - [Official Kernel Documentation : kernel parameters](https://www.kernel.org/doc/html/latest/admin-guide/kernel-parameters.html)
 - ['How to get printk format specifiers right', Linux kernel doc](https://www.kernel.org/doc/html/latest/core-api/printk-formats.html?highlight=dma)
@@ -72,7 +72,11 @@ For the reader's convenience, below are chapter-wise links to the *Further Readi
 - [Linux console (on Wikipedia)](https://en.wikipedia.org/wiki/Linux_console)
 - [Debugging by printing, eLinux](https://elinux.org/Debugging_by_printing)
 - Blog article: ["MAKEFILES TUTORIAL", Liran B.H.](http://devarea.com/makefiles-tutorial/)
-- Article: [WORKING ON THE CONSOLE WITH THE RASPBERRY PI, kaiwanTECH](https://kaiwantech.wordpress.com/2018/12/16/working-on-the-console-with-the-raspberry-pi/)
+
+## Chapter 3, Writing your first Kernel Module-LKMs Part 2 : Further Reading
+
+- Blog article: [WORKING ON THE CONSOLE WITH THE RASPBERRY PI, kaiwanTECH](https://kaiwantech.wordpress.com/2018/12/16/working-on-the-console-with-the-raspberry-pi/)
+- An excellent must-read whitepaper: ['Understanding Integer Overflow in C/C++', Dietz, et al, June 2012](http://www.cs.utah.edu/~regehr/papers/overflow12.pdf)
 - Article: ['Improving EXPORT_SYMBOL()', Jon Corbet, Feb 2016, LWN](https://lwn.net/Articles/674303/)
 - StackOverflow Q&A: ["How to prevent “error: 'symbol' undeclared here” despite EXPORT_SYMBOL in a Linux kernel module?"](https://stackoverflow.com/questions/6670589/how-to-prevent-error-symbol-undeclared-here-despite-export-symbol-in-a-linu?noredirect=1&lq=1)
 - Linux kernel static analysis
@@ -96,7 +100,7 @@ For the reader's convenience, below are chapter-wise links to the *Further Readi
 	- ["Loading signed kernel modules", LWN, Dec 2011](https://lwn.net/Articles/470906/)
 - [The Eudyptula Challenge](http://eudyptula-challenge.org/): "The Eudyptula Challenge was a series of programming exercises for the Linux kernel, that started from a very basic "Hello world" kernel module, moving on up in complexity to getting patches accepted into the main Linux kernel source tree." It's really cool but NOT active as of this writing though.
 
-## Chapter 3, Kernel and Memory Management Internals -Essentials
+## Chapter 4, Essentials of Kernel and Memory Management Internals - Further Reading
 - Book: [Hands-On System Programming with Linux", Kaiwan N Billimoria, Packt](https://www.packtpub.com/networking-and-servers/hands-system-programming-linux). Prerequisites to this chapter (essential reading, really):
 	- Ch 1 : Linux System Architecture
 	- Ch 2 : Virtual Memory
@@ -123,7 +127,7 @@ Software Developer’s Manual. Volume 3 (3A, 3B & 3C): System Programming Guide]
 - ['Virtual Memory and Linux', PDF, Matt Porter, Alan Ott](https://elinux.org/images/b/b0/Introduction_to_Memory_Management_in_Linux.pdf)
 
 
-## Chapter 4, Kernel Memory Allocation for Module Authors
+## Chapter 5, Kernel Memory Allocation for Module Authors - Further Reading
 
 - Book: ['Hands-On System Programming with Linux', Kaiwan N Billimoria, Packt](https://www.packtpub.com/networking-and-servers/hands-system-programming-linux). Prerequisites to this chapter (essential reading, really):
 	- Ch 1 : Linux System Architecture
@@ -158,7 +162,7 @@ Software Developer’s Manual. Volume 3 (3A, 3B & 3C): System Programming Guide]
 - b
 
 
-## Ch 11 : Kernel Debug
+## Ch 11 : Kernel Debug - Further Reading
 
 - Blog article (medium): ['A Short Guide to Kernel Debugging
 A story about finding a kernel bug on a production system', Wester, Oct 2015](https://medium.com/square-corner-blog/a-short-guide-to-kernel-debugging-e6fdbe7bfcdf)

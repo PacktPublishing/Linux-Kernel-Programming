@@ -23,11 +23,24 @@ that does not return any value in the init routine (tip: comment out the
 that does not have an exit routine (tip: comment out the module_exit()). What
 is the effect?
 
+-----------------------------------------------------------------------
+Ch 3:
+-----------------------------------------------------------------------
+3.1 : libtest: Write a kernel module called mycaller.c; it must invoke a
+'library' routine called 'product' that lives within another 'C' file (mylib.c).
+ int product(int a, int b); returns (a*b)
+Link them into a single kernel module called libtest.ko and verify that the
+caller can indeed correctly invoke code from the 'library'.
+(Additional marks if you check for overflow!).
+
+3.2 : Generate the full Linux kernel documentation in PDF format docs from
+within the kernel source tree. Once done, browse through the documents (they
+will be under Documntation/output/...).
 
 -----------------------------------------------------------------------
-Ch 4:
+Ch 5:
 -----------------------------------------------------------------------
-4.1 : Write a kernel module, that, within it's init code, allocates slab
+5.1 : Write a kernel module, that, within it's init code, allocates slab
 memory with the kmalloc() to an array of five pointers, i.e., each pointer
 gets a kilobyte of slab memory, like this:
 
@@ -44,7 +57,7 @@ In the cleanup code, free up the memory. Tip: take care to handle the error
 case where a memory allocation fails - don't forget to free the allocations
 already performed!
 
-4.2 : Rework the oom_killer_try program; set it up such that it cannot be
+5.2 : Rework the oom_killer_try program; set it up such that it cannot be
 selected as the victim process when the OOM killer comes knocking. Run the
 program, have the oom killer invoked and see what happens.
 
