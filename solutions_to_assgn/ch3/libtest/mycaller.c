@@ -29,15 +29,21 @@ MODULE_DESCRIPTION("LKDC book assignment : ch3/libtest");
 MODULE_LICENSE("Dual MIT/GPL");
 MODULE_VERSION("0.1");
 
-int product(int, int);
+int prodint(int, int);
 
 static int __init mycaller_init(void)
 {
 	int a = 500, b = 900, res;
 
 	pr_debug("%s: inserted\n", OURMODNAME);
+
 	pr_info("%s: calling product(%d,%d) now...\n", OURMODNAME, a, b);
-	res = product(a, b);
+	res = prodint(a, b);
+	pr_info(" res = %d\n", res);
+
+	a = 10000; b = 250000;
+	pr_info("%s: calling product(%d,%d) now...\n", OURMODNAME, a, b);
+	res = prodint(a, b);
 	pr_info(" res = %d\n", res);
 	return 0;		/* success */
 }
