@@ -76,7 +76,11 @@ For the reader's convenience, below are chapter-wise links to the *Further Readi
 ## Chapter 3, Writing your first Kernel Module-LKMs Part 2 : Further Reading
 
 - Blog article: [WORKING ON THE CONSOLE WITH THE RASPBERRY PI, kaiwanTECH](https://kaiwantech.wordpress.com/2018/12/16/working-on-the-console-with-the-raspberry-pi/)
-- An excellent must-read whitepaper: ['Understanding Integer Overflow in C/C++', Dietz, et al, June 2012](http://www.cs.utah.edu/~regehr/papers/overflow12.pdf)
+
+- Arithmetic Overflow
+    - An excellent must-read whitepaper: ['Understanding Integer Overflow in C/C++', Dietz, et al, June 2012](http://www.cs.utah.edu/~regehr/papers/overflow12.pdf)
+    - ['Catch and compute overflow during multiplication of two large integers', StackOverflow](https://stackoverflow.com/questions/1815367/catch-and-compute-overflow-during-multiplication-of-two-large-integers)
+
 - Article: ['Improving EXPORT_SYMBOL()', Jon Corbet, Feb 2016, LWN](https://lwn.net/Articles/674303/)
 - StackOverflow Q&A: ["How to prevent “error: 'symbol' undeclared here” despite EXPORT_SYMBOL in a Linux kernel module?"](https://stackoverflow.com/questions/6670589/how-to-prevent-error-symbol-undeclared-here-despite-export-symbol-in-a-linu?noredirect=1&lq=1)
 - Linux kernel static analysis
@@ -164,8 +168,14 @@ Software Developer’s Manual. Volume 3 (3A, 3B & 3C): System Programming Guide]
 
 ## Ch 11 : Kernel Debug - Further Reading
 
+- [Debugging by printing, elinux](https://elinux.org/Debugging_by_printing)
+- [The 'poor person's printf()' - using a scope, The Embedded Muse, Dec 2018](http://www.ganssle.com/tem/tem364.html#article4)
 - Blog article (medium): ['A Short Guide to Kernel Debugging
 A story about finding a kernel bug on a production system', Wester, Oct 2015](https://medium.com/square-corner-blog/a-short-guide-to-kernel-debugging-e6fdbe7bfcdf)
+- Kdump, crash
+    - ['How to use kdump to debug kernel crashes', Fedora Project Wiki](https://fedoraproject.org/wiki/How_to_use_kdump_to_debug_kernel_crashes)
+    - Blog article: ['Using Kdump for examining Linux Kernel crashes', opensource.com, June 2017](https://opensource.com/article/17/6/kdump-usage-and-internals); (x86_64)
+    - Blog article: ['SETTING UP KDUMP AND CRASH FOR ARM-32 – AN ONGOING SAGA', kaiwanTECH, July 2017](https://kaiwantech.wordpress.com/2017/07/13/setting-up-kdump-and-crash-for-arm-32-an-ongoing-saga/)
 - a
 
 
