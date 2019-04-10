@@ -34,7 +34,7 @@
 	  (by an integer var USE_RATELIMITING [default: On]).
 
  	*** Kernel module authors Note: ***
-	To use the trace_printk(), pl #define the symbol USE_FTRACE_PRINT in your Makefile:
+	To use the trace_printk(), pl #define the symbol USE_FTRACE_BUFFER in your Makefile:
 	EXTRA_CFLAGS += -DUSE_FTRACE_PRINT
 	If you do not do this, we will use the usual printk() .
 
@@ -45,17 +45,17 @@
 	 Default: printk
  */
 // keep this defined to use the FTRACE-style trace_printk(), else will use regular printk()
-//#define USE_FTRACE_PRINT
-#undef USE_FTRACE_PRINT
+//#define USE_FTRACE_BUFFER
+#undef USE_FTRACE_BUFFER
 
-#ifdef USE_FTRACE_PRINT
+#ifdef USE_FTRACE_BUFFER
 #define DBGPRINT(string, args...) \
      trace_printk(string, ##args);
 #else
 #define DBGPRINT(string, args...) do {                             \
      int USE_RATELIMITING=0;                                       \
 	 if (USE_RATELIMITING) {                                   \
-	   printk_ratelimited (KERN_INFO pr_fmt(string), ##args);  \
+	   printk_info_ratelimited(pr_fmt(string), ##args);        \
 	 }                                                         \
 	 else                                                      \
            pr_info(pr_fmt(string), ##args);                        \
@@ -89,10 +89,17 @@
 #define QP MSG("\n")
 
 #ifdef __KERNEL__
+#ifndef USE_FTRACE_BUFFER
 #define QPDS do {     \
 	MSG("\n");    \
 	dump_stack(); \
 } while(0)
+#else
+#define QPDS do {           \
+	MSG("\n");          \
+	trace_dump_stack(); \
+} while(0)
+#endif
 #endif
 
 #ifdef __KERNEL__
@@ -110,7 +117,7 @@
 /*------------------------ PRINT_CTX ---------------------------------*/
 /* 
  An interesting way to print the context info:
- If USE_FTRACE_PRINT is On, it implies we'll use trace_printk(), else the vanilla
+ If USE_FTRACE_BUFFER is On, it implies we'll use trace_printk(), else the vanilla
  printk(). 
  If we are using trace_printk(), we will automatically get output in the ftrace 
  latency format (see below):
@@ -131,7 +138,7 @@
 #include <linux/sched.h>
 #include <linux/interrupt.h>
 
-#ifndef USE_FTRACE_PRINT	// 'normal' printk(), lets emulate ftrace latency format
+#ifndef USE_FTRACE_BUFFER	// 'normal' printk(), lets emulate ftrace latency format
 #define PRINT_CTX() do {                                                                     \
 	char sep='|', intr='.';                                                              \
 	                                                                                     \
