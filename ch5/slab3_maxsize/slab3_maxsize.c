@@ -1,5 +1,5 @@
 /*
- * ch4/slab4_maxsize/slab4_maxsize.c
+ * ch5/slab3_maxsize/slab3_maxsize.c
  ***************************************************************
  * This program is part of the source code released for the book
  *  "Linux Kernel Development Cookbook"
@@ -8,17 +8,17 @@
  *  GitHub repository:
  *  https://github.com/PacktPublishing/Linux-Kernel-Development-Cookbook
  *
- * From: Ch 4 : Linux Kernel Memory Allocation for Module Authors 
+ * From: Ch 5 : Linux Kernel Memory Allocation for Module Authors Part 1
  ****************************************************************
  * Brief Description:
  *
- * For details, please refer the book, Ch 4.
+ * For details, please refer the book, Ch 5.
  */
 #include <linux/init.h>
 #include <linux/module.h>
 #include <linux/slab.h>
 
-#define OURMODNAME   "slab4_maxsize"
+#define OURMODNAME   "slab3_maxsize"
 
 MODULE_AUTHOR("Kaiwan N Billimoria");
 MODULE_DESCRIPTION("LKDC book:ch/: hello, world");
@@ -48,15 +48,15 @@ static int test_maxallocsz(void)
 	return 0;
 }
 
-static int __init slab4_maxsize_init(void)
+static int __init slab3_maxsize_init(void)
 {
 	pr_debug("%s: inserted\n", OURMODNAME);
 	return test_maxallocsz();
 }
-static void __exit slab4_maxsize_exit(void)
+static void __exit slab3_maxsize_exit(void)
 {
 	pr_debug("%s: removed\n", OURMODNAME);
 }
 
-module_init(slab4_maxsize_init);
-module_exit(slab4_maxsize_exit);
+module_init(slab3_maxsize_init);
+module_exit(slab3_maxsize_exit);

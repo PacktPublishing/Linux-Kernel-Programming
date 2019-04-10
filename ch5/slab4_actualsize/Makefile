@@ -17,7 +17,7 @@ else
 endif
 
 PWD	       := $(shell pwd)
-obj-m          += slab5_actualsize.o
+obj-m          += slab4_actualsize.o
 EXTRA_CFLAGS   += -DDEBUG
 $(info Building for: ARCH=${ARCH} CROSS_COMPILE=${CROSS_COMPILE} EXTRA_CFLAGS=${EXTRA_CFLAGS})
 

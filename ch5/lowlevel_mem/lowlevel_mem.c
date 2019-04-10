@@ -1,5 +1,5 @@
 /*
- * ch4/lowlevel_mem/lowlevel_mem.c
+ * ch5/lowlevel_mem/lowlevel_mem.c
  ***************************************************************
  * This program is part of the source code released for the book
  *  "Linux Kernel Development Cookbook"
@@ -8,7 +8,7 @@
  *  GitHub repository:
  *  https://github.com/PacktPublishing/Linux-Kernel-Development-Cookbook
  *
- * From: Ch 4: Kernel Memory Allocation for Module Authors
+ * From: Ch 5: Kernel Memory Allocation for Module Authors
  ****************************************************************
  * Brief Description:
  * A quick demo of the essential 'low-level' / page allocator / Buddy System
@@ -22,10 +22,10 @@
  * contiguous.
  *
  * Also, in the printks below, we use the %[ll]x fprmat specifier in addition
- * to the 'correct' %pK style (for security). We do this here tp see the actual
+ * to the 'correct' %pK style (for security). We do this here to see the actual
  * virtual addresses (and not some hashed value). Don't do this in production.
  *
- * For details, please refer the book, Ch 4.
+ * For details, please refer the book, Ch 5.
  */
 #include <linux/init.h>
 #include <linux/module.h>
@@ -35,7 +35,7 @@
 
 #define OURMODNAME    "lowlevel_mem"
 
-MODULE_DESCRIPTION("Demo kernel module to exercise essential page allocator APIs.");
+MODULE_DESCRIPTION("Ch 5: Demo kernel module to exercise essential page allocator APIs.");
 MODULE_AUTHOR("Kaiwan N Billimoria");
 MODULE_LICENSE("MIT");
 

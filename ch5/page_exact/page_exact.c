@@ -1,5 +1,5 @@
 /*
- * ch4/page_exact/page_exact.c
+ * ch5/page_exact/page_exact.c
  ***************************************************************
  * This program is part of the source code released for the book
  *  "Linux Kernel Development Cookbook"
@@ -8,11 +8,11 @@
  *  GitHub repository:
  *  https://github.com/PacktPublishing/Linux-Kernel-Development-Cookbook
  *
- * From: Ch 4 : Kernel Memory Allocation for Module Authors
+ * From: Ch 5 : Kernel Memory Allocation for Module Authors
  ****************************************************************
  * Brief Description:
  *
- * For details, please refer the book, Ch 4.
+ * For details, please refer the book, Ch 5.
  */
 #include <linux/init.h>
 #include <linux/module.h>
@@ -20,7 +20,7 @@
 #define OURMODNAME   "page_exact"
 
 MODULE_AUTHOR("Kaiwan N Billimoria");
-MODULE_DESCRIPTION("LKDC book:ch4/: demo using the superior [alloc|free]_pages_exact() BSA APIs");
+MODULE_DESCRIPTION("LKDC book:ch5/: demo using the superior [alloc|free]_pages_exact() BSA APIs");
 MODULE_LICENSE("Dual MIT/GPL");
 MODULE_VERSION("0.1");
 

@@ -1,5 +1,5 @@
 /*
- * solutions_to_assgn/ch4/slab_ptr_array/slab_ptr_array.c
+ * solutions_to_assgn/ch5/slab_ptr_array/slab_ptr_array.c
  ***************************************************************
  * This program is part of the source code released for the book
  *  "Linux Kernel Development Cookbook"
@@ -8,7 +8,7 @@
  *  GitHub repository:
  *  https://github.com/PacktPublishing/Linux-Kernel-Development-Cookbook
  *
- * From: Ch 4 : Kernel Memory Allocation for Module Authors
+ * From: Ch 5 : Kernel Memory Allocation for Module Authors Part 1
  ****************************************************************
  * Brief Description:
  * Assignment:
@@ -27,7 +27,7 @@
  * Tip: take care to handle the error case where a memory allocation fails;
  * don't forget to free the allocations already performed!
  *
- * For details, please refer the book, Ch 4.
+ * For details, please refer the book, Ch 5.
  */
 #include <linux/init.h>
 #include <linux/module.h>
@@ -37,7 +37,7 @@
 #define SLAB_MAXLOOP    5
 
 MODULE_AUTHOR("Kaiwan N Billimoria");
-MODULE_DESCRIPTION("LKDC book:solutions_to_assgn/ch4/slab_ptr_array/: assignment solution");
+MODULE_DESCRIPTION("LKDC book:solutions_to_assgn/ch5/slab_ptr_array/: assignment solution");
 MODULE_LICENSE("Dual MIT/GPL");
 MODULE_VERSION("0.1");
 
