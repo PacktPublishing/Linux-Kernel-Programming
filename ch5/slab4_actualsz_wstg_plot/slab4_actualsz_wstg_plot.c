@@ -1,5 +1,5 @@
 /*
- * ch4/slab5_actualsz_wstg_plot/slab5_actualsz_wstg_plot.c
+ * ch5/slab4_actualsz_wstg_plot/slab4_actualsz_wstg_plot.c
  ***************************************************************
  * This program is part of the source code released for the book
  *  "Linux Kernel Development Cookbook"
@@ -8,23 +8,23 @@
  *  GitHub repository:
  *  https://github.com/PacktPublishing/Linux-Kernel-Development-Cookbook
  *
- * From: Ch 4 : Linux Kernel Memory Allocation for Module Authors 
+ * From: Ch 5 : Linux Kernel Memory Allocation for Module Authors Part 1
  ****************************************************************
  * Brief Description:
  * Here, we have slightly modified the ch4/slab5_actualsize LKM to print just
  * what's required in order to get a good data file, in order to plot a nice
  * graph with gnuplot(1) !
  *
- * For details, please refer the book, Ch 4.
+ * For details, please refer the book, Ch 5.
  */
 #include <linux/init.h>
 #include <linux/module.h>
 #include <linux/slab.h>
 
-#define OURMODNAME   "slab5_actualsz_wstg_plot"
+#define OURMODNAME   "slab4_actualsz_wstg_plot"
 
 MODULE_AUTHOR("Kaiwan N Billimoria");
-MODULE_DESCRIPTION("LKDC book:ch4/slab5_actualsz_wstg_plot: test slab alloc with the ksize()");
+MODULE_DESCRIPTION("LKDC book:ch5/slab4_actualsz_wstg_plot: test slab alloc with the ksize()");
 MODULE_LICENSE("Dual MIT/GPL");
 MODULE_VERSION("0.1");
 
@@ -57,15 +57,15 @@ static int test_maxallocsz(void)
 	return 0;
 }
 
-static int __init slab5_actualsz_wstg_plot_init(void)
+static int __init slab4_actualsz_wstg_plot_init(void)
 {
 	pr_debug("%s: inserted\n", OURMODNAME);
 	return test_maxallocsz();
 }
-static void __exit slab5_actualsz_wstg_plot_exit(void)
+static void __exit slab4_actualsz_wstg_plot_exit(void)
 {
 	pr_debug("%s: removed\n", OURMODNAME);
 }
 
-module_init(slab5_actualsz_wstg_plot_init);
-module_exit(slab5_actualsz_wstg_plot_exit);
+module_init(slab4_actualsz_wstg_plot_init);
+module_exit(slab4_actualsz_wstg_plot_exit);
