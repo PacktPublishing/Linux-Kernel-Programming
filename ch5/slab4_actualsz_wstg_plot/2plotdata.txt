@@ -1,4 +1,3 @@
-#slab5_actualsz_wstg_plot: inserted
 100   28
 20100   63
 40100   63
@@ -209,4 +208,3 @@
 4140100    1
 4160100    0
 4180100    0
-#kmalloc fail, size2alloc=4200100
