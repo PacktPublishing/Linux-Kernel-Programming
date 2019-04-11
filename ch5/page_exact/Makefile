@@ -19,7 +19,10 @@ endif
 PWD	            := $(shell pwd)
 obj-m               += page_exact_chk.o
 page_exact_chk-objs := page_exact.o ../../klib_lkdc.o
-EXTRA_CFLAGS        += -DDEBUG
+EXTRA_CFLAGS        += -DDEBUG -Wformat=0
+ # we use the -Wformat=0 above to subdue the warning on the printk %llx format
+ # specifier (in our klib_lkdc.c code) as we _want_ to show the actual address
+ # and not a hashed value; don't do this in production
 $(info Building for: ARCH=${ARCH} CROSS_COMPILE=${CROSS_COMPILE} EXTRA_CFLAGS=${EXTRA_CFLAGS})
 
 all:
