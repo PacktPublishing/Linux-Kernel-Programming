@@ -1,6 +1,6 @@
 # Makefile
 # For 'Linux Kernel Development Cookbook', Kaiwan N Billimoria, Packt
-#  ch5/oom_try
+#  ch6/oom_try
 # userspace app.
 ALL := oom-killer-try
 CC := ${CROSS_COMPILE}gcc

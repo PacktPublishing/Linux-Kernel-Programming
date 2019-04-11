@@ -1,5 +1,5 @@
 /*
- * ch4/vmalloc_demo/vmalloc_demo.c
+ * ch6/vmalloc_demo/vmalloc_demo.c
  ***************************************************************
  * This program is part of the source code released for the book
  *  "Linux Kernel Development Cookbook"
@@ -8,12 +8,12 @@
  *  GitHub repository:
  *  https://github.com/PacktPublishing/Linux-Kernel-Development-Cookbook
  *
- * From: Ch 4 : Kernel Memory Allocation for Module Authors
+ * From: Ch 6 : Kernel Memory Allocation for Module Authors Part 2
  ****************************************************************
  * Brief Description:
  * A simple demo of using the vmalloc() and friends...
  *
- * For details, please refer the book, Ch 4.
+ * For details, please refer the book, Ch 6.
  */
 #include <linux/init.h>
 #include <linux/module.h>
@@ -24,7 +24,7 @@
 #define OURMODNAME   "vmalloc_demo"
 
 MODULE_AUTHOR("Kaiwan N Billimoria");
-MODULE_DESCRIPTION("LKDC book:ch4/vmalloc_demo/: simple vmalloc() and friends demo lkm");
+MODULE_DESCRIPTION("LKDC book:ch6/vmalloc_demo/: simple vmalloc() and friends demo lkm");
 MODULE_LICENSE("Dual MIT/GPL");
 MODULE_VERSION("0.1");
 

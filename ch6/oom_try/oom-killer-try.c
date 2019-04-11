@@ -1,5 +1,5 @@
 /*
- * ch4/oom_try/oom_try.c
+ * ch6/oom_try/oom_try.c
  ***************************************************************
  * This program is part of the source code released for the book
  *  "Linux Kernel Development Cookbook"
@@ -8,7 +8,7 @@
  *  GitHub repository:
  *  https://github.com/PacktPublishing/Linux-Kernel-Development-Cookbook
  *
- * From: Ch 4: Kernel Memory Allocation for Module Authors
+ * From: Ch 6: Kernel Memory Allocation for Module Authors Part 2
  ****************************************************************
  * Brief Description:
  *
@@ -22,7 +22,7 @@
  * heavy swapping on your system and might even necessitate a
  * reboot; to be safe, only run this on a test VM.
  *
- * For details, please refer the book, Ch 4.
+ * For details, please refer the book, Ch 6.
  */
 #include <stdio.h>
 #include <stdlib.h>

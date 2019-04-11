@@ -1,5 +1,5 @@
 /*
- * ch4/slab_custom/slab_custom.c
+ * ch6/slab_custom/slab_custom.c
  ***************************************************************
  * This program is part of the source code released for the book
  *  "Linux Kernel Development Cookbook"
@@ -8,13 +8,13 @@
  *  GitHub repository:
  *  https://github.com/PacktPublishing/Linux-Kernel-Development-Cookbook
  *
- * From: Ch 4 : Kernel Memory Allocation for Module Authors
+ * From: Ch 6 : Kernel Memory Allocation for Module Authors Part 2
  ****************************************************************
  * Brief Description:
  * Simple demo of using the slab layer (exorted) APIs to create our very own
  * custom slab cache.
  *
- * For details, please refer the book, Ch 4.
+ * For details, please refer the book, Ch 6.
  */
 #include <linux/init.h>
 #include <linux/module.h>
@@ -26,7 +26,7 @@
 #define OURCACHENAME "our_ctx"
 
 MODULE_AUTHOR("Kaiwan N Billimoria");
-MODULE_DESCRIPTION("LKDC book:ch4/slab_custom: simple demo of creating a custom slab cache");
+MODULE_DESCRIPTION("LKDC book:ch6/slab_custom: simple demo of creating a custom slab cache");
 MODULE_LICENSE("Dual MIT/GPL");
 MODULE_VERSION("0.1");
 
