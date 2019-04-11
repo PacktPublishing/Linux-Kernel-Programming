@@ -24,7 +24,7 @@
 #define OURMODNAME   "slab4_actualsz_wstg_plot"
 
 MODULE_AUTHOR("Kaiwan N Billimoria");
-MODULE_DESCRIPTION("LKDC book:ch5/slab4_actualsz_wstg_plot: test slab alloc with the ksize()");
+MODULE_DESCRIPTION("LKDC book:ch5/slab4_actualsz_wstg_plot: test slab alloc with the ksize(), minimal ver");
 MODULE_LICENSE("Dual MIT/GPL");
 MODULE_VERSION("0.1");
 
@@ -38,7 +38,7 @@ static int test_maxallocsz(void)
 	/* This time, initialize size2alloc to 100 (not 0), as otherwise we'll
 	 * likely get a divide error!
 	 */
-	size_t size2alloc = 100, actual_alloc;
+	size_t size2alloc = 100, actual_alloced;
 	void *p;
 
 	while (1) {
@@ -47,10 +47,10 @@ static int test_maxallocsz(void)
 			pr_alert("kmalloc fail, size2alloc=%ld\n", size2alloc);
 			return -ENOMEM;
 		}
-		actual_alloc = ksize(p);
+		actual_alloced = ksize(p);
 		/* Only print the size2alloc (required) and the percentage of waste */
 		pr_info("%ld  %3ld\n",
-                        size2alloc, (((actual_alloc-size2alloc)*100/size2alloc)));
+			size2alloc, (((actual_alloced-size2alloc)*100)/size2alloc));
 		kfree(p);
 		size2alloc += stepsz;
 	}

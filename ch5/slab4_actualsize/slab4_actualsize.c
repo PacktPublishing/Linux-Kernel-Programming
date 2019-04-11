@@ -34,22 +34,24 @@ static int test_maxallocsz(void)
 {
 	/* This time, initialize size2alloc to 100, as otherwise we'll get a
 	 * divide error! */
-	size_t size2alloc = 100, actual_alloc;
+	size_t size2alloc = 100, actual_alloced;
 	void *p;
 
+	pr_info("kmalloc(      n) :  Actual : Wastage : Waste %%\n");
 	while (1) {
 		p = kmalloc(size2alloc, GFP_KERNEL);
 		if (!p) {
 			pr_alert("kmalloc fail, size2alloc=%ld\n", size2alloc);
 			return -ENOMEM;
 		}
-		actual_alloc = ksize(p);
+		actual_alloced = ksize(p);
 		/* Print the size2alloc, the amount actually allocated,
 	         * the delta between the two, and the percentage of waste
+		 * (integer arithmetic, of course :-)
 		 */
 		pr_info("kmalloc(%7ld) : %7ld : %7ld : %3ld%%\n",
-                        size2alloc, actual_alloc, (actual_alloc-size2alloc),
-			(((actual_alloc-size2alloc)*100/size2alloc)));
+                        size2alloc, actual_alloced, (actual_alloced-size2alloc),
+			(((actual_alloced-size2alloc)*100)/size2alloc));
 		kfree(p);
 		size2alloc += stepsz;
 	}
