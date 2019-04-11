@@ -12,5 +12,9 @@
 # c) you will comment out or delete any extraneous lines in the final o/p
 # file 2plotdata.txt after this :-)
 # (To save the trouble, we've (also) kept the 2plotdata.txt file in the repo).
-dmesg > plotdata.txt
-cut -c16- plotdata.txt > 2plotdata.txt
+dmesg > /tmp/plotdata
+cut -c16- /tmp/plotdata | grep -v -i "^[a-z]" > 2plotdata.txt
+rm -f /tmp/plotdata
+echo "Done, data file for gnuplot is 2plotdata.txt
+(follow the steps in the LKDC book, Ch 5, to plot the graph)."
+ls -l 2plotdata.txt
