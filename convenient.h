@@ -237,16 +237,20 @@ static inline void beep(int what)
 
 #ifdef __KERNEL__
 /*------------ DELAY_SEC -------------------------*
- * Delays execution for n seconds.
+ * Delays execution for @val seconds.
+ * If @val is -1, we sleep forever!
  * MUST be called from process context.
  *------------------------------------------------*/
-#define DELAY_SEC(val)                                  \
-{                                                       \
-	if (!in_interrupt()) {	                        \
-		set_current_state(TASK_INTERRUPTIBLE);  \
-		schedule_timeout(val * HZ);             \
-	}	                                        \
+static inline void delay_sec(long val)
+{
+	if (!in_interrupt()) {
+		set_current_state(TASK_INTERRUPTIBLE);
+		if (-1 == val)
+			schedule_timeout(MAX_SCHEDULE_TIMEOUT);
+		else
+			schedule_timeout(val * HZ);
+	}
 }
-#endif
+#endif   /* #ifdef __KERNEL__ */
 
 #endif   /* #ifndef __CONVENIENT_H__ */
