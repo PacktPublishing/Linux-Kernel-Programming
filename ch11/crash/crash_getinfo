@@ -1,0 +1,32 @@
+echo "=== System Info ==="
+echo "--- sys ---"
+sys
+
+echo "--- log ---"
+log
+
+echo "--- ps ---"
+ps
+
+echo "--- dev ---"
+dev
+
+echo "=== Current Context Info ==="
+echo "== Kernel Stack Backtraces =="
+echo "--- bt -a ---"
+bt -a
+
+echo "--- bt -af ---"
+bt -af
+
+echo "--- bt -aF ---"
+bt -aF
+
+echo "--- files ---"
+files
+
+echo "--- vm ---"
+vm
+
+echo "<<< End report >>>"
+exit
