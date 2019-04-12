@@ -78,8 +78,8 @@ static void lkdc_sysinfo2(void)
 #endif
 	pr_info("%s", msg);
 
-	/* Words, min & max: defines are in include/linux/kernel.h */
-	pr_info("Words: unsigned max, signed max, signed min:\n"
+	/* Word ranges: min & max: defines are in include/linux/kernel.h */
+	pr_info("Word [U|S][8|16|32|64] ranges: unsigned max, signed max, signed min:\n"
 		" U8_MAX = %20u,  S8_MAX = %20d,  S8_MIN = %20d\n"
 		"U16_MAX = %20u, S16_MAX = %20d, S16_MIN = %20d\n"
 		"U32_MAX = %20u, S32_MAX = %20d, S32_MIN = %20d\n"
