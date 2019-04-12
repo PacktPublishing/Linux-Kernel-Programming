@@ -77,6 +77,19 @@ static void lkdc_sysinfo2(void)
 	strlcat(msg, "64-bit OS.\n", MSGLEN);
 #endif
 	pr_info("%s", msg);
+
+	/* Words, min & max: defines are in include/linux/kernel.h */
+	pr_info("Words: unsigned max, signed max, signed min:\n"
+		" U8_MAX = %20u,  S8_MAX = %20d,  S8_MIN = %20d\n"
+		"U16_MAX = %20u, S16_MAX = %20d, S16_MIN = %20d\n"
+		"U32_MAX = %20u, S32_MAX = %20d, S32_MIN = %20d\n"
+		"U64_MAX = %20llu, S64_MAX = %20lld, S64_MIN = %20lld\n"
+		"PHYS_ADDR_MAX = %llu\n",
+			U8_MAX, S8_MAX, S8_MIN,
+			U16_MAX, S16_MAX, S16_MIN,
+			U32_MAX, S32_MAX, S32_MIN,
+			U64_MAX, S64_MAX, S64_MIN,
+			PHYS_ADDR_MAX);
 }
 EXPORT_SYMBOL(lkdc_sysinfo2);
 
