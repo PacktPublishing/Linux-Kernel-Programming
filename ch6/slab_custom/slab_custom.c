@@ -57,8 +57,8 @@ static void use_our_cache(void)
 			OURMODNAME, __func__);
 	}
 
-	pr_info("Our cache object size is %u bytes; ksize=%lu\n",
-		kmem_cache_size(gctx_cachep), ksize(obj));
+	pr_info("Our cache object (@ %pK, actual=%llx) size is %u bytes; ksize=%lu\n",
+		obj, (long long unsigned)obj, kmem_cache_size(gctx_cachep), ksize(obj));
 	print_hex_dump_bytes("obj: ", DUMP_PREFIX_OFFSET, obj, sizeof(struct myctx));
 
 	kmem_cache_free(gctx_cachep, obj);
