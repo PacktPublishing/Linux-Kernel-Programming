@@ -55,7 +55,7 @@
 #define DBGPRINT(string, args...) do {                             \
      int USE_RATELIMITING=0;                                       \
 	 if (USE_RATELIMITING) {                                   \
-	   printk_info_ratelimited(pr_fmt(string), ##args);        \
+	   pr_info_ratelimited(pr_fmt(string), ##args);        \
 	 }                                                         \
 	 else                                                      \
            pr_info(pr_fmt(string), ##args);                        \
@@ -236,13 +236,16 @@ static inline void beep(int what)
 /*------------------------------------------------------------------------*/
 
 #ifdef __KERNEL__
-/*------------ DELAY_SEC -------------------------*
+/*------------ delay_sec --------------------------------------------------
  * Delays execution for @val seconds.
  * If @val is -1, we sleep forever!
  * MUST be called from process context.
- *------------------------------------------------*/
-static inline void delay_sec(long val)
+ * (We deliberately do not inline this function; this way, we can see it's
+ * entry within a kernel stack call trace).
+ */
+void delay_sec(long val)
 {
+	asm ("");    // force the compiler to not inline it!
 	if (!in_interrupt()) {
 		set_current_state(TASK_INTERRUPTIBLE);
 		if (-1 == val)
