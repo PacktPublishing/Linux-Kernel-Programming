@@ -38,7 +38,7 @@ which lsb_release >/dev/null 2>&1 && {
 echo -n "Kernel: " ; uname -r
 
 runcmd "sudo rmmod $1 2> /dev/null"
-runcmd "make clean"
+#runcmd "make clean"
 runcmd "sudo dmesg -C"
 runcmd "make || exit 1"
  # TODO - the '|| exit 1' does not seem to work
