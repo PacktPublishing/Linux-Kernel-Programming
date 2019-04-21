@@ -15,6 +15,8 @@
 #define READ	0
 #define WRITE	1
 
+static int stay_alive = 1;
+
 static inline void usage(char *prg)
 {
 	fprintf(stderr,"Usage: %s opt=read/write device_file num_bytes_to_read\n"
@@ -82,17 +84,9 @@ int main(int argc, char **argv)
 		}
 		printf("%s: wrote %ld bytes to %s\n", argv[0], n, argv[2]);
 	}
-	//buf[n]='\0'; 
-	/*
-	Interesting! If the above line is compiled in, we get this error:
-	*** glibc detected *** ./rd_tst: double free or corruption (!prev): 0x097e6008 ***
-	======= Backtrace: =========
-	/lib/libc.so.6(+0x6c501)[0x505501]
-	/lib/libc.so.6(+0x6dd70)[0x506d70]
-	...
 
-	Actually, there is a bug if we keep that line: a buffer overrun by 1 byte (valgrind caught it!)
-	*/
+	if (stay_alive)
+		pause();
 
 	free(buf);
 	close(fd);
