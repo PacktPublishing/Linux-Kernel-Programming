@@ -27,6 +27,21 @@ MODULE_DESCRIPTION
 MODULE_LICENSE("Dual MIT/GPL");
 MODULE_VERSION("0.1");
 
+/*
+ * show_sizeof()
+ * Simply displays the sizeof data types on the platform.
+ */
+void show_sizeof(void)
+{
+	pr_info("sizeof: (bytes)\n"
+		"  char = %2ld   short int = %2ld           int = %2ld\n"
+		"  long = %2ld   long long = %2ld        void * = %2ld\n"
+		" float = %2ld      double = %2ld   long double = %2ld\n",
+			sizeof(char), sizeof(short int), sizeof(int),
+			sizeof(long), sizeof(long long), sizeof(void *),
+			sizeof(float), sizeof(double), sizeof(long double));
+}
+
 /* lkdc_sysinfo2:
  * A more security-aware version of the lkdc_sysinfo routine. We used
  * David Wheeler's flawfinder(1) tool to detect possible vulnerabilities;
@@ -77,6 +92,8 @@ static void lkdc_sysinfo2(void)
 	strlcat(msg, "64-bit OS.\n", MSGLEN);
 #endif
 	pr_info("%s", msg);
+
+	show_sizeof();
 
 	/* Word ranges: min & max: defines are in include/linux/kernel.h */
 	pr_info("Word [U|S][8|16|32|64] ranges: unsigned max, signed max, signed min:\n"
