@@ -19,6 +19,7 @@
  */
 #include <linux/init.h>
 #include <linux/module.h>
+#include <linux/kernel.h>
 
 #define MYMODNAME   "min_sysinfo"
 MODULE_AUTHOR("<insert your name here>");
@@ -27,6 +28,12 @@ MODULE_DESCRIPTION
 MODULE_LICENSE("Dual MIT/GPL");
 MODULE_VERSION("0.1");
 
+#if(BITS_PER_LONG == 32)
+	#define FMT   "%2u"
+#else
+	#define FMT   "%2ld"
+#endif
+
 /*
  * show_sizeof()
  * Simply displays the sizeof data types on the platform.
@@ -34,9 +41,9 @@ MODULE_VERSION("0.1");
 void show_sizeof(void)
 {
 	pr_info("sizeof: (bytes)\n"
-		"  char = %2ld   short int = %2ld           int = %2ld\n"
-		"  long = %2ld   long long = %2ld        void * = %2ld\n"
-		" float = %2ld      double = %2ld   long double = %2ld\n",
+		"  char = " FMT "   short int = " FMT "           int = " FMT "\n"
+		"  long = " FMT "   long long = " FMT "        void * = " FMT "\n"
+		" float = " FMT "      double = " FMT "   long double = " FMT "\n",
 			sizeof(char), sizeof(short int), sizeof(int),
 			sizeof(long), sizeof(long long), sizeof(void *),
 			sizeof(float), sizeof(double), sizeof(long double));
@@ -101,12 +108,17 @@ static void lkdc_sysinfo2(void)
 		"U16_MAX = %20u, S16_MAX = %20d, S16_MIN = %20d\n"
 		"U32_MAX = %20u, S32_MAX = %20d, S32_MIN = %20d\n"
 		"U64_MAX = %20llu, S64_MAX = %20lld, S64_MIN = %20lld\n"
-		"PHYS_ADDR_MAX = %llu\n",
-			U8_MAX, S8_MAX, S8_MIN,
+#if defined (CONFIG_X86)
+		"PHYS_ADDR_MAX = %llu\n"
+#endif
+		,	U8_MAX, S8_MAX, S8_MIN,
 			U16_MAX, S16_MAX, S16_MIN,
 			U32_MAX, S32_MAX, S32_MIN,
-			U64_MAX, S64_MAX, S64_MIN,
-			PHYS_ADDR_MAX);
+			U64_MAX, S64_MAX, S64_MIN
+#if defined (CONFIG_X86)
+			, PHYS_ADDR_MAX
+#endif
+			);
 }
 EXPORT_SYMBOL(lkdc_sysinfo2);
 
