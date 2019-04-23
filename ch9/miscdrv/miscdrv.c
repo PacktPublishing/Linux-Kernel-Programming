@@ -17,7 +17,7 @@
 #include <linux/init.h>
 #include <linux/module.h>
 #include <linux/miscdevice.h>
-#include <linux/fs.h>
+#include <linux/fs.h>            // the fops, file data structures
 #include "../../convenient.h"
 
 #define OURMODNAME   "miscdrv"
@@ -72,7 +72,6 @@ static ssize_t read_miscdrv(struct file *filp, char __user *ubuf,
 				size_t count, loff_t *off)
 {
 	pr_info("%s:%s():\n", OURMODNAME, __func__);
-	PRINT_CTX();
 	return count;
 }
 
@@ -88,7 +87,6 @@ static ssize_t write_miscdrv(struct file *filp, const char __user *ubuf,
 				size_t count, loff_t *off)
 {
 	pr_info("%s:%s():\n", OURMODNAME, __func__);
-	PRINT_CTX();
 	return count;
 }
 
@@ -101,8 +99,6 @@ static ssize_t write_miscdrv(struct file *filp, const char __user *ubuf,
  */
 static int close_miscdrv(struct inode *inode, struct file *filp)
 {
-	PRINT_CTX(); // displays process (or intr) context info
-
 	/* REQD:: XXX : spin_lock(filp->f_lock); .. then unlock 
 	 *  do this for the CORRECT drv; miscdrv_enh.ko */
 	pr_info("%s:%s(): filename: \"%s\"\n",
@@ -118,9 +114,10 @@ static const struct file_operations lkdc_misc_fops = {
 	.release = close_miscdrv,
 };
 static struct miscdevice lkdc_miscdev = {
-	.minor = MISC_DYNAMIC_MINOR,
+	.minor = MISC_DYNAMIC_MINOR, // kernel dynamically assigns a free minor#
 	.name = "lkdc_miscdrv",
-	.fops = &lkdc_misc_fops,
+	   // populated within /sys/class/misc/ and /sys/devices/virtual/misc/
+	.fops = &lkdc_misc_fops,     // connect to 'functionality'
 };
 
 static int __init miscdrv_init(void)
@@ -132,7 +129,7 @@ static int __init miscdrv_init(void)
 			       OURMODNAME);
 		return ret;
 	}
-	pr_info("%s: Hi, LKDC misc driver (major # 10) registered, minor# = %d\n",
+	pr_info("%s: LKDC misc driver (major # 10) registered, minor# = %d\n",
 			OURMODNAME, lkdc_miscdev.minor);
 	return 0;		/* success */
 }

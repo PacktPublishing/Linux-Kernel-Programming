@@ -20,13 +20,17 @@
 /* 
  * show_phy_pages - show the virtual, physical addresses and PFNs of the memory
  *            range provided on a per-page basis.
- * @kaddr: the starting kernel virtual address
+ * !NOTE! The starting kernel address MUST be within the 'lowmem'direct-mapped
+ * region of the kernel segment, else this will Not work and can possibly
+ * crash the system.
+ *
+ * @kaddr: the starting kernel virtual address; MUST be a 'lowmem' region addr
  * @len: length of the memory piece (bytes)
  * @contiguity_check: if True, check for physical contiguity of pages
  *
  * 'Walk' the virtually contiguous 'array' of pages one by one (i.e. page by
  * page), printing the virt and physical address (& PFN- page frame number).
- * This way, we can see if the memory really is *physically* contiguous or not
+ * This way, we can see if the memory really is *physically* contiguous or not.
  */
 void show_phy_pages(const void *kaddr, size_t len, bool contiguity_check)
 {

@@ -1,8 +1,21 @@
 /*
- * read_test.c
- * Test bed for demo drivers
+ * ch9/miscdrv_rdwr/rdwr_test.c
+ ***************************************************************
+ * This program is part of the source code released for the book
+ *  "Linux Kernel Development Cookbook"
+ *  (c) Author: Kaiwan N Billimoria
+ *  Publisher:  Packt
+ *  GitHub repository:
+ *  https://github.com/PacktPublishing/Linux-Kernel-Development-Cookbook
  *
- * Author: Kaiwan N Billimoria <kaiwan@kaiwantech.com>
+ * From: Ch : Synchronization Primitives and How to Use Them
+ ****************************************************************
+ * Brief Description:
+ * A simple test bed for demo driver(s); a small userspace app to issue the
+ * read(2) and write(2) system calls upon a given (device) file for a given
+ * number of bytes.
+ *
+ * For details, please refer the book, Ch 9.
  */
 #include <stdio.h>
 #include <unistd.h>
@@ -14,6 +27,8 @@
 
 #define READ	0
 #define WRITE	1
+
+static int stay_alive = 1;
 
 static inline void usage(char *prg)
 {
@@ -82,17 +97,9 @@ int main(int argc, char **argv)
 		}
 		printf("%s: wrote %ld bytes to %s\n", argv[0], n, argv[2]);
 	}
-	//buf[n]='\0'; 
-	/*
-	Interesting! If the above line is compiled in, we get this error:
-	*** glibc detected *** ./rd_tst: double free or corruption (!prev): 0x097e6008 ***
-	======= Backtrace: =========
-	/lib/libc.so.6(+0x6c501)[0x505501]
-	/lib/libc.so.6(+0x6dd70)[0x506d70]
-	...
 
-	Actually, there is a bug if we keep that line: a buffer overrun by 1 byte (valgrind caught it!)
-	*/
+	if (stay_alive)
+		pause();
 
 	free(buf);
 	close(fd);

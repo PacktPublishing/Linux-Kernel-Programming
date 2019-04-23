@@ -1,3 +1,5 @@
+echo "===== Report from ch11/crash/run_crash script in non-interactive mode ====="
+
 echo "=== System Info ==="
 echo "--- sys ---"
 sys
