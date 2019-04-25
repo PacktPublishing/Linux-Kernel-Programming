@@ -23,3 +23,6 @@ install:
 	make -C $(KDIR) M=$(PWD) modules_install
 clean:
 	make -C $(KDIR) M=$(PWD) clean
+	rm -f rdwr_test
+rdwr_test: rdwr_test.c  # the userspace app
+	gcc -Wall -Os rdwr_test.c -o rdwr_test
