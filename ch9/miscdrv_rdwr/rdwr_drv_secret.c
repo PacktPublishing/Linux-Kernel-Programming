@@ -1,5 +1,5 @@
 /*
- * ch9/miscdrv_rdwr/rdwr_test.c
+ * ch9/miscdrv_rdwr/rdwr_drv_secret.c
  ***************************************************************
  * This program is part of the source code released for the book
  *  "Linux Kernel Development Cookbook"
@@ -11,64 +11,79 @@
  * From: Ch : Synchronization Primitives and How to Use Them
  ****************************************************************
  * Brief Description:
- * A simple test bed for demo driver(s); a small userspace app to issue the
- * read(2) and write(2) system calls upon a given (device) file for a given
- * number of bytes.
+ * A simple test bed for the misc_rdwr demo driver; a small userspace app to
+ * issue the read(2) and write(2) system calls upon a given (device) file.
+ * Also, again as a demo, we use the read(2) to retreive the 'secret' <eye-roll>
+ * from the driver within kernel-space. Equivalently, one can use the write(2)
+ * change the 'secret' (just plain text).
  *
  * For details, please refer the book, Ch 9.
  */
 #include <stdio.h>
 #include <unistd.h>
+#include <string.h>
 #include <sys/types.h>
 #include <limits.h>
 #include <sys/stat.h>
 #include <fcntl.h>
 #include <stdlib.h>
 
-#define READ	0
-#define WRITE	1
-
-static int stay_alive = 1;
+#define MAXBYTES    128   /* Must macth the driver; we should actually use a
+			     common header file for things like this */
+static int stay_alive = 0;
 
 static inline void usage(char *prg)
 {
-	fprintf(stderr,"Usage: %s opt=read/write device_file num_bytes_to_read\n"
-			" opt = '0'  => we shall issue the read(2)\n"
-			" opt = '1' => we shall issue the write(2)\n",
-		       prg);
+	fprintf(stderr,"Usage: %s opt=read/write device_file [\"secret-msg\"]\n"
+			" opt = 'r' => we shall issue the read(2), retreiving the 'secret' form the driver\n"
+			" opt = 'w' => we shall issue the write(2), writing the secret message <secret-msg>\n"
+			"  (max %d bytes)\n",
+		       prg, MAXBYTES);
 }
 
 int main(int argc, char **argv)
 {
-	int fd, opt = READ, flags = O_RDONLY;
+	char opt = 'r';
+	int fd, flags = O_RDONLY;
 	ssize_t n;
 	char *buf = NULL;
 	size_t num = 0;
 	
-	if( argc != 4 ) {
+	if (argc < 3) {
 		usage(argv[0]);
 		exit(EXIT_FAILURE);
 	}
 
-	opt = atoi(argv[1]);
-	if (opt != 0 && opt != 1) {
+	opt = argv[1][0];
+	if (opt != 'r' && opt != 'w') {
 		usage(argv[0]);
 		exit(EXIT_FAILURE);
 	}
-	if (1 == opt)
+	if( (opt == 'w' && argc != 4) ||
+	    (opt == 'r' && argc != 3)) {
+		usage(argv[0]);
+		exit(EXIT_FAILURE);
+	}
+	if ('w' == opt && strlen(argv[3]) > MAXBYTES) {
+		fprintf(stderr, "%s: too big a secret; pl restrict to %d bytes max\n",
+				argv[0], MAXBYTES);
+		exit(EXIT_FAILURE);
+	}
+
+	if ('w' == opt)
 		flags = O_WRONLY;
-
-	if( (fd=open(argv[2], flags, 0)) == -1)
-		perror("open"),exit(1);
+	if( (fd=open(argv[2], flags, 0)) == -1) {
+		fprintf(stderr, "%s: open(2) on %s failed\n", argv[0], argv[2]);
+		perror("open");
+		exit(EXIT_FAILURE);
+	}
 	printf("Device file %s opened (in %s mode): fd=%d\n",
 		       argv[2], (flags == O_RDONLY ? "read-only" : "write-only"), fd);
 
-	num = atoi(argv[3]);
-	if ((num < 0) || (num > INT_MAX)) {
-		fprintf(stderr,"%s: number of bytes '%ld' invalid.\n", argv[0], num);
-		close(fd);
-		exit(EXIT_FAILURE);
-	}
+	if ('w' == opt)
+		num = strlen(argv[3])+1; // IMP! +1 to include the NULL byte!
+	else
+		num = MAXBYTES;
 
 	buf = malloc(num);
 	if (!buf) {
@@ -77,7 +92,7 @@ int main(int argc, char **argv)
 		exit(EXIT_FAILURE);
 	}
 
-	if (0 == opt) { // test reading..
+	if ('r' == opt) {
 		n = read(fd, buf, num);
 		if( n < 0 ) {
 			perror("read failed");
@@ -86,8 +101,9 @@ int main(int argc, char **argv)
 			exit(EXIT_FAILURE);
 		}
 		printf("%s: read %ld bytes from %s\n", argv[0], n, argv[2]);
-		printf(" Data read:\n\"%.*s\"\n", (int)n, buf);
-	} else { // test writing ..
+		printf("The 'secret' is:\n \"%.*s\"\n", (int)n, buf);
+	} else {
+		strncpy(buf, argv[3], num);
 		n = write(fd, buf, num);
 		if( n < 0 ) {
 			perror("write failed");
@@ -98,8 +114,10 @@ int main(int argc, char **argv)
 		printf("%s: wrote %ld bytes to %s\n", argv[0], n, argv[2]);
 	}
 
-	if (stay_alive)
+	if (stay_alive) {
+		printf("%s:%d: stayin' alive (in pause()) ... \n", argv[0], getpid());
 		pause();
+	}
 
 	free(buf);
 	close(fd);
