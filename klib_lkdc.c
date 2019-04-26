@@ -109,6 +109,12 @@ u64 powerof(int base, int exponent)
  * show_sizeof()
  * Simply displays the sizeof data types on the platform.
  */
+/* Portability: set the printk formatting appropriately for 32 and 64-bit */
+#if(BITS_PER_LONG == 32)
+	#define FMT   "%2u"
+#else
+	#define FMT   "%2ld"
+#endif
 void show_sizeof(void)
 {
 #ifndef __KERNEL__
@@ -117,9 +123,9 @@ void show_sizeof(void)
 	pr_info(
 #endif
 		"sizeof: (bytes)\n"
-		"  char = %2ld   short int = %2ld           int = %2ld\n"
-		"  long = %2ld   long long = %2ld        void * = %2ld\n"
-		" float = %2ld      double = %2ld   long double = %2ld\n",
+		"  char = " FMT "   short int = " FMT "           int = " FMT "\n"
+		"  long = " FMT "   long long = " FMT "        void * = " FMT "\n"
+		" float = " FMT "      double = " FMT "   long double = " FMT "\n",
 			sizeof(char), sizeof(short int), sizeof(int),
 			sizeof(long), sizeof(long long), sizeof(void *),
 			sizeof(float), sizeof(double), sizeof(long double));

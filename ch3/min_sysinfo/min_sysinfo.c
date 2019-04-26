@@ -28,16 +28,16 @@ MODULE_DESCRIPTION
 MODULE_LICENSE("Dual MIT/GPL");
 MODULE_VERSION("0.1");
 
+/*
+ * show_sizeof()
+ * Simply displays the sizeof data types on the platform.
+ */
+/* Portability: set the printk formatting appropriately for 32 and 64-bit */
 #if(BITS_PER_LONG == 32)
 	#define FMT   "%2u"
 #else
 	#define FMT   "%2ld"
 #endif
-
-/*
- * show_sizeof()
- * Simply displays the sizeof data types on the platform.
- */
 void show_sizeof(void)
 {
 	pr_info("sizeof: (bytes)\n"
