@@ -43,10 +43,13 @@ static int open_miscdrv(struct inode *inode, struct file *filp)
 	 *  do this for the CORRECT drv; miscdrv_enh.ko */
 	pr_info("%s:%s():\n"
 		" filename: \"%s\"\n"
-		" wrt open file: f_flags = 0x%x, ref count = %ld\n",
-	       OURMODNAME, __func__, filp->f_path.dentry->d_iname,
+		" wrt open file: f_flags = 0x%x\n",
+	       OURMODNAME, __func__,
+	       filp->f_path.dentry->d_iname, filp->f_flags);
+	/* REQD:: XXX : spin_unlock(inode->f_lock); 
+	atomic:	" wrt open file: f_flags = 0x%x, ref count = %ld\n",
 	       filp->f_flags, atomic_long_read(&filp->f_count));
-	/* REQD:: XXX : spin_unlock(inode->f_lock); */
+	*/
 
 #if 0
 	/* REQD:: XXX : spin_lock(inode->i_lock); .. then unlock 
@@ -126,11 +129,26 @@ static int __init miscdrv_init(void)
 
 	if ((ret = misc_register(&lkdc_miscdev))) {
 		pr_notice("%s: misc device registration failed, aborting\n",
-			       OURMODNAME);
+			OURMODNAME);
 		return ret;
 	}
 	pr_info("%s: LKDC misc driver (major # 10) registered, minor# = %d\n",
 			OURMODNAME, lkdc_miscdev.minor);
+
+	/* Now, for the purpose of creating the device node (file), we require
+	 * both the major and minor numbers. The major number will always be 10
+	 * (it's reserved for all 'misc' class devices). Reg the minor number's
+	 * retrieval, here's one (rather silly) technique:
+	 * Write the minor # into the kernel log in an easily grep-able way (so
+	 * that we can do a
+	 *  MINOR=$(dmesg |grep "^miscdrv_rdwr\:minor=" |cut -d"=" -f2)
+	 * from a shell script!). Of course, this approach is silly; in the
+	 * real world, superior techniques (typically 'udev') are used.
+	 * Here, we do provide a utility script (cr8devnode.sh) to do this and create the
+	 * device node.
+	 */
+	pr_info("%s:minor=%d\n", OURMODNAME, lkdc_miscdev.minor);
+
 	return 0;		/* success */
 }
 
