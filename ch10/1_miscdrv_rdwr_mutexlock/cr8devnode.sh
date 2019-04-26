@@ -3,7 +3,7 @@
 # Simple utility script to create the device node for the miscdrv_rdwr 'misc'
 # class device driver
 name=$(basename $0)
-OURMODNAME="miscdrv_rdwr"
+OURMODNAME="miscdrv_rdwr_mutexlock"
 
 MAJOR=10   # misc class is always major # 10
 unalias dmesg 2>/dev/null
