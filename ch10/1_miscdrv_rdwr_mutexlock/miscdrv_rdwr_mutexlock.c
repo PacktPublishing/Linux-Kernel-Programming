@@ -8,7 +8,7 @@
  *  GitHub repository:
  *  https://github.com/PacktPublishing/Linux-Kernel-Development-Cookbook
  *
- * From: Ch : Synchronization Primitives and How to Use Them
+ * From: Ch 10 : Synchronization Primitives and How to Use Them
  ****************************************************************
  * Brief Description:
  * This driver is built upon our previous ch9/miscdrv_rdwr/ miscellaneous
@@ -26,7 +26,7 @@
 #include <linux/miscdevice.h>
 #include <linux/slab.h>         // k[m|z]alloc(), k[z]free(), ...
 #include <linux/mm.h>           // kvmalloc()
-#include <linux/fs.h>		// the fops
+#include <linux/fs.h>		// the fops structure
 #include <linux/uaccess.h>      // copy_to|from_user() macros
 #include <linux/mutex.h>
 #include "../../convenient.h"
@@ -34,7 +34,7 @@
 #define OURMODNAME   "miscdrv_rdwr_mutexlock"
 
 MODULE_AUTHOR("Kaiwan N Billimoria");
-MODULE_DESCRIPTION("LKDC book:ch9/miscdrv_rdwr_mutexlock: simple misc char driver with mutex locking");
+MODULE_DESCRIPTION("LKDC book:ch10/miscdrv_rdwr_mutexlock: simple misc char driver with mutex locking");
 MODULE_LICENSE("Dual MIT/GPL");
 MODULE_VERSION("0.1");
 
@@ -264,7 +264,7 @@ static struct miscdevice lkdc_miscdev = {
 	.fops = &lkdc_misc_fops,     // connect to 'functionality'
 };
 
-static int __init miscdrv_init(void)
+static int __init miscdrv_init_mutexlock(void)
 {
 	int ret;
 
@@ -297,11 +297,18 @@ static int __init miscdrv_init(void)
 	}
 	mutex_init(&ctx->lock);
 	strlcpy(ctx->oursecret, "initmsg", 8);
+		/* Why don't we protect the above strlcpy() with the mutex lock?
+		 * It's working on shared writable data, yes?
+		 * No; this is the init code; it's guaranteed to run in exactly
+		 * one context (typically the insmod(8) process), thus there is
+		 * no concurrency possible here. The same goes for the cleanup
+		 * code path.
+		 */
 
 	return 0;		/* success */
 }
 
-static void __exit miscdrv_exit(void)
+static void __exit miscdrv_exit_mutexlock(void)
 {
 	mutex_destroy(&lock1);
 	mutex_destroy(&ctx->lock);
@@ -310,5 +317,5 @@ static void __exit miscdrv_exit(void)
 	pr_debug("%s: LKDC misc driver deregistered, bye\n", OURMODNAME);
 }
 
-module_init(miscdrv_init);
-module_exit(miscdrv_exit);
+module_init(miscdrv_init_mutexlock);
+module_exit(miscdrv_exit_mutexlock);
