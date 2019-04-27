@@ -8,7 +8,7 @@
  *  GitHub repository:
  *  https://github.com/PacktPublishing/Linux-Kernel-Development-Cookbook
  *
- * From: Ch : Synchronization Primitives and How to Use Them
+ * From: Ch 9 : Writing a Simple Misc Device Driver
  ****************************************************************
  * Brief Description:
  * This driver is built upon our previous 'skeleton' ../miscdrv/ miscellaneous
@@ -195,6 +195,7 @@ static ssize_t write_miscdrv_rdwr(struct file *filp, const char __user *ubuf,
 	 */
 	strlcpy(ctx->oursecret, kbuf, (count > MAXBYTES ? MAXBYTES : count));
 #if 0
+	/* Might be useful to actually see a hex dump of the driver 'context' */
 	print_hex_dump_bytes("ctx ", DUMP_PREFIX_OFFSET,
 				ctx, sizeof(struct drv_ctx));
 #endif
@@ -267,8 +268,8 @@ static int __init miscdrv_init(void)
 
 	/* Now, for the purpose of creating the device node (file), we require
 	 * both the major and minor numbers. The major number will always be 10
-	 * (it's reserved for all 'misc' class devices). Reg the minor number's
-	 * retrieval, here's one (rather silly) technique:
+	 * (it's reserved for all character 'misc' class devices). Reg the minor
+	 * number's retrieval, here's one (rather silly) technique:
 	 * Write the minor # into the kernel log in an easily grep-able way (so
 	 * that we can do a
 	 *  MINOR=$(dmesg |grep "^miscdrv_rdwr\:minor=" |cut -d"=" -f2)

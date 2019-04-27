@@ -8,9 +8,12 @@
  *  GitHub repository:
  *  https://github.com/PacktPublishing/Linux-Kernel-Development-Cookbook
  *
- * From: Ch : Synchronization Primitives and How to Use Them
+ * From: Ch 9 : Writing a Simple Misc Device Driver
  ****************************************************************
  * Brief Description:
+ * A simple 'skeleton' Linux character device driver, belonging to the
+ * 'misc' class (major #10). Here, we simply build something of a 'template'
+ * or skeleton for a misc driver.
  *
  * For details, please refer the book, Ch 9.
  */
@@ -39,27 +42,12 @@ static int open_miscdrv(struct inode *inode, struct file *filp)
 {
 	PRINT_CTX(); // displays process (or intr) context info
 
-	/* REQD:: XXX : spin_lock(filp->f_lock); .. then unlock 
-	 *  do this for the CORRECT drv; miscdrv_enh.ko */
 	pr_info("%s:%s():\n"
 		" filename: \"%s\"\n"
 		" wrt open file: f_flags = 0x%x\n",
 	       OURMODNAME, __func__,
 	       filp->f_path.dentry->d_iname, filp->f_flags);
-	/* REQD:: XXX : spin_unlock(inode->f_lock); 
-	atomic:	" wrt open file: f_flags = 0x%x, ref count = %ld\n",
-	       filp->f_flags, atomic_long_read(&filp->f_count));
-	*/
 
-#if 0
-	/* REQD:: XXX : spin_lock(inode->i_lock); .. then unlock 
-	 *  do this for the CORRECT drv; miscdrv_enh.ko */
-	pr_info("wrt the file's inode: "
-		" uid=%u inode# = %lu size=%lld\n",
-	       OURMODNAME, __func__,
-	       __kuid_val(inode->i_uid), inode->i_ino, inode->i_size);
-	/* REQD:: XXX : spin_unlock(inode->i_lock); */
-#endif
 	return 0;
 }
 
@@ -102,11 +90,8 @@ static ssize_t write_miscdrv(struct file *filp, const char __user *ubuf,
  */
 static int close_miscdrv(struct inode *inode, struct file *filp)
 {
-	/* REQD:: XXX : spin_lock(filp->f_lock); .. then unlock 
-	 *  do this for the CORRECT drv; miscdrv_enh.ko */
 	pr_info("%s:%s(): filename: \"%s\"\n",
 	       OURMODNAME, __func__, filp->f_path.dentry->d_iname);
-	/* REQD:: XXX : spin_unlock(inode->f_lock); */
 	return 0;
 }
 
@@ -137,8 +122,8 @@ static int __init miscdrv_init(void)
 
 	/* Now, for the purpose of creating the device node (file), we require
 	 * both the major and minor numbers. The major number will always be 10
-	 * (it's reserved for all 'misc' class devices). Reg the minor number's
-	 * retrieval, here's one (rather silly) technique:
+	 * (it's reserved for all character 'misc' class devices). Reg the minor
+	 * number's retrieval, here's one (rather silly) technique:
 	 * Write the minor # into the kernel log in an easily grep-able way (so
 	 * that we can do a
 	 *  MINOR=$(dmesg |grep "^miscdrv_rdwr\:minor=" |cut -d"=" -f2)

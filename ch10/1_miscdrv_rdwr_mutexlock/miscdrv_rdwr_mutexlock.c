@@ -198,7 +198,8 @@ static ssize_t write_miscdrv_rdwr(struct file *filp, const char __user *ubuf,
 	/* In a 'real' driver, we would now actually write (for 'count' bytes)
 	 * the content of the 'ubuf' buffer to the device hardware (or whatever),
 	 * and then return.
-	 * Here, we do nothing, we just pretend we've done everything :-)
+	 * Here, we first acquire the mutex lock, then write the just-accepted
+	 * new 'secret' into our driver 'context' structure, and unlock.
 	 */
 	mutex_lock(&ctx->lock);
 	strlcpy(ctx->oursecret, kbuf, (count > MAXBYTES ? MAXBYTES : count));
