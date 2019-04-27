@@ -1,0 +1,43 @@
+LKDC book:
+A solution for assignment 10.1:
+
+1. Build the driver, insmod it..
+
+$ lsmod |grep miscdrv_rdwr_mutextrylock
+miscdrv_rdwr_mutextrylock    28672  0
+$ 
+
+2. To test it, run the rdwr test app from ch9/, like so:
+
+$ ../../../ch9/miscdrv_rdwr/rdwr_drv_secret 
+Usage: ../../../ch9/miscdrv_rdwr/rdwr_drv_secret opt=read/write device_file ["secret-msg"]
+ opt = 'r' => we shall issue the read(2), retreiving the 'secret' form the driver
+ opt = 'w' => we shall issue the write(2), writing the secret message <secret-msg>
+  (max 128 bytes)
+$ ../../../ch9/miscdrv_rdwr/rdwr_drv_secret r /dev/miscdrv 
+Device file /dev/miscdrv opened (in read-only mode): fd=3
+../../../ch9/miscdrv_rdwr/rdwr_drv_secret: read 7 bytes from /dev/miscdrv
+The 'secret' is:
+ "initmsg"
+$ 
+$ sudo ../../../ch9/miscdrv_rdwr/rdwr_drv_secret w /dev/miscdrv "trylock is the new secret"
+Device file /dev/miscdrv opened (in write-only mode): fd=3
+../../../ch9/miscdrv_rdwr/rdwr_drv_secret: wrote 26 bytes to /dev/miscdrv
+$ dmesg 
+[...]
+[44810.992198] PRINT_CTX:: [001] rdwr_drv_secret :22040   | ...0 
+[44810.992210] miscdrv_rdwr_mutexlock:open_miscdrv_rdwr():
+                filename: "miscdrv"
+                wrt open file: f_flags = 0x8001
+                ga = 1, gb = 0
+[44810.992392] PRINT_CTX:: [001] rdwr_drv_secret :22040   | ...0 
+[44810.992460] miscdrv_rdwr_mutexlock:write_miscdrv_rdwr():
+                rdwr_drv_secret wants to write 26 bytes
+===> [44810.993176] miscdrv_rdwr_mutexlock:write_miscdrv_rdwr(): try #1: mutex trylock acquired ...  <===
+[44810.993183]  26 bytes written, returning... (stats: tx=7, rx=26)
+[44810.993226] PRINT_CTX:: [001] rdwr_drv_secret :22040   | ...0 
+[44810.993237] miscdrv_rdwr_mutexlock:close_miscdrv_rdwr(): filename: "miscdrv"
+                ga = 0, gb = 1
+$ 
+
+(we use the arrows to show the trylock).
