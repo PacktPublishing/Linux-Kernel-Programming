@@ -14,6 +14,7 @@ MINOR=$(dmesg |grep "${OURMODNAME}\:minor\=" |cut -d"=" -f2)
 }
 echo "minor number is ${MINOR}"
 
+sudo rm -f /dev/miscdrv   # rm any stale instance
 sudo mknod /dev/miscdrv c ${MAJOR} ${MINOR}
 ls -l /dev/miscdrv
 exit 0
