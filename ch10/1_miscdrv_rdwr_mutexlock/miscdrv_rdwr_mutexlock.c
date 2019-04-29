@@ -34,12 +34,12 @@
 #define OURMODNAME   "miscdrv_rdwr_mutexlock"
 
 MODULE_AUTHOR("Kaiwan N Billimoria");
-MODULE_DESCRIPTION("LKDC book:ch10/miscdrv_rdwr_mutexlock: simple misc char driver with mutex locking");
+MODULE_DESCRIPTION("LKDC book:ch10/1_miscdrv_rdwr_mutexlock: simple misc char driver with mutex locking");
 MODULE_LICENSE("Dual MIT/GPL");
 MODULE_VERSION("0.1");
 
 static int ga, gb = 1;
-DEFINE_MUTEX(lock1); // protects the global integers ga and gb
+DEFINE_MUTEX(lock1); // this mutex lock protects the global integers ga and gb
 
 /* The driver 'context' data structure;
  * all relevant 'state info' reg the driver is here.
@@ -50,7 +50,7 @@ struct drv_ctx {
 	u64 config3;
 #define MAXBYTES    128
 	char oursecret[MAXBYTES];
-	struct mutex lock;  // protects this data structure
+	struct mutex lock;  // this mutex protects this data structure
 };
 static struct drv_ctx *ctx;
 
@@ -106,7 +106,8 @@ static ssize_t read_miscdrv_rdwr(struct file *filp, char __user *ubuf,
 
 	ret = -EINVAL;
 	if (count < MAXBYTES) {
-		pr_warn("%s:%s(): request # of bytes (%ld) is < required size (%d), aborting read\n",
+		pr_warn("%s:%s(): request # of bytes (%ld) is < required size"
+			" (%d), aborting read\n",
 				OURMODNAME, __func__, count, MAXBYTES);
 		goto out_notok;
 	}
@@ -235,8 +236,6 @@ static int close_miscdrv_rdwr(struct inode *inode, struct file *filp)
 	ga --; gb ++;
 	mutex_unlock(&lock1);
 
-        /* REQD:: XXX : spin_lock(filp->f_lock); .. then unlock 
-         *  do this for the CORRECT drv; miscdrv_enh.ko */
         pr_info("%s:%s(): filename: \"%s\"\n"
 		" ga = %d, gb = %d\n",
 			OURMODNAME, __func__, filp->f_path.dentry->d_iname,
@@ -315,7 +314,7 @@ static void __exit miscdrv_exit_mutexlock(void)
 	mutex_destroy(&ctx->lock);
 	kzfree(ctx);
 	misc_deregister(&lkdc_miscdev);
-	pr_debug("%s: LKDC misc driver deregistered, bye\n", OURMODNAME);
+	pr_info("%s: LKDC misc driver deregistered, bye\n", OURMODNAME);
 }
 
 module_init(miscdrv_init_mutexlock);
