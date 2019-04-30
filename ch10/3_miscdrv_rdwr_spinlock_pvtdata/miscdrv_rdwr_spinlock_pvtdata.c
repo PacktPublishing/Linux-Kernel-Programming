@@ -1,5 +1,5 @@
 /*
- * ch10/2_miscdrv_rdwr_spinlock_pvtdata/miscdrv_rdwr_spinlock_pvtdata.c
+ * ch10/3_miscdrv_rdwr_spinlock_pvtdata/miscdrv_rdwr_spinlock_pvtdata.c
  ***************************************************************
  * This program is part of the source code released for the book
  *  "Linux Kernel Development Cookbook"
@@ -29,27 +29,25 @@
 #include <linux/mm.h>           // kvmalloc()
 #include <linux/fs.h>		// the fops structure
 #include <linux/uaccess.h>      // copy_to|from_user() macros
-//#include <linux/mutex.h>
 #include <linux/spinlock.h>
 #include "../../convenient.h"
 
 #define OURMODNAME   "miscdrv_rdwr_spinlock_pvtdata"
 
 MODULE_AUTHOR("Kaiwan N Billimoria");
-MODULE_DESCRIPTION("LKDC book:ch10/2_miscdrv_rdwr_spinlock: simple misc char driver with spinlock locking");
+MODULE_DESCRIPTION("LKDC book:ch10/3_miscdrv_rdwr_spinlock: simple misc char driver using filp->private_data");
 MODULE_LICENSE("Dual MIT/GPL");
 MODULE_VERSION("0.1");
-
-static int buggy;
-module_param(buggy, int, 0600);
-MODULE_PARM_DESC(buggy,
- "If 1, cause an error by issuing a blocking call within a spinlock critical section");
 
 static int ga, gb = 1;
 DEFINE_SPINLOCK(lock1); // this spinlock protects the global integers ga and gb
 
 /* The driver 'context' data structure;
  * all relevant 'state info' reg the driver is here.
+ * This time, we will allocate this structure on a *per process* basis, thus
+ * effectively eliminating the need for a mutex and/or spinlock to protect it!
+ * (a 'semi-lockless' design).
+ * We allocate it in the open method, and free it in the release method.
  */
 struct drv_ctx {
 	int tx, rx, err, myword;
@@ -57,10 +55,6 @@ struct drv_ctx {
 	u64 config3;
 #define MAXBYTES    128
 	char oursecret[MAXBYTES];
-#if 0
-	struct mutex mutex;        // this mutex protects this data structure
-	spinlock_t spinlock;	   // ...so does this spinlock
-#endif
 };
 
 static inline void display_stats(int show_stats, struct drv_ctx *ctx)
@@ -95,23 +89,23 @@ static int open_miscdrv_rdwr(struct inode *inode, struct file *filp)
 		" ga = %d, gb = %d\n",
 	       OURMODNAME, __func__,
 	       filp->f_path.dentry->d_iname,
-	       filp->f_flags, /* protect this access with the
+	       filp->f_flags, /* protect this member access with the
 				 struct file's spinlock ! */
 	       ga, gb); // potential bug; unprotected / dirty reads on ga, gb!
 	spin_unlock(&filp->f_lock);
 
 	/* 'Lockless' architecture: allocate a private instance of the driver
 	 * 'context' data structure and use it */
-	if (!filp->private_data) {	  // true on first open(2)
-		filp->private_data = ctx = kzalloc(sizeof(struct drv_ctx), GFP_KERNEL);
-		if (!ctx) {
-			pr_notice("%s:%s():%d: kzalloc failed! aborting\n",
-				OURMODNAME, __func__, __LINE__);
-			return -ENOMEM;
-		}
+	filp->private_data = kzalloc(sizeof(struct drv_ctx), GFP_KERNEL);
+	if (!ctx) {
+		pr_notice("%s:%s():%d: kzalloc failed! aborting\n",
+			OURMODNAME, __func__, __LINE__);
+		return -ENOMEM;
 	}
-	//mutex_init(&ctx->mutex);
-	//spin_lock_init(&ctx->spinlock);
+	ctx = filp->private_data;
+	pr_info(" ** kzalloc ctx for pid %d, ctx = 0x%llx\n",
+		current->pid, (long long unsigned int)ctx);
+
 	strlcpy(ctx->oursecret, "initmsg", 8);
 		/* This time, why don't we protect the above strlcpy() with
 		 * a mutex or spinlock? It's working on shared writable data, yes?
@@ -144,9 +138,10 @@ static ssize_t read_miscdrv_rdwr(struct file *filp, char __user *ubuf,
 	int ret = count, secret_len = strlen(ctx->oursecret), err_path = 0;
 	void *kbuf = NULL;
 
-	PRINT_CTX();
 	pr_info("%s:%s():\n %s wants to read (upto) %ld bytes\n",
 			OURMODNAME, __func__, current->comm, count);
+	pr_info(" pid %d, ctx = 0x%llx\n",
+		current->pid, (long long unsigned int)ctx);
 
 	ret = -EINVAL;
 	if (count < MAXBYTES) {
@@ -218,9 +213,10 @@ static ssize_t write_miscdrv_rdwr(struct file *filp, const char __user *ubuf,
 	int ret, err_path = 0;
 	void *kbuf = NULL;
 
-	PRINT_CTX();
 	pr_info("%s:%s():\n %s wants to write %ld bytes\n",
 			OURMODNAME, __func__, current->comm, count);
+	pr_info(" pid %d, ctx = 0x%llx\n",
+		current->pid, (long long unsigned int)ctx);
 
 	ret = -ENOMEM;
 	kbuf = kvmalloc(count, GFP_KERNEL);
@@ -289,6 +285,8 @@ static int close_miscdrv_rdwr(struct inode *inode, struct file *filp)
 		ga, gb); // potential bug; unprotected / dirty reads on ga, gb!
 
 	display_stats(1, ctx);
+	pr_info(" ** kfree ctx for pid %d, ctx=0x%llx\n",
+		current->pid, (long long unsigned int)ctx);
 	kfree(ctx);
 
 	return 0;
@@ -326,6 +324,7 @@ static int __init miscdrv_init_spinlock_pvtdata(void)
 	}
 	pr_info("%s: LKDC misc driver (major # 10) registered, minor# = %d\n",
 			OURMODNAME, lkdc_miscdev.minor);
+	spin_lock_init(&lock1);
 
 	/* Now, for the purpose of creating the device node (file), we require
 	 * both the major and minor numbers. The major number will always be 10
