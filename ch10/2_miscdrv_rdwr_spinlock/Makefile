@@ -23,6 +23,3 @@ install:
 	make -C $(KDIR) M=$(PWD) modules_install
 clean:
 	make -C $(KDIR) M=$(PWD) clean
-	rm -f rdwr_drv_secret
-rdwr_drv_secret: rdwr_drv_secret.c  # the userspace app
-	gcc -Wall -Os rdwr_drv_secret.c -o rdwr_drv_secret
