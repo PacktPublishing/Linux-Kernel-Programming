@@ -252,7 +252,7 @@ static ssize_t write_miscdrv_rdwr(struct file *filp, const char __user *ubuf,
 
 	if (1 == buggy) {
 		set_current_state(TASK_INTERRUPTIBLE);
-		schedule_timeout(1*HZ);
+		schedule_timeout(1*HZ);      /* this is a blocking call! */
 	}
 
 	spin_unlock(&ctx->spinlock);
