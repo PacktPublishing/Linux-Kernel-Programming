@@ -11,7 +11,7 @@
  * From: Ch : Synchronization Primitives and How to Use Them
  ****************************************************************
  * Brief Description:
- * A simple test bed for the misc_rdwr demo driver; a small userspace app to
+ * A simple test bed for the miscdrv_rdwr demo driver; a small userspace app to
  * issue the read(2) and write(2) system calls upon a given (device) file.
  * Also, again as a demo, we use the read(2) to retreive the 'secret' <eye-roll>
  * from the driver within kernel-space. Equivalently, one can use the write(2)
@@ -28,8 +28,8 @@
 #include <fcntl.h>
 #include <stdlib.h>
 
-#define MAXBYTES    128   /* Must macth the driver; we should actually use a
-			     common header file for things like this */
+#define MAXBYTES    128   /* Must match the driver; we should actually use a
+			   * common header file for things like this */
 static int stay_alive = 0;
 
 static inline void usage(char *prg)
@@ -65,8 +65,8 @@ int main(int argc, char **argv)
 		exit(EXIT_FAILURE);
 	}
 	if ('w' == opt && strlen(argv[3]) > MAXBYTES) {
-		fprintf(stderr, "%s: too big a secret; pl restrict to %d bytes max\n",
-				argv[0], MAXBYTES);
+		fprintf(stderr, "%s: too big a secret (%ld bytes); pl restrict"
+				" to %d bytes max\n", argv[0], strlen(argv[3]), MAXBYTES);
 		exit(EXIT_FAILURE);
 	}
 

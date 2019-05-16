@@ -12,14 +12,14 @@
  ****************************************************************
  * Brief Description:
  * This driver is built upon our previous 'skeleton' ../miscdrv/ miscellaneous
- * driver. The key difference: we use a few global data items throughout; we
- * introduce the notion of a 'driver context' data structure; we allocate
- * memory to it on init and initialize it; one of the members within is a
- * so-called 'oursecret' message (along with some fake statistics and config
- * words). So, when a userpace process (or thread) opens the device file and
- * issues a read upon it, we pass back the 'secret' to it. When it writes data
- * to us, we consider that data to be the new 'secret' and update it here (in
- * memory).
+ * driver. The key difference: we use a few global data items throughout; to do
+ * so, we introduce the notion of a 'driver context' data structure. On init,
+ * we allocate memory to it on init and initialize it; one of the members
+ * within is a so-called secret (the 'oursecret' member along with some fake
+ * statistics and config words).
+ * So, when a userpace process (or thread) opens the device file and issues a
+ * read upon it, we pass back the 'secret' to it. When it writes data to us,
+ * we consider that data to be the new 'secret' and update it here (in memory).
  *
  * For details, please refer the book, Ch 9.
  */
@@ -29,13 +29,21 @@
 #include <linux/slab.h>         // k[m|z]alloc(), k[z]free(), ...
 #include <linux/mm.h>           // kvmalloc()
 #include <linux/fs.h>		// the fops
-#include <linux/uaccess.h>      // copy_to|from_user() macros
+
+// copy_[to|from]_user()
+#include <linux/version.h>
+#if LINUX_VERSION_CODE > KERNEL_VERSION(4,11,0)
+#include <linux/uaccess.h>
+#else
+#include <asm/uaccess.h>
+#endif
+
 #include "../../convenient.h"
 
 #define OURMODNAME   "miscdrv_rdwr"
 
 MODULE_AUTHOR("Kaiwan N Billimoria");
-MODULE_DESCRIPTION("LKDC book:ch9/miscdrv_rdwr: simple 'skeleton' misc char driver with rdwr");
+MODULE_DESCRIPTION("LKDC book:ch9/miscdrv_rdwr: simple misc char driver with rdwr");
 MODULE_LICENSE("Dual MIT/GPL");
 MODULE_VERSION("0.1");
 
@@ -48,7 +56,8 @@ struct drv_ctx {
 	int tx, rx, err, myword;
 	u32 config1, config2;
 	u64 config3;
-#define MAXBYTES    128
+#define MAXBYTES    128   /* Must match the userspace app; we should actually
+			   * use a common header file for things like this */
 	char oursecret[MAXBYTES];
 };
 static struct drv_ctx *ctx;
@@ -66,8 +75,6 @@ static int open_miscdrv_rdwr(struct inode *inode, struct file *filp)
 {
 	PRINT_CTX(); // displays process (or intr) context info
 
-	/* REQD:: XXX : spin_lock(filp->f_lock); .. then unlock 
-	 *  do this for the CORRECT drv; miscdrv_enh.ko */
 	ga ++; gb --;
 	pr_info("%s:%s():\n"
 		" filename: \"%s\"\n"
@@ -75,7 +82,6 @@ static int open_miscdrv_rdwr(struct inode *inode, struct file *filp)
 		" ga = %d, gb = %d\n",
 	       OURMODNAME, __func__, filp->f_path.dentry->d_iname,
 	       filp->f_flags, ga, gb);
-	/* REQD:: XXX : spin_unlock(inode->f_lock); */
 
 	return 0;
 }
@@ -138,7 +144,7 @@ static ssize_t read_miscdrv_rdwr(struct file *filp, char __user *ubuf,
 	ret = secret_len;
 
 	// Update stats
-	ctx->tx += secret_len; // our 'transmit' is wrt userspace
+	ctx->tx += secret_len; // our 'transmit' is wrt this driver
 	pr_info(" %d bytes read, returning... (stats: tx=%d, rx=%d)\n",
 			secret_len, ctx->tx, ctx->rx);
 out_ctu:
@@ -160,10 +166,15 @@ out_notok:
 static ssize_t write_miscdrv_rdwr(struct file *filp, const char __user *ubuf,
 				size_t count, loff_t *off)
 {
-	int ret;
+	int ret = count;
 	void *kbuf = NULL;
 
 	PRINT_CTX();
+	if (unlikely(count > MAXBYTES)) {   /* paranoia */
+		pr_warn("%s:%s(): count %zu exceeds max # of bytes allowed, "
+			"aborting write\n", OURMODNAME, __func__, count);
+		goto out_nomem;
+	}
 	pr_info("%s:%s():\n %s wants to write %ld bytes\n",
 			OURMODNAME, __func__, current->comm, count);
 
@@ -200,7 +211,7 @@ static ssize_t write_miscdrv_rdwr(struct file *filp, const char __user *ubuf,
 				ctx, sizeof(struct drv_ctx));
 #endif
 	// Update stats
-	ctx->rx += count; // our 'receive' is wrt userspace
+	ctx->rx += count; // our 'receive' is wrt this driver
 
 	ret = count;
 	pr_info(" %ld bytes written, returning... (stats: tx=%d, rx=%d)\n",
@@ -223,14 +234,11 @@ static int close_miscdrv_rdwr(struct inode *inode, struct file *filp)
         PRINT_CTX(); // displays process (or intr) context info
 
 	ga --; gb ++;
-        /* REQD:: XXX : spin_lock(filp->f_lock); .. then unlock 
-         *  do this for the CORRECT drv; miscdrv_enh.ko */
         pr_info("%s:%s(): filename: \"%s\"\n"
 		" ga = %d, gb = %d\n",
 			OURMODNAME, __func__, filp->f_path.dentry->d_iname,
 			ga, gb);
-        /* REQD:: XXX : spin_unlock(inode->f_lock); */
-        return 0;
+	return 0;
 }
 
 /* The driver 'functionality' is encoded via the fops */
