@@ -20,7 +20,7 @@
 #include <linux/init.h>
 #include <linux/module.h>
 #include <linux/miscdevice.h>
-#include <linux/fs.h>            // the fops, file data structures
+#include <linux/fs.h>            /* the fops, file data structures */
 #include "../../convenient.h"
 
 #define OURMODNAME   "miscdrv"
@@ -102,10 +102,10 @@ static const struct file_operations lkdc_misc_fops = {
 	.release = close_miscdrv,
 };
 static struct miscdevice lkdc_miscdev = {
-	.minor = MISC_DYNAMIC_MINOR, // kernel dynamically assigns a free minor#
+	.minor = MISC_DYNAMIC_MINOR, /* kernel dynamically assigns a free minor# */
 	.name = "lkdc_miscdrv",
-	   // populated within /sys/class/misc/ and /sys/devices/virtual/misc/
-	.fops = &lkdc_misc_fops,     // connect to 'functionality'
+	   /* populated within /sys/class/misc/ and /sys/devices/virtual/misc/ */
+	.fops = &lkdc_misc_fops,     /* connect to 'functionality' */
 };
 
 static int __init miscdrv_init(void)
