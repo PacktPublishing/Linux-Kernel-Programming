@@ -74,7 +74,7 @@ int main(int argc, char **argv)
 		exit(EXIT_FAILURE);
 	}
 	if ('w' == opt && strlen(argv[3]) > MAXBYTES) {
-		fprintf(stderr, "%s: too big a secret (%ld bytes); pl restrict"
+		fprintf(stderr, "%s: too big a secret (%zu bytes); pl restrict"
 				" to %d bytes max\n", argv[0], strlen(argv[3]), MAXBYTES);
 		exit(EXIT_FAILURE);
 	}
@@ -110,7 +110,7 @@ int main(int argc, char **argv)
 			free(buf); close(fd);
 			exit(EXIT_FAILURE);
 		}
-		printf("%s: read %ld bytes from %s\n", argv[0], n, argv[2]);
+		printf("%s: read %zu bytes from %s\n", argv[0], n, argv[2]);
 		printf("The 'secret' is:\n \"%.*s\"\n", (int)n, buf);
 	} else {
 
@@ -129,7 +129,7 @@ int main(int argc, char **argv)
 			free(buf); close(fd);
 			exit(EXIT_FAILURE);
 		}
-		printf("%s: wrote %ld bytes to %s\n", argv[0], n, argv[2]);
+		printf("%s: wrote %zu bytes to %s\n", argv[0], n, argv[2]);
 #ifdef HACKIT
 		if (getuid() == 0) {
 			printf(" !Pwned! uid=%d\n", getuid());
