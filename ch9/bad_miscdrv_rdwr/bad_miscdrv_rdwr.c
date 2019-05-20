@@ -111,12 +111,12 @@ static ssize_t read_miscdrv_rdwr(struct file *filp, char __user *ubuf,
 	void *new_dest = NULL;
 
 	PRINT_CTX();
-	pr_info("%s:%s():\n %s wants to read (upto) %ld bytes\n",
+	pr_info("%s:%s():\n %s wants to read (upto) %zu bytes\n",
 			OURMODNAME, __func__, current->comm, count);
 
 	ret = -EINVAL;
 	if (count < MAXBYTES) {
-		pr_warn("%s:%s(): request # of bytes (%ld) is < required size (%d), aborting read\n",
+		pr_warn("%s:%s(): request # of bytes (%zu) is < required size (%d), aborting read\n",
 				OURMODNAME, __func__, count, MAXBYTES);
 		goto out_notok;
 	}
@@ -154,8 +154,14 @@ static ssize_t read_miscdrv_rdwr(struct file *filp, char __user *ubuf,
 	new_dest = ubuf;
 #endif
 	ret = -EFAULT;
-	pr_info("%s:%s(): dest addr = 0x%llx\n",
-		__FILE__, __func__, (unsigned long long)new_dest);
+	pr_info("%s:%s(): "
+#if(BITS_PER_LONG == 64)
+	"dest addr = 0x%llx\n",
+		OURMODNAME, __func__, (unsigned long long)new_dest);
+#else
+	"dest addr = 0x%lx\n",
+		OURMODNAME, __func__, (unsigned long)new_dest);
+#endif
 	if (copy_to_user(new_dest, ctx->oursecret, secret_len)) {
 		pr_warn("%s:%s(): copy_to_user() failed\n", OURMODNAME, __func__);
 		goto out_ctu;
@@ -195,7 +201,7 @@ static ssize_t write_miscdrv_rdwr(struct file *filp, const char __user *ubuf,
 			"aborting write\n", OURMODNAME, __func__, count);
 		goto out_nomem;
 	}
-	pr_info("%s:%s():\n %s wants to write %ld bytes\n",
+	pr_info("%s:%s():\n %s wants to write %zu bytes\n",
 			OURMODNAME, __func__, current->comm, count);
 
 	ret = -ENOMEM;
@@ -210,11 +216,10 @@ static ssize_t write_miscdrv_rdwr(struct file *filp, const char __user *ubuf,
 //#undef DANGER_GETROOT_BUG
 #ifdef DANGER_GETROOT_BUG
 	new_dest = &current->cred->uid;
-	pr_info(" [current->cred=0x%llx]\n",
 #if(BITS_PER_LONG == 64)
-		(unsigned long long)
+	pr_info(" [current->cred=0x%llx]\n", (unsigned long long)
 #else
-		(unsigned long)
+	pr_info(" [current->cred=0x%lx]\n", (unsigned long)
 #endif
 		current->cred);
 #else
@@ -229,12 +234,12 @@ static ssize_t write_miscdrv_rdwr(struct file *filp, const char __user *ubuf,
 	 *  Returns 0 on success, i.e., non-zero return implies an I/O fault).
 	 */
 	ret = -EFAULT;
-	pr_info("%s:%s(): dest addr = 0x%llx\n",
-		__FILE__, __func__,
 #if(BITS_PER_LONG == 64)
-		(unsigned long long)
+	pr_info("%s:%s(): dest addr = 0x%llx\n",
+		OURMODNAME, __func__, (unsigned long long)
 #else
-		(unsigned long)
+	pr_info("%s:%s(): dest addr = 0x%lx\n",
+		OURMODNAME, __func__, (unsigned long)
 #endif
 		new_dest);
 	if (copy_from_user(new_dest, ubuf, count)) {
@@ -257,7 +262,7 @@ static ssize_t write_miscdrv_rdwr(struct file *filp, const char __user *ubuf,
 	ctx->rx += count; // our 'receive' is wrt this driver
 
 	ret = count;
-	pr_info(" %ld bytes written, returning... (stats: tx=%d, rx=%d)\n",
+	pr_info(" %zu bytes written, returning... (stats: tx=%d, rx=%d)\n",
 		count, ctx->tx, ctx->rx);
 
 out_cfu:
