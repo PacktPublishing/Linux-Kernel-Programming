@@ -47,7 +47,7 @@ MODULE_DESCRIPTION("LKDC book:ch9/miscdrv_rdwr: simple misc char driver with"
 MODULE_LICENSE("Dual MIT/GPL");
 MODULE_VERSION("0.1");
 
-static int ga, gb = 1;
+static int ga, gb = 1; /* ignore for now ... */
 
 /* The driver 'context' data structure;
  * all relevant 'state info' reg the driver is here.
