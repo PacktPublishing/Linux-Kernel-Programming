@@ -41,9 +41,9 @@
 #include "../../convenient.h"
 
 #define OURMODNAME   "miscdrv_rdwr"
-
 MODULE_AUTHOR("Kaiwan N Billimoria");
-MODULE_DESCRIPTION("LKDC book:ch9/miscdrv_rdwr: simple misc char driver with rdwr");
+MODULE_DESCRIPTION("LKDC book:ch9/miscdrv_rdwr: simple misc char driver with"
+		   " a 'secret' to read/write");
 MODULE_LICENSE("Dual MIT/GPL");
 MODULE_VERSION("0.1");
 
@@ -128,8 +128,8 @@ static ssize_t read_miscdrv_rdwr(struct file *filp, char __user *ubuf,
 	/* In a 'real' driver, we would now actually read the content of the
 	 * device hardware (or whatever) into the user supplied buffer 'ubuf'
 	 * for 'count' bytes, and then copy it to the userspace process (via
-	 * the copy_to_user() macro).
-	 * (FYI, the copy_to_user() macro is the *right* way to copy data from
+	 * the copy_to_user() routine).
+	 * (FYI, the copy_to_user() routine is the *right* way to copy data from
 	 * userspace to kernel-space; the parameters are:
 	 *  'to-buffer', 'from-buffer', count
 	 *  Returns 0 on success, i.e., non-zero return implies an I/O fault).
