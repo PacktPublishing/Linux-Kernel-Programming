@@ -36,7 +36,6 @@
 #include <linux/slab.h>         // k[m|z]alloc(), k[z]free(), ...
 #include <linux/mm.h>           // kvmalloc()
 #include <linux/fs.h>		// the fops
-#include <linux/cred.h>
 
 // copy_[to|from]_user()
 #include <linux/version.h>
@@ -46,14 +45,24 @@
 #include <asm/uaccess.h>
 #endif
 
+#include <linux/cred.h>
 #include "../../convenient.h"
 
 #define OURMODNAME   "bad_miscdrv_rdwr"
 MODULE_AUTHOR("Kaiwan N Billimoria");
 MODULE_DESCRIPTION("LKDC book:ch9/bad_miscdrv_rdwr: simple misc char driver with"
-		   " a 'secret' to read/write AND a (sloppy) privesc!");
+		   " a 'secret' to read/write AND a (contrived) privesc!");
 MODULE_LICENSE("Dual MIT/GPL");
 MODULE_VERSION("0.1");
+
+/* Portability: set the printk formatting appropriately for 32 and 64-bit */
+#if(BITS_PER_LONG == 64)
+	#define ADDRFMT   "0x%llx"
+	#define TYPECST   unsigned long long
+#else
+	#define ADDRFMT   "0x%lx"
+	#define TYPECST   unsigned long
+#endif
 
 static int ga, gb = 1; /* ignore for now ... */
 
@@ -149,19 +158,17 @@ static ssize_t read_miscdrv_rdwr(struct file *filp, char __user *ubuf,
 //#define READ_BUG
 #undef READ_BUG
 #ifdef READ_BUG
+	/* As a demo of misusing the copy_to_user(), we change the destination
+	 * pointer to point 512 KB beyond the userspace buffer; this will/could
+	 * result in a bad read */
 	new_dest = ubuf+(512*1024);
 #else
 	new_dest = ubuf;
 #endif
 	ret = -EFAULT;
-	pr_info("%s:%s(): "
-#if(BITS_PER_LONG == 64)
-	"dest addr = 0x%llx\n",
-		OURMODNAME, __func__, (unsigned long long)new_dest);
-#else
-	"dest addr = 0x%lx\n",
-		OURMODNAME, __func__, (unsigned long)new_dest);
-#endif
+	pr_info("%s:%s(): dest addr = " ADDRFMT "\n",
+		OURMODNAME, __func__, (TYPECST)new_dest);
+
 	if (copy_to_user(new_dest, ctx->oursecret, secret_len)) {
 		pr_warn("%s:%s(): copy_to_user() failed\n", OURMODNAME, __func__);
 		goto out_ctu;
@@ -215,13 +222,13 @@ static ssize_t write_miscdrv_rdwr(struct file *filp, const char __user *ubuf,
 #define DANGER_GETROOT_BUG
 //#undef DANGER_GETROOT_BUG
 #ifdef DANGER_GETROOT_BUG
+	/* Make the destination of the copy_from_user() point to the current
+	 * process context's (real) UID; this way, we redirect the driver to
+	 * write zero's here. Why? Simple: traditionally, a UID == 0 is what
+	 * defines root capability!
+	 */
 	new_dest = &current->cred->uid;
-#if(BITS_PER_LONG == 64)
-	pr_info(" [current->cred=0x%llx]\n", (unsigned long long)
-#else
-	pr_info(" [current->cred=0x%lx]\n", (unsigned long)
-#endif
-		current->cred);
+	pr_info(" [current->cred=" ADDRFMT "]\n", (TYPECST)current->cred);
 #else
 	new_dest = kbuf;
 #endif
@@ -233,15 +240,10 @@ static ssize_t write_miscdrv_rdwr(struct file *filp, const char __user *ubuf,
 	 *  'to-buffer', 'from-buffer', count
 	 *  Returns 0 on success, i.e., non-zero return implies an I/O fault).
 	 */
+	pr_info("%s:%s(): dest addr = " ADDRFMT "\n",
+		OURMODNAME, __func__, (TYPECST)new_dest);
+
 	ret = -EFAULT;
-#if(BITS_PER_LONG == 64)
-	pr_info("%s:%s(): dest addr = 0x%llx\n",
-		OURMODNAME, __func__, (unsigned long long)
-#else
-	pr_info("%s:%s(): dest addr = 0x%lx\n",
-		OURMODNAME, __func__, (unsigned long)
-#endif
-		new_dest);
 	if (copy_from_user(new_dest, ubuf, count)) {
 		pr_warn("%s:%s(): copy_from_user() failed\n", OURMODNAME, __func__);
 		goto out_cfu;
