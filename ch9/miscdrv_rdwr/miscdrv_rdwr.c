@@ -8,7 +8,7 @@
  *  GitHub repository:
  *  https://github.com/PacktPublishing/Linux-Kernel-Development-Cookbook
  *
- * From: Ch 9 : Writing a Simple Misc Device Driver
+ * From: Ch 9 : Writing a Simple Misc Character Device Driver
  ****************************************************************
  * Brief Description:
  * This driver is built upon our previous 'skeleton' ../miscdrv/ miscellaneous
@@ -99,7 +99,6 @@ static ssize_t read_miscdrv_rdwr(struct file *filp, char __user *ubuf,
 				size_t count, loff_t *off)
 {
 	int ret = count, secret_len = strlen(ctx->oursecret);
-	void *kbuf = NULL;
 
 	PRINT_CTX();
 	pr_info("%s:%s():\n %s wants to read (upto) %ld bytes\n",
@@ -114,15 +113,8 @@ static ssize_t read_miscdrv_rdwr(struct file *filp, char __user *ubuf,
 	if (secret_len <= 0) {
 		pr_warn("%s:%s(): whoops, something's wrong, the 'secret' isn't"
 			" available..; aborting read\n",
-				OURMODNAME, __func__);
+			OURMODNAME, __func__);
 		goto out_notok;
-	}
-
-	ret = -ENOMEM;
-	kbuf = kvmalloc(count, GFP_KERNEL);
-	if (unlikely(!kbuf)) {
-		pr_warn("%s:%s(): kvmalloc() failed!\n", OURMODNAME, __func__);
-		goto out_nomem;
 	}
 
 	/* In a 'real' driver, we would now actually read the content of the
@@ -139,7 +131,7 @@ static ssize_t read_miscdrv_rdwr(struct file *filp, char __user *ubuf,
 	ret = -EFAULT;
 	if (copy_to_user(ubuf, ctx->oursecret, secret_len)) {
 		pr_warn("%s:%s(): copy_to_user() failed\n", OURMODNAME, __func__);
-		goto out_ctu;
+		goto out_notok;
 	}
 	ret = secret_len;
 
@@ -147,9 +139,6 @@ static ssize_t read_miscdrv_rdwr(struct file *filp, char __user *ubuf,
 	ctx->tx += secret_len; // our 'transmit' is wrt this driver
 	pr_info(" %d bytes read, returning... (stats: tx=%d, rx=%d)\n",
 			secret_len, ctx->tx, ctx->rx);
-out_ctu:
-	kvfree(kbuf);
-out_nomem:
 out_notok:
 	return ret;
 }
