@@ -8,7 +8,7 @@
  *  GitHub repository:
  *  https://github.com/PacktPublishing/Linux-Kernel-Development-Cookbook
  *
- * From: Ch : Synchronization Primitives and How to Use Them
+ * From: Ch 9 : Writing a Simple Misc Character Device Driver
  ****************************************************************
  * Brief Description:
  * A simple test bed for the miscdrv_rdwr demo driver; a small userspace app to
@@ -35,7 +35,7 @@ static int stay_alive = 0;
 static inline void usage(char *prg)
 {
 	fprintf(stderr,"Usage: %s opt=read/write device_file [\"secret-msg\"]\n"
-			" opt = 'r' => we shall issue the read(2), retreiving the 'secret' form the driver\n"
+			" opt = 'r' => we shall issue the read(2), retrieving the 'secret' form the driver\n"
 			" opt = 'w' => we shall issue the write(2), writing the secret message <secret-msg>\n"
 			"  (max %d bytes)\n",
 		       prg, MAXBYTES);
@@ -72,7 +72,7 @@ int main(int argc, char **argv)
 
 	if ('w' == opt)
 		flags = O_WRONLY;
-	if( (fd=open(argv[2], flags, 0)) == -1) {
+	if ((fd=open(argv[2], flags, 0)) == -1) {
 		fprintf(stderr, "%s: open(2) on %s failed\n", argv[0], argv[2]);
 		perror("open");
 		exit(EXIT_FAILURE);
