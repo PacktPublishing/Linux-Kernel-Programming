@@ -27,7 +27,15 @@
 #include <linux/slab.h>         // k[m|z]alloc(), k[z]free(), ...
 #include <linux/mm.h>           // kvmalloc()
 #include <linux/fs.h>		// the fops structure
-#include <linux/uaccess.h>      // copy_to|from_user() macros
+
+// copy_[to|from]_user()
+#include <linux/version.h>
+#if LINUX_VERSION_CODE > KERNEL_VERSION(4,11,0)
+#include <linux/uaccess.h>
+#else
+#include <asm/uaccess.h>
+#endif
+
 #include <linux/mutex.h>
 #include "../../convenient.h"
 
@@ -94,7 +102,6 @@ static ssize_t read_miscdrv_rdwr(struct file *filp, char __user *ubuf,
 				size_t count, loff_t *off)
 {
 	int ret = count, secret_len;
-	void *kbuf = NULL;
 
 	mutex_lock(&ctx->lock);
 	secret_len = strlen(ctx->oursecret);
@@ -114,22 +121,15 @@ static ssize_t read_miscdrv_rdwr(struct file *filp, char __user *ubuf,
 	if (secret_len <= 0) {
 		pr_warn("%s:%s(): whoops, something's wrong, the 'secret' isn't"
 			" available..; aborting read\n",
-				OURMODNAME, __func__);
+			OURMODNAME, __func__);
 		goto out_notok;
-	}
-
-	ret = -ENOMEM;
-	kbuf = kvmalloc(count, GFP_KERNEL);
-	if (unlikely(!kbuf)) {
-		pr_warn("%s:%s(): kvmalloc() failed!\n", OURMODNAME, __func__);
-		goto out_nomem;
 	}
 
 	/* In a 'real' driver, we would now actually read the content of the
 	 * device hardware (or whatever) into the user supplied buffer 'ubuf'
 	 * for 'count' bytes, and then copy it to the userspace process (via
-	 * the copy_to_user() macro).
-	 * (FYI, the copy_to_user() macro is the *right* way to copy data from
+	 * the copy_to_user() routine).
+	 * (FYI, the copy_to_user() routine is the *right* way to copy data from
 	 * userspace to kernel-space; the parameters are:
 	 *  'to-buffer', 'from-buffer', count
 	 *  Returns 0 on success, i.e., non-zero return implies an I/O fault).
@@ -145,13 +145,11 @@ static ssize_t read_miscdrv_rdwr(struct file *filp, char __user *ubuf,
 	ret = secret_len;
 
 	// Update stats
-	ctx->tx += secret_len; // our 'transmit' is wrt userspace
+	ctx->tx += secret_len; // our 'transmit' is wrt this driver
 	pr_info(" %d bytes read, returning... (stats: tx=%d, rx=%d)\n",
 			secret_len, ctx->tx, ctx->rx);
 out_ctu:
 	mutex_unlock(&ctx->lock);
-	kvfree(kbuf);
-out_nomem:
 out_notok:
 	return ret;
 }
