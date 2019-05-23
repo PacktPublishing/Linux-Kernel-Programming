@@ -1,7 +1,11 @@
 LKDC book:
 A solution for assignment 10.1:
+"Modify the ch10/1_miscdrv_rdwr_mutexlock/miscdrv_rdwr_mutexlock.c device driver
+to use the trylock mutex variant in the driver's write() method. If the lock is
+not acquired, perform a hex dump of the driver 'context' structure ('busy-loop'
+over this)."
 
-1. Build the driver, insmod it..
+1. Build the driver (in this directory), insmod it..
 
 $ lsmod |grep miscdrv_rdwr_mutextrylock
 miscdrv_rdwr_mutextrylock    28672  0
@@ -40,4 +44,4 @@ $ dmesg
                 ga = 0, gb = 1
 $ 
 
-(we use the arrows to show the trylock).
+(above, we use the arrows to show the trylock).
