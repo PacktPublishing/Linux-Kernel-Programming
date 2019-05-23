@@ -28,10 +28,11 @@
 #include <linux/mutex.h>
 #include "../../../convenient.h"
 
-#define OURMODNAME   "miscdrv_rdwr_mutexlock"
+#define OURMODNAME   "miscdrv_rdwr_mutextrylock"
 
 MODULE_AUTHOR("Kaiwan N Billimoria");
-MODULE_DESCRIPTION("LKDC book:ch10/miscdrv_rdwr_mutexlock: simple misc char driver with mutex locking");
+MODULE_DESCRIPTION("LKDC book:solutions_to_assgn/ch10/miscdrv_rdwr_mutextrylock:"
+		" a solution to Assignment 10.1");
 MODULE_LICENSE("Dual MIT/GPL");
 MODULE_VERSION("0.1");
 
@@ -91,7 +92,6 @@ static ssize_t read_miscdrv_rdwr(struct file *filp, char __user *ubuf,
 				size_t count, loff_t *off)
 {
 	int ret = count, secret_len;
-	void *kbuf = NULL;
 
 	mutex_lock(&ctx->lock);
 	secret_len = strlen(ctx->oursecret);
@@ -114,13 +114,6 @@ static ssize_t read_miscdrv_rdwr(struct file *filp, char __user *ubuf,
 		goto out_notok;
 	}
 
-	ret = -ENOMEM;
-	kbuf = kvmalloc(count, GFP_KERNEL);
-	if (unlikely(!kbuf)) {
-		pr_warn("%s:%s(): kvmalloc() failed!\n", OURMODNAME, __func__);
-		goto out_nomem;
-	}
-
 	/* In a 'real' driver, we would now actually read the content of the
 	 * device hardware (or whatever) into the user supplied buffer 'ubuf'
 	 * for 'count' bytes, and then copy it to the userspace process (via
@@ -141,13 +134,11 @@ static ssize_t read_miscdrv_rdwr(struct file *filp, char __user *ubuf,
 	ret = secret_len;
 
 	// Update stats
-	ctx->tx += secret_len; // our 'transmit' is wrt userspace
+	ctx->tx += secret_len; // our 'transmit' is wrt this driver
 	pr_info(" %d bytes read, returning... (stats: tx=%d, rx=%d)\n",
 			secret_len, ctx->tx, ctx->rx);
 out_ctu:
 	mutex_unlock(&ctx->lock);
-	kvfree(kbuf);
-out_nomem:
 out_notok:
 	return ret;
 }
@@ -202,8 +193,8 @@ static ssize_t write_miscdrv_rdwr(struct file *filp, const char __user *ubuf,
 	 * new 'secret' into our driver 'context' structure, and unlock.
 	 *
 	 * The likely scenario: this lock is of course lightly contended (we
-	 * don't really have many threads competing for it (unless you write
-	 * a test case for that)); hence, we will likely acquire the mutex on
+	 * don't really have many threads competing for it - unless you write
+	 * a test case for that); hence, we will likely acquire the mutex on
 	 * the first attempt.
 	 */
 	while (0 == (tl = mutex_trylock(&ctx->lock))) { // not acquired the lock
@@ -222,7 +213,7 @@ static ssize_t write_miscdrv_rdwr(struct file *filp, const char __user *ubuf,
 			OURMODNAME, __func__, try ++);
 		strlcpy(ctx->oursecret, kbuf, (count > MAXBYTES ? MAXBYTES : count));
 		// Update stats
-		ctx->rx += count; // our 'receive' is wrt userspace
+		ctx->rx += count; // our 'receive' is wrt this driver
 
 		ret = count;
 		pr_info(" %ld bytes written, returning... (stats: tx=%d, rx=%d)\n",
@@ -274,12 +265,12 @@ static const struct file_operations lkdc_misc_fops = {
 
 static struct miscdevice lkdc_miscdev = {
 	.minor = MISC_DYNAMIC_MINOR, // kernel dynamically assigns a free minor#
-	.name = "lkdc_miscdrv_rdwr",
+	.name = "lkdc_miscdrv_mutextrylock",
 	    // populated within /sys/class/misc/ and /sys/devices/virtual/misc/
 	.fops = &lkdc_misc_fops,     // connect to 'functionality'
 };
 
-static int __init miscdrv_init_mutexlock(void)
+static int __init miscdrv_init_mutextrylock(void)
 {
 	int ret;
 
@@ -323,7 +314,7 @@ static int __init miscdrv_init_mutexlock(void)
 	return 0;		/* success */
 }
 
-static void __exit miscdrv_exit_mutexlock(void)
+static void __exit miscdrv_exit_mutextrylock(void)
 {
 	mutex_destroy(&lock1);
 	mutex_destroy(&ctx->lock);
@@ -332,5 +323,5 @@ static void __exit miscdrv_exit_mutexlock(void)
 	pr_debug("%s: LKDC misc driver deregistered, bye\n", OURMODNAME);
 }
 
-module_init(miscdrv_init_mutexlock);
-module_exit(miscdrv_exit_mutexlock);
+module_init(miscdrv_init_mutextrylock);
+module_exit(miscdrv_exit_mutextrylock);
