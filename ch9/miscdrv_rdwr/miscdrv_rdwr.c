@@ -106,7 +106,8 @@ static ssize_t read_miscdrv_rdwr(struct file *filp, char __user *ubuf,
 
 	ret = -EINVAL;
 	if (count < MAXBYTES) {
-		pr_warn("%s:%s(): request # of bytes (%ld) is < required size (%d), aborting read\n",
+		pr_warn("%s:%s(): request # of bytes (%ld) is < required size"
+			" (%d), aborting read\n",
 				OURMODNAME, __func__, count, MAXBYTES);
 		goto out_notok;
 	}
