@@ -11,13 +11,10 @@
  * From: Ch 10 : Synchronization Primitives and How to Use Them
  ****************************************************************
  * Brief Description:
- * This driver is built upon our previous one: ch10/miscdrv_rdwr_mutexlock/
- * miscellaneous driver.
- * The key difference:  TODO
- *
- * by using the mutex lock to protect the critical sections - the places in the
- * code where we access global / shared writeable data.
- * The functionality (the get and set of the 'secret') remains identical.
+ * This driver is built upon our previous ch10/1_miscdrv_rdwr_mutexlock/
+ * misc driver.
+ * The key difference: we use spinlocks in place of the mutex locks. This isn't
+ * the case everywhere though..
  *
  * For details, please refer the book, Ch 10.
  */
@@ -27,7 +24,15 @@
 #include <linux/slab.h>         // k[m|z]alloc(), k[z]free(), ...
 #include <linux/mm.h>           // kvmalloc()
 #include <linux/fs.h>		// the fops structure
-#include <linux/uaccess.h>      // copy_to|from_user() macros
+
+// copy_[to|from]_user()
+#include <linux/version.h>
+#if LINUX_VERSION_CODE > KERNEL_VERSION(4,11,0)
+#include <linux/uaccess.h>
+#else
+#include <asm/uaccess.h>
+#endif
+
 #include <linux/mutex.h>
 #include <linux/spinlock.h>
 #include "../../convenient.h"
@@ -35,7 +40,8 @@
 #define OURMODNAME   "miscdrv_rdwr_spinlock"
 
 MODULE_AUTHOR("Kaiwan N Billimoria");
-MODULE_DESCRIPTION("LKDC book:ch10/2_miscdrv_rdwr_spinlock: simple misc char driver with spinlock locking");
+MODULE_DESCRIPTION("LKDC book:ch10/2_miscdrv_rdwr_spinlock: simple misc"
+		" char driver with spinlocks");
 MODULE_LICENSE("Dual MIT/GPL");
 MODULE_VERSION("0.1");
 
@@ -56,8 +62,8 @@ struct drv_ctx {
 	u64 config3;
 #define MAXBYTES    128
 	char oursecret[MAXBYTES];
-	struct mutex mutex;        // this mutex protects this data structure
-	spinlock_t spinlock;	   // ...so does this spinlock
+	struct mutex mutex;  // this mutex protects this data structure
+	spinlock_t spinlock; // ...so does this spinlock
 };
 static struct drv_ctx *ctx;
 
@@ -65,7 +71,8 @@ static inline void display_stats(int show_stats)
 {
 	if (1 == show_stats) {
 		spin_lock(&ctx->spinlock);
-		pr_info(" stats: tx=%d, rx=%d\n", ctx->tx, ctx->rx);
+		pr_info("%s: stats: tx=%d, rx=%d\n",
+			OURMODNAME, ctx->tx, ctx->rx);
 		spin_unlock(&ctx->spinlock);
 	}
 }
@@ -87,17 +94,12 @@ static int open_miscdrv_rdwr(struct inode *inode, struct file *filp)
 	ga ++; gb --;
 	spin_unlock(&lock1);
 
-	spin_lock(&filp->f_lock);	// (see comment below)
 	pr_info("%s:%s():\n"
 		" filename: \"%s\"\n"
 		" wrt open file: f_flags = 0x%x\n"
 		" ga = %d, gb = %d\n",
-	       OURMODNAME, __func__,
-	       filp->f_path.dentry->d_iname,
-	       filp->f_flags, /* protect this access with the
-				 struct file's spinlock ! */
-	       ga, gb); // potential bug; unprotected / dirty reads on ga, gb!
-	spin_unlock(&filp->f_lock);
+	       OURMODNAME, __func__, filp->f_path.dentry->d_iname,
+	       filp->f_flags, ga, gb);
 
 	display_stats(1);
 	return 0;
@@ -116,10 +118,7 @@ static ssize_t read_miscdrv_rdwr(struct file *filp, char __user *ubuf,
 				size_t count, loff_t *off)
 {
 	int ret = count, secret_len, err_path = 0;
-	void *kbuf = NULL;
 
-	/* Routines like strlen(), strlcpy(), etc are non-blocking; hence,
-	 * we can use our spinlock to protect them */
 	spin_lock(&ctx->spinlock);
 	secret_len = strlen(ctx->oursecret);
 	spin_unlock(&ctx->spinlock);
@@ -139,24 +138,16 @@ static ssize_t read_miscdrv_rdwr(struct file *filp, char __user *ubuf,
 	if (secret_len <= 0) {
 		pr_warn("%s:%s(): whoops, something's wrong, the 'secret' isn't"
 			" available..; aborting read\n",
-				OURMODNAME, __func__);
+			OURMODNAME, __func__);
 		err_path = 1;
 		goto out_notok;
-	}
-
-	ret = -ENOMEM;
-	kbuf = kvmalloc(count, GFP_KERNEL);
-	if (unlikely(!kbuf)) {
-		pr_warn("%s:%s(): kvmalloc() failed!\n", OURMODNAME, __func__);
-		err_path = 1;
-		goto out_nomem;
 	}
 
 	/* In a 'real' driver, we would now actually read the content of the
 	 * device hardware (or whatever) into the user supplied buffer 'ubuf'
 	 * for 'count' bytes, and then copy it to the userspace process (via
-	 * the copy_to_user() macro).
-	 * (FYI, the copy_to_user() macro is the *right* way to copy data from
+	 * the copy_to_user() routine).
+	 * (FYI, the copy_to_user() routine is the *right* way to copy data from
 	 * userspace to kernel-space; the parameters are:
 	 *  'to-buffer', 'from-buffer', count
 	 *  Returns 0 on success, i.e., non-zero return implies an I/O fault).
@@ -168,7 +159,7 @@ static ssize_t read_miscdrv_rdwr(struct file *filp, char __user *ubuf,
 	/* Why don't we just use the spinlock??
 	 * Because - v imp! - remember that the spinlock can only be used when
 	 * the critical section will not sleep or block in any manner; here,
-	 * the critical section involves the copy_to_user(); it very much can
+	 * the critical section invokes the copy_to_user(); it very much can
 	 * cause a 'sleep' (a schedule()) to occur.
 	 */
 	if (copy_to_user(ubuf, ctx->oursecret, secret_len)) {
@@ -179,13 +170,12 @@ static ssize_t read_miscdrv_rdwr(struct file *filp, char __user *ubuf,
 	ret = secret_len;
 
 	// Update stats
-	ctx->tx += secret_len; // our 'transmit' is wrt userspace
-	pr_info(" %d bytes read, returning...\n", secret_len);
+	ctx->tx += secret_len; // our 'transmit' is wrt this driver
+	pr_info(" %d bytes read, returning... (stats: tx=%d, rx=%d)\n",
+			secret_len, ctx->tx, ctx->rx);
 out_ctu:
 	mutex_unlock(&ctx->mutex);
 	display_stats(err_path);
-	kvfree(kbuf);
-out_nomem:
 out_notok:
 	return ret;
 }
@@ -248,15 +238,17 @@ static ssize_t write_miscdrv_rdwr(struct file *filp, const char __user *ubuf,
 	ctx->rx += count; // our 'receive' is wrt userspace
 
 	ret = count;
-	pr_info(" %ld bytes written, returning...\n", count);
+	pr_info(" %ld bytes written, returning... (stats: tx=%d, rx=%d)\n",
+		count, ctx->tx, ctx->rx);
 
 	if (1 == buggy) {
+		/* We're still holding the spinlock! */
 		set_current_state(TASK_INTERRUPTIBLE);
-		schedule_timeout(1*HZ);      /* this is a blocking call! */
+		schedule_timeout(1*HZ);  /* ... and this is a blocking call!
+			Congratulations! you've just engineered a bug */
 	}
 
 	spin_unlock(&ctx->spinlock);
-
 out_cfu:
 	kvfree(kbuf);
 	display_stats(err_path);
@@ -280,11 +272,10 @@ static int close_miscdrv_rdwr(struct inode *inode, struct file *filp)
 
         pr_info("%s:%s(): filename: \"%s\"\n"
 		" ga = %d, gb = %d\n",
-		OURMODNAME, __func__, filp->f_path.dentry->d_iname,
-		ga, gb); // potential bug; unprotected / dirty reads on ga, gb!
+			OURMODNAME, __func__, filp->f_path.dentry->d_iname,
+			ga, gb);
 	display_stats(1);
-
-	return 0;
+        return 0;
 }
 
 /* The driver 'functionality' is encoded via the fops */
@@ -303,7 +294,7 @@ static const struct file_operations lkdc_misc_fops = {
 
 static struct miscdevice lkdc_miscdev = {
 	.minor = MISC_DYNAMIC_MINOR, // kernel dynamically assigns a free minor#
-	.name = "lkdc_miscdrv_rdwr",
+	.name = "lkdc_miscdrv_rdwr_spinlock",
 	    // populated within /sys/class/misc/ and /sys/devices/virtual/misc/
 	.fops = &lkdc_misc_fops,     // connect to 'functionality'
 };
@@ -327,9 +318,8 @@ static int __init miscdrv_init_spinlock(void)
 	 * Write the minor # into the kernel log in an easily grep-able way (so
 	 * that we can do a
 	 *  MINOR=$(dmesg |grep "^miscdrv_rdwr\:minor=" |cut -d"=" -f2)
-	 * from a shell script!).
-	 * Of course, this approach is silly; in the real world, superior
-	 * techniques (typically 'udev') are used.
+	 * from a shell script!). Of course, this approach is silly; in the
+	 * real world, superior techniques (typically 'udev') are used.
 	 * Here, we do provide a utility script (cr8devnode.sh) to do this and create the
 	 * device node.
 	 */
@@ -343,24 +333,19 @@ static int __init miscdrv_init_spinlock(void)
 	mutex_init(&ctx->mutex);
 	spin_lock_init(&ctx->spinlock);
 	strlcpy(ctx->oursecret, "initmsg", 8);
-		/* Why don't we protect the above strlcpy() with the mutex or
-		 * spinlock? It's working on shared writable data, yes?
+		/* Why don't we protect the above strlcpy() with the mutex lock?
+		 * It's working on shared writable data, yes?
 		 * No; this is the init code; it's guaranteed to run in exactly
 		 * one context (typically the insmod(8) process), thus there is
 		 * no concurrency possible here. The same goes for the cleanup
 		 * code path.
 		 */
-	pr_info("Initial stats: ");
-	display_stats(1);
 
 	return 0;		/* success */
 }
 
 static void __exit miscdrv_exit_spinlock(void)
 {
-	pr_info("Closing stats: ");
-	display_stats(1);
-
 	mutex_destroy(&ctx->mutex);
 	kzfree(ctx);
 	misc_deregister(&lkdc_miscdev);

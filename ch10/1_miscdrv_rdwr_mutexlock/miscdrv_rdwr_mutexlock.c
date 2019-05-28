@@ -184,7 +184,7 @@ static ssize_t write_miscdrv_rdwr(struct file *filp, const char __user *ubuf,
 	/* Copy in the user supplied buffer 'ubuf' - the data content to write -
 	 * via the copy_from_user() macro.
 	 * (FYI, the copy_from_user() macro is the *right* way to copy data from
-	 * kernel-space to userspace; the parameters are:
+	 * userspace to kernel-space; the parameters are:
 	 *  'to-buffer', 'from-buffer', count
 	 *  Returns 0 on success, i.e., non-zero return implies an I/O fault).
 	 */
