@@ -24,7 +24,7 @@
 #include <linux/kallsyms.h>
 #include <linux/cred.h>
 #include <linux/delay.h>
-#include <linux/uidgid.h>
+#include "../../convenient.h"
 
 #define OURMODNAME   "6_percpuvar"
 
@@ -33,68 +33,45 @@ MODULE_DESCRIPTION("LKDC book:ch/: hello, world");
 MODULE_LICENSE("Dual MIT/GPL");
 MODULE_VERSION("0.1");
 
-static int dont_use_pcpu;
-module_param(dont_use_pcpu, int, 0600);
-MODULE_PARM_DESC(dont_use_pcpu,
- "If 1, don't use our percpu variables, use 'regular' global integers");
-
 #define SHOW_CPU_CTX()  do {                                           \
-	pr_info(" %s():%d: *** thread PID %d on cpu %d now ***\n",     \
+	pr_info("%s():%d: *** thread PID %d on cpu %d now ***\n",      \
 		__func__, __LINE__, current->pid, smp_processor_id()); \
 } while(0)
 
-#define MAX_KTHRDS      2
-#define THRD0_ITERS     30000
-#define THRD1_ITERS     30000
+#define MAX_KTHRDS       2
+#define THRD0_ITERS      3
+#define THRD1_ITERS      3
 
 static long (*ptr_sched_setaffinity)(pid_t, const struct cpumask *);
-static volatile int ga, gb;
 static struct task_struct *arr_tsk[MAX_KTHRDS];
 
-/*--- The percpu vars ---
- * - two integers, pcpa and pcpb
- */
+/*--- The percpu variables, an integer 'pcpa' and a dat structure --- */
+/* This integer is statically allocated and initialized to 0 */
 DEFINE_PER_CPU(int, pcpa);
-//DEFINE_PER_CPU(int, pcpb);
+/* This will be dynamically allocated via __alloc_percpu() */
+struct drv_ctx {
+	int tx, rx; /* here, as a demo, we just use these two members,
+	               ignoring the rest */
+	int err, myword;
+	u32 config1, config2;
+	u64 config3;
+} *pcp_ctx;
 
-#if 0
+
 /* Display the percpu vars */
 static inline void disp_vars(void)
 {
-	int i;
+	int i, val, rx, tx;
 
-	if (!dont_use_pcpu) {
-		mb();
-		/* for (i = 0; i < num_online_cpus(); i++) { */
-		for_each_online_cpu(i) {
-			pr_info(" cpu %2d: pcpa=%d\n", i, get_cpu_var(pcpa));
-			put_cpu_var(pcpa);
-		}
-	} else {
-		pr_info(" ga = %d gb = %d\n", ga, gb);
+	PRINT_CTX();
+	for_each_online_cpu(i) {
+		val = per_cpu(pcpa, i);
+		rx = per_cpu_ptr(pcp_ctx, i)->rx;
+		tx = per_cpu_ptr(pcp_ctx, i)->tx;
+		pr_info(" cpu %2d: pcpa = %+d, rx = %5d, tx = %5d\n",
+			i, val, rx, tx);
 	}
 }
-#endif
-#if 0
-/* Display the percpu vars */
-static inline void OLD_disp_vars(void)
-{
-	int i;
-
-	if (!dont_use_pcpu) {
-		mb();
-		/* for (i = 0; i < num_online_cpus(); i++) { */
-		for_each_online_cpu(i) {
-			pr_info(" cpu %2d: pcpa=%d pcpb=%d\n",
-				i, get_cpu_var(pcpa), get_cpu_var(pcpb));
-			put_cpu_var(pcpa);
-			put_cpu_var(pcpb);
-		}
-	} else {
-		pr_info(" ga = %d gb = %d\n", ga, gb);
-	}
-}
-#endif
 
 static long set_cpuaffinity(unsigned int cpu)
 {
@@ -104,7 +81,7 @@ static long set_cpuaffinity(unsigned int cpu)
 	struct cred *new;
 
 	/* Not root? get root! (hey, we're in kernel mode :) */
-	if (unlikely(euid)) {  
+	if (unlikely(euid)) {
 		pr_info("%s(): before commit_creds(): uid=%u euid=%u\n",
 			__func__, from_kuid(&init_user_ns, current_uid()),
 			from_kuid(&init_user_ns, current_euid()));
@@ -133,55 +110,58 @@ static long set_cpuaffinity(unsigned int cpu)
 	return ret;
 }
 
-/* Our simple kernel thread. */
+/* Our kernel thread worker routine */
 static int thrd_work(void *arg)
 {
 	int i, val;
 	long thrd = (long)arg;
+	struct drv_ctx *ctx;
 
 	if (thrd != 0 && thrd != 1) {
 		pr_err("%s: 'thrd' value invalid (thrd=%ld)\n", OURMODNAME, thrd);
 		return -EINVAL;
 	}
 
-	if (set_cpuaffinity(thrd) < 0) { /* thrd is either 0 or 1 */
+	/* Set CPU affinity mask to 'thrd', which is either 0 or 1 */
+	if (set_cpuaffinity(thrd) < 0) {
 		pr_err("%s: setting cpu affinity mask for our kthread"
 			" %ld failed\n", OURMODNAME, thrd);
 		return -ENOSYS;
 	}
-
-	pr_info("name: %s PID: %d thrdnum %ld\n",
-		current->comm, current->pid, thrd);
+	SHOW_CPU_CTX();
 
 	if (thrd == 0) { /* our kthread #0 runs on CPU 0 */
-		SHOW_CPU_CTX();
 		for (i=0; i<THRD0_ITERS; i++) {
-			if (!dont_use_pcpu) {
-				val = ++ get_cpu_var(pcpa);
-				pr_info("cpu0: pcpa = %d\n", val);
-				put_cpu_var(pcpa);
-				//get_cpu_var(pcpb) --;
-				//put_cpu_var(pcpb);
-			} else {
-				ga ++; gb --;
-			}
+			/* Operate on our perpcu integer */
+			val = ++ get_cpu_var(pcpa);
+			pr_info("cpu0: pcpa = %+d\n", val);
+			put_cpu_var(pcpa);
+
+			/* Operate on our perpcu structure */
+			ctx = get_cpu_ptr(pcp_ctx);
+			ctx->tx += 100;
+			pr_info("cpu0: pcp ctx: tx = %5d, rx = %5d\n",
+				ctx->tx, ctx->rx);
+			put_cpu_ptr(pcp_ctx);
 		}
 	} else if (thrd == 1) { /* our kthread #1 runs on CPU 1 */
-		SHOW_CPU_CTX();
 		for (i=0; i<THRD1_ITERS; i++) {
-			if (!dont_use_pcpu) {
-				val = -- get_cpu_var(pcpa);
-				pr_info("cpu1: pcpa = %d\n", val);
-				put_cpu_var(pcpa);
-				//get_cpu_var(pcpb) ++;
-				//put_cpu_var(pcpb);
-			} else {
-				ga --; gb ++;
-			}
+			/* Operate on our perpcu integer */
+			val = -- get_cpu_var(pcpa);
+			pr_info("cpu1: pcpa = %+d\n", val);
+			put_cpu_var(pcpa);
+
+			/* Operate on our perpcu structure */
+			ctx = get_cpu_ptr(pcp_ctx);
+			ctx->rx += 200;
+			pr_info("cpu1: pcp ctx: tx = %5d, rx = %5d\n",
+				ctx->tx, ctx->rx);
+			put_cpu_ptr(pcp_ctx);
 		}
 	}
 
-	pr_info(" Our kernel thread #%ld exiting now...\n", thrd);
+	disp_vars();
+	pr_info("Our kernel thread #%ld exiting now...\n", thrd);
 	do_exit(0);
 }
 
@@ -208,8 +188,7 @@ static int run_kthrd(char *kname, long thrdnum)
 
 static int __init init_6_percpuvar(void)
 {
-	pr_debug("%s: inserted (dont_use_pcpu=%d)\n",
-		OURMODNAME, dont_use_pcpu);
+	pr_debug("%s: inserted\n", OURMODNAME);
 
 	/* WARNING! This is considered a hack.
 	 * As sched_setaffinity() isn't exported, we don't have access to it
@@ -226,7 +205,15 @@ static int __init init_6_percpuvar(void)
 		return -ENOSYS;
 	}
 
-	pr_info(" Variables before modification; will now get modified...\n");
+	/* Dynamically allocate the percpu structures */
+	pcp_ctx = __alloc_percpu(sizeof(struct drv_ctx), sizeof(void *));
+	if (!pcp_ctx) {
+		pr_info("%s: kthread thrd #0 not created, aborting...\n",
+			OURMODNAME);
+		return -ENOMEM;
+	}
+
+	/* Spawn two kernel threads */
 	if (run_kthrd("thrd_0", 0) < 0) {
 		pr_info("%s: kthread thrd #0 not created, aborting...\n",
 			OURMODNAME);
@@ -255,6 +242,8 @@ static void __exit exit_6_percpuvar(void)
 {
 	stop_kthrd(arr_tsk[0]);
 	stop_kthrd(arr_tsk[1]);
+	disp_vars();
+	free_percpu(pcp_ctx);
 	pr_debug("%s: removed.\n", OURMODNAME);
 }
 
