@@ -8,11 +8,11 @@
  *  GitHub repository:
  *  https://github.com/PacktPublishing/Linux-Kernel-Development-Cookbook
  *
- * From: Ch 4 : Memory Allocation for Module Authors
+ * From: Ch 4 : Kernel and MM Internals - Essentials
  ****************************************************************
  * Brief Description:
  * This kernel module iterates over the task structures of all *processes*
- * currently alive on the box, printing out some details.
+ * currently alive on the box, printing out a few details for each of them.
  * We use the for_each_process() macro to do so here.
  *
  * For details, please refer the book, Ch 4.
@@ -24,9 +24,9 @@
 
 #include <linux/version.h>
 #if LINUX_VERSION_CODE > KERNEL_VERSION(4, 10, 0)
-#include <linux/sched/signal.h>	/* for_each_xxx, ... */
+#include <linux/sched/signal.h>	/* for_each_xxx(), ... */
 #endif
-#include <linux/fs.h>		/* no_llseek */
+#include <linux/fs.h>		/* no_llseek() */
 #include <linux/slab.h>
 #include <linux/uaccess.h>	/* copy_to_user() */
 #include <linux/kallsyms.h>
