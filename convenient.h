@@ -154,10 +154,10 @@
 	intr='.';                                                                            \
 	                                                                                     \
 	DBGPRINT(                                                                            \
-	"PRINT_CTX:: [%03d]%c%s%c:%d   %c "                                                  \
+	"%s(): [%03d]%c%s%c:%d   %c "                                                        \
 	"%c%c%c%u "                                                                          \
 	"\n"                                                                                 \
-	, smp_processor_id(),                                                                \
+	, __func__, smp_processor_id(),                                                      \
     (!current->mm?'[':' '), current->comm, (!current->mm?']':' '), current->pid, sep,        \
 	(irqs_disabled()?'d':'.'),                                                           \
 	(need_resched()?'N':'.'),                                                            \
