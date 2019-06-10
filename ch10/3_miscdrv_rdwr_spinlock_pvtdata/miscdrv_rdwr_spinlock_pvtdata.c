@@ -28,14 +28,23 @@
 #include <linux/slab.h>         // k[m|z]alloc(), k[z]free(), ...
 #include <linux/mm.h>           // kvmalloc()
 #include <linux/fs.h>		// the fops structure
-#include <linux/uaccess.h>      // copy_to|from_user() macros
+
+// copy_[to|from]_user()
+#include <linux/version.h>
+#if LINUX_VERSION_CODE > KERNEL_VERSION(4,11,0)
+#include <linux/uaccess.h>
+#else
+#include <asm/uaccess.h>
+#endif
+
 #include <linux/spinlock.h>
 #include "../../convenient.h"
 
 #define OURMODNAME   "miscdrv_rdwr_spinlock_pvtdata"
 
 MODULE_AUTHOR("Kaiwan N Billimoria");
-MODULE_DESCRIPTION("LKDC book:ch10/3_miscdrv_rdwr_spinlock: simple misc char driver using filp->private_data");
+MODULE_DESCRIPTION("LKDC book:ch10/3_miscdrv_rdwr_spinlock_pvtdata: simple "
+	"misc char driver using filp->private_data");
 MODULE_LICENSE("Dual MIT/GPL");
 MODULE_VERSION("0.1");
 
@@ -94,7 +103,7 @@ static int open_miscdrv_rdwr(struct inode *inode, struct file *filp)
 	       ga, gb); // potential bug; unprotected / dirty reads on ga, gb!
 	spin_unlock(&filp->f_lock);
 
-	/* 'Lockless' architecture: allocate a private instance of the driver
+	/* 'Lock-Free' architecture: allocate a private instance of the driver
 	 * 'context' data structure and use it */
 	filp->private_data = kzalloc(sizeof(struct drv_ctx), GFP_KERNEL);
 	if (!ctx) {
@@ -136,7 +145,6 @@ static ssize_t read_miscdrv_rdwr(struct file *filp, char __user *ubuf,
 {
 	struct drv_ctx *ctx = (struct drv_ctx *)filp->private_data;
 	int ret = count, secret_len = strlen(ctx->oursecret), err_path = 0;
-	void *kbuf = NULL;
 
 	pr_info("%s:%s():\n %s wants to read (upto) %ld bytes\n",
 			OURMODNAME, __func__, current->comm, count);
@@ -157,14 +165,6 @@ static ssize_t read_miscdrv_rdwr(struct file *filp, char __user *ubuf,
 				OURMODNAME, __func__);
 		err_path = 1;
 		goto out_notok;
-	}
-
-	ret = -ENOMEM;
-	kbuf = kvmalloc(count, GFP_KERNEL);
-	if (unlikely(!kbuf)) {
-		pr_warn("%s:%s(): kvmalloc() failed!\n", OURMODNAME, __func__);
-		err_path = 1;
-		goto out_nomem;
 	}
 
 	/* In a 'real' driver, we would now actually read the content of the
@@ -191,8 +191,6 @@ static ssize_t read_miscdrv_rdwr(struct file *filp, char __user *ubuf,
 	pr_info(" %d bytes read, returning...\n", secret_len);
 out_ctu:
 	display_stats(err_path, ctx);
-	kvfree(kbuf);
-out_nomem:
 out_notok:
 	return ret;
 }
