@@ -8,7 +8,7 @@
  *  GitHub repository:
  *  https://github.com/PacktPublishing/Linux-Kernel-Development-Cookbook
  *
- * From: Ch 4 : Memory Allocation for Module Authors
+ * From: Ch 4 : Kernel and MM Internals - Essentials
  ****************************************************************
  * Brief Description:
  * This kernel module iterates over the task structures of all *threads*
@@ -20,7 +20,7 @@
  */
 #include <linux/kernel.h>
 #include <linux/module.h>
-#include <linux/sched.h>     /* current */
+#include <linux/sched.h>     /* current() */
 #include <linux/version.h>
 #if LINUX_VERSION_CODE > KERNEL_VERSION(4, 10, 0)
 #include <linux/sched/signal.h>
@@ -28,7 +28,7 @@
 
 #define OURMODNAME   "thrd_showall"
 
-MODULE_AUTHOR("<insert your name here>");
+MODULE_AUTHOR("Kaiwan N Billimoria");
 MODULE_DESCRIPTION("LKDC book:ch4/foreach/thrd_showall:"
 		   " demo to display all threads by iterating over the task list");
 MODULE_LICENSE("Dual MIT/GPL");
@@ -36,29 +36,41 @@ MODULE_VERSION("0.1");
 
 static int showthrds(void)
 {
-	struct task_struct *g, *t;	// 'g' : process ptr; 't': thread ptr
+	struct task_struct *g, *t;	/* 'g' : process ptr; 't': thread ptr */
 	int nr_thrds = 1, total = 0;
 #define BUFMAX		256
 #define TMPMAX		128
 	char buf[BUFMAX], tmp[TMPMAX];
 	const char hdr[] =
-"------------------------------------------------------------------------------------\n"
-"    TGID   PID        current          stack-start       Thread Name     MT? # thrds\n"
-"------------------------------------------------------------------------------------\n";
+"--------------------------------------------------------------------------------\n"
+"    TGID   PID         current        stack-start      Thread Name   MT? # thrds\n"
+"--------------------------------------------------------------------------------\n";
 
 	pr_info("%s", hdr);
-	do_each_thread(g, t) {
+#if 0
+	/* the tasklist_lock reader-writer spinlock for the task list 'should'
+	 * be used here, but, it's not exported, hence unavailable to our
+	 * kernel module */
+	read_lock(&tasklist_lock);
+#endif
+	do_each_thread(g, t) {     /* 'g' : process ptr; 't': thread ptr */
 		task_lock(t);
 
 		snprintf(buf, BUFMAX-1, "%6d %6d ", g->tgid, t->pid);
 
 		/* task_struct addr and kernel-mode stack addr */
-		snprintf(tmp, TMPMAX-1, "  0x%16pK", t);
+		snprintf(tmp, TMPMAX-1, "  0x%016lx", (unsigned long)t);
 		strncat(buf, tmp, TMPMAX);
-		snprintf(tmp, TMPMAX-1, "  0x%16pK", t->stack);
+		snprintf(tmp, TMPMAX-1, "  0x%016lx", (unsigned long)t->stack);
 		strncat(buf, tmp, TMPMAX);
 
 		if (!g->mm) {	// kernel thread
+		/* One might question why we don't use the get_task_comm() to
+		 * obtain the task's name here; the short reason: it causes a
+		 * deadlock! We shall explore this (and how to avoid it) in
+		 * some detail in the chapter on Synchronization. For now, we
+		 * just do it the simple way ...
+		 */
 			snprintf(tmp, TMPMAX-1, " [%16s]", t->comm);
 		} else {
 			snprintf(tmp, TMPMAX-1, "  %16s ", t->comm);
@@ -87,6 +99,10 @@ static int showthrds(void)
 		memset(tmp, 0, sizeof(tmp));
 		task_unlock(t);
 	} while_each_thread(g, t);
+#if 0
+	/* <same as above, reg the reader-writer spinlock for the task list> */
+	read_unlock(&tasklist_lock);
+#endif
 
 	return total;
 }
