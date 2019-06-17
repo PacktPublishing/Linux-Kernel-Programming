@@ -210,6 +210,7 @@ static inline void beep(int what)
 #ifdef __KERNEL__
 	pr_info("%c", (char)what);
 #else
+#include <unistd.h>
 	char buf=(char)what;
 	(void)write(STDOUT_FILENO, &buf, 1);
 #endif
@@ -217,20 +218,23 @@ static inline void beep(int what)
 
 /* 
  * DELAY_LOOP macro
+ * (Mostly) mindlessly loop, print a char to emulate 'work' :-)
  * @val : ASCII value to print
  * @loop_count : times to loop around
  */
 #define DELAY_LOOP(val,loop_count)                                             \
 {                                                                              \
 	int c = 0, m;                                                          \
-	unsigned int for_index,inner_index;                                    \
+	unsigned int for_index, inner_index, x;                                \
 	                                                                       \
 	for (for_index=0;for_index<loop_count;for_index++) {                   \
 		beep((val));                                                   \
 		c++;                                                           \
-		for (inner_index=0;inner_index<HZ*1000*8;inner_index++)        \
+		for (inner_index=0;inner_index<HZ;inner_index++) {             \
 			for(m=0;m<50;m++);                                     \
+			x = inner_index /2;                                    \
 		}                                                              \
+	}                                                                      \
 	/*printf("c=%d\n",c);*/                                                \
 }
 /*------------------------------------------------------------------------*/
