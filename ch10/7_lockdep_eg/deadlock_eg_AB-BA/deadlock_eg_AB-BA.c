@@ -44,8 +44,8 @@ MODULE_PARM_DESC(lock_ooo, "set to 1 to perform out-of-order (ooo) locking");
 } while(0)
 
 #define MAX_KTHRDS       2
-#define THRD0_ITERS      10
-#define THRD1_ITERS       8
+#define THRD0_ITERS      1
+#define THRD1_ITERS      1
 
 /* Locking rule : lockA --> lockB */
 DEFINE_SPINLOCK(lockA);
