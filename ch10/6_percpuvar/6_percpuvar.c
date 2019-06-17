@@ -8,11 +8,11 @@
  *  GitHub repository:
  *  https://github.com/PacktPublishing/Linux-Kernel-Development-Cookbook
  *
- * From: Ch : 
+ * From: Ch 10 : Synchronization Primitives and How to Use Them
  ****************************************************************
  * Brief Description:
  *
- * For details, please refer the book, Ch .
+ * For details, please refer the book, Ch 10.
  */
 #include <linux/init.h>
 #include <linux/module.h>
