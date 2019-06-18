@@ -24,6 +24,20 @@
 
 static unsigned int numcores;
 
+static inline void print_ruler(unsigned int len)
+{
+	int i;
+
+	printf("       +");
+	for (i=1; i<=len*3; i++) {
+		if ((i%3) == 0)
+			printf("+");
+		else
+			printf("-");
+	}
+	printf("\n");
+}
+
 static void disp_cpumask(pid_t pid, cpu_set_t *cpumask, unsigned int ncores)
 {
 	int i;
@@ -33,23 +47,28 @@ static void disp_cpumask(pid_t pid, cpu_set_t *cpumask, unsigned int ncores)
 	snprintf(tmpbuf, 127, "ps aux |awk '$2 == %d {print $0}'", pid);
 	system(tmpbuf);
 
-	printf("             +");
-	for (i=0; i<ncores; i++)
-		printf("-");
-	printf("+\n");
+	print_ruler(ncores);
 
-	printf(" core#       |");
+	printf("core#  |");
 	for (i=0; i<ncores; i++)
-		printf("%d", i);
+		printf("%2d|", i);
+	printf("\n");
+	print_ruler(ncores);
 
-	printf("|\n cpu mask    |");
-	for (i=0; i<ncores; i++) {
-		printf("%u", CPU_ISSET(i, cpumask));
-	}
-	printf("|\n             +");
-	for (i=0; i<ncores; i++)
+/*
+	printf("\n      +");
+	for (i=0; i<ncores*3; i++)
 		printf("-");
-	printf("+\n");
+*/
+	printf("cpumask|");
+	for (i=0; i<ncores; i++)
+		printf("%2u|", CPU_ISSET(i, cpumask));
+	printf("\n");
+	//printf("        +");
+	print_ruler(ncores);
+	/*for (i=0; i<ncores*3; i++)
+		printf("-");
+	printf("+\n"); */
 }
 
 static int query_cpu_affinity(pid_t pid)
