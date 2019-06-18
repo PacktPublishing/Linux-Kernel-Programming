@@ -200,7 +200,7 @@ static ssize_t write_miscdrv_rdwr(struct file *filp, const char __user *ubuf,
 	while (0 == (tl = mutex_trylock(&ctx->lock))) { // not acquired the lock
 		pr_info("%s:%s(): try #%d: mutex trylock NOT acquired ...\n",
 			OURMODNAME, __func__, try ++);
-		DELAY_LOOP('L', 72);
+		DELAY_LOOP('L', 72);		// emulate 'work'
 #if 1
 		/* Pedantically wrong; we must have the lock when reading the
 		 * 'ctx' structure */
