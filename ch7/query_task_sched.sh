@@ -1,19 +1,27 @@
 #!/bin/bash
+# query_task_sched.sh
+# ***************************************************************
+# This program is part of the source code released for the book
+#  "Linux Kernel Development Cookbook"
+#  (c) Author: Kaiwan N Billimoria
+#  Publisher:  Packt
+#  GitHub repository:
+#  https://github.com/PacktPublishing/Linux-Kernel-Development-Cookbook
+# ****************************************************************
+# Brief Description:
+#
 # Query the scheduling attributes (policy and RT (static) priority) of 
-# all processes currently alive on the system.
-# Just a simple wrapper around chrt.
-# 
-# Tip: Pipe this o/p to grep for FIFO / RR tasks..
-# Also note that a multithreaded process shows up as several same PIDs
-#  (resolve these using ps -eLf - to see actual PIDs of threads).
-
+# all threads currently alive on the system. Just a simple wrapper around
+# chrt(1).
+# Tip: One can always pipe this output to grep for FIFO / RR tasks..
 i=1
-printf "  PID       TID            Name                 Sched Policy Prio\n"
+printf "  PID       TID            Name                 Sched Policy Prio    *RT\n"
+prev_pid=1
+
 IFS=$'\n'
 for rec in $(ps -LA)
-#for rec in $(ps -LA -To pid,comm)
 do
-  [ $i -eq 1 ] && {  # skip ps's hdr
+  [ $i -eq 1 ] && {  # skip ps's header
     let i=i+1
     continue
   }
@@ -30,15 +38,28 @@ do
   prio=$(echo ${rec2_line2} |awk -F: '{print $2}')
 
   # ... print it!
-  [ "${pid}" != "0" ] && {
-     printf "%6d  %6d  %28s   %12s   %2d" ${pid} ${tid} ${comm} ${policy} ${prio}
+  [ ${pid} -ne 0 ] && {
+     printf "%6d  " ${pid}
+     # if it's a child thread ...
+     if [ ${pid} -ne 1 -a ${pid} -eq ${prev_pid} ] ; then
+        printf "  %6d%28s" ${tid} ${comm}   # ... indent to the right
+     else
+        printf "%6d  %28s" ${tid} ${comm}
+     fi
+     printf "   %12s   %2d" ${policy} ${prio}
+
+     # 'Highlight', with 1 star, any real-time thread, and with 3 stars, those
+     # that have an rtprio of 99 !
      if [ "${policy}" = " SCHED_RR" -o "${policy}" = " SCHED_FIFO" ] ; then
         if [ ${prio} -eq 99 ] ; then
 	   printf "     ***"
+	else
+	   printf "     *"
 	fi
      fi
   }
   printf "\n"
+  prev_pid=${pid}
   let i=i+1
 done
 exit 0
