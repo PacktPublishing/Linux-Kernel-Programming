@@ -34,10 +34,25 @@ MODULE_DESCRIPTION("LKDC book:ch4/foreach/thrd_showall:"
 MODULE_LICENSE("Dual MIT/GPL");
 MODULE_VERSION("0.1");
 
+/* Display just this CPU's idle thread, i.e., the pid 0 task,
+ * the (terribly named) 'swapper/n'; n = 0, 1, 2,...
+ * Again, init_task is always the task structure of the first CPU's
+ * idle thread, i.e., we're referencing swapper/0.
+ */
+static inline void disp_idle_thread(void)
+{
+	struct task_struct *t = &init_task;
+
+	/* We know that the swapper is a kernel thread */
+	pr_info("%6d %6d   0x%016lx  0x%016lx [%16s]\n",
+		t->pid, t->pid, (unsigned long)t,
+		(unsigned long)t->stack, t->comm);
+}
+
 static int showthrds(void)
 {
 	struct task_struct *g, *t;	/* 'g' : process ptr; 't': thread ptr */
-	int nr_thrds = 1, total = 0;
+	int nr_thrds = 1, total = 1;    /* total init to 1 for the idle thread */
 #define BUFMAX		256
 #define TMPMAX		128
 	char buf[BUFMAX], tmp[TMPMAX];
@@ -53,6 +68,9 @@ static int showthrds(void)
 	 * kernel module */
 	read_lock(&tasklist_lock);
 #endif
+
+	disp_idle_thread();
+
 	do_each_thread(g, t) {     /* 'g' : process ptr; 't': thread ptr */
 		task_lock(t);
 
