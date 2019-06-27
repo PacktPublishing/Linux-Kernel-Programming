@@ -38,6 +38,10 @@ static inline void print_ruler(unsigned int len)
 	printf("\n");
 }
 
+/* disp_cpumask():
+ * Print the provided CPU bitmask @cpumask (along with the 'ruler' lines),
+ * for a max of @ncores-1 CPU cores, in (a more intuitive) right-to-left order.
+ */
 static void disp_cpumask(pid_t pid, cpu_set_t *cpumask, unsigned int ncores)
 {
 	int i;
@@ -50,13 +54,13 @@ static void disp_cpumask(pid_t pid, cpu_set_t *cpumask, unsigned int ncores)
 	print_ruler(ncores);
 
 	printf("core#  |");
-	for (i=0; i<ncores; i++)
+	for (i=ncores-1; i>=0; i--)
 		printf("%2d|", i);
 	printf("\n");
 	print_ruler(ncores);
 
 	printf("cpumask|");
-	for (i=0; i<ncores; i++)
+	for (i=ncores-1; i>=0; i--)
 		printf("%2u|", CPU_ISSET(i, cpumask));
 	printf("\n");
 	print_ruler(ncores);
