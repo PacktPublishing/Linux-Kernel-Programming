@@ -132,7 +132,7 @@ Software Developer’s Manual. Volume 3 (3A, 3B & 3C): System Programming Guide]
 - ['Virtual Memory and Linux', PDF, Matt Porter, Alan Ott](https://elinux.org/images/b/b0/Introduction_to_Memory_Management_in_Linux.pdf)
 
 
-## Chapter 5, Kernel Memory Allocation for Module Authors - Further Reading
+## Ch 5 and Ch 6, Kernel Memory Allocation for Module Authors - Further Reading
 
 - Book: ['Hands-On System Programming with Linux', Kaiwan N Billimoria, Packt](https://www.packtpub.com/networking-and-servers/hands-system-programming-linux). Prerequisites to this chapter (essential reading, really):
 	- Ch 1 : Linux System Architecture
@@ -164,7 +164,15 @@ Software Developer’s Manual. Volume 3 (3A, 3B & 3C): System Programming Guide]
     - [Linux kernel documentation](https://www.kernel.org/doc/Documentation/vm/overcommit-accounting)
     - Blog article: ['Virtual memory settings in Linux - The Problem with Overcommit'](http://engineering.pivotal.io/post/virtual_memory_settings_in_linux_-_the_problem_with_overcommit/)
     - RHEL specific but useful: ['Interpreting /proc/meminfo and free output for Red Hat Enterprise Linux 5, 6 and 7'](https://access.redhat.com/solutions/406773)
-- b
+
+## Ch 7 : The CPU Scheduler - Further Reading
+    - Detailed PDF: ['A complete guide to Linux process scheduling', Nikita Ishkov, Feb 2015](https://trepo.tuni.fi/bitstream/handle/10024/96864/GRADU-1428493916.pdf)
+    - Ftrace
+        - ['ftrace: trace your kernel functions!', Julia Evans, Mar 2017](https://jvns.ca/blog/2017/03/19/getting-started-with-ftrace/)
+
+
+
+
 
 ## Ch 9 : Writing a simple Misc Character Device Driver - Further Reading
 
@@ -182,6 +190,8 @@ Software Developer’s Manual. Volume 3 (3A, 3B & 3C): System Programming Guide]
 ## Ch 10 : Synchronization Primitives and How to Use Them - Further Reading
 
 - ['What every systems programmer should know about concurrency', M Kline, May 2018](https://assets.bitbashing.io/papers/concurrency-primer.pdf)
+- This presentation covers deadlock scenarios: ['Lockdep: how to read it's cryptic output', Steve Rostedt, Linux Plumbers Conf 2011](https://blog.linuxplumbersconf.org/2011/ocw/sessions/153)
+
 -  ['Mutexes and Semaphores Demystified', Micheal Barr, May 2016](https://barrgroup.com/Embedded-Systems/How-To/RTOS-Mutex-Semaphore)
 - The Mars Pathfinder mission and Priority Inversion
 	- ['What really happened on Mars ?' Glenn Reeves](https://cs.unc.edu/~anderson/teach/comp790/papers/mars_pathfinder_long_version.html)
@@ -195,19 +205,34 @@ Software Developer’s Manual. Volume 3 (3A, 3B & 3C): System Programming Guide]
 - False Sharing
     - ['Avoiding and Identifying False Sharing Among Threads', Intel, Nov 2011](https://software.intel.com/en-us/articles/avoiding-and-identifying-false-sharing-among-threads)
     - Blog article: ['Understanding False Sharing', Mar 2017](https://parallelcomputing2017.wordpress.com/2017/03/17/understanding-false-sharing/)
+- PDF: ['Memory Barriers: a Hardware View for Software Hackers', 
+Paul E. McKenney, IBM LTC, June 2010](http://www.rdrop.com/~paulmck/scalability/paper/whymb.2010.06.07c.pdf)
 
- - Lockless or Lock-free programming
-    - Lockfree programming concepts 
+ - Lockless or Lock-Free programming
+    - PDF: ['What every systems programmer should know about concurrency', Matt Kline, May 2018](https://assets.bitbashing.io/papers/concurrency-primer.pdf)
+    - Lock-Free programming concepts 
         - ['Fear and Loathing in Lock-Free Programming', T Neely, Medium](https://medium.com/@tylerneely/fear-and-loathing-in-lock-free-programming-7158b1cdd50c) : an excellent 'Lock-free 101' article
-        - Good artcile series: ['Introduction to Lock-free Algorithms'](http://www.1024cores.net/home/lock-free-algorithms/introduction)
+        - Good article series: ['Introduction to Lock-free Algorithms'](http://www.1024cores.net/home/lock-free-algorithms/introduction)
+        - Presentation: ['Lock-Free Programming', Geoff Langdale](https://www.cs.cmu.edu/~410-s05/lectures/L31_LockFree.pdf)
         - Blog article: ['Some notes on lock-free and wait-free algorithms'](http://www.rossbencina.com/code/lockfree?q=~rossb/code/lockfree/)
         - ['CppCon 2014: Herb Sutter "Lock-Free Programming (or, Juggling Razor Blades), Part I', Herb Sutter, YouTube video](https://www.youtube.com/watch?v=c1gO9aB9nbs)
 
+    - Percpu
+        - Blog: ['A brief introduction to per-cpu variables', Chen, May 2014](http://thinkiii.blogspot.com/2014/05/a-brief-introduction-to-per-cpu.html)
+        - ['How are percpu pointers implemented in the Linux kernel?', StackOverflow, June 2013](https://stackoverflow.com/questions/16978959/how-are-percpu-pointers-implemented-in-the-linux-kernel)
+
     - RCU in the Linux kernel
-        - A 3 series article to learn RCU: ['What is RCU, Fundamentally?', LWN, Paul McKenney, Dec 2007, Part 1 of 3 ](https://lwn.net/Articles/262464/)
+        - The excellent and extensive kernel community documentation: [RCU](https://www.kernel.org/doc/Documentation/RCU/00-INDEX)
         - ['RCU Usage In the Linux Kernel: One Decade Later', McKenny et al (PDF), circa 2013](http://www2.rdrop.com/~paulmck/techreports/RCUUsage.2013.02.24a.pdf)
+        - A 3 series article to learn RCU: ['What is RCU, Fundamentally?', LWN, Paul McKenney, Dec 2007, Part 1 of 3 ](https://lwn.net/Articles/262464/)
         - ['Make any algorithm lock-free with this one crazy trick', May 2016](https://www.the-paper-trail.org/post/2016-05-25-make-any-algorithm-lock-free-with-this-one-crazy-trick/)
     - ['The lockless page cache', LWN, Jon Corbet, July 2008](https://lwn.net/Articles/291826/) (an interesting article)
+    - Lockdep
+        - ['Runtime locking correctness validator', kernel documentation](https://www.kernel.org/doc/Documentation/locking/lockdep-design.txt)
+        - ['The kernel lock validator', LWN, J Corbet, May 2006](https://lwn.net/Articles/185666/)
+        - ['Lockdep: how to read it's cryptic output', Steve Rostedt, Linux Plumbers Conf 2011](https://blog.linuxplumbersconf.org/2011/ocw/sessions/153)
+        - ['LOCKDEP, AN INSIDE OUT PERSPECTIVE', Nahim El Atmani, Nov 2016](https://www.lse.epita.fr/data/lt/2016-11-08/lt-2016-11-08-Nahim_El_Atmani-lockdep-an-inside-out-perspective.pdf)
+        - (until it gets merged :-) : ['[PATCH 16/28] locking/lockdep: Add explanation to lock usage rules in lockdep design doc', Yuyang Du](https://lkml.org/lkml/2019/4/24/333), Apr 2019
 
 
 ## Ch 11 : Kernel Debug - Further Reading
