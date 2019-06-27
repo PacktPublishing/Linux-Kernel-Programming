@@ -55,20 +55,11 @@ static void disp_cpumask(pid_t pid, cpu_set_t *cpumask, unsigned int ncores)
 	printf("\n");
 	print_ruler(ncores);
 
-/*
-	printf("\n      +");
-	for (i=0; i<ncores*3; i++)
-		printf("-");
-*/
 	printf("cpumask|");
 	for (i=0; i<ncores; i++)
 		printf("%2u|", CPU_ISSET(i, cpumask));
 	printf("\n");
-	//printf("        +");
 	print_ruler(ncores);
-	/*for (i=0; i<ncores*3; i++)
-		printf("-");
-	printf("+\n"); */
 }
 
 static int query_cpu_affinity(pid_t pid)
@@ -115,7 +106,7 @@ int main (int argc, char **argv)
 
 	if (argc < 2) {
 		fprintf(stderr, "Usage: %s number-of-CPU-cores "
-		"[PID] [new-CPU-mask]\n"
+		 "[PID] [new-CPU-mask]\n"
 		"(If using the optional params, you must at least pass"
 		" the process PID;\nwe (attempt to) set CPU affinity only if"
 		" new-CPU-mask is passed)\n", argv[0]);
