@@ -165,20 +165,19 @@ Software Developer’s Manual. Volume 3 (3A, 3B & 3C): System Programming Guide]
     - Blog article: ['Virtual memory settings in Linux - The Problem with Overcommit'](http://engineering.pivotal.io/post/virtual_memory_settings_in_linux_-_the_problem_with_overcommit/)
     - RHEL specific but useful: ['Interpreting /proc/meminfo and free output for Red Hat Enterprise Linux 5, 6 and 7'](https://access.redhat.com/solutions/406773)
 
-
 ## Ch 7 : The CPU Scheduler - Further Reading
 
-    - Detailed PDF: ['A complete guide to Linux process scheduling', Nikita Ishkov, Feb 2015](https://trepo.tuni.fi/bitstream/handle/10024/96864/GRADU-1428493916.pdf)
-    - Ftrace
-        - ['ftrace: trace your kernel functions!', Julia Evans, Mar 2017](https://jvns.ca/blog/2017/03/19/getting-started-with-ftrace/)
+- Detailed PDF: ['A complete guide to Linux process scheduling', Nikita Ishkov, Feb 2015](https://trepo.tuni.fi/bitstream/handle/10024/96864/GRADU-1428493916.pdf)
+- Ftrace
+    - ['ftrace: trace your kernel functions!', Julia Evans, Mar 2017](https://jvns.ca/blog/2017/03/19/getting-started-with-ftrace/)
 
-    - Control Groups (cgroups)
-        - Good introductory article (focussed on cgroups1): ['Control Groups in Linux', Feb 2017](http://blog.brew.com.hk/control-groups-in-linux/)
-        - ['Understanding the new control groups API', Rami Rosen, LWN, Mar 2016](https://lwn.net/Articles/679786/)
-        - ['Control Group v2' : Linux kernel 'official' documentation](https://www.kernel.org/doc/html/v4.18/admin-guide/cgroup-v2.html#control-group-v2)
-        - man page (informational): ['cgroups - Linux control groups'](http://man7.org/linux/man-pages/man7/cgroups.7.html) (man 7 cgroups)
-        - Includes an interesting case study on how Facebook uses Linux's cgroups2 to perform equitable resource distribution on (some of) it's servers: ['Maximizing Resource Utilization with cgroup2'](https://facebookmicrosites.github.io/cgroup2/docs/overview.html)
-        - Blog article, examples of using cgroups v1 for CPU and memory bandwidth control: ['Linux Virtualization : Resource throttling using cgroups'](https://www.geeksforgeeks.org/linux-virtualization-resource-throttling-using-cgroups/)
+- Control Groups (cgroups)
+    - Good introductory article (focussed on cgroups1): ['Control Groups in Linux', Feb 2017](http://blog.brew.com.hk/control-groups-in-linux/)
+    - ['Understanding the new control groups API', Rami Rosen, LWN, Mar 2016](https://lwn.net/Articles/679786/)
+    - ['Control Group v2' : Linux kernel 'official' documentation](https://www.kernel.org/doc/html/v4.18/admin-guide/cgroup-v2.html#control-group-v2)
+    - man page (informational): ['cgroups - Linux control groups'](http://man7.org/linux/man-pages/man7/cgroups.7.html) (man 7 cgroups)
+    - Includes an interesting case study on how Facebook uses Linux's cgroups2 to perform equitable resource distribution on (some of) it's servers: ['Maximizing Resource Utilization with cgroup2'](https://facebookmicrosites.github.io/cgroup2/docs/overview.html)
+    - Blog article, examples of using cgroups v1 for CPU and memory bandwidth control: ['Linux Virtualization : Resource throttling using cgroups'](https://www.geeksforgeeks.org/linux-virtualization-resource-throttling-using-cgroups/)
 
 
 
