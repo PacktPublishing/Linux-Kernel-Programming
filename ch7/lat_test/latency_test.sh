@@ -18,28 +18,26 @@ cat /proc/version
 echo
 
 # 1. Redirect the output of cyclictest to a file, for example
-loops=100000    #100000000
-#sudo ${pfx}/cyclictest -l100000000 -m -Sp90 -i200 -h400 -q >output 
-#echo "sudo ${pfx}/cyclictest --duration=5m -v -m -Sp90 -i200 -h400 -q >output"
-#sudo ${pfx}/cyclictest --duration=5m -v -m -Sp90 -i200 -h400 -q >output
+loops=1000000    #100000000
 echo "sudo ${pfx}/cyclictest -l${loops} -v -m -Sp90 -i200 -h400 -q >output"
 sudo ${pfx}/cyclictest -l${loops} -v -m -Sp90 -i200 -h400 -q >output
 # (Please note that this with loops==100,000,000 will take 5 hours and 33 minutes.)
+# alt: duration of 5 min
+#echo "sudo ${pfx}/cyclictest --duration=5m -v -m -Sp90 -i200 -h400 -q >output"
+#sudo ${pfx}/cyclictest --duration=5m -v -m -Sp90 -i200 -h400 -q >output
 
 # 2. Get maximum latency
 max=$(grep "Max Latencies" output | tr " " "\n" | sort -n | tail -1 | sed s/^0*//)
+echo "max latency: ${max}"
 
 # 3. Grep data lines, remove empty lines and create a common field separator
 grep -v -e "^#" -e "^$" output | tr " " "\t" >histogram 
 
 # 4. Set the number of cores, for example
-cores=4
+#cores=4
 # (If the script is used on a variety of systems with a different number of cores,
 # this can, of course, be determined from the system.)
-#cores=$(lscpu |grep "^CPU(s)"| cut -d: -f2)
 cores=$(lscpu |grep "^CPU(s)" | awk -F: '{print $2}' |awk '{$1=$1};1')
-
-echo "cores = ${cores}"
 
 # 5. Create two-column data sets with latency classes and frequency values for each core
 for i in $(seq 1 $cores)
@@ -49,7 +47,7 @@ do
 done
 
 # 6. Create plot command header
-echo -n -e "set title \"Latency plot\"\n\
+echo -n -e "set title \"Latency plot for kernel $(uname -r)\"\n\
     set terminal png\n\
     set xlabel \"Latency (us), max $max us\"\n\
     set logscale y\n\
