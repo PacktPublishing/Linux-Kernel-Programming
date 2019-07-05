@@ -23,7 +23,7 @@ cat /proc/version
 echo
 
 # 1. Redirect the output of cyclictest to a file, for example
-loops=1000000    #100000000
+loops=100000000
 # use -n : clock_nanosleep() ??
 echo "sudo ${pfx}cyclictest -l${loops} -v -m -Sp90 -i200 -h400 -q >output"
 sudo ${pfx}cyclictest -l${loops} -v -m -Sp90 -i200 -h400 -q >output
