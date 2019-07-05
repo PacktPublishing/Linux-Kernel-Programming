@@ -99,7 +99,7 @@ static long set_cpuaffinity(unsigned int cpu)
 			from_kuid(&init_user_ns, current_euid()));
 	}
 
-	//pr_info("%s(): setting cpu mask to cpu #%u now...\n", __func__, cpu);
+	/* pr_info("%s(): setting cpu mask to cpu #%u now...\n", __func__, cpu); */
 	cpumask_clear(&mask);
 	cpumask_set_cpu(cpu, &mask); // 1st param is the CPU number, not bitmask
 	/* !HACK! sched_setaffinity() is NOT exported, we can't call it

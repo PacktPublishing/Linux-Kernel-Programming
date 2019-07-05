@@ -89,7 +89,7 @@ static int set_cpu_affinity(pid_t pid, unsigned long bitmask)
 
 	/* Iterate over the given bitmask, setting CPU bits as required */
 	for (i=0; i<sizeof(unsigned long)*8; i++) {
-		//printf("bit %d: %d\n", i, (bitmask >> i) & 1);
+		/* printf("bit %d: %d\n", i, (bitmask >> i) & 1); */
 		if ((bitmask >> i) & 1)
 			CPU_SET(i, &cpumask);
 	}
