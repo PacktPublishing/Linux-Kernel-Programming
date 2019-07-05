@@ -174,10 +174,35 @@ Software Developer’s Manual. Volume 3 (3A, 3B & 3C): System Programming Guide]
 - Control Groups (cgroups)
     - Good introductory article (focussed on cgroups1): ['Control Groups in Linux', Feb 2017](http://blog.brew.com.hk/control-groups-in-linux/)
     - ['Understanding the new control groups API', Rami Rosen, LWN, Mar 2016](https://lwn.net/Articles/679786/)
-    - ['Control Group v2' : Linux kernel 'official' documentation](https://www.kernel.org/doc/html/v4.18/admin-guide/cgroup-v2.html#control-group-v2)
+    - ['Control Group v2' : Linux kernel 'official' documentation](https://www.kernel.org/doc/html/latest/admin-guide/cgroup-v2.html#control-group-v2)
     - man page (informational): ['cgroups - Linux control groups'](http://man7.org/linux/man-pages/man7/cgroups.7.html) (man 7 cgroups)
-    - Includes an interesting case study on how Facebook uses Linux's cgroups2 to perform equitable resource distribution on (some of) it's servers: ['Maximizing Resource Utilization with cgroup2'](https://facebookmicrosites.github.io/cgroup2/docs/overview.html)
+    - RedHat System Design Guide (RHEL 8); focus on cgroups v1: ['SETTING LIMITS FOR APPLICATIONS'](https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/8/html/system_design_guide/setting-limits-for-applications_system-design-guide)
+    - FB: Includes an interesting case study on how Facebook uses Linux's cgroups2 to perform equitable resource distribution on (some of) it's servers: ['Maximizing Resource Utilization with cgroup2'](https://facebookmicrosites.github.io/cgroup2/docs/overview.html)
+        - ['Creating and organizing cgroups'](https://facebookmicrosites.github.io/cgroup2/docs/create-cgroups.html)
     - Blog article, examples of using cgroups v1 for CPU and memory bandwidth control: ['Linux Virtualization : Resource throttling using cgroups'](https://www.geeksforgeeks.org/linux-virtualization-resource-throttling-using-cgroups/)
+
+- Hard Real-Time and Linux as an RTOS
+-   - ['Inside Real-Time Linux', Feb 2017](https://www.linux.com/news/event/elce/2017/2/inside-real-time-linux)
+-     - ['The Road to Real Time Linux', Steven Rostedt, Mar 2017](https://blogs.vmware.com/opensource/2017/03/16/road-real-time-linux/)
+-     - [VDC Survey on real-time response : The Embedded Muse, 341, 03 Jan 2018, Jack Ganssle](http://www.ganssle.com/tem/tem341.html#article3)
+-     - Blog article: ['Algorithm time complexity and big O notation'](https://medium.com/@StueyGK/algorithm-time-complexity-and-big-o-notation-51502e612b4d)
+-     - Book: *Automate This: How Algorithms Came to Rule Our World, Christopher Steiner*
+-     - Older wiki site on *preempt_rt*; it's in the process of being migrated to the new documentation for RTL; it still has very useful HOWTO guides, articles, etc: ['Real-Time Linux Wiki'](https://rt.wiki.kernel.org/index.php/Main_Page) 
+-     - [RTL – Real-Time Linux, using Linux as an RTOS:
+The RTL Collaborative Project](https://wiki.linuxfoundation.org/realtime/rtl/start)
+-   - [RTL Real-Time documentation](https://wiki.linuxfoundation.org/realtime/documentation/start)
+-   - [HOWTO: RTOS and RT Applications](https://wiki.linuxfoundation.org/realtime/documentation/howto/applications/application_base)
+-   - Interesting: "... compares the load results of the Ubuntu 18.04 LTS generic kernel 4.15.0-22-generic, the Ubuntu low-latency kernel 4.15.0-22-lowlatency and an Ubuntu Linux kernel patched to be fully preemptive 4.16.0-rt4-PREEMPT_RT_FULL as well as preemptive with low-latency 4.16.12-rt4+REEMPT_LL" : ['Low latency and real-time kernels for telco and NFV', Ubuntu, Oct 2018](https://ubuntu.com/blog/low-latency-real-time-kernels-telco-nfv)
+-   - ['Real-time Linux communications - An evaluation of the Linux communication stack for real-time robotic applications', Sept 2018](https://hackernoon.com/real-time-linux-communications-2faabf31cf5e)
+-   - ['The real-time linux kernel: A survey on Preempt_RT', Feb 2019](https://www.researchgate.net/publication/331290349_The_real-time_linux_kernel_A_survey_on_Preempt_RT)
+-   - Detailed slides on cyclictest, good for understanding latency and it's measurement: ['Using and Understanding the Real-Time Cyclictest Benchmark', Rowand, Oct 2013](https://events.static.linuxfound.org/sites/events/files/slides/cyclictest.pdf)
+-   - ['Intro to Real-Time Linux for Embedded Developers', an interview with Steven Rostedt](https://www.linuxfoundation.org/blog/2013/03/intro-to-real-time-linux-for-embedded-developers/)
+
+
+- The still amazing and very relevant book on software engineering: *'The Mythical Man Month: Essays on Software Engineering'*, Frederick P Brooks, 1975, 1995
+    - [On Amazon (Anniversary Edition)](https://www.amazon.com/Mythical-Man-Month-Anniversary-Software-Engineering-ebook/dp/B00B8USS14/ref=sr_1_1?crid=3R2CNHTX5LYIC&keywords=mythical+man+month&qid=1562226712&s=digital-text&sprefix=mythical+%2Cdigital-text%2C376&sr=1-1)
+    - [Quotes](https://en.wikiquote.org/wiki/Fred_Brooks)
+
 
 
 
