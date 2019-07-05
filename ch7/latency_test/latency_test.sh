@@ -4,23 +4,29 @@
 #  https://www.osadl.org/uploads/media/mklatencyplot.bash
 # Notes:
 #  http://www.osadl.org/Create-a-latency-plot-from-cyclictest-hi.bash-script-for-latency-plot.0.html
-
-pfx=~/kaiwantech/rtl/rt-tests
-[ ! -x ${pfx}/cyclictest ] && {
-  echo "${name}: cyclictest not located, aborting..."
-  exit 1
+# Detailed slides on cyclictest, good for understanding latency and it's
+# measurement: 'Using and Understanding the Real-Time Cyclictest Benchmark',
+# Rowand, Oct 2013: #  https://events.static.linuxfound.org/sites/events/files/slides/cyclictest.pdf
+name=$(basename $0)
+which cyclictest >/dev/null && pfx="" || {
+pfx=~/rtl/rt-tests/   # adjust as required !
+ [ ! -x ${pfx}/cyclictest ] && {
+   echo "${name}: cyclictest not located, aborting..."
+   exit 1
+ }
 }
 
 echo "Version info:"
 lsb_release -a
-uname -r
+uname -a
 cat /proc/version
 echo
 
 # 1. Redirect the output of cyclictest to a file, for example
 loops=1000000    #100000000
-echo "sudo ${pfx}/cyclictest -l${loops} -v -m -Sp90 -i200 -h400 -q >output"
-sudo ${pfx}/cyclictest -l${loops} -v -m -Sp90 -i200 -h400 -q >output
+# use -n : clock_nanosleep() ??
+echo "sudo ${pfx}cyclictest -l${loops} -v -m -Sp90 -i200 -h400 -q >output"
+sudo ${pfx}cyclictest -l${loops} -v -m -Sp90 -i200 -h400 -q >output
 # (Please note that this with loops==100,000,000 will take 5 hours and 33 minutes.)
 # alt: duration of 5 min
 #echo "sudo ${pfx}/cyclictest --duration=5m -v -m -Sp90 -i200 -h400 -q >output"
