@@ -71,7 +71,7 @@ do
 done
 
 # 6. Create plot command header
-title="${title}\n${latstr}\nkernel ver $(uname -r)"
+title="${title}\n\${latstr}\n\kernel ver $(uname -r)"
 echo -n -e "set title \"${title}\"\n\
     set terminal png\n\
     set xlabel \"Latency (us), max $max us\"\n\
