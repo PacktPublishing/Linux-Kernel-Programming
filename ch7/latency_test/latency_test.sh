@@ -8,6 +8,13 @@
 # measurement: 'Using and Understanding the Real-Time Cyclictest Benchmark',
 # Rowand, Oct 2013: #  https://events.static.linuxfound.org/sites/events/files/slides/cyclictest.pdf
 name=$(basename $0)
+
+[ $# -ne 1 ] && {
+ echo "Usage: ${name} \"<test title>\""
+ exit 1
+}
+title="$1"
+
 which cyclictest >/dev/null && pfx="" || {
 pfx=~/kaiwantech/rtl/rt-tests/   # adjust as required !
  [ ! -x ${pfx}/cyclictest ] && {
@@ -16,6 +23,9 @@ pfx=~/kaiwantech/rtl/rt-tests/   # adjust as required !
  }
 }
 
+echo "--------------------------"
+echo "Test Title :: \"${title}\""
+echo "--------------------------"
 echo "Version info:"
 lsb_release -a
 uname -a
@@ -29,13 +39,20 @@ loops=100000000
 #sudo ${pfx}cyclictest -l${loops} -m -Sp90 -i200 -h400 -q >output
 # (Please note that this with loops==100,000,000 will take 5 hours and 33 minutes.)
 # alt: by duration
+[ 0 -eq 1 ] && {
 duration=2h
+} || {
+duration=12h
+}
 echo "sudo ${pfx}/cyclictest --duration=${duration} -m -Sp90 -i200 -h400 -q >output"
 sudo ${pfx}/cyclictest --duration=${duration} -m -Sp90 -i200 -h400 -q >output
 
 # 2. Get maximum latency
+min=$(grep "Min Latencies" output | tr " " "\n" | grep "^[0-9]" | sort -n | head -1 | sed s/^0*//)
 max=$(grep "Max Latencies" output | tr " " "\n" | sort -n | tail -1 | sed s/^0*//)
-echo "max latency: ${max}"
+avg=$(grep "Avg Latencies" output | tr " " "\n" | grep "^[0-9]" | sed s/^0*// |awk '{sum += $1} END {print sum/NR}')
+latstr="min/avg/max latency: ${min} us / ${avg} us / ${max} us"
+echo "${latstr}"
 
 # 3. Grep data lines, remove empty lines and create a common field separator
 grep -v -e "^#" -e "^$" output | tr " " "\t" >histogram 
@@ -54,14 +71,15 @@ do
 done
 
 # 6. Create plot command header
-echo -n -e "set title \"Latency plot for kernel $(uname -r)\"\n\
+title="${title}\n${latstr}\nkernel ver $(uname -r)"
+echo -n -e "set title \"${title}\"\n\
     set terminal png\n\
     set xlabel \"Latency (us), max $max us\"\n\
     set logscale y\n\
     set xrange [0:400]\n\
     set yrange [0.8:*]\n\
     set ylabel \"Number of latency samples\"\n\
-    set output \"plot.png\"\n\
+    set output \"plot_$(uname -r).png\"\n\
     plot " >plotcmd
 
 # 7. Append plot command data references
@@ -83,4 +101,3 @@ done
 
 # 8. Execute plot command
 gnuplot -persist <plotcmd
-mv plot.png plot_$(uname -r).png
