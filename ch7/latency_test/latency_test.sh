@@ -9,7 +9,7 @@
 # Rowand, Oct 2013: #  https://events.static.linuxfound.org/sites/events/files/slides/cyclictest.pdf
 name=$(basename $0)
 which cyclictest >/dev/null && pfx="" || {
-pfx=~/rtl/rt-tests/   # adjust as required !
+pfx=~/kaiwantech/rtl/rt-tests/   # adjust as required !
  [ ! -x ${pfx}/cyclictest ] && {
    echo "${name}: cyclictest not located, aborting..."
    exit 1
@@ -25,12 +25,13 @@ echo
 # 1. Redirect the output of cyclictest to a file, for example
 loops=100000000
 # use -n : clock_nanosleep() ??
-echo "sudo ${pfx}cyclictest -l${loops} -v -m -Sp90 -i200 -h400 -q >output"
-sudo ${pfx}cyclictest -l${loops} -v -m -Sp90 -i200 -h400 -q >output
+#echo "sudo ${pfx}cyclictest -l${loops} -m -Sp90 -i200 -h400 -q >output"
+#sudo ${pfx}cyclictest -l${loops} -m -Sp90 -i200 -h400 -q >output
 # (Please note that this with loops==100,000,000 will take 5 hours and 33 minutes.)
-# alt: duration of 5 min
-#echo "sudo ${pfx}/cyclictest --duration=5m -v -m -Sp90 -i200 -h400 -q >output"
-#sudo ${pfx}/cyclictest --duration=5m -v -m -Sp90 -i200 -h400 -q >output
+# alt: by duration
+duration=2h
+echo "sudo ${pfx}/cyclictest --duration=${duration} -m -Sp90 -i200 -h400 -q >output"
+sudo ${pfx}/cyclictest --duration=${duration} -m -Sp90 -i200 -h400 -q >output
 
 # 2. Get maximum latency
 max=$(grep "Max Latencies" output | tr " " "\n" | sort -n | tail -1 | sed s/^0*//)
