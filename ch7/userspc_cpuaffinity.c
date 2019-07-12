@@ -49,7 +49,9 @@ static void disp_cpumask(pid_t pid, cpu_set_t *cpumask, unsigned int ncores)
 
 	printf("CPU affinity mask for PID %d:\n", pid);
 	snprintf(tmpbuf, 127, "ps aux |awk '$2 == %d {print $0}'", pid);
-	system(tmpbuf);
+	if (system(tmpbuf) == -1)
+		fprintf(stderr, "Warning: %s():system(3) (to show ps output)"
+			" failed\n", __func__);
 
 	print_ruler(ncores);
 
