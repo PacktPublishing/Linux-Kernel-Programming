@@ -53,12 +53,8 @@ loops=100000000
 #echo "sudo ${pfx}cyclictest -l${loops} -m -Sp90 -i200 -h400 -q >output"
 #sudo ${pfx}cyclictest -l${loops} -m -Sp90 -i200 -h400 -q >output
 # (Please note that this with loops==100,000,000 will take 5 hours and 33 minutes.)
-# alt: by duration
-[ 0 -eq 1 ] && {
-duration=2h
-} || {
+# alternatively: run cyclictest by duration
 duration=12h
-}
 echo "sudo ${pfx}cyclictest --duration=${duration} -m -Sp90 -i200 -h400 -q >output"
 sudo ${pfx}cyclictest --duration=${duration} -m -Sp90 -i200 -h400 -q >output
 
