@@ -1,5 +1,5 @@
 /*
- * ch3/kernel_seg/kernel_seg.c
+ * ch4/kernel_seg/kernel_seg.c
  ***************************************************************
  * This program is part of the source code released for the book
  *  "Linux Kernel Development Cookbook"
@@ -8,14 +8,14 @@
  *  GitHub repository:
  *  https://github.com/PacktPublishing/Linux-Kernel-Development-Cookbook
  *
- * From: Ch 3: Kernel and Memory Management Internals -Essentials
+ * From: Ch 4: Kernel and Memory Management Internals -Essentials Part 2
  ****************************************************************
  * Brief Description:
  * A kernel module to show us abot about the layout of the kernel segment;
  * kernel VAS (Virtual Address Space). In effect, showing us a simple memory
  * map of the kernel. Works on both 32 and 64-bit systems.
  *
- * For details, please refer the book, Ch 3.
+ * For details, please refer the book, Ch 4.
  */
 #include <linux/init.h>
 #include <linux/module.h>
@@ -31,7 +31,7 @@
 #define OURMODNAME   "kernel_seg"
 
 MODULE_AUTHOR("Kaiwan N Billimoria");
-MODULE_DESCRIPTION("LKDC book:ch3/kernel_seg: display some kernel space details");
+MODULE_DESCRIPTION("LKDC book:ch4/kernel_seg: display some kernel space details");
 MODULE_LICENSE("Dual MIT/GPL");
 MODULE_VERSION("0.1");
 
