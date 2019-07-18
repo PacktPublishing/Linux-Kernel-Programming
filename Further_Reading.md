@@ -57,7 +57,13 @@ For the reader's convenience, below are chapter-wise links to the *Further Readi
 - Article: [Linux Kernel Cross Compilation](https://gts3.org/2017/cross-kernel.html)
 - [SEALS - Simple Embedded ARM Linux System - project](https://github.com/kaiwan/seals)
 	- - [Wiki pages](https://github.com/kaiwan/seals/wiki)
-- [Raspberry Pi kernel build: official doc](https://www.raspberrypi.org/documentation/linux/kernel/building.md)
+- Building the (usual 32-bit) kernel for the Raspberry Pi device
+    - [Raspberry Pi kernel build: official doc](https://www.raspberrypi.org/documentation/linux/kernel/building.md)
+    - Building a **64-bit** kernel for the Raspberry Pi
+        - blog article: ['BUILD A 64-BIT KERNEL FOR YOUR RASPBERRY PI 3', Dec 2016](https://devsidestory.com/build-a-64-bit-kernel-for-your-raspberry-pi-3/)
+        - blog article: ['Tutorial: How (and why!) to set up a 64-bit kernel, 32-bit Raspbian host OS, 64-bit nspawn Debian guest OS RPi3 system', Jan 2019](https://www.raspberrypi.org/forums/viewtopic.php?f=56&t=232415&sid=146ea82cef8d235c1eaf64a12a8c3427)
+        - On GitHub: ['Bootable RPi3 image with 64-bit kernel, 32-bit Raspbian Stretch host OS, 64-bit Debian Buster guest OS in nspawn container', Sakaki, Apr 2019](https://github.com/sakaki-/raspbian-nspawn-64)
+        - Interesting, an [Ubuntu 18.04 server on Aarch64 Raspberry Pi](https://wiki.ubuntu.com/ARM/RaspberryPi); simplest way to get a 64-bit Raspberry Pi kernel and rootfs in a single image which can be burned onto the SD card
 
 ## Chapter 2, Writing your first Kernel Module-LKMs Part 1 - Further Reading
 
