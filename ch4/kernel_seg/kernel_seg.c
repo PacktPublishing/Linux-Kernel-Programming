@@ -11,9 +11,10 @@
  * From: Ch 4: Kernel and Memory Management Internals -Essentials Part 2
  ****************************************************************
  * Brief Description:
- * A kernel module to show us abot about the layout of the kernel segment;
- * kernel VAS (Virtual Address Space). In effect, showing us a simple memory
- * map of the kernel. Works on both 32 and 64-bit systems.
+ * A kernel module to show us stuff regarding the layout of the kernel segment;
+ * the kernel VAS (Virtual Address Space). In effect, showing us a simple memory
+ * map of the kernel. Works on both 32 and 64-bit systems of differing
+ * architectures (CPUs).
  *
  * For details, please refer the book, Ch 4.
  */
@@ -49,7 +50,7 @@ MODULE_PARM_DESC(show_uservas,
 	#define MY_PATTERN2     0xffeeddcc
 #elif(BITS_PER_LONG == 64)
 	#define FMTSPC		"%016lx"
-	#define FMTSPC_DEC	"%ld"
+	#define FMTSPC_DEC	"%9ld"
 	#define TYPECST	        unsigned long
 	#define MY_PATTERN1     0xdeadfacedeadface
 	#define MY_PATTERN2     0xffeeddccbbaa9988
@@ -69,62 +70,76 @@ static int __init kernel_seg_init(void)
 	lkdc_sysinfo2();
 
 	pr_info(
-    "\nSome Kernel Details -------------------\n"
-	" MODULES_END         = 0x" FMTSPC "\n"
-	" MODULES_VADDR       = 0x" FMTSPC " [modules range: " FMTSPC_DEC " MB]\n"
-	" VMALLOC_END         = 0x" FMTSPC "\n"
-	" VMALLOC_START       = 0x" FMTSPC " [vmalloc range: " FMTSPC_DEC " MB =" FMTSPC_DEC " GB]" "\n"
-	" PAGE_OFFSET         = 0x" FMTSPC " [lowmem region: start of all phy mapped RAM (here to RAM-size)]\n"
-	" TASK_SIZE           = 0x" FMTSPC " [size of user VAS]\n",
-		(TYPECST)MODULES_END, (TYPECST)MODULES_VADDR,
-		 (TYPECST)((MODULES_END-MODULES_VADDR)/(1024*1024)),
-		(TYPECST)VMALLOC_END, (TYPECST)VMALLOC_START,
-		 (TYPECST)((VMALLOC_END-VMALLOC_START)/(1024*1024)), 
-		 (TYPECST)((VMALLOC_END-VMALLOC_START)/(1024*1024*1024)),
-		(TYPECST)PAGE_OFFSET,
-		(TYPECST)TASK_SIZE);
+    "\nSome Kernel Details [by decreasing address]\n"
+	"+-------------------------------------------------------------+\n"
+	"|                           [ . . . ]                         |\n"
+	"|Module space:       "
+	" 0x" FMTSPC " - 0x" FMTSPC " | [" FMTSPC_DEC " MB]\n"
+	"|Vmalloc region:     "
+	" 0x" FMTSPC " - 0x" FMTSPC " | [" FMTSPC_DEC " MB = " FMTSPC_DEC " GB]" "\n"
+	" PAGE_OFFSET:         0x" FMTSPC " [lowmem region: start of all phy mapped RAM (here to RAM-size)]\n",
+		(TYPECST)MODULES_VADDR, (TYPECST)MODULES_END,
+		(TYPECST)((MODULES_END-MODULES_VADDR)/(1024*1024)),
+		(TYPECST)VMALLOC_START, (TYPECST)VMALLOC_END,
+		(TYPECST)((VMALLOC_END-VMALLOC_START)/(1024*1024)), 
+		(TYPECST)((VMALLOC_END-VMALLOC_START)/(1024*1024*1024)),
+		(TYPECST)PAGE_OFFSET);
 
 #ifdef CONFIG_KASAN  // Kernel Address SANitizer
-	pr_info("\nKASAN_SHADOW_START = 0x" FMTSPC " KASAN_SHADOW_END = 0x" FMTSPC "\n",
-		(TYPECST)KASAN_SHADOW_START, (TYPECST)KASAN_SHADOW_END);
+	//pr_info("\nKASAN_SHADOW_START to KASAN_SHADOW_END: "
+	pr_info(
+	"|KASAN shadow:       "
+	" 0x" FMTSPC " - 0x" FMTSPC " | [" FMTSPC_DEC " GB]\n"
+	(TYPECST)KASAN_SHADOW_START, (TYPECST)KASAN_SHADOW_END,
+	(TYPECST)((KASAN_SHADOW_END-KASAN_SHADOW_START)/(1024*1024*1024)));
 #endif
 	if (!show_uservas) {
 		pr_info("%s: skipping show userspace...\n", OURMODNAME);
 		return 0;
 	}
 
-	pr_info("%s: Process Userspace - some details:\n", OURMODNAME);
-	PRINT_CTX();       // see it in the convenient.h header
 	pr_info (
-    "\nProcess Usermode VAS [sorted by decreasing address] ------------------\n"
-	" [TASK_SIZE         = 0x" FMTSPC " size of userland]\n"
-	" [Statistics wrt 'current' thread TGID=%d PID=%d name=%s]:\n"
-	"        env_end     = 0x" FMTSPC "\n"
-	"        env_start   = 0x" FMTSPC "\n"
-	"        arg_end     = 0x" FMTSPC "\n"
-	"        arg_start   = 0x" FMTSPC "\n"
-	"        start_stack = 0x" FMTSPC "\n"
-	"        curr brk    = 0x" FMTSPC "\n" 
-	"        start_brk   = 0x" FMTSPC "\n"
-	"        end_data    = 0x" FMTSPC "\n"
-	"        start_data  = 0x" FMTSPC "\n" 
-	"        end_code    = 0x" FMTSPC "\n"
-	"        start_code  = 0x" FMTSPC "\n"
-	" [# memory regions (VMAs) = %d]\n",
-		(TYPECST)TASK_SIZE,
-		current->tgid, current->pid, current->comm,
+	"+------------ Above, kernel-space; Below, userspace ----------+\n"
+	"|                           [ . . . ]                         |\n"
+	"|Process environment "
+	" 0x" FMTSPC " - 0x" FMTSPC " | [" FMTSPC_DEC " bytes]\n"
+	"|          arguments "
+	" 0x" FMTSPC " - 0x" FMTSPC " | [" FMTSPC_DEC " bytes]\n"
+	"|        stack start  0x" FMTSPC "                      |\n"
+	"|       heap segment "
+	" 0x" FMTSPC " - 0x" FMTSPC " | [" FMTSPC_DEC " bytes]\n"
+	"|static data segment "
+	" 0x" FMTSPC " - 0x" FMTSPC " | [" FMTSPC_DEC " bytes]\n"
+	"|       text segment "
+	" 0x" FMTSPC " - 0x" FMTSPC " | [" FMTSPC_DEC " bytes]\n"
+	"|                           [ . . . ]                         |\n"
+	"+-------------------------------------------------------------+\n",
 		(TYPECST)current->mm->env_end,
 		(TYPECST)current->mm->env_start,
+		(TYPECST)(current->mm->env_end-current->mm->env_start),
 		(TYPECST)current->mm->arg_end, 
 		(TYPECST)current->mm->arg_start,
+		(TYPECST)(current->mm->arg_end-current->mm->arg_start),
 		(TYPECST)current->mm->start_stack,
 		(TYPECST)current->mm->brk,
 		(TYPECST)current->mm->start_brk,
+		(TYPECST)(current->mm->brk-current->mm->start_brk),
 		(TYPECST)current->mm->end_data,
 		(TYPECST)current->mm->start_data,
+		(TYPECST)(current->mm->end_data-current->mm->start_data),
 		(TYPECST)current->mm->end_code,
 		(TYPECST)current->mm->start_code,
-		current->mm->map_count);
+		(TYPECST)(current->mm->end_code-current->mm->start_code)
+		);
+
+	pr_info(
+	"Above: TASK_SIZE         = 0x" FMTSPC " size of userland   [= " FMTSPC_DEC " GB]\n"
+	" # userspace memory regions (VMAs) = %d\n"
+	" Above statistics are wrt 'current' thread TGID=%d PID=%d name=%s:\n",
+		(TYPECST)TASK_SIZE, (TYPECST)TASK_SIZE/(1024*1024*1024),
+		current->mm->map_count,
+		current->tgid, current->pid, current->comm);
+	PRINT_CTX();       // see it in the convenient.h header
 
 	return 0;
 }
