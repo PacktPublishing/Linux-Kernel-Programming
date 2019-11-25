@@ -1,16 +1,16 @@
 #!/bin/bash
 # genlkm
-# ***************************************************************
+# **********************************************************************
 # This program is part of the source code released for the book
-#  "Linux Kernel Development Cookbook"
+#  "Learn Linux Kernel Development"
 #  (c) Author: Kaiwan N Billimoria
 #  Publisher:  Packt
 #  GitHub repository:
-#  https://github.com/PacktPublishing/Linux-Kernel-Development-Cookbook
-# ****************************************************************
+#  https://github.com/PacktPublishing/Learn-Linux-Kernel-Development
+# **********************************************************************
 # Brief Description:
 # Generate a simple Linux LKM (Loadable Kernel Module) 'template'.
-# For details, please refer the book, Ch 2.
+# For details, please refer the book, Ch 4.
 name=$(basename $0)
 
 usage()

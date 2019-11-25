@@ -1,14 +1,14 @@
 /*
  * convenient.h
- ***************************************************************
+ ***********************************************************************
  * This program is part of the source code released for the book
- *  "Linux Kernel Development Cookbook"
+ *  "Learn Linux Kernel Development"
  *  (c) Author: Kaiwan N Billimoria
  *  Publisher:  Packt
  *  GitHub repository:
- *  https://github.com/PacktPublishing/Linux-Kernel-Development-Cookbook
+ *  https://github.com/PacktPublishing/Learn-Linux-Kernel-Development
  *
- ****************************************************************
+ ************************************************************************
  * Brief Description:
  * A few convenience macros and routines..
  * Mostly for kernel-space usage, some for user-space as well.
@@ -81,7 +81,7 @@
 } while (0)
 #else
 #define MSG_SHORT(string, args...) do {  \
-	fprintf(stderr, string, ##args); \
+	fprintf(stderr, string, ##args);     \
 } while (0)
 #endif
 
@@ -91,13 +91,13 @@
 #ifdef __KERNEL__
 #ifndef USE_FTRACE_BUFFER
 #define QPDS do {     \
-	MSG("\n");    \
-	dump_stack(); \
+	MSG("\n");        \
+	dump_stack();     \
 } while(0)
 #else
 #define QPDS do {           \
-	MSG("\n");          \
-	trace_dump_stack(); \
+	MSG("\n");              \
+	trace_dump_stack();     \
 } while(0)
 #endif
 #endif
@@ -139,18 +139,18 @@
 #include <linux/interrupt.h>
 
 #ifndef USE_FTRACE_BUFFER	// 'normal' printk(), lets emulate ftrace latency format
-#define PRINT_CTX() do {                                                                     \
+#define PRINT_CTX() do {                                                                 \
 	char sep='|', intr='.';                                                              \
 	                                                                                     \
-   if (in_interrupt()) {                                                                     \
-      if (in_irq() && in_softirq())                                                          \
+   if (in_interrupt()) {                                                                 \
+      if (in_irq() && in_softirq())                                                      \
 	    intr='H';                                                                        \
 	  else if (in_irq())                                                                 \
 	    intr='h';                                                                        \
 	  else if (in_softirq())                                                             \
 	    intr='s';                                                                        \
 	}                                                                                    \
-   else                                                                                      \
+   else                                                                                  \
 	intr='.';                                                                            \
 	                                                                                     \
 	DBGPRINT(                                                                            \
@@ -158,7 +158,7 @@
 	"%c%c%c%u "                                                                          \
 	"\n"                                                                                 \
 	, __func__, smp_processor_id(),                                                      \
-    (!current->mm?'[':' '), current->comm, (!current->mm?']':' '), current->pid, sep,        \
+    (!current->mm?'[':' '), current->comm, (!current->mm?']':' '), current->pid, sep,    \
 	(irqs_disabled()?'d':'.'),                                                           \
 	(need_resched()?'N':'.'),                                                            \
 	intr,                                                                                \
@@ -166,18 +166,18 @@
 	);                                                                                   \
 } while (0)
 #else				// using ftrace trace_prink() internally
-#define PRINT_CTX() do {                                                                     \
+#define PRINT_CTX() do {                                                                 \
 	DBGPRINT("PRINT_CTX:: [cpu %02d]%s:%d\n", smp_processor_id(), __func__,              \
-			current->pid);                                                       \
+			current->pid);                                                               \
 	if (!in_interrupt()) {                                                               \
-  		DBGPRINT(" in process context:%c%s%c:%d\n",                                  \
-		    (!current->mm?'[':' '), current->comm, (!current->mm?']':' '),           \
-				current->pid);                                               \
+  		DBGPRINT(" in process context:%c%s%c:%d\n",                                      \
+		    (!current->mm?'[':' '), current->comm, (!current->mm?']':' '),               \
+				current->pid);                                                           \
 	} else {                                                                             \
-        DBGPRINT(" in interrupt context: in_interrupt:%3s. in_irq:%3s. in_softirq:%3s. "     \
-		"in_serving_softirq:%3s. preempt_count=0x%x\n",                              \
-          (in_interrupt()?"yes":"no"), (in_irq()?"yes":"no"), (in_softirq()?"yes":"no"),     \
-          (in_serving_softirq()?"yes":"no"), (preempt_count() && 0xff));                     \
+        DBGPRINT(" in interrupt context: in_interrupt:%3s. in_irq:%3s. in_softirq:%3s. " \
+		"in_serving_softirq:%3s. preempt_count=0x%x\n",                                  \
+          (in_interrupt()?"yes":"no"), (in_irq()?"yes":"no"), (in_softirq()?"yes":"no"), \
+          (in_serving_softirq()?"yes":"no"), (preempt_count() && 0xff));                 \
 	}                                                                                    \
 } while (0)
 #endif
@@ -222,18 +222,18 @@ static inline void beep(int what)
  * @val : ASCII value to print
  * @loop_count : times to loop around
  */
-#define DELAY_LOOP(val,loop_count)                                             \
-{                                                                              \
+#define DELAY_LOOP(val,loop_count)                                         \
+{                                                                          \
 	int c = 0, m;                                                          \
 	unsigned int for_index, inner_index, x;                                \
 	                                                                       \
 	for (for_index=0;for_index<loop_count;for_index++) {                   \
-		beep((val));                                                   \
-		c++;                                                           \
-		for (inner_index=0;inner_index<HZ;inner_index++) {             \
-			for(m=0;m<50;m++);                                     \
-			x = inner_index /2;                                    \
-		}                                                              \
+		beep((val));                                                       \
+		c++;                                                               \
+		for (inner_index=0;inner_index<HZ;inner_index++) {                 \
+			for(m=0;m<50;m++);                                             \
+			x = inner_index /2;                                            \
+		}                                                                  \
 	}                                                                      \
 	/*printf("c=%d\n",c);*/                                                \
 }

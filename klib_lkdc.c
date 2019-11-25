@@ -1,14 +1,14 @@
 /*
  * klib_lkdc.c
- ***************************************************************
+ ***********************************************************************
  * This program is part of the source code released for the book
- *  "Linux Kernel Development Cookbook"
+ *  "Learn Linux Kernel Development"
  *  (c) Author: Kaiwan N Billimoria
  *  Publisher:  Packt
  *  GitHub repository:
- *  https://github.com/PacktPublishing/Linux-Kernel-Development-Cookbook
+ *  https://github.com/PacktPublishing/Learn-Linux-Kernel-Development
  *
- ****************************************************************
+ ************************************************************************
  * Brief Description:
  * This kernel (module) code is meant to serve as a 'library' of sorts. Other
  * kernel modules in our codebase might wish to link into it and use it's code.

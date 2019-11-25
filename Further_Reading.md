@@ -1,15 +1,15 @@
 # Further Reading
-*For the book "Linux Kernel Development Cookbook", Kaiwan N Billimoria, Packt (2019).*
+*For the book "Learn Linux Kernel Development", Kaiwan N Billimoria, Packt (2019).*
 
-*Book GitHub repo*: https://github.com/PacktPublishing/Linux-Kernel-Development-Cookbook
+*Book GitHub repo*: https://github.com/PacktPublishing/Learn-Linux-Kernel-Development
 
 Here, we present, in a chapter-wise format, additional online as well as book references. We feel that these will help, you, the reader, in digging deeper into topics, or gaining additional views/information, or both. We definitely recommend you browse through the provided references. Also, you will find that some resources are repeated across chapters; we leave it this way so that the reader can gain all required resources in one place (and chapter-wise).
 (Obviously, these reference articles/blogs/etc are provided "as-is"; we cannot vouch for their correctness or validity).
 
 For the reader's convenience, below are chapter-wise links to the *Further Reading* notes:
 
- - [Ch 1, Building the Kernel From Source](https://github.com/PacktPublishing/Linux-Kernel-Development-Cookbook/blob/master/Further_Reading.md#chapter-1-building-the-linux-kernel-from-source--further-reading) 
- - [Ch 2. Writing your first Kernel Module - the LKM Framework](https://github.com/PacktPublishing/Linux-Kernel-Development-Cookbook/blob/master/Further_Reading.md#chapter-2-writing-your-first-kernel-module-the-lkm-framework-further-reading)
+ - [Ch 2, Building the Kernel From Source](https://github.com/PacktPublishing/Linux-Kernel-Development-Cookbook/blob/master/Further_Reading.md#chapter-1-building-the-linux-kernel-from-source--further-reading) 
+ - [Ch 4. Writing your first Kernel Module - the LKM Framework](https://github.com/PacktPublishing/Linux-Kernel-Development-Cookbook/blob/master/Further_Reading.md#chapter-2-writing-your-first-kernel-module-the-lkm-framework-further-reading)
  - Ch 3
  - Ch 4. Kernel Memory Allocation for Module Authors
  - Ch 5
@@ -18,7 +18,7 @@ For the reader's convenience, below are chapter-wise links to the *Further Readi
 	 - [A: File IO Essentials](https://github.com/PacktPublishing/Hands-on-System-Programming-with-Linux/blob/master/Further_reading.md#a-file-io-essentials--further-reading)
 
 
-## Chapter 1, Building the Linux Kernel From Source - Further Reading
+## Chapter 2and Ch 3, Building the Linux Kernel From Source - Further Reading
 
 - **[Official Kernel Documentation](https://www.kernel.org/doc/html/latest/index.html)** : the modern Linux kernel documentation is very well written and presented here
 	- ["2. How the development process works"](https://www.kernel.org/doc/html/latest/process/2.Process.html#how-the-development-process-works)
@@ -39,6 +39,7 @@ For the reader's convenience, below are chapter-wise links to the *Further Readi
 - ["LTSI	Project	update - Long Term Support Initiative"](https://events.linuxfoundation.org/wp-content/uploads/2017/11/Using-Linux-for-Long-Term-Community-Status-and-the-Way-We-Go-OSS-Tsugikazu-Shibata.pdf) - slide deck, Open Source Summit Japan, June 2018
 - Linux kernel upstream development
     - [Working with the kernel development community](https://www.kernel.org/doc/html/latest/process/index.html#working-with-the-kernel-development-community)
+    - Blog artcile: ['Kernel Patch Submission tutorial', Saurabh Singh Sengar](https://saurabhsengarblog.wordpress.com/2015/11/26/kernel-patch-submission-tutorial/)
     - [Working with linux-next](https://www.kernel.org/doc/man-pages/linux-next.html)
 
 - [Linux kernel versions with detailed notes on new features, kernelnewbies](https://kernelnewbies.org/LinuxVersions)
@@ -65,7 +66,7 @@ For the reader's convenience, below are chapter-wise links to the *Further Readi
         - On GitHub: ['Bootable RPi3 image with 64-bit kernel, 32-bit Raspbian Stretch host OS, 64-bit Debian Buster guest OS in nspawn container', Sakaki, Apr 2019](https://github.com/sakaki-/raspbian-nspawn-64)
         - Interesting, an [Ubuntu 18.04 server on Aarch64 Raspberry Pi](https://wiki.ubuntu.com/ARM/RaspberryPi); simplest way to get a 64-bit Raspberry Pi kernel and rootfs in a single image which can be burned onto the SD card
 
-## Chapter 2, Writing your first Kernel Module-LKMs Part 1 - Further Reading
+## Chapter 4, Writing your first Kernel Module-LKMs Part 1 - Further Reading
 
 - [Official Kernel Documentation : kernel parameters](https://www.kernel.org/doc/html/latest/admin-guide/kernel-parameters.html)
 - ['How to get printk format specifiers right', Linux kernel doc](https://www.kernel.org/doc/html/latest/core-api/printk-formats.html?highlight=dma)
@@ -79,7 +80,7 @@ For the reader's convenience, below are chapter-wise links to the *Further Readi
 - [Debugging by printing, eLinux](https://elinux.org/Debugging_by_printing)
 - Blog article: ["MAKEFILES TUTORIAL", Liran B.H.](http://devarea.com/makefiles-tutorial/)
 
-## Chapter 3, Writing your first Kernel Module-LKMs Part 2 - Further Reading
+## Chapter 5, Writing your first Kernel Module-LKMs Part 2 - Further Reading
 
 - Blog article: [WORKING ON THE CONSOLE WITH THE RASPBERRY PI, kaiwanTECH](https://kaiwantech.wordpress.com/2018/12/16/working-on-the-console-with-the-raspberry-pi/)
 
@@ -111,7 +112,7 @@ For the reader's convenience, below are chapter-wise links to the *Further Readi
 	- ["Loading signed kernel modules", LWN, Dec 2011](https://lwn.net/Articles/470906/)
 - [The Eudyptula Challenge](http://eudyptula-challenge.org/): "The Eudyptula Challenge was a series of programming exercises for the Linux kernel, that started from a very basic "Hello world" kernel module, moving on up in complexity to getting patches accepted into the main Linux kernel source tree." It's really cool but NOT active as of this writing though.
 
-## Chapter 4, Essentials of Kernel and Memory Management Internals - Further Reading
+## Chapter 6, Essentials of Kernel and Memory Management Internals - Further Reading
 - Book: [Hands-On System Programming with Linux", Kaiwan N Billimoria, Packt](https://www.packtpub.com/networking-and-servers/hands-system-programming-linux). Prerequisites to this chapter (essential reading, really):
 	- Ch 1 : Linux System Architecture
 	- Ch 2 : Virtual Memory
@@ -138,7 +139,7 @@ Software Developer’s Manual. Volume 3 (3A, 3B & 3C): System Programming Guide]
 - ['Virtual Memory and Linux', PDF, Matt Porter, Alan Ott](https://elinux.org/images/b/b0/Introduction_to_Memory_Management_in_Linux.pdf)
 
 
-## Ch 5 and Ch 6, Kernel Memory Allocation for Module Authors - Further Reading
+## Ch 7 and Ch 8, Kernel Memory Allocation for Module Authors - Further Reading
 
 - Book: ['Hands-On System Programming with Linux', Kaiwan N Billimoria, Packt](https://www.packtpub.com/networking-and-servers/hands-system-programming-linux). Prerequisites to this chapter (essential reading, really):
 	- Ch 1 : Linux System Architecture
@@ -171,7 +172,7 @@ Software Developer’s Manual. Volume 3 (3A, 3B & 3C): System Programming Guide]
     - Blog article: ['Virtual memory settings in Linux - The Problem with Overcommit'](http://engineering.pivotal.io/post/virtual_memory_settings_in_linux_-_the_problem_with_overcommit/)
     - RHEL specific but useful: ['Interpreting /proc/meminfo and free output for Red Hat Enterprise Linux 5, 6 and 7'](https://access.redhat.com/solutions/406773)
 
-## Ch 7 : The CPU Scheduler - Further Reading
+## Ch 9 and Ch 10 : The CPU Scheduler - Further Reading
 
 - Detailed PDF: ['A complete guide to Linux process scheduling', Nikita Ishkov, Feb 2015](https://trepo.tuni.fi/bitstream/handle/10024/96864/GRADU-1428493916.pdf)
 - Ftrace
@@ -212,7 +213,7 @@ The RTL Collaborative Project](https://wiki.linuxfoundation.org/realtime/rtl/sta
 
 
 
-## Ch 9 : Writing a simple Misc Character Device Driver - Further Reading
+## Ch 11 : Writing a simple Misc Character Device Driver - Further Reading
 
 - Linux Device Drivers
     - Books:
@@ -225,7 +226,7 @@ The RTL Collaborative Project](https://wiki.linuxfoundation.org/realtime/rtl/sta
         - ['Device Drivers, Part 8: Accessing x86-Specific I/O-Mapped Hardware', Anil K Pugalia, OpenSourceForU, July 2011](https://opensourceforu.com/2011/07/accessing-x86-specific-io-mapped-hardware-in-linux/)
 
 
-## Ch 10 : Synchronization Primitives and How to Use Them - Further Reading
+## Ch 15 and Ch 16 : Kernel Synchronization Primitives and How to Use Them - Further Reading
 
 - ['What every systems programmer should know about concurrency', M Kline, May 2018](https://assets.bitbashing.io/papers/concurrency-primer.pdf)
 - This presentation covers deadlock scenarios: ['Lockdep: how to read it's cryptic output', Steve Rostedt, Linux Plumbers Conf 2011](https://blog.linuxplumbersconf.org/2011/ocw/sessions/153)
@@ -271,20 +272,6 @@ Paul E. McKenney, IBM LTC, June 2010](http://www.rdrop.com/~paulmck/scalability/
         - ['Lockdep: how to read it's cryptic output', Steve Rostedt, Linux Plumbers Conf 2011](https://blog.linuxplumbersconf.org/2011/ocw/sessions/153)
         - ['LOCKDEP, AN INSIDE OUT PERSPECTIVE', Nahim El Atmani, Nov 2016](https://www.lse.epita.fr/data/lt/2016-11-08/lt-2016-11-08-Nahim_El_Atmani-lockdep-an-inside-out-perspective.pdf)
         - (until it gets merged :-) : ['[PATCH 16/28] locking/lockdep: Add explanation to lock usage rules in lockdep design doc', Yuyang Du](https://lkml.org/lkml/2019/4/24/333), Apr 2019
-
-
-## Ch 11 : Kernel Debug - Further Reading
-
-- [Debugging by printing, elinux](https://elinux.org/Debugging_by_printing)
-- [The 'poor person's printf()' - using a scope, The Embedded Muse, Dec 2018](http://www.ganssle.com/tem/tem364.html#article4)
-- Blog article (medium): ['A Short Guide to Kernel Debugging
-A story about finding a kernel bug on a production system', Wester, Oct 2015](https://medium.com/square-corner-blog/a-short-guide-to-kernel-debugging-e6fdbe7bfcdf)
-- Kdump, crash
-    - ['How to use kdump to debug kernel crashes', Fedora Project Wiki](https://fedoraproject.org/wiki/How_to_use_kdump_to_debug_kernel_crashes)
-    - Blog article: ['Using Kdump for examining Linux Kernel crashes', opensource.com, June 2017](https://opensource.com/article/17/6/kdump-usage-and-internals); (x86_64)
-    - Blog article: ['SETTING UP KDUMP AND CRASH FOR ARM-32 – AN ONGOING SAGA', kaiwanTECH, July 2017](https://kaiwantech.wordpress.com/2017/07/13/setting-up-kdump-and-crash-for-arm-32-an-ongoing-saga/)
-- a
-
 
 
 [\[Top\]](https://github.com/PacktPublishing/Linux-Kernel-Development-Cookbook/blob/master/Further_Reading.md#further-reading)
