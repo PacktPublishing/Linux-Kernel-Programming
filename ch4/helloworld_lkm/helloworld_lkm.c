@@ -25,16 +25,16 @@ MODULE_DESCRIPTION("LLKD book:ch4/helloworld_lkm: hello, world, our first LKM");
 MODULE_LICENSE("Dual MIT/GPL");
 MODULE_VERSION("0.1");
 
-static int __init hello_llkd_init(void)
+static int __init helloworld_lkm_init(void)
 {
 	printk(KERN_INFO "Hello, world\n");
 	return 0;		/* success */
 }
 
-static void __exit hello_llkd_exit(void)
+static void __exit helloworld_lkm_exit(void)
 {
 	printk(KERN_INFO "Goodbye, world\n");
 }
 
-module_init(hello_llkd_init);
-module_exit(hello_llkd_exit);
+module_init(helloworld_lkm_init);
+module_exit(helloworld_lkm_exit);
