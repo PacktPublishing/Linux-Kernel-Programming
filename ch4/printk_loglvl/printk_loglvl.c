@@ -22,11 +22,11 @@
 #include <linux/module.h>
 
 MODULE_AUTHOR("<insert your name here>");
-MODULE_DESCRIPTION("LLKD book:ch2/printk_loglvl: print at each kernel log level");
+MODULE_DESCRIPTION("LLKD book:ch4/printk_loglvl: print at each kernel log level");
 MODULE_LICENSE("Dual MIT/GPL");
 MODULE_VERSION("0.1");
 
-static int __init hello_init(void)
+static int __init printk_loglvl_init(void)
 {
 	pr_emerg("Hello, world @ log-level KERN_EMERG   [0]\n");
 	pr_alert("Hello, world @ log-level KERN_ALERT   [1]\n");
@@ -40,10 +40,10 @@ static int __init hello_init(void)
 	return 0; /* success */
 }
 
-static void __exit hello_exit(void)
+static void __exit printk_loglvl_exit(void)
 {
 	pr_info("Goodbye, world @ log-level KERN_INFO    [6]\n");
 }
 
-module_init(hello_init);
-module_exit(hello_exit);
+module_init(printk_loglvl_init);
+module_exit(printk_loglvl_exit);
