@@ -8,6 +8,7 @@ Here, we present, in a chapter-wise format, additional online as well as book re
 
 For the reader's convenience, below are chapter-wise links to the *Further Reading* notes:
 
+ - [Ch 1, Kernel workspace setup](https://github.com/PacktPublishing/Linux-Kernel-Development-Cookbook/blob/master/Further_Reading.md#chapter-1-kernel-workspace-setup--further-reading)
  - [Ch 2, Building the Kernel From Source](https://github.com/PacktPublishing/Linux-Kernel-Development-Cookbook/blob/master/Further_Reading.md#chapter-1-building-the-linux-kernel-from-source--further-reading) 
  - [Ch 4. Writing your first Kernel Module - the LKM Framework](https://github.com/PacktPublishing/Linux-Kernel-Development-Cookbook/blob/master/Further_Reading.md#chapter-2-writing-your-first-kernel-module-the-lkm-framework-further-reading)
  - Ch 3
@@ -18,7 +19,18 @@ For the reader's convenience, below are chapter-wise links to the *Further Readi
 	 - [A: File IO Essentials](https://github.com/PacktPublishing/Hands-on-System-Programming-with-Linux/blob/master/Further_reading.md#a-file-io-essentials--further-reading)
 
 
-## Chapter 2and Ch 3, Building the Linux Kernel From Source - Further Reading
+## Chapter 1, Kernel Development Workspace Setup - Further Reading
+
+- [Emulating Raspberry Pi on Linux](http://embedonix.com/articles/linux/emulating-raspberry-pi-on-linux/)
+
+- [qemu-rpi-kernel, GitHub](https://github.com/dhruvvyas90/qemu-rpi-kernel/wiki)
+- Code browsers
+    - [Ctags Tutorial](https://courses.cs.washington.edu/courses/cse451/10au/tutorials/tutorial_ctags.html)
+    - [The Vim/Cscope tutorial](http://cscope.sourceforge.net/cscope_vim_tutorial.html)
+
+
+
+## Chapter 2 and Ch 3, Building the Linux Kernel From Source - Further Reading
 
 - **[Official Kernel Documentation](https://www.kernel.org/doc/html/latest/index.html)** : the modern Linux kernel documentation is very well written and presented here
 	- ["2. How the development process works"](https://www.kernel.org/doc/html/latest/process/2.Process.html#how-the-development-process-works)
