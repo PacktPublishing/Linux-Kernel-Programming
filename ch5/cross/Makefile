@@ -10,7 +10,7 @@
 ifeq ($(ARCH),arm)
     # *UPDATE* 'KDIR' below to point to the ARM Linux kernel 
     # source tree on your box
-    KDIR ?= ~/rpi_work/kernel_rpi  # the R Pi kernel
+    KDIR ?= ~/rpi_work/kernel_rpi/linux  # the R Pi kernel
 else ifeq ($(ARCH),powerpc)
     # *UPDATE* 'KDIR' below to point to the PPC64 Linux kernel
     # source tree on your box
@@ -20,7 +20,7 @@ else   # it's x86, the 'default'
 endif
 
 PWD	     := $(shell pwd)
-obj-m        += hello.o
+obj-m        += helloworld_lkm.o
 EXTRA_CFLAGS += -DDEBUG
 $(info Building for: ARCH=${ARCH} CROSS_COMPILE=${CROSS_COMPILE} EXTRA_CFLAGS=${EXTRA_CFLAGS})
 
