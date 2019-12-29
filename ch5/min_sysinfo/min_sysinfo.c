@@ -23,8 +23,7 @@
 
 #define MYMODNAME   "min_sysinfo"
 MODULE_AUTHOR("<insert your name here>");
-MODULE_DESCRIPTION
-    ("LLKD book:ch5/min_sysinfo: print some minimal system info");
+MODULE_DESCRIPTION("LLKD book:ch5/min_sysinfo: print some minimal system info");
 MODULE_LICENSE("Dual MIT/GPL");
 MODULE_VERSION("0.1");
 
@@ -34,19 +33,19 @@ MODULE_VERSION("0.1");
  */
 /* Portability: set the printk formatting appropriately for 32 and 64-bit */
 #if(BITS_PER_LONG == 32)
-	#define FMT   "%2u"
+#define FMT   "%2u"
 #else
-	#define FMT   "%2ld"
+#define FMT   "%2ld"
 #endif
 void show_sizeof(void)
 {
 	pr_info("sizeof: (bytes)\n"
-		"  char = " FMT "   short int = " FMT "           int = " FMT "\n"
-		"  long = " FMT "   long long = " FMT "        void * = " FMT "\n"
-		" float = " FMT "      double = " FMT "   long double = " FMT "\n",
-			sizeof(char), sizeof(short int), sizeof(int),
-			sizeof(long), sizeof(long long), sizeof(void *),
-			sizeof(float), sizeof(double), sizeof(long double));
+		"  char = " FMT "   short int = " FMT "           int = " FMT
+		"\n" "  long = " FMT "   long long = " FMT "        void * = "
+		FMT "\n" " float = " FMT "      double = " FMT
+		"   long double = " FMT "\n", sizeof(char), sizeof(short int),
+		sizeof(int), sizeof(long), sizeof(long long), sizeof(void *),
+		sizeof(float), sizeof(double), sizeof(long double));
 }
 
 /* llkd_sysinfo2:
@@ -103,23 +102,24 @@ static void llkd_sysinfo2(void)
 	show_sizeof();
 
 	/* Word ranges: min & max: defines are in include/linux/kernel.h */
-	pr_info("Word [U|S][8|16|32|64] ranges: unsigned max, signed max, signed min:\n"
-		" U8_MAX = %20u,  S8_MAX = %20d,  S8_MIN = %20d\n"
-		"U16_MAX = %20u, S16_MAX = %20d, S16_MIN = %20d\n"
-		"U32_MAX = %20u, S32_MAX = %20d, S32_MIN = %20d\n"
-		"U64_MAX = %20llu, S64_MAX = %20lld, S64_MIN = %20lld\n"
+	pr_info
+	    ("Word [U|S][8|16|32|64] ranges: unsigned max, signed max, signed min:\n"
+	     " U8_MAX = %20u,  S8_MAX = %20d,  S8_MIN = %20d\n"
+	     "U16_MAX = %20u, S16_MAX = %20d, S16_MIN = %20d\n"
+	     "U32_MAX = %20u, S32_MAX = %20d, S32_MIN = %20d\n"
+	     "U64_MAX = %20llu, S64_MAX = %20lld, S64_MIN = %20lld\n"
 #if defined (CONFIG_X86)
-		"PHYS_ADDR_MAX = %llu\n"
+	     "PHYS_ADDR_MAX = %llu\n"
 #endif
-		,	U8_MAX, S8_MAX, S8_MIN,
-			U16_MAX, S16_MAX, S16_MIN,
-			U32_MAX, S32_MAX, S32_MIN,
-			U64_MAX, S64_MAX, S64_MIN
+	     , U8_MAX, S8_MAX, S8_MIN,
+	     U16_MAX, S16_MAX, S16_MIN,
+	     U32_MAX, S32_MAX, S32_MIN, U64_MAX, S64_MAX, S64_MIN
 #if defined (CONFIG_X86)
-			, PHYS_ADDR_MAX
+	     , PHYS_ADDR_MAX
 #endif
-			);
+	    );
 }
+
 EXPORT_SYMBOL(llkd_sysinfo2);
 
 static void llkd_sysinfo(void)
@@ -167,6 +167,7 @@ static void llkd_sysinfo(void)
 #endif
 	pr_info("%s", msg);
 }
+
 EXPORT_SYMBOL(llkd_sysinfo);
 
 static int __init min_sysinfo_init(void)
@@ -174,7 +175,7 @@ static int __init min_sysinfo_init(void)
 	pr_info("%s: inserted\n", MYMODNAME);
 	llkd_sysinfo();
 	llkd_sysinfo2();
-	return 0;	/* success */
+	return 0;		/* success */
 }
 
 static void __exit min_sysinfo_exit(void)
