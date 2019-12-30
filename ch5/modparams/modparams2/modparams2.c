@@ -11,9 +11,9 @@
  * From: Ch 5: Writing your First Kernel Module- LKMs Part 2
  ****************************************************************
  * Brief Description:
- * Same as modparams1, plus, we do some checks: here, we propose that
- * the newly introduced parameter 'control_freak' is mandatory to be passed
- * by the user; this module aborts if it isn't explicityl passed along.
+ * Same as modparams1, plus, we do some validity checks: here, we propose that
+ * the newly introduced kernel module parameter 'control_freak' is mandatory to
+ * be passed by the user; this module aborts if it isn't explicityl passed along.
  *
  * For details, please refer the book, Ch 5.
  */
