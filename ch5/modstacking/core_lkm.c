@@ -33,9 +33,10 @@ EXPORT_SYMBOL_GPL(exp_int);
 /* Functions to be called from other LKMs */
 
 /* llkd_sysinfo2:
- * a more security-aware version of the llkd_sysinfo routine. We use
+ * A more security-aware version of the earlier llkd_sysinfo() routine. We use
  * David Wheeler's flawfinder(1) tool to detect possible vulnerabilities;
- * so, we change the strlen, and replace the strncat with strlcat.
+ * Based on it's report, we change the strlen, and replace the strncat with
+ * strlcat.
  */
 static void llkd_sysinfo2(void)
 {

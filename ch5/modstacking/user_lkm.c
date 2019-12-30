@@ -38,9 +38,8 @@ extern int exp_int;
 static int __init user_lkm_init(void)
 {
 #define THE_ONE   0xfedface
-	u64 sk = get_skey(THE_ONE);
-
 	pr_info("%s: inserted\n", MODNAME);
+	u64 sk = get_skey(THE_ONE);
 	pr_debug("%s: Called get_skey(), ret = 0x%llx = %llu\n",
 			MODNAME, sk, sk);
 	pr_debug("%s: exp_int = %d\n", MODNAME, exp_int);
