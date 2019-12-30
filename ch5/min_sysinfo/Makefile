@@ -20,7 +20,7 @@ endif
 PWD	       := $(shell pwd)
 obj-m          += min_sysinfo.o
 EXTRA_CFLAGS   += -DDEBUG
-$(info Building for: ARCH=${ARCH} CROSS_COMPILE=${CROSS_COMPILE} EXTRA_CFLAGS=${EXTRA_CFLAGS})
+$(info Building for: KREL=${KERNELRELEASE} ARCH=${ARCH} CROSS_COMPILE=${CROSS_COMPILE} EXTRA_CFLAGS=${EXTRA_CFLAGS})
 
 all:
 	make -C $(KDIR) M=$(PWD) modules
