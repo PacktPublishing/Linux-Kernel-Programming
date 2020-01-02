@@ -3,7 +3,7 @@
 # License: MIT
 unset ARCH
 unset CROSS_COMPILE
-name=$(basename $0)
+name=$(basename "${0}")
 
 #-------------- r u n c m d -------------------------------------------
 # Display and run the provided command.
@@ -13,7 +13,7 @@ runcmd()
 local SEP="------------------------------"
 [ $# -eq 0 ] && return
 echo "${SEP}
-$@
+$*
 ${SEP}"
 eval "$@"
 [ $? -ne 0 ] && echo " ^--[FAILED]"
@@ -43,7 +43,7 @@ runcmd "sudo dmesg -C"
 runcmd "make || exit 1"
  # TODO - the '|| exit 1' does not seem to work
 
-[ ! -f $1.ko ] && {
+[ ! -f "$1".ko ] && {
   echo "[!] ${name}: $1.ko has not been built, aborting..."
   exit 1
 }

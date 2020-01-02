@@ -5,7 +5,7 @@
 #
 # Currently we support cross-compiling for the ARM-32 and PowerPC (64-bit)
 # archs, and 'normal' build for the x86[_64].
-name=$(basename $0)
+name=$(basename "$0")
 
 #--- Global config
 # set to 1 for verbose build
@@ -13,8 +13,8 @@ VERBOSE=0
 
 # *** IMP! UPDATE as required ***
 # Kernel source tree locations for various targets
-KSRC_ARM_TARGET="~/rpi_kernel"
-KSRC_PPC64_TARGET="~/linux-4.9.1"
+KSRC_ARM_TARGET="${HOME}/rpi_kernel"
+KSRC_PPC64_TARGET="${HOME}/linux-4.9.1"
 
 # Toolchain prefixes for various targets
 ARM_CXX=arm-linux-gnueabi-
@@ -57,7 +57,7 @@ usage()
  exit 1
 }
 
-if [ "${ARCH}" != "arm" -a "${ARCH}" != "powerpc" -a ! -z "${ARCH}" ] ; then
+if [ "${ARCH}" != "arm" ] && [ "${ARCH}" != "powerpc" ] && [ ! -z "${ARCH}" ] ; then
  echo "[!] ${name}: ARCH has to be either 'arm' or 'powerpc' or NULL (for x86, the default)"
  usage
  exit 1
@@ -75,7 +75,7 @@ fi
   }
 }
 [ -z "${ARCH}" ] && {    # ${ARCH} NUL implies x86[_64]
-  [ ! -d /lib/modules/$(uname -r)/build/ ] && {
+  [ ! -d /lib/modules/"$(uname -r)"/build/ ] && {
     echo "[!] x86[_64]: failed to locate /lib/modules/$(uname -r)/build/.
 Package kernel-headers required to be installed? Aborting..."
     exit 1
@@ -141,11 +141,11 @@ else
 fi
 
 echo
-[ ! -f $1.ko ] && {
+if [ ! -f "$1".ko ] ; then
   echo "[!] ${name} : Failed; $1.ko not generated, aborting"
   exit 1
-} || {
-  file $1.ko
-  ls -l $1.ko
-}
+else
+  file "$1".ko
+  ls -l "$1".ko
+fi
 exit 0

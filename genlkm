@@ -11,19 +11,22 @@
 # Brief Description:
 # Generate a simple Linux LKM (Loadable Kernel Module) 'template'.
 # For details, please refer the book, Ch 4.
-name=$(basename $0)
+name=$(basename "$0")
 
 usage()
 {
-	echo "Usage: ${name} filename-without-.c_extension
- This helper script will create a directory under the current one named $1/
+	echo "${name} is a simple Linux kernel module 'generator' script.
+(It internally invokes the xcc_lkm.sh script as well).
+
+Usage: ${name} mykmod
+ ; where \"mykmod\" is a filename (without any extension)
+ This helper script will create a directory under the current one named \"mykmod\"
  and will then generate two files within it:
- (i)  the $1.c kernel module 'template' file, and
+ (i)  the \"mykmod\".c kernel module 'template' file, and
  (ii) the Makefile for it.
 Enjoy!"
 }
 
-ONLY_TARGET=0
 [ $# -lt 1 ] && {
 	usage
 	exit 1
@@ -83,17 +86,19 @@ module_exit($1_exit);"
 
 #---
 
-[ ! -d $1 ] && mkdir -p $1 || {
+if [ ! -d "$1" ] ; then
+ mkdir -p "$1"
+else
  echo "${name}: the directory $1/ already exists, aborting..."
  exit 1
-}
+fi
 
 # Within a sub-shell ...
 (
-cd $1 || exit 1
-[ -f $1.c ] && cp -f $1.c $1.c.bkp
+cd "$1" || exit 1
+[ -f "$1".c ] && cp -f "$1".c "$1".c.bkp
 
-cat > $1.c << EOF
+cat > "$1".c << EOF
 ${HDR_1}
 ${INC_1}
 ${MAC_1}
@@ -102,12 +107,12 @@ ${CODE_1}
 EOF
 
 echo "[+] LKM $1/$1.c generated"
-ls -l $1.c
+ls -l "$1".c
 
 which xcc_lkm.sh >/dev/null 2>&1 || {
  echo "[!] xcc_lkm.sh script not found (not in PATH?), unable to generate Makefile"
  exit 1
 }
-echo "[+] Generating the $1/Makefile for $1.c ..."
-xcc_lkm.sh $1
+echo "[+] Generating the $1/Makefile for $1.c (via xcc_lkm.sh)..."
+xcc_lkm.sh "$1"
 )
