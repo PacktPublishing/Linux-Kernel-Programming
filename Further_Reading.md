@@ -35,6 +35,7 @@ For the reader's convenience, below are chapter-wise links to the *Further Readi
 - **[Official Kernel Documentation](https://www.kernel.org/doc/html/latest/index.html)** : the modern Linux kernel documentation is very well written and presented here
 	- ["2. How the development process works"](https://www.kernel.org/doc/html/latest/process/2.Process.html#how-the-development-process-works)
 	- [The Linux kernel build system - kbuild - infrastructure](https://www.kernel.org/doc/Documentation/kbuild/)
+
 - Git
     - [Firstly, A Gentle Introduction to Version Control](http://chronicle.com/blogs/profhacker/a-gentle-introduction-to-version-control/23064)
     - [Resources to Learn Git](http://try.github.io/)
@@ -55,6 +56,8 @@ For the reader's convenience, below are chapter-wise links to the *Further Readi
     - [Working with linux-next](https://www.kernel.org/doc/man-pages/linux-next.html)
 
 - [Linux kernel versions with detailed notes on new features, kernelnewbies](https://kernelnewbies.org/LinuxVersions)
+- Fun: [Occurences of words in the Linux kernel source code over time](https://www.vidarholen.net/contents/wordcount/#hack*,workaround*,todo,fixme)
+
 - Licensing
 	-   [The differences between the GPL, LGPL and the BSD](https://fosswire.com/post/2007/04/the-differences-between-the-gpl-lgpl-and-the-bsd/)
 	- [Proprietary loadable kernel modules, LWN](https://lwn.net/Articles/434491/)
@@ -96,6 +99,15 @@ For the reader's convenience, below are chapter-wise links to the *Further Readi
 
 - Blog article: [WORKING ON THE CONSOLE WITH THE RASPBERRY PI, kaiwanTECH](https://kaiwantech.wordpress.com/2018/12/16/working-on-the-console-with-the-raspberry-pi/)
 
+- Licensing
+    - [Being honest with MODULE_LICENSE, Jon Corbet, LWN, Apr 2004](https://lwn.net/Articles/82305/)
+    - [Multi-licensing](https://en.wikipedia.org/wiki/Multi-licensing)
+    - [Dual Licensing: Having Your Cake and Eating It Too](https://www.linuxinsider.com/story/38172.html), LinuxInsider
+    - [GPL License FAQs](https://www.gnu.org/licenses/gpl-faq.html)
+    - Selecting a license
+        - [Open Source Licenses Comparison -Guide](https://itsfoss.com/open-source-licenses-explained/), Leroux, Nov 2019
+        - [Choose an open source license](https://choosealicense.com/)
+
 - Arithmetic Overflow
     - An excellent must-read whitepaper: ['Understanding Integer Overflow in C/C++', Dietz, et al, June 2012](http://www.cs.utah.edu/~regehr/papers/overflow12.pdf)
     - ['Catch and compute overflow during multiplication of two large integers', StackOverflow](https://stackoverflow.com/questions/1815367/catch-and-compute-overflow-during-multiplication-of-two-large-integers)
@@ -107,12 +119,14 @@ For the reader's convenience, below are chapter-wise links to the *Further Readi
 	- Blog article: ["Static analysis on the Linux kernel"](http://smackerelofopinion.blogspot.com/2017/09/static-analysis-on-linux-kernel.html)
 	- PDF: ["Static code checking In the Linux kernel", Arnd Bergmann, Linaro](https://elinux.org/images/d/d3/Bargmann.pdf)
 	- Thesis paper: ["Automatic Bug-finding Techniques for Large Software Projects", Jiri Slaby](https://www.fi.muni.cz/~xslaby/sklad/dis.pdf)
+
 - Blog article: ["LINUX KERNEL DEVELOPMENT – KERNEL MODULE PARAMETERS", Liran B.H.](http://devarea.com/linux-kernel-development-kernel-module-parameters/)
 - Useful Arch Linux Wiki on kernel module - gathering info, auto-loading, aliasing, blacklisting, etc: ["Kernel module"](https://wiki.archlinux.org/index.php/Kernel_module)
 - StackOverflow Q&A: ["Where does modprobe load a driver that udev requests?"](https://unix.stackexchange.com/questions/330186/where-does-modprobe-load-a-driver-that-udev-requests)
 - DKMS: Dynamic Kernel Module Support
 	- AskUbuntu: ["What does DKMS do? How do I use it?"](https://askubuntu.com/questions/408605/what-does-dkms-do-how-do-i-use-it)
 	- dkms(8) man page](https://linux.die.net/man/8/dkms)
+
 - Linux Kernel Security
 	- The [Kernel Self Protection Project](https://kernsec.org/wiki/index.php/Kernel_Self_Protection_Project)  (KSPP, Kees Cook)
 	- Arch Linux wiki: ["Security / Kernel hardening"](https://wiki.archlinux.org/index.php/security#Kernel_hardening)
