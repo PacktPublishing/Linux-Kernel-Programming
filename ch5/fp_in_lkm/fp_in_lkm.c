@@ -23,7 +23,7 @@
 #define OURMODNAME   "fp_in_lkm"
 
 MODULE_AUTHOR("<insert your name here>");
-MODULE_DESCRIPTION("LLKD book:ch3/fp_in_kernel: no performing FP"
+MODULE_DESCRIPTION("LLKD book:ch5/fp_in_lkm: no performing FP"
 			" (floating point) arithmetic in kernel mode");
 MODULE_LICENSE("Dual MIT/GPL");
 MODULE_VERSION("0.1");
