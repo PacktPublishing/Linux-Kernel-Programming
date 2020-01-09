@@ -1,0 +1,72 @@
+------------------------------------------------------------------------------
+Solutions to selected assignments ::
+Ch 1: Kernel Workspace Setup
+(For your convenience, we have repeated the questions below and have provided
+answers / solutions to some of them).
+------------------------------------------------------------------------------
+1. VM is a common abbreviation used in virtualization technology for a 'guest'
+system; it stands for:
+    a) Virtual Monkey
+    b) Virtual Mac
+    c) Virtual Machine
+    d) Veryvery Maddening
+A. (c)
+
+2. Can one install:
+   a) a 32-bit Linux guest on a 64-bit Windows host? (Y/N)
+   b) a 64-bit Linux guest on a 64-bit Windows host? (Y/N)
+   c) a 64-bit Linux guest on a 32-bit Windows host? (Y/N)
+
+A. a) Y
+   b) Y
+   c) N
+
+3. On Linux:
+   a) can one name a directory *,hey,whatacoolname,huh? ? (Y/N)
+   b) (hang on! before you try it out) Why, in general, should one not do so?
+	   (Okay try it out, But: on a VM, And Be Careful!)
+
+A. a) Y ; Linux pathnames can have contain *any* ASCII character; that doesn't
+      mean we should use weird ones!
+   b) What if the dir name is something like '*\0,hey,whatacoolname' ; then,
+      when you're fed up of it and want to completely delete the folder, you
+	  might inadvertently type the command
+	     rm -rf *\0,hey,whatacoolname
+	  A simple shell may interpret the '\0' as the NULL character and possibly
+	  stop interpretation there, thus changing the command to effectively become
+	     rm -rf *
+	  Whoops!!! a disaster.
+
+	  Worse, what if, within a script, we intend to use a variable to construct the
+	  pathname, something like:
+	    mydir=${PFX}/*\0,hey,whatacoolname
+
+	  AND, what if, by chance, the variable PFX is currently NULL!??
+	  Then mydir=/*\0   effectively; imagine doing a rm -rf ${mydir}
+	  If running as root (and the distro does not perform special checking), the
+	  *entire* disk(s) are wiped out! <Shiver>
+ 
+4. Lets say we are running on an x86-64 host system running Linux and have a
+   32-bit ARM 'target' board (perhaps a Raspberry Pi 3); the job of a cross
+   compiler is to:
+   a) compile code that's on the target system into an x86-64 binary executable
+      that can run on the host system
+   b) compile code that's on the host system into an ARM-32 binary executable
+      that can run on the target system
+   c) perform an entertaining console game on the target
+   d) none of the above
+
+A. (b)
+
+5. Wrt the Linux man pages:
+   a) they are divided into nine sections (True/False)
+   b) which section represents system call APIs?
+   c) which section represents kernel APIs? how up-to-date is it?
+
+A. a) True
+   b) section 2
+   c) section 9 ; ha, it doesn't really exist (try doing a 
+        man 9 printk  )
+	  As the book will further explain, the Linux kernel documentation is not
+	  (at least currently) a part of the man pages package, and is dealt with
+	  as a separate project.
