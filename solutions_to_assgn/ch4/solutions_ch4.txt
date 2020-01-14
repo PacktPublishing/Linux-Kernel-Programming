@@ -1,0 +1,76 @@
+-----------------------------------------------------------------------
+Solutions to selected assignments ::
+Ch 4: Writing your First Kernel Module, Part 1
+-----------------------------------------------------------------------
+1. Does the Linux kernel follow the monolithic or microkernel architecture?
+A. monolithic
+
+2. Name a few of the subsystems within the kernel
+A. Major subsystems:
+     core kernel - (user and kernel) process and thread creation/destruction,
+	           CPU, scheduling, synchronization primitives, signaling,
+		   timers, interrupt handling, namespaces, cgroups, module
+		   support, crypto, etc
+     memory management
+     VFS (filesystem support)
+     block IO
+     network protocol stack
+     IPC (Inter Process Communication) support
+     sound (audio) support
+     virtualization support
+
+3. Would you architect a device driver as a separate kernel module or build it
+   into the kernel itself; why?
+A. A kernel module; it then has the advantages of not being tightly coupled
+   with a particular kernel, can be easily re-compiled and deployed on various
+   distros or custom systems, productization advantages, etc
+
+4. Can a kernel module be used to create a new CPU scheduler on Linux?
+A. No; the kernel module has access to only a subset of all kernel APIs and
+   data structures (more on this in the next chapter!)
+
+5. (a) Spot the error in the following line of code:
+         printk(KERN_CRIT, "Goodbye, world, am burning up...\n");
+   (b) What's the fix?
+A. (a) KERN_CRIT isn't a parameter, remove the comma; 
+   (b) the fix:
+         printk(KERN_CRIT "Goodbye, world, am burning up...\n");
+    or even better:
+         pr_crit("Goodbye, world, am burning up...\n");
+
+6. How does the kernel build system know the location of the kernel headers?
+A. The 'limited' kernel source tree location is derived from the symbolic link
+   'build' (or 'source') here:
+    /lib/modules/$(uname -r)/build
+
+7. (a) Spot the errors in the following lines of code:
+    static int __init wow_an_lkm_init(void *msg)
+    {
+             pr_inform("Am intializing...[%d]\n");
+    }
+    (b) What's the fix(es)?
+A.  (a) Errors: 
+     For a kernel module's 'init' function:
+     1. the (formal) parameter to the init function is 'void' (no parameter)
+     2. pr_inform() doesn't exist
+	 3. the '%d' has no corresponding variable; this can become a security issue!
+     4. one MUST return an integer following the 0/-E convention
+    (b) Kernel module's 'init' function, fixed ver:
+    static int __init wow_an_lkm_init(void)
+    {
+    	pr_info("Am intializing...\n");
+		return 0;   /* success */
+    }
+
+8   Why doesn't insmod or rmmod work unless one runs with root privilege?
+A.  It would be a gaping security loophole..
+
+9   Is there an alternate way to insmod / rmmod kernel modules (i.e. without
+    root)?
+A.  Yes, use the Capabilities model to set the CAP_SYS_MODULE bit; see the
+    man page on capabilities(7) for details.
+
+11. How can one guarantee 'seeing' the printk output on the console device?
+A.  There are several ways: one, by changing the /proc/sys/kernel/printk first
+    integer value to 8. Easier: simply pass (from the bootloader) the kernel
+    parameter called ignore_level.
