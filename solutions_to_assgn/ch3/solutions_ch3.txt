@@ -1,0 +1,42 @@
+-----------------------------------------------------------------------
+Solutions to selected assignments ::
+Ch 3 : Building the 5.x Linux Kernel from Source, Part 2
+
+(For your convenience, we have repeated the questions below and have provided
+answers / solutions to some of them).
+-----------------------------------------------------------------------
+
+1. (If you haven't already done so) Follow this chapter's directions to build
+the kernel from source, installing the kernel modules and setting up the
+initramfs (initrd) image and GRUB bootloader to boot into it as well; do
+verify it actually works!
+
+--- Left as an exercise to the reader ---
+
+
+2. Make a copy of, and extract the content of your initramfs image in a
+temporary directory; check out the contents (use the tree(1) utility as
+well on it)
+
+A. We assume :
+  - the freshly generated initrd file is /boot/initrd.img-5.4.0-llkd01
+  - we're running on a recent Ubuntu Linux distro
+
+  One way to achieve this:
+
+TMPD=$(mktemp -d)     <-- create a temp dir and hold it's location in a variable
+cp /boot/initrd.img-5.4.0-llkd01 ${TMPD}
+unmkinitramfs -v /boot/initrd.img-5.4.0-llkd01 ${TMPD}
+
+See the contents with:
+
+tree ${TMPD}
+[...]
+
+
+3. Using the GRUB menu, boot into your new kernel in single-user mode (and
+then change the root password).
+A.
+--- Left as an exercise to the reader ---
+
+(Described in some detail in Ch 3 / Doing a bit more on the GRUB prompt).
