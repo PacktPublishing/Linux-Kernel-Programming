@@ -68,7 +68,10 @@ For the reader's convenience, below are chapter-wise links to the *Further Readi
 	
 - [Configuring the kernel](https://www.kernel.org/doc/html/latest/admin-guide/README.html#configuring-the-kernel)
 - Detailed article: [Exploring the Linux kernel: The secrets of Kconfig/kbuild](https://opensource.com/article/18/10/kbuild-and-kconfig)
-- Initrd / initramfs article: [Opening and modifying the initrd](http://www.alexonlinux.com/opening-and-modifying-the-initrd)
+- Initramfs (initrd):
+    -  [Opening and modifying the initrd](http://www.alexonlinux.com/opening-and-modifying-the-initrd)
+    - [Initramfs (on Ubuntu wiki)](https://wiki.ubuntu.com/Initramfs)
+    - informative: [debian bug report: intel-microcode: breaks initrd for newer kernels, Sept 2014](https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=760765)
 - [GRUB: How do I change the default boot kernel](https://askubuntu.com/questions/216398/set-older-kernel-as-default-grub-entry)
 - Article: [Linux Kernel Cross Compilation](https://gts3.org/2017/cross-kernel.html)
 - [SEALS - Simple Embedded ARM Linux System - project](https://github.com/kaiwan/seals)
