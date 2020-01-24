@@ -1,5 +1,5 @@
 /*
- * ch${CH}/modstacking/user_lkm.c
+ * ch5/modstacking/user_lkm.c
  ***************************************************************
  * This program is part of the source code released for the book
  *  "Learn Linux Kernel Development"
@@ -8,7 +8,7 @@
  *  GitHub repository:
  *  https://github.com/PacktPublishing/Learn-Linux-Kernel-Development
  *
- * From: Ch ${CH}: Writing your First Kernel Module- LKMs Part 2
+ * From: Ch 5: Writing your First Kernel Module- LKMs Part 2
  ****************************************************************
  * Brief Description:
  * This kernel module - user_lkm - is part of the 'modstacking' POC project:
@@ -18,7 +18,7 @@
  * The user_lkm kernel module calls an (exported) function that resides 
  * in the core_lkm kernel module.
  *
- * For details, please refer the book, Ch ${CH}.
+ * For details, please refer the book, Ch 5.
  */
 #include <linux/init.h>
 #include <linux/module.h>
@@ -30,7 +30,7 @@ MODULE_LICENSE("Dual MIT/GPL");
 MODULE_LICENSE("MIT");
 #endif
 
-extern void LLKD_sysinfo2(void);
+extern void llkd_sysinfo2(void);
 extern long get_skey(int);
 extern int exp_int;
 
@@ -38,13 +38,12 @@ extern int exp_int;
 static int __init user_lkm_init(void)
 {
 #define THE_ONE   0xfedface
-	u64 sk = get_skey(THE_ONE);
-
 	pr_info("%s: inserted\n", MODNAME);
+	u64 sk = get_skey(THE_ONE);
 	pr_debug("%s: Called get_skey(), ret = 0x%llx = %llu\n",
 			MODNAME, sk, sk);
 	pr_debug("%s: exp_int = %d\n", MODNAME, exp_int);
-	LLKD_sysinfo2();
+	llkd_sysinfo2();
 
 	return 0;
 }

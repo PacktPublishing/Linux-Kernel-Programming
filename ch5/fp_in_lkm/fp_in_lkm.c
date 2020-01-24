@@ -1,5 +1,5 @@
 /*
- * ch${CH}/fp_in_lkm/fp_in_lkm.c
+ * ch5/fp_in_lkm/fp_in_lkm.c
  ***************************************************************
  * This program is part of the source code released for the book
  *  "Learn Linux Kernel Development"
@@ -8,13 +8,13 @@
  *  GitHub repository:
  *  https://github.com/PacktPublishing/Learn-Linux-Kernel-Development
  *
- * From: Ch ${CH}: Writing your First Kernel Module - LKMs Part 2
+ * From: Ch 5: Writing your First Kernel Module - LKMs Part 2
  ****************************************************************
  * Brief Description:
  * A quick demo to show that we cannot / must not attempt to perform FP
  * (floating point) arithmetic in kernel mode.
  *
- * For details, please refer the book, Ch ${CH}.
+ * For details, please refer the book, Ch 5.
  */
 #include <linux/init.h>
 #include <linux/module.h>
@@ -23,7 +23,7 @@
 #define OURMODNAME   "fp_in_lkm"
 
 MODULE_AUTHOR("<insert your name here>");
-MODULE_DESCRIPTION("LLKD book:ch3/fp_in_kernel: no performing FP"
+MODULE_DESCRIPTION("LLKD book:ch5/fp_in_lkm: no performing FP"
 			" (floating point) arithmetic in kernel mode");
 MODULE_LICENSE("Dual MIT/GPL");
 MODULE_VERSION("0.1");

@@ -5,13 +5,13 @@
 # make ARCH=<arch> CROSS_COMPILE=<cross-compiler-prefix> 
 ifeq ($(ARCH),arm)
     # *UPDATE* 'KDIR' below to point to the ARM Linux kernel source tree on your box
-    KDIR ?= /home/LLKD/rpi_work/rpi_kernel
+    KDIR ?= /home/llkd/rpi_work/rpi_kernel
 else ifeq ($(ARCH),arm64)
     # *UPDATE* 'KDIR' below to point to the PPC64 Linux kernel source tree on your box
     KDIR ?= /mnt/par3/rpi_work/rpi_64bit/linux
 else ifeq ($(ARCH),powerpc)
     # *UPDATE* 'KDIR' below to point to the PPC64 Linux kernel source tree on your box
-    KDIR ?= /home/LLKD/kernel/linux-4.9.1
+    KDIR ?= /home/llkd/kernel/linux-4.9.1
 else
     # x86[_64]: 'KDIR' is the Linux kernel source tree (headers) on your box
     KDIR ?= /lib/modules/$(shell uname -r)/build
@@ -20,7 +20,7 @@ endif
 PWD	       := $(shell pwd)
 obj-m          += min_sysinfo.o
 EXTRA_CFLAGS   += -DDEBUG
-$(info Building for: ARCH=${ARCH} CROSS_COMPILE=${CROSS_COMPILE} EXTRA_CFLAGS=${EXTRA_CFLAGS})
+$(info Building for: KREL=${KERNELRELEASE} ARCH=${ARCH} CROSS_COMPILE=${CROSS_COMPILE} EXTRA_CFLAGS=${EXTRA_CFLAGS})
 
 all:
 	make -C $(KDIR) M=$(PWD) modules

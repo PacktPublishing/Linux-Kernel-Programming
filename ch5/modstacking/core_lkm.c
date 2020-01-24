@@ -1,5 +1,5 @@
 /*
- * ch${CH}/modstacking/core_lkm.c
+ * ch5/modstacking/core_lkm.c
  ***************************************************************
  * This program is part of the source code released for the book
  *  "Learn Linux Kernel Development"
@@ -8,7 +8,7 @@
  *  GitHub repository:
  *  https://github.com/PacktPublishing/Learn-Linux-Kernel-Development
  *
- * From: Ch ${CH}: Writing your First Kernel Module- LKMs Part 2
+ * From: Ch 5: Writing your First Kernel Module- LKMs Part 2
  ****************************************************************
  * Brief Description:
  * This kernel module - core_lkm - is part of the 'modstacking' POC project:
@@ -18,7 +18,7 @@
  * The user_lkm kernel module calls an (exported) function that resides 
  * in the core_lkm kernel module.
  *
- * For details, please refer the book, Ch ${CH}.
+ * For details, please refer the book, Ch 5.
  */
 #include <linux/init.h>
 #include <linux/module.h>
@@ -32,12 +32,13 @@ EXPORT_SYMBOL_GPL(exp_int);
 
 /* Functions to be called from other LKMs */
 
-/* LLKD_sysinfo2:
- * a more security-aware version of the LLKD_sysinfo routine. We use
+/* llkd_sysinfo2:
+ * A more security-aware version of the earlier llkd_sysinfo() routine. We use
  * David Wheeler's flawfinder(1) tool to detect possible vulnerabilities;
- * so, we change the strlen, and replace the strncat with strlcat.
+ * Based on it's report, we change the strlen, and replace the strncat with
+ * strlcat.
  */
-static void LLKD_sysinfo2(void)
+static void llkd_sysinfo2(void)
 {
 #define MSGLEN   128
 	char msg[MSGLEN];
@@ -83,7 +84,7 @@ static void LLKD_sysinfo2(void)
 #endif
 	pr_info("%s", msg);
 }
-EXPORT_SYMBOL(LLKD_sysinfo2);
+EXPORT_SYMBOL(llkd_sysinfo2);
 
 #if(BITS_PER_LONG == 32)
 static u32 get_skey(int p)

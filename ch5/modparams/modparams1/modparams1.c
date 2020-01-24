@@ -1,5 +1,5 @@
 /*
- * ch${CH}/modparams/modparams1/modparams1.c
+ * ch5/modparams/modparams1/modparams1.c
  ***************************************************************
  * This program is part of the source code released for the book
  *  "Learn Linux Kernel Development"
@@ -8,11 +8,11 @@
  *  GitHub repository:
  *  https://github.com/PacktPublishing/Learn-Linux-Kernel-Development
  *
- * From: Ch ${CH}: Writing your First Kernel Module- LKMs Part 2
+ * From: Ch 5: Writing your First Kernel Module- LKMs Part 2
  ****************************************************************
  * Brief Description:
  *
- * For details, please refer the book, Ch ${CH}.
+ * For details, please refer the book, Ch 5.
  */
 #include <linux/init.h>
 #include <linux/module.h>

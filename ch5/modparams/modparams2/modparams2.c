@@ -1,5 +1,5 @@
 /*
- * ch${CH}/modparams/modparams2/modparams2.c
+ * ch5/modparams/modparams2/modparams2.c
  ***************************************************************
  * This program is part of the source code released for the book
  *  "Learn Linux Kernel Development"
@@ -8,14 +8,14 @@
  *  GitHub repository:
  *  https://github.com/PacktPublishing/Learn-Linux-Kernel-Development
  *
- * From: Ch ${CH}: Writing your First Kernel Module- LKMs Part 2
+ * From: Ch 5: Writing your First Kernel Module- LKMs Part 2
  ****************************************************************
  * Brief Description:
- * Same as modparams1, plus, we do some checks: here, we propose that
- * the newly introduced parameter 'control_freak' is mandatory to be passed
- * by the user; this module aborts if it isn't explicityl passed along.
+ * Same as modparams1, plus, we do some validity checks: here, we propose that
+ * the newly introduced kernel module parameter 'control_freak' is mandatory to
+ * be passed by the user; this module aborts if it isn't explicityl passed along.
  *
- * For details, please refer the book, Ch ${CH}.
+ * For details, please refer the book, Ch 5.
  */
 #include <linux/init.h>
 #include <linux/module.h>
