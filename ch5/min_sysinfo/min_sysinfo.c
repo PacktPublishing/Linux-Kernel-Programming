@@ -67,7 +67,7 @@ static void llkd_sysinfo2(void)
 #if(BITS_PER_LONG == 32)
 	strlcat(msg, "x86-32, ", MSGLEN);
 #else
-	strlcat(msg, "x86_64, ", MSGLEN);
+	strlcat(msg, "x86-64, ", MSGLEN);
 #endif
 #endif
 #ifdef CONFIG_ARM
@@ -135,7 +135,7 @@ static void llkd_sysinfo(void)
 #if(BITS_PER_LONG == 32)
 	strncat(msg, "x86-32, ", 9);
 #else
-	strncat(msg, "x86_64, ", 9);
+	strncat(msg, "x86-64, ", 9);
 #endif
 #endif
 #ifdef CONFIG_ARM
