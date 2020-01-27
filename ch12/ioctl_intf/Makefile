@@ -23,8 +23,8 @@ install:
 	make -C $(KDIR) M=$(PWD) modules_install
 clean:
 	make -C $(KDIR) M=$(PWD) clean
-	rm -f ioctl_user_test 2>/dev/null
+	rm -f ioctl_llkd_userspace 2>/dev/null
 
 # the userspace app
-ioctl_user_test: ioctl_user_test.c
-	gcc ioctl_user_test.c -o ioctl_user_test -Wall
+ioctl_llkd_userspace: ioctl_llkd_userspace.c
+	gcc ioctl_llkd_userspace.c -o ioctl_llkd_userspace -Wall

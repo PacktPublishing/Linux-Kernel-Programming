@@ -3,6 +3,9 @@
  *
  * A kernel module that demonstrates simple usage of the ioctl driver method
  * to interface with a userspace 'C' application (the ioctl_user_test.c).
+ * Architected as a simple device driver for a fictional 'device'; we use
+ * the ioctl(2) system call to interface with the device from/to a usermode
+ * 'C' application.
  */
 #include <linux/module.h>
 #include <linux/kernel.h>
@@ -28,7 +31,7 @@ MODULE_DESCRIPTION(
 MODULE_LICENSE("Dual MIT/GPL");
 MODULE_VERSION("0.1");
 
-static int ioct_intf_major = 0,
+static int ioctl_intf_major = 0,
 	power = 1; /* 'powered on' by default */
 
 /* 
@@ -37,9 +40,9 @@ static int ioct_intf_major = 0,
  * BKL was finally removed).
  */
 #if LINUX_VERSION_CODE >= KERNEL_VERSION(2,6,36)
-static long ioct_intf_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
+static long ioctl_intf_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
 #else
-static int ioct_intf_ioctl(struct inode *ino, struct file *filp, unsigned int cmd,
+static int ioctl_intf_ioctl(struct inode *ino, struct file *filp, unsigned int cmd,
 		     unsigned long arg)
 #endif
 {
@@ -57,34 +60,30 @@ static int ioct_intf_ioctl(struct inode *ino, struct file *filp, unsigned int cm
 		return -ENOTTY;
 	}
 
-#if 0
-	/* Verify direction */
-	if (_IOC_DIR(cmd) & _IOC_READ)
-		/* userspace read => kernel-space -> userspace write operation */
-		err =
-		    !access_ok((void __user *)arg, _IOC_SIZE(cmd));
-	else if (_IOC_DIR(cmd) & _IOC_WRITE)
-		/* userspace write => userspace -> kernel-space read operation */
-		err =
-		    !access_ok(VERIFY_READ, (void __user *)arg, _IOC_SIZE(cmd));
-	if (err)
-		return -EFAULT;
-#endif
 	switch (cmd) {
 	case IOCTL_LLKD_IOCRESET:
 		MSG("In ioctl cmd option: IOCTL_LLKD_IOCRESET\n");
+		/* ... Insert the code here to write to a control register to reset the
+		 * device ... */
 		break;
 	case IOCTL_LLKD_IOCQPOWER:	/* Get: arg is pointer to result */
 		MSG("In ioctl cmd option: IOCTL_LLKD_IOCQPOWER\n"
 			"arg=0x%x (drv) power=%d\n", (unsigned int)arg, power);
 		if (!capable(CAP_SYS_ADMIN))
 			return -EPERM;
+		/* ... Insert the code here to read a status register to query the
+		 * power state of the device ...
+		 * here, imagine we've done that and placed it into a variable 'power'
+		 */
 		retval = __put_user(power, (int __user *)arg);
 		break;
 	case IOCTL_LLKD_IOCSPOWER:	/* Set: arg is the value to set */
 		if (!capable(CAP_SYS_ADMIN))
 			return -EPERM;
 		power = arg;
+		/* ... Insert the code here to write a control register to set the
+		 * power state of the device ...
+		 */
 		MSG("In ioctl cmd option: IOCTL_LLKD_IOCSPOWER\n"
 			"power=%d now.\n", power);
 		break;
@@ -94,22 +93,22 @@ static int ioct_intf_ioctl(struct inode *ino, struct file *filp, unsigned int cm
 	return retval;
 }
 
-static struct file_operations ioct_intf_fops = {
+static struct file_operations ioctl_intf_fops = {
 	.llseek = no_llseek,
 #if LINUX_VERSION_CODE >= KERNEL_VERSION(2,6,36)
-	.unlocked_ioctl = ioct_intf_ioctl,	// use the 'unlocked' version!
+	.unlocked_ioctl = ioctl_intf_ioctl,	// use the 'unlocked' version
 #else
-	.ioctl = ioct_intf_ioctl,
+	.ioctl = ioctl_intf_ioctl,   // 'old' way
 #endif
 };
 
-static int ioct_intf_open(struct inode *inode, struct file *filp)
+static int ioctl_intf_open(struct inode *inode, struct file *filp)
 {
 	MSG("Device node with minor # %d being used\n", iminor(inode));
 
 	switch (iminor(inode)) {
 	case 0:
-		filp->f_op = &ioct_intf_fops;
+		filp->f_op = &ioctl_intf_fops;
 		break;
 	default:
 		return -ENXIO;
@@ -121,30 +120,30 @@ static int ioct_intf_open(struct inode *inode, struct file *filp)
 }
 
 /* Major-wide open routine */
-static struct file_operations ioct_intf_open_fops = {
-	.open = ioct_intf_open,	/* just a means to get at the real open */
+static struct file_operations ioctl_intf_open_fops = {
+	.open = ioctl_intf_open,	/* just a means to get at the real open */
 };
 
 static int __init ioctl_llkd_kdrv_init(void)
 {
 	int result;
 
-	MSG("ioct_intf_major=%d\n", ioct_intf_major);
+	MSG("ioctl_intf_major=%d\n", ioctl_intf_major);
 
 	/*
 	 * Register the major, and accept a dynamic number.
 	 * The return value is the actual major # assigned.
 	 */
-	result = register_chrdev(ioct_intf_major, OURMODNAME, &ioct_intf_open_fops);
+	result = register_chrdev(ioctl_intf_major, OURMODNAME, &ioctl_intf_open_fops);
 	if (result < 0) {
-		MSG("register_chrdev() failed trying to get ioct_intf_major=%d\n",
-		    ioct_intf_major);
+		MSG("register_chrdev() failed trying to get ioctl_intf_major=%d\n",
+		    ioctl_intf_major);
 		return result;
 	}
 
-	if (ioct_intf_major == 0)
-		ioct_intf_major = result;	/* dynamic */
-	MSG("registered:: ioct_intf_major=%d\n", ioct_intf_major);
+	if (ioctl_intf_major == 0)
+		ioctl_intf_major = result;	/* dynamic */
+	MSG("registered:: ioctl_intf_major=%d\n", ioctl_intf_major);
 
 	pr_info("%s initialized\n", OURMODNAME);
 	return 0;		/* success */
@@ -152,7 +151,7 @@ static int __init ioctl_llkd_kdrv_init(void)
 
 static void ioctl_llkd_kdrv_cleanup(void)
 {
-	unregister_chrdev(ioct_intf_major, OURMODNAME);
+	unregister_chrdev(ioctl_intf_major, OURMODNAME);
 	pr_info("%s removed\n", OURMODNAME);
 }
 

@@ -1,9 +1,5 @@
 /*
- * ioctl_user_test.c
- * Test ioctl_kdrv a bit -- /dev/ioctlkdrv
- * Note that the user (as root) must create the device file.
- *
- *TODO - use inlines..
+ * ioctl_llkd_userspace.c
  */
 #include <stdio.h>
 #include <unistd.h>
@@ -37,7 +33,7 @@ int main(int argc, char **argv)
 	     IOCTL_LLKD_IOCRESET, (unsigned int)IOCTL_LLKD_IOCQPOWER,
 	     (unsigned int)IOCTL_LLKD_IOCSPOWER);
 
-	// test our various ioctl's ...
+	// Test our various ioctl's ...
 	// 1. Reset the device
 	if (ioctl(fd, IOCTL_LLKD_IOCRESET, 0) == -1) {
 		perror("ioctl IOCTL_LLKD_IOCRESET failed");
