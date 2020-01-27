@@ -13,8 +13,8 @@
  * A few convenience macros and routines..
  * Mostly for kernel-space usage, some for user-space as well.
  */
-#ifndef __CONVENIENT_H__
-#define __CONVENIENT_H__
+#ifndef __LLKD_CONVENIENT_H__
+#define __LLKD_CONVENIENT_H__
 
 #include <asm/param.h>		/* HZ */
 #include <linux/sched.h>
@@ -23,42 +23,44 @@
 #include <linux/ratelimit.h>
 
 /* 
-   *** Note: PLEASE READ this documentation: ***
+   *** PLEASE READ this first ***
 
     We can reduce the load, and increase readability, by using the trace_printk
-    instead of printk. To see the o/p do:
-     # cat /sys/kernel/debug/tracing/trace
+    instead of printk. To see the trace_printk() output do:
+       cat /sys/kernel/debug/tracing/trace
 
-     If we insist on using the regular printk, lets at least rate-limit it.
-	 For the programmers' convenience, this too is programatically controlled 
-	  (by an integer var USE_RATELIMITING [default: On]).
+    If we insist on using the regular printk, lets at least rate-limit it.
+	For the programmers' convenience, this too is programatically controlled 
+	(by an integer var USE_RATELIMITING [default: On]).
 
  	*** Kernel module authors Note: ***
-	To use the trace_printk(), pl #define the symbol USE_FTRACE_BUFFER in your Makefile:
-	EXTRA_CFLAGS += -DUSE_FTRACE_PRINT
+	To use the trace_printk(), pl #define the symbol USE_FTRACE_PRINT in your
+	Makefile:
+	 EXTRA_CFLAGS += -DUSE_FTRACE_PRINT
 	If you do not do this, we will use the usual printk() .
 
 	To view :
 	  printk's       : dmesg
       trace_printk's : cat /sys/kernel/debug/tracing/trace
 
-	 Default: printk
+	 Default: printk (with rate-limiting)
  */
-// keep this defined to use the FTRACE-style trace_printk(), else will use regular printk()
+/* Keep this defined to use the FTRACE-style trace_printk(), else will use
+   regular printk() */
 //#define USE_FTRACE_BUFFER
 #undef USE_FTRACE_BUFFER
 
 #ifdef USE_FTRACE_BUFFER
-#define DBGPRINT(string, args...) \
+#define DBGPRINT(string, args...)                                       \
      trace_printk(string, ##args);
 #else
-#define DBGPRINT(string, args...) do {                             \
-     int USE_RATELIMITING=0;                                       \
-	 if (USE_RATELIMITING) {                                   \
-	   pr_info_ratelimited(pr_fmt(string), ##args);        \
-	 }                                                         \
-	 else                                                      \
-           pr_info(pr_fmt(string), ##args);                        \
+#define DBGPRINT(string, args...) do {                                  \
+     int USE_RATELIMITING=0;                                            \
+	 if (USE_RATELIMITING) {                                            \
+	   pr_info_ratelimited(pr_fmt(string), ##args);                     \
+	 }                                                                  \
+	 else                                                               \
+           pr_info(pr_fmt(string), ##args);                             \
 } while (0)
 #endif
 #endif				/* #ifdef __KERNEL__ */
@@ -66,22 +68,22 @@
 /*------------------------ MSG, QP ------------------------------------*/
 #ifdef DEBUG
 #ifdef __KERNEL__
-#define MSG(string, args...) do {                                     \
-	DBGPRINT("%s:%d : " string, __FUNCTION__, __LINE__, ##args);  \
+#define MSG(string, args...) do {                                       \
+	DBGPRINT("%s:%d : " string, __FUNCTION__, __LINE__, ##args);        \
 } while (0)
 #else
-#define MSG(string, args...) do {                                           \
+#define MSG(string, args...) do {                                       \
 	fprintf(stderr, "%s:%d : " string, __FUNCTION__, __LINE__, ##args); \
 } while (0)
 #endif
 
 #ifdef __KERNEL__
-#define MSG_SHORT(string, args...) do {  \
-	DBGPRINT(string, ##args);        \
+#define MSG_SHORT(string, args...) do {                                 \
+	DBGPRINT(string, ##args);                                           \
 } while (0)
 #else
-#define MSG_SHORT(string, args...) do {  \
-	fprintf(stderr, string, ##args);     \
+#define MSG_SHORT(string, args...) do {                                 \
+	fprintf(stderr, string, ##args);                                    \
 } while (0)
 #endif
 
@@ -90,14 +92,14 @@
 
 #ifdef __KERNEL__
 #ifndef USE_FTRACE_BUFFER
-#define QPDS do {     \
-	MSG("\n");        \
-	dump_stack();     \
+#define QPDS do {                                                       \
+	MSG("\n");                                                          \
+	dump_stack();                                                       \
 } while(0)
 #else
-#define QPDS do {           \
-	MSG("\n");              \
-	trace_dump_stack();     \
+#define QPDS do {                                                       \
+	MSG("\n");                                                          \
+	trace_dump_stack();                                                 \
 } while(0)
 #endif
 #endif
@@ -118,7 +120,7 @@
 /* 
  An interesting way to print the context info:
  If USE_FTRACE_BUFFER is On, it implies we'll use trace_printk(), else the vanilla
- printk(). 
+ printk() (see above).
  If we are using trace_printk(), we will automatically get output in the ftrace 
  latency format (see below):
 
@@ -133,7 +135,7 @@
 
  However, if we're _not_ using ftrace trace_printk(), then we'll _emulate_ the same
  with the printk() !
- (Of course, without the 'Duration' and 'Function Calls' fields).
+ (of course, without the 'Duration' and 'Function Calls' fields).
  */
 #include <linux/sched.h>
 #include <linux/interrupt.h>
@@ -184,8 +186,8 @@
 #endif
 
 /*------------------------ assert ---------------------------------------
- * Hey you, careful! 
- * Using assertions is great *but* pl be aware of traps & pitfalls:
+ * Hey, careful!
+ * Using assertions is great *but* be aware of traps & pitfalls:
  * http://blog.regehr.org/archives/1096
  *
  * The closest equivalent perhaps, to assert() in the kernel are the BUG() 
@@ -218,8 +220,9 @@ static inline void beep(int what)
 
 /* 
  * DELAY_LOOP macro
- * (Mostly) mindlessly loop, print a char to emulate 'work' :-)
- * @val : ASCII value to print
+ * (Mostly) mindlessly loop, then print a char (via our beep() routine,
+ * to emulate 'work' :-)
+ * @val        : ASCII value to print
  * @loop_count : times to loop around
  */
 #define DELAY_LOOP(val,loop_count)                                         \
@@ -260,4 +263,4 @@ void delay_sec(long val)
 }
 #endif   /* #ifdef __KERNEL__ */
 
-#endif   /* #ifndef __CONVENIENT_H__ */
+#endif   /* #ifndef __LLKD_CONVENIENT_H__ */
