@@ -113,6 +113,10 @@ install:
 	make -C \$(KDIR) M=\$(PWD) modules_install
 clean:
 	make -C \$(KDIR) M=\$(PWD) clean
+
+# 'cb' target is 'C beautifier'
+cb:
+	indent -linux *.[ch]
 EOF
 
 echo "[+] Makefile generated; verbose=${VERBOSE}"
