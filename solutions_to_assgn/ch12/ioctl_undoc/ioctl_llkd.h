@@ -34,7 +34,7 @@ _IOWR(type,nr,datatype)       ioctl command for read/write transfers
 /* our dummy ioctl (IOC) Set POWER command */
 #define IOCTL_LLKD_IOCSPOWER		_IOW(IOCTL_LLKD_MAGIC, 2, int)
 
-/* Borrowed from ch11; the driver 'context' data structure;
+/* Borrowed from ch11; the 'driver context' data structure;
  * all relevant 'state info' reg the driver is here.
  */
 #ifndef __KERNEL__
@@ -46,8 +46,7 @@ struct drv_ctx {
 	int tx, rx, err, myword, power;
 	u32 config1, config2;
 	u64 config3;
-#define MAXBYTES    128   /* Must match the userspace app; we should actually
-			   * use a common header file for things like this */
+#define MAXBYTES   128
 	char oursecret[MAXBYTES];
 };
 
