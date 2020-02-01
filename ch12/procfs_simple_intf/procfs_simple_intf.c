@@ -12,40 +12,43 @@
  ****************************************************************
  * Brief Description:
  * Simple kernel module to demo interfacing with userspace via procfs.
- * As with the other ways to interface the kernel and userspace, we issue
- * appropriate kernel APIs to have the procfs layer create four procfs
- *  'objects' - pseudo-files - under a direcotry whose name is the name
- * goven to this kernel module. The four procfs 'files' and what they are
- * meant for is summarized below:
+ * In order to demonstrate (and let you easily contrast) the different ways
+ * in which one can create interfaces between the kernel and userspace,
+ * we issue appropriate kernel APIs to have the interface create four 'files'
+ * or 'objects'.
+ * In this particular case, the interface is via procfs, so we create four
+ * procfs 'objects' - pseudo-files - under a directory whose name is the name
+ * given to this kernel module. These four procfs 'files', what they are named
+ * and meant for is summarized below:
  * /proc
  *  ...
  *  |---procfs_simple_intf           <-- our proc directory
- *      |---llkdproc_config1
+ *      |---llkdproc_dbg_level
  *      |---llkdproc_show_pgoff
  *      |---llkdproc_show_drvctx
- *      |---llkdproc_dbg_level
+ *      |---llkdproc_config1
  *
- * Summary of our proc files and how they can be used:
- * llkdproc_config1    : RW
- *	                 R: read retrieves (to userspace) the current value
- *                          of the driver context variable drvctx->config1
- *                       W: write a value (from userspace) to drvctx->config1
- *                       file perms: 0644
- *  (for fun, we treat this value 'config1' as also representing thei
+ * Summary of our proc files and how they can be used (R=>read,W=>write)
+ * (1) llkdproc_dbg_level   : RW
+ *      R: read retrieves (to userspace) the current value of the global var
+ *         debug_level
+ *      W: write a value (from userspace) to the global var debug_level, thus
+ *         changing the debug level verbosity
+ *      file perms: 0644
+ * (2) llkdproc_show_pgoff  : R-
+ *      R: read retrieves (to userspace) the value of PAGE_OFFSET
+ *      file perms: 0444
+ * (3) llkdproc_show_drvctx : R-
+ *      R: read retrieves (to userspace) the values in the driver context
+ *         data structure
+ *      file perms: 0440
+ * (4) llkdproc_config1     : RW
+ *      R: read retrieves (to userspace) the current value of the driver
+ *         context variable drvctx->config1
+ *      W: write a value (from userspace) to drvctx->config1
+ *      file perms: 0644
+ *  (for fun, we treat this value 'config1' as also representing the
  *   driver debug_level)
- * llkdproc_show_pgoff : R-
- *			 R: read retrieves (to userspace) the value of PAGE_OFFSET
- *                       file perms: 0444
- * llkdproc_show_drvctx: R-
- *			 R: read retrieves (to userspace) the values in the
- *                          driver context data structure
- *                       file perms: 0440
- * llkdproc_dbg_level  : RW
- *	                 R: read retrieves (to userspace) the current value
- *                          of the global var debug_level
- *                       W: write a value (from userspace) to the global var
- *                          debug_level, thus changing the debug level verbosity
- *                       file perms: 0644
  *
  * For details, please refer the book, Ch 12.
  */
@@ -72,13 +75,13 @@ MODULE_LICENSE("Dual MIT/GPL");
 MODULE_VERSION("0.1");
 
 #define	OURMODNAME		"procfs_simple_intf"
-#define	PROC_FILE1		"llkdproc_config1"
+#define	PROC_FILE1		"llkdproc_debug_level"
 #define	PROC_FILE1_PERMS	0644
 #define	PROC_FILE2		"llkdproc_show_pgoff"
 #define	PROC_FILE2_PERMS	0444
 #define	PROC_FILE3		"llkdproc_show_drvctx"
 #define	PROC_FILE3_PERMS	0440
-#define	PROC_FILE4		"llkdproc_debug_level"
+#define	PROC_FILE4		"llkdproc_config1"
 #define	PROC_FILE4_PERMS	0644
 
 //--- our MSG() macro
@@ -91,10 +94,12 @@ MODULE_VERSION("0.1");
 #define MSG(string, args...)
 #endif
 
+/* We use a mutex lock; details in Ch 15 and Ch 16 */
 DEFINE_MUTEX(mtx);
 
 /* Borrowed from ch11; the 'driver context' data structure;
- * all relevant 'state info' reg the driver is here.
+ * all relevant 'state info' reg the driver and (fictional) 'device'
+ * is maintained here.
  */
 struct drv_ctx {
 	int tx, rx, err, myword, power;
@@ -107,8 +112,8 @@ struct drv_ctx {
 static struct drv_ctx *gdrvctx;
 static int debug_level; /* 'off' (0) by default ... */
 
-/*------------------ proc file 1 -------------------------------------*/
-/* Our proc file 1: displays the current driver context 'config1' value */
+/*------------------ proc file 4 -------------------------------------*/
+/* Our proc file 4: displays the current driver context 'config1' value */
 static int proc_show_config1(struct seq_file *seq, void *v)
 {
 	if (mutex_lock_interruptible(&mtx))
@@ -119,7 +124,7 @@ static int proc_show_config1(struct seq_file *seq, void *v)
 	return 0;
 }
 
-/* proc file 1 : modify the driver context 'config1' value as per what
+/* proc file 4 : modify the driver context 'config1' value as per what
    userspace writes */
 static ssize_t myproc_write_config1(struct file *filp, const char __user *ubuf,
 				size_t count, loff_t *off)
@@ -165,14 +170,6 @@ static const struct file_operations fops_rdwr_config1 = {
 	.llseek = seq_lseek,
 	.release = single_release,
 };
-
-/*------------------ proc file 2 -------------------------------------*/
-/* Our proc file 2: displays the system PAGE_OFFSET value */
-static int proc_show_pgoff(struct seq_file *seq, void *v)
-{
-	seq_printf(seq, "%s:PAGE_OFFSET:0x%lx\n", OURMODNAME, PAGE_OFFSET);
-	return 0;
-}
 
 /*------------------ proc file 3 -------------------------------------*/
 /* Our proc file 3: displays the 'driver context' data structure */
@@ -222,12 +219,20 @@ static struct drv_ctx *alloc_init_drvctx(void)
 	return drvctx;
 }
 
-/*------------------ proc file 4 -------------------------------------*/
+/*------------------ proc file 2 -------------------------------------*/
+/* Our proc file 2: displays the system PAGE_OFFSET value */
+static int proc_show_pgoff(struct seq_file *seq, void *v)
+{
+	seq_printf(seq, "%s:PAGE_OFFSET:0x%lx\n", OURMODNAME, PAGE_OFFSET);
+	return 0;
+}
+
+/*------------------ proc file 1 -------------------------------------*/
 #define DEBUG_LEVEL_MIN		0
 #define DEBUG_LEVEL_MAX		2
 #define DEBUG_LEVEL_DEFAULT	DEBUG_LEVEL_MIN
 
-/* proc file 4 : modify the driver's debug_level global variable as per
+/* proc file 1 : modify the driver's debug_level global variable as per
  * what userspace writes */
 static ssize_t myproc_write_debug_level(
 		struct file *filp, const char __user *ubuf, size_t count,
@@ -260,6 +265,9 @@ static ssize_t myproc_write_debug_level(
 		goto out;
 	}
 
+// eg. of using dyn dbg level
+// MSG_L1 , MSG_L2 , ...
+
 	/* just for fun, lets say that our drv ctx 'config1'
 	   represents the debug level */
 	gdrvctx->config1 = debug_level;
@@ -269,7 +277,7 @@ out:
 	return ret;
 }
 
-/* Our proc file 4: displays the current value of debug_level */
+/* Our proc file 1: displays the current value of debug_level */
 static int proc_show_debug_level(struct seq_file *seq, void *v)
 {
 	if (mutex_lock_interruptible(&mtx))
@@ -313,12 +321,14 @@ static int __init procfs_simple_intf_init(void)
 	MSG("proc dir (/proc/%s) created\n", OURMODNAME);
 
 	/* 1. Create the PROC_FILE1 proc entry under the parent dir OURMODNAME;
-	 * this will serve as the 'read/write drv_ctx->config1' (pseudo) file
+	 * this will serve as the 'dynamically view/modify debug_level'
+	 * (pseudo) file
 	 */
-	if (!proc_create(PROC_FILE1, PROC_FILE1_PERMS, gprocdir, &fops_rdwr_config1)) {
+	if (!proc_create(PROC_FILE1, PROC_FILE1_PERMS, gprocdir,
+			&fops_rdwr_dbg_level)) {
 		pr_warn("%s: proc_create [1] failed, aborting...\n", OURMODNAME);
 		stat = -ENOMEM;
-		goto out_fail_2;
+		goto out_fail_1;
 	}
 	MSG("proc file 1 (/proc/%s/%s) created\n", OURMODNAME, PROC_FILE1);
 
@@ -357,17 +367,15 @@ static int __init procfs_simple_intf_init(void)
 	}
 	MSG("proc file 3 (/proc/%s/%s) created\n", OURMODNAME, PROC_FILE3);
 
-	/* 4. Create the PROC_FILE4 proc entry under the parent dir OURMODNAME;
-	 * this will serve as the 'dynamically view/modify debug_level'
-	 * (pseudo) file
+	/* 4. Create the PROC_FILE1 proc entry under the parent dir OURMODNAME;
+	 * this will serve as the 'read/write drv_ctx->config1' (pseudo) file
 	 */
-	if (!proc_create(PROC_FILE4, PROC_FILE4_PERMS, gprocdir,
-			&fops_rdwr_dbg_level)) {
+	if (!proc_create(PROC_FILE4, PROC_FILE4_PERMS, gprocdir, &fops_rdwr_config1)) {
 		pr_warn("%s: proc_create [4] failed, aborting...\n", OURMODNAME);
 		stat = -ENOMEM;
 		goto out_fail_3;
 	}
-	MSG("proc file 4 (/proc/%s/%s) created\n", OURMODNAME, PROC_FILE4);
+	MSG("proc file 1 (/proc/%s/%s) created\n", OURMODNAME, PROC_FILE4);
 
 	pr_info("%s initialized\n", OURMODNAME);
 	return 0;	/* success */
