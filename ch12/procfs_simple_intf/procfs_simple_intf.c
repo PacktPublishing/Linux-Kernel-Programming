@@ -247,6 +247,7 @@ static ssize_t myproc_write_debug_level(
 		ret = -EINVAL;
 		goto out;
 	}
+	/* Get the usermode buffer content into the kernel (into 'buf') */
 	if (copy_from_user(buf, ubuf, count)) {
 		ret = -EFAULT;
 		goto out;
@@ -375,7 +376,7 @@ static int __init procfs_simple_intf_init(void)
 		stat = -ENOMEM;
 		goto out_fail_3;
 	}
-	MSG("proc file 1 (/proc/%s/%s) created\n", OURMODNAME, PROC_FILE4);
+	MSG("proc file 4 (/proc/%s/%s) created\n", OURMODNAME, PROC_FILE4);
 
 	pr_info("%s initialized\n", OURMODNAME);
 	return 0;	/* success */
