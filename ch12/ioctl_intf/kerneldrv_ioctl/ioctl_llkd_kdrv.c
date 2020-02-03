@@ -52,11 +52,11 @@ static int ioctl_intf_ioctl(struct inode *ino, struct file *filp, unsigned int c
 
 	/* Verify stuff: is the ioctl's for us? etc.. */
 	if (_IOC_TYPE(cmd) != IOCTL_LLKD_MAGIC) {
-		MSG("ioctl fail; magic # mismatch\n");
+		pr_info("ioctl fail; magic # mismatch\n");
 		return -ENOTTY;
 	}
 	if (_IOC_NR(cmd) > IOCTL_LLKD_MAXIOCTL) {
-		MSG("ioctl fail; invalid cmd?\n");
+		pr_info("ioctl fail; invalid cmd?\n");
 		return -ENOTTY;
 	}
 
@@ -95,7 +95,7 @@ static int ioctl_intf_ioctl(struct inode *ino, struct file *filp, unsigned int c
 
 static struct file_operations ioctl_intf_fops = {
 	.llseek = no_llseek,
-#if LINUX_VERSION_CODE >= KERNEL_VERSION(2,6,36)
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(2, 6, 36)
 	.unlocked_ioctl = ioctl_intf_ioctl,	// use the 'unlocked' version
 #else
 	.ioctl = ioctl_intf_ioctl,   // 'old' way
@@ -136,7 +136,7 @@ static int __init ioctl_llkd_kdrv_init(void)
 	 */
 	result = register_chrdev(ioctl_intf_major, OURMODNAME, &ioctl_intf_open_fops);
 	if (result < 0) {
-		MSG("register_chrdev() failed trying to get ioctl_intf_major=%d\n",
+		pr_info("register_chrdev() failed trying to get ioctl_intf_major=%d\n",
 		    ioctl_intf_major);
 		return result;
 	}

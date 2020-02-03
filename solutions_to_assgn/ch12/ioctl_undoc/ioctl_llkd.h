@@ -44,7 +44,8 @@ typedef unsigned long u64;
 
 struct drv_ctx {
 	int tx, rx, err, myword, power;
-	u32 config1, config2;
+	u32 config1;
+	u32 config2;
 	u64 config3;
 #define MAXBYTES   128
 	char oursecret[MAXBYTES];
