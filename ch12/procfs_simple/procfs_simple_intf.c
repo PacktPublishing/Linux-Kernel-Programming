@@ -139,16 +139,20 @@ static ssize_t myproc_write_config1(struct file *filp, const char __user *ubuf,
 		ret = -EINVAL;
 		goto out;
 	}
+
+	/* Get the usermode buffer content into the kernel (into 'buf') */
 	if (copy_from_user(buf, ubuf, count)) {
 		ret = -EFAULT;
 		goto out;
 	}
 	buf[count - 1] = '\0';
 	MSG("user sent: buf = %s\n", buf);
+
 	ret = kstrtoul(buf, 0, &configval);
 	if (ret)
 		goto out;
 	gdrvctx->config1 = configval;
+
 	/* As we're treating 'config1' as the 'debug level', update it */
 	debug_level = configval;
 	ret = count;
