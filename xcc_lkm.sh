@@ -4,7 +4,7 @@
 # by Kaiwan N Billimoria, Packt.
 #
 # Currently we support cross-compiling for the ARM-32 and PowerPC (64-bit)
-# archs, and 'normal' build for the x86[_64].
+# archs, and 'normal' build for the x86[-64].
 name=$(basename "$0")
 
 #--- Global config
@@ -34,7 +34,7 @@ usage()
  To select which architecture (cpu) the kernel module is to be (cross) compiled
  for, pl set the environment variable ARCH=<arch>. Currently, we support (cross)
  compiling for:
-  x86[_64] : ARCH=(null)    [default]
+  x86[-64] : ARCH=(null)    [default]
   ARM-32   : ARCH=arm
   PPC-64   : ARCH=powerpc
 
@@ -43,7 +43,7 @@ usage()
 
  Obviously, we expect:
  - an installed and working cross compiler toolchain(s)
- - kernel source tree to build against; for the x86[_64], we shall default to
+ - kernel source tree to build against; for the x86[-64], we shall default to
    the running kernel's 'build' folder, for the ARM and PPC-64, we have
    hard-coded paths into the Makefile; please change it as required."
 }
@@ -74,9 +74,9 @@ fi
     exit 1
   }
 }
-[ -z "${ARCH}" ] && {    # ${ARCH} NUL implies x86[_64]
+[ -z "${ARCH}" ] && {    # ${ARCH} NUL implies x86[-64]
   [ ! -d /lib/modules/"$(uname -r)"/build/ ] && {
-    echo "[!] x86[_64]: failed to locate /lib/modules/$(uname -r)/build/.
+    echo "[!] x86[-64]: failed to locate /lib/modules/$(uname -r)/build/.
 Package kernel-headers required to be installed? Aborting..."
     exit 1
   }
@@ -98,7 +98,7 @@ else ifeq (\$(ARCH),powerpc)
     # *UPDATE* 'KDIR' below to point to the PPC64 Linux kernel source tree on your box
     KDIR ?= ${KSRC_PPC64_TARGET}
 else
-    # x86[_64]: 'KDIR' is the Linux kernel source tree (headers) on your box
+    # x86[-64]: 'KDIR' is the Linux kernel source tree (headers) on your box
     KDIR ?= /lib/modules/\$(shell uname -r)/build
 endif
 
@@ -140,7 +140,7 @@ elif [ "${ARCH}" = "powerpc" ]; then
   echo; echo "[+] ------ PowerPC64 build :: make V=${VERBOSE} ARCH=${ARCH} CROSS_COMPILE=${CROSS_COMPILE}"
   make V=${VERBOSE} ARCH=${ARCH} CROSS_COMPILE=${CROSS_COMPILE}
 else
-  echo; echo "[+] ------ x86[_64] build :: make V=${VERBOSE}"
+  echo; echo "[+] ------ x86[-64] build :: make V=${VERBOSE}"
   make V=${VERBOSE}
 fi
 
