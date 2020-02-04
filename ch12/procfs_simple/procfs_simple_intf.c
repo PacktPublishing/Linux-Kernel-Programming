@@ -94,6 +94,9 @@ MODULE_VERSION("0.1");
 #define MSG(string, args...)
 #endif
 
+#define DEBUG_LEVEL_MIN		0
+#define DEBUG_LEVEL_MAX		2
+
 /* We use a mutex lock; details in Ch 15 and Ch 16 */
 DEFINE_MUTEX(mtx);
 
@@ -130,11 +133,13 @@ static ssize_t myproc_write_config1(struct file *filp, const char __user *ubuf,
 				size_t count, loff_t *off)
 {
 	char buf[8];
-	int ret = count;
+	int ret = count, prev_dbglevel;
 	unsigned long configval = 0;
 
 	if (mutex_lock_interruptible(&mtx))
 		return -ERESTARTSYS;
+
+	prev_dbglevel = debug_level;
 	if (count == 0 || count > sizeof(buf)) {
 		ret = -EINVAL;
 		goto out;
@@ -151,9 +156,19 @@ static ssize_t myproc_write_config1(struct file *filp, const char __user *ubuf,
 	ret = kstrtoul(buf, 0, &configval);
 	if (ret)
 		goto out;
+	/* As we're treating 'config1' as the 'debug level',
+	 * validate and update it */
+	if (debug_level < DEBUG_LEVEL_MIN || debug_level > DEBUG_LEVEL_MAX) {
+		pr_info("%s: trying to set invalid value (%d) for debug_level\n"
+		" [allowed range: %d-%d]; resetting to previous (%d)\n",
+			OURMODNAME, debug_level, DEBUG_LEVEL_MIN,
+			DEBUG_LEVEL_MAX, prev_dbglevel);
+		debug_level = prev_dbglevel;
+		ret = -EFAULT;
+		goto out;
+	}
 	gdrvctx->config1 = configval;
 
-	/* As we're treating 'config1' as the 'debug level', update it */
 	debug_level = configval;
 	ret = count;
 out:
@@ -232,10 +247,6 @@ static int proc_show_pgoff(struct seq_file *seq, void *v)
 }
 
 /*------------------ proc file 1 -------------------------------------*/
-#define DEBUG_LEVEL_MIN		0
-#define DEBUG_LEVEL_MAX		2
-#define DEBUG_LEVEL_DEFAULT	DEBUG_LEVEL_MIN
-
 /* proc file 1 : modify the driver's debug_level global variable as per
  * what userspace writes */
 static ssize_t myproc_write_debug_level(
@@ -243,10 +254,12 @@ static ssize_t myproc_write_debug_level(
 		loff_t *off)
 {
 	char buf[12];
-	int ret = count;
+	int ret = count, prev_dbglevel;
 
 	if (mutex_lock_interruptible(&mtx))
 		return -ERESTARTSYS;
+
+	prev_dbglevel = debug_level;
 	if (count == 0 || count > 12) {
 		ret = -EINVAL;
 		goto out;
@@ -262,10 +275,11 @@ static ssize_t myproc_write_debug_level(
 	if (ret)
 		goto out;
 	if (debug_level < DEBUG_LEVEL_MIN || debug_level > DEBUG_LEVEL_MAX) {
-		pr_info("%s: trying to set invalid value for debug_level\n"
-			" [allowed range: %d-%d]\n",
-			OURMODNAME, DEBUG_LEVEL_MIN, DEBUG_LEVEL_MAX);
-		debug_level = DEBUG_LEVEL_DEFAULT;
+		pr_info("%s: trying to set invalid value (%d) for debug_level\n"
+		" [allowed range: %d-%d]; resetting to previous (%d)\n",
+			OURMODNAME, debug_level, DEBUG_LEVEL_MIN,
+			DEBUG_LEVEL_MAX, prev_dbglevel);
+		debug_level = prev_dbglevel;
 		ret = -EFAULT;
 		goto out;
 	}
