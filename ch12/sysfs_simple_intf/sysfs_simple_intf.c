@@ -12,9 +12,36 @@
  ****************************************************************
  * Brief Description:
  *
- * Simple demo of having your 2.6 Linux driver create it's own sysfs entry
- * points. For details, pl see Documentation/filesystems/sysfs.txt and the
- * Documentation/driver-model branch.
+ * Simple kernel module to demo interfacing with userspace via sysfs.
+ * In order to demonstrate (and let you easily contrast) the different ways
+ * in which one can create interfaces between the kernel and userspace,
+ * we issue appropriate kernel APIs to have the interface create three sysfs
+ * 'files' or 'objects'.
+ * In this particular case, the interface is via sysfs, so we create three
+ * sysfs pseudo-files under a directory whose name is the name given to this
+ * kernel module. These three sysfs 'files', what they are named and meant for
+ * is summarized below:
+ * /sys
+ *  ...
+ *  |---sysfs_simple_intf            <-- our proc directory
+ *      |---llkdsysfs_debug_level
+ *      |---llkdsysfs_pgoff
+ *      |---llkdsysfs_pressure
+ *
+ * Summary of our sysfs files and how they can be used (R=>read,W=>write)
+ * (1) llkdsysfs_dbg_level   : RW
+ *      R: read retrieves (to userspace) the current value of the global var
+ *         debug_level
+ *      W: write a value (from userspace) to the global var debug_level, thus
+ *         changing the debug level verbosity
+ *      file perms: 0644
+ * (2) llkdsysfs_pgoff       : R-
+ *      R: read retrieves (to userspace) the value of PAGE_OFFSET
+ *      file perms: 0444
+ * (3) llkdsysfs_pressure    : R-
+ *      R: read retrieves (to userspace) the value of the (dummy) global
+ *         variable gpressure
+ *      file perms: 0440
  *
  * For details, please refer the book, Ch 12.
  */
@@ -47,7 +74,8 @@ MODULE_VERSION("0.1");
 
 #define OURMODNAME		"sysfs_simple_intf"
 #define SYSFS_FILE1		llkdsysfs_debug_level
-#define SYSFS_FILE2		"llkdsysfs_pgoff"
+#define SYSFS_FILE2		llkdsysfs_pgoff
+#define SYSFS_FILE3		llkdsysfs_pressure
 
 //--- our MSG() macro
 #ifdef DEBUG
@@ -97,7 +125,7 @@ static ssize_t llkdsysfs_pressure_show(struct device *dev,
 }
 
 /* The DEVICE_ATTR{_RW|RO|WO}() macro instantiates a struct device_attribute
- * dev_attr_<name>
+ * dev_attr_<name> here...
  */
 static DEVICE_ATTR_RO(llkdsysfs_pressure);
 
@@ -116,7 +144,7 @@ static ssize_t llkdsysfs_pgoff_show(struct device *dev,
 }
 
 /* The DEVICE_ATTR{_RW|RO|WO}() macro instantiates a struct device_attribute
- * dev_attr_<name>
+ * dev_attr_<name> here...
  */
 static DEVICE_ATTR_RO(llkdsysfs_pgoff);	/* it's show callback is above.. */
 
@@ -169,8 +197,6 @@ static ssize_t llkdsysfs_debug_level_store(struct device *dev,
 		ret = -EFAULT;
 		goto out;
 	}
-// eg. of using dyn dbg level
-// MSG_L1 , MSG_L2 , ...
 
 	ret = count;
  out:
@@ -179,9 +205,9 @@ static ssize_t llkdsysfs_debug_level_store(struct device *dev,
 }
 
 /* The DEVICE_ATTR{_RW|RO|WO}() macro instantiates a struct device_attribute
- * dev_attr_<name> (as the comments below help explain ...)
+ * dev_attr_<name> (as the comments below help explain ...) here...
  */
-static DEVICE_ATTR_RW(SYSFS_FILE1);	/* it's show/store callbacks are above.. */
+static DEVICE_ATTR_RW(SYSFS_FILE1);  /* it's show/store callbacks are above */
 
 /*
  * From <linux/device.h>:
@@ -208,16 +234,16 @@ int __init sysfs_simple_intf_init(void)
 	 * struct device *dev pointer to create the sysfs file with
 	 * the device_create_file() API
 	 */
+#define PLAT_NAME	"llkd_sysfs_simple_intf_device"
 	sysfs_demo_platdev =
-	    platform_device_register_simple("sysfs_simple_intf_device", -1,
-					    NULL, 0);
+	    platform_device_register_simple(PLAT_NAME, -1, NULL, 0);
 	if (IS_ERR(sysfs_demo_platdev)) {
 		stat = PTR_ERR(sysfs_demo_platdev);
-		pr_info("%s: error (%d) registering our platform device, aborting\n",
-			OURMODNAME, stat);
+		pr_info
+		  ("%s: error (%d) registering our platform device, aborting\n",
+		     OURMODNAME, stat);
 		goto out1;
 	}
-
 	// 1. Create our first sysfile file : llkdsysfs_debug_level
 	/* The device_create_file() API creates a sysfs attribute file for
 	 * given device (1st parameter); the second parameter is the pointer
@@ -232,8 +258,8 @@ int __init sysfs_simple_intf_init(void)
 		     OURMODNAME, stat);
 		goto out2;
 	}
-	MSG("sysfs file [1] (/sys/devices/platform/sysfs_simple_intf_device/%s)"
-	    " created\n", "llkdsysfs_debug_level");
+	MSG("sysfs file [1] (/sys/devices/platform/%s/%s) created\n",
+		PLAT_NAME, __stringify(SYSFS_FILE1));
 
 	// 2. Create our second sysfile file : llkdsysfs_pgoff
 	stat =
@@ -245,8 +271,8 @@ int __init sysfs_simple_intf_init(void)
 		     OURMODNAME, stat);
 		goto out3;
 	}
-	MSG("sysfs file [2] (/sys/devices/platform/sysfs_simple_intf_device/%s)"
-	    " created\n", SYSFS_FILE2);
+	MSG("sysfs file [2] (/sys/devices/platform/%s/%s) created\n",
+		PLAT_NAME, __stringify(SYSFS_FILE2));
 
 	// 3. Create our third sysfile file : llkdsysfs_pressure
 	gpressure = 25;
@@ -259,8 +285,8 @@ int __init sysfs_simple_intf_init(void)
 		     OURMODNAME, stat);
 		goto out4;
 	}
-	MSG("sysfs file [3] (/sys/devices/platform/sysfs_simple_intf_device/%s)"
-	    " created\n", "llkdsysfs_pressure");
+	MSG("sysfs file [3] (/sys/devices/platform/%s/%s) created\n",
+		PLAT_NAME, __stringify(SYSFS_FILE3));
 
 	pr_info("%s initialized\n", OURMODNAME);
 	return 0;		/* success */
