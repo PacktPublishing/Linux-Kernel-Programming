@@ -1,16 +1,28 @@
 /*
  * solutions_to_assgn/ch12/ioctl_undoc/userspace_ioctl/ioctl_llkd_userspace.c
- ***************************************************************
+ **************************************************************************
  * This program is part of the source code released for the book
- *  "Linux Kernel Development Cookbook"
+ *  "Learn Linux Kernel Development"
  *  (c) Author: Kaiwan N Billimoria
  *  Publisher:  Packt
  *  GitHub repository:
- *  https://github.com/PacktPublishing/Linux-Kernel-Development-Cookbook
+ *  https://github.com/PacktPublishing/Learn-Linux-Kernel-Development
  *
  * From: Ch 12 : User - kernel communication pathways
- ****************************************************************
- * Assignment :
+ **************************************************************************
+ * Assignment : ch12: ioctl #2: 'ioctl_undoc':
+ *
+ * Using the provided ch12/ioctl_intf/ code as a template, write a userspace
+ * 'C' application and a kernel-space (char) device driver implementing the
+ * ioctl method. Add in a 'driver context' data structure (that we use in
+ * several examples), allocate and initialize it. Now, in addition to the
+ * earlier three ioctl 'commands' we use, setup a fourth 'undocumented' command
+ * (you can call it IOCTL_LLKD_IOCQDRVSTAT). It's job: when queried from
+ * userspace via ioctl(2), it must return the contents of the 'driver context'
+ * data structure to userspace; the userspace 'C' app must print out the
+ * content.
+ *
+ * For details refer the book, Ch 12.
  */
 #include <stdio.h>
 #include <unistd.h>
@@ -69,7 +81,7 @@ int main(int argc, char **argv)
 		close(fd);
 		exit(EXIT_FAILURE);
 	}
-	drvctx->power = 1;
+//	drvctx->power = 1;
 	printf("%s: running the 'undocumented' ioctl cmd IOCQDRVSTAT now...\n", argv[0]);
 	if (ioctl(fd, IOCTL_LLKD_IOCQDRVSTAT, drvctx) == -1) {
 		perror("ioctl IOCTL_LLKD_IOCSPOWER failed");

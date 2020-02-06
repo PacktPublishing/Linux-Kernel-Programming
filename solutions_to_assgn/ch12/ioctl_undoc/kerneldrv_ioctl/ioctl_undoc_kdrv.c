@@ -1,18 +1,28 @@
 /*
- * ioctl_llkd_kdrv.c
+ * solutions_to_assgn/ch12/ioctl_undoc/kerneldrv_ioctl/ioctl_undoc_kdrv.c
+ **************************************************************************
+ * This program is part of the source code released for the book
+ *  "Learn Linux Kernel Development"
+ *  (c) Author: Kaiwan N Billimoria
+ *  Publisher:  Packt
+ *  GitHub repository:
+ *  https://github.com/PacktPublishing/Learn-Linux-Kernel-Development
  *
- * part of: ch12 Assignment #1
+ * From: Ch 12 : User - kernel communication pathways
+ **************************************************************************
+ * Assignment : ch12: ioctl #2: 'ioctl_undoc':
  *
- * The assignment text is repeated below:
+ * Using the provided ch12/ioctl_intf/ code as a template, write a userspace
+ * 'C' application and a kernel-space (char) device driver implementing the
+ * ioctl method. Add in a 'driver context' data structure (that we use in
+ * several examples), allocate and initialize it. Now, in addition to the
+ * earlier three ioctl 'commands' we use, setup a fourth 'undocumented' command
+ * (you can call it IOCTL_LLKD_IOCQDRVSTAT). It's job: when queried from
+ * userspace via ioctl(2), it must return the contents of the 'driver context'
+ * data structure to userspace; the userspace 'C' app must print out the
+ * content.
  *
- * ioctl_undoc:
- * Using the provided ch12/ioctl_intf/ as a template, write a userspace 'C'
- * application and a kernel-space (char) device driver implementing the ioctl
- * method. In addition to the earlier three ioctl 'commands', setup a fourth
- * 'undocumented' command (you can call it IOCTL_LLKD_IOCQDRVSTAT).
- * It's job: when queried via ioctl(2), it must return the contents of a
- * 'driver context' data structure (that you define within the device driver)
- * to userspace.
+ * For details refer the book, Ch 12.
  */
 #include <linux/module.h>
 #include <linux/kernel.h>
