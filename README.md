@@ -1,5 +1,5 @@
-# Linux-Kernel-Development-Cookbook
+# Learn-Linux-Kernel-Development (LLKD)
 
-'Linux Kernel Development Cookbook', Kaiwan N Billimoria, Packt Publishing.
+'Learn Linux Kernel Development', Kaiwan N Billimoria, Packt Publishing.
 Preorder available on amazon.
-Due in Aug/Sept 2019.
+Due in Aug 2020.
