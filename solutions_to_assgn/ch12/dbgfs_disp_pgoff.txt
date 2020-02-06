@@ -8,6 +8,12 @@ kernel macro PAGE_OFFSET.
 -----------------------------------------------------------
 
 TIP :: Lookup one of your author's opensource projects devmem-rw, here:
-https://github.com/kaiwan/device-memory-readwrite/blob/master/drv_rwmem/debugfs_hooks.c
+https://github.com/kaiwan/device-memory-readwrite/
 
-The above code does something very similar...
+The kernel code that sets up the debugfs file is in:
+ drv_rwmem/debugfs_hooks.c
+The usermode code that retrieves the PAGE_OFFSET value is in:
+ common.h
+
+(Notice how the usermode code makes *no assumptions* about the debugfs mount
+point location; rather, it figures it out!)
