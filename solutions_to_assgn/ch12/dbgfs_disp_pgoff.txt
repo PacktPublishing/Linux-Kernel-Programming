@@ -1,0 +1,13 @@
+Solution / Tip for:
+ch12 : Debugfs assignment #1
+-----------------------------------------------------------
+Write a kernel module that sets up a debugfs file here:
+  <debugfs_mount_point>/dbgfs_disp_pgoff ;
+when read, it should display (to userspace) the current value of the
+kernel macro PAGE_OFFSET.
+-----------------------------------------------------------
+
+TIP :: Lookup one of your author's opensource projects devmem-rw, here:
+https://github.com/kaiwan/device-memory-readwrite/blob/master/drv_rwmem/debugfs_hooks.c
+
+The above code does something very similar...
