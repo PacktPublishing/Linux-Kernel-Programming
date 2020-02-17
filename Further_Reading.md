@@ -93,6 +93,10 @@ For the reader's convenience, below are chapter-wise links to the *Further Readi
         - On GitHub: ['Bootable RPi3 image with 64-bit kernel, 32-bit Raspbian Stretch host OS, 64-bit Debian Buster guest OS in nspawn container', Sakaki, Apr 2019](https://github.com/sakaki-/raspbian-nspawn-64)
         - Interesting, an [Ubuntu 18.04 server on Aarch64 Raspberry Pi](https://wiki.ubuntu.com/ARM/RaspberryPi); simplest way to get a 64-bit Raspberry Pi kernel and rootfs in a single image which can be burned onto the SD card
 
+- New Linux kernel: ['Linux 5.6 Is Looking Like It Will Be Spectacular With A Long List Of Features', Phoronix, 26Jan2020](https://www.phoronix.com/scan.php?page=news_item&px=Linux-5.6-Spectacular)
+
+
+
 ## Chapter 4, Writing your first Kernel Module-LKMs Part 1 - Further Reading
 
 - [Official Kernel Documentation : kernel parameters](https://www.kernel.org/doc/html/latest/admin-guide/kernel-parameters.html)
@@ -215,6 +219,8 @@ Software Developer’s Manual. Volume 3 (3A, 3B & 3C): System Programming Guide]
 ## Ch 9 and Ch 10 : The CPU Scheduler - Further Reading
 
 - Detailed PDF: ['A complete guide to Linux process scheduling', Nikita Ishkov, Feb 2015](https://trepo.tuni.fi/bitstream/handle/10024/96864/GRADU-1428493916.pdf)
+- An excellent detailed code-level article on how very particularly the context switching code path switch_to() has evolved on the x86[_64] arch: ['Evolution of the x86 context switch in Linux', Maizure, Sept 2018](https://www.maizure.org/projects/evolution_x86_context_switch_linux/)
+
 - Ftrace
     - ['ftrace: trace your kernel functions!', Julia Evans, Mar 2017](https://jvns.ca/blog/2017/03/19/getting-started-with-ftrace/)
 
