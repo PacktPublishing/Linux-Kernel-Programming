@@ -12,16 +12,7 @@ system; it stands for:
     d) Veryvery Maddening
 A. (c)
 
-2. Can one install:
-   a) a 32-bit Linux guest on a 64-bit Windows host? (Y/N)
-   b) a 64-bit Linux guest on a 64-bit Windows host? (Y/N)
-   c) a 64-bit Linux guest on a 32-bit Windows host? (Y/N)
-
-A. a) Y
-   b) Y
-   c) N
-
-3. On Linux:
+2. On Linux:
    a) can one name a directory *,hey,whatacoolname,huh? ? (Y/N)
    b) (hang on! before you try it out) Why, in general, should one not do so?
 	   (Okay try it out, But: on a VM, And Be Careful!)
@@ -46,7 +37,7 @@ A. a) Y ; Linux pathnames can have contain *any* ASCII character; that doesn't
 	  If running as root (and the distro does not perform special checking), the
 	  *entire* disk(s) are wiped out! <Shiver>
  
-4. Lets say we are running on an x86-64 host system running Linux and have a
+3. Lets say we are running on an x86-64 host system running Linux and have a
    32-bit ARM 'target' board (perhaps a Raspberry Pi 3); the job of a cross
    compiler is to:
    a) compile code that's on the target system into an x86-64 binary executable
@@ -58,7 +49,7 @@ A. a) Y ; Linux pathnames can have contain *any* ASCII character; that doesn't
 
 A. (b)
 
-5. Wrt the Linux man pages:
+4. Wrt the Linux man pages:
    a) they are divided into nine sections (True/False)
    b) which section represents system call APIs?
    c) which section represents kernel APIs? how up-to-date is it?
