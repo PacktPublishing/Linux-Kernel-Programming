@@ -230,6 +230,11 @@ int __init sysfs_simple_intf_init(void)
 {
 	int stat = 0;
 
+	if (!IS_ENABLED(CONFIG_SYSFS)) {
+		pr_warn("%s: sysfs unsupported! Aborting ...\n", OURMODNAME);
+		return -EINVAL;
+        }
+
 	/* 0. Register a (dummy) platform device; required as we need a
 	 * struct device *dev pointer to create the sysfs file with
 	 * the device_create_file() API

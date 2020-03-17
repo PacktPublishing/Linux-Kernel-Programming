@@ -308,10 +308,11 @@ static int __init procfs_simple_intf_init(void)
 {
 	int stat = 0;
 
-#ifndef	CONFIG_PROC_FS
-	pr_warn("%s: procfs unsupported! Aborting ...\n", OURMODNAME);
-	return -EINVAL;
-#endif
+	if(!IS_ENABLED(CONFIG_PROC_FS)) {
+		pr_warn("%s: procfs unsupported! Aborting ...\n", OURMODNAME);
+		return -EINVAL;
+	}
+
 	/* 0. Create our parent dir under /proc called OURMODNAME */
 	gprocdir = proc_mkdir(OURMODNAME, NULL);
 	if (!gprocdir) {
