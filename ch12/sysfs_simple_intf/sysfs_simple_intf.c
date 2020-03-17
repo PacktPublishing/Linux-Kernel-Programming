@@ -23,7 +23,7 @@
  * is summarized below:
  * /sys
  *  ...
- *  |---sysfs_simple_intf            <-- our proc directory
+ *  |---sysfs_simple_intf            <-- our sysfs directory
  *      |---llkdsysfs_debug_level
  *      |---llkdsysfs_pgoff
  *      |---llkdsysfs_pressure
@@ -88,7 +88,7 @@ MODULE_VERSION("0.1");
 #endif
 
 /* We use a mutex lock; details in Ch 15 and Ch 16 */
-DEFINE_MUTEX(mtx);
+static DEFINE_MUTEX(mtx);
 
 static int debug_level;		/* 'off' (0) by default ... */
 static u32 gpressure;		/* our dummy 'pressure' value */
@@ -226,7 +226,7 @@ and in <linux/sysfs.h>:
 }
  */
 
-int __init sysfs_simple_intf_init(void)
+static int __init sysfs_simple_intf_init(void)
 {
 	int stat = 0;
 
@@ -300,7 +300,7 @@ int __init sysfs_simple_intf_init(void)
 	return stat;
 }
 
-void __exit sysfs_simple_intf_cleanup(void)
+static void __exit sysfs_simple_intf_cleanup(void)
 {
 	/* Cleanup sysfs nodes */
 	device_remove_file(&sysfs_demo_platdev->dev,

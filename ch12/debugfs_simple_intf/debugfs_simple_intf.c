@@ -288,12 +288,10 @@ static int debugfs_simple_intf_init(void)
 	int stat = 0;
 	struct dentry *file1;
 
-//#ifndef	CONFIG_DEBUG_FS
 	if (!IS_ENABLED(CONFIG_DEBUG_FS)) {
-	pr_warn("%s: debugfs unsupported! Aborting ...\n", OURMODNAME);
-	return -EINVAL;
+		pr_warn("%s: debugfs unsupported! Aborting ...\n", OURMODNAME);
+		return -EINVAL;
 	}
-//#endif
 
 	/* 1. Create a dir under the debugfs mount point, whose name is the
 	 * module name */
