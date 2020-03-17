@@ -64,8 +64,9 @@ For the reader's convenience, below are chapter-wise links to the *Further Readi
 	- [Choose an open source license](https://choosealicense.com/)
 	- [Legal Risks of Open Source – GPL/Linux Loadable Kernel Modules](http://sourceauditor.com/blog/legal-risks-of-open-source-gpllinux-loadable-kernel-modules/)
 	- [Linux kernel licensing rules](https://www.kernel.org/doc/html/latest/process/license-rules.html#linux-kernel-licensing-rules)
+	- To circumvent the EXPORT_SYMBOL_GPL(), people have been known to use a GPL "shim" kernel module whose routines are invoked from a proprietary module; [Greg K Hartman 'Re: EXPORT_SYMBOL_GPL recursive for shim and/or wrapper](http://linux-kernel.2935.n7.nabble.com/EXPORT-SYMBOL-GPL-recursive-for-shim-and-or-wrappers-tp474689p474690.html)
 	- [MIT vs. BSD vs. Dual License](https://softwareengineering.stackexchange.com/questions/121998/mit-vs-bsd-vs-dual-license)
-	
+
 - [Configuring the kernel](https://www.kernel.org/doc/html/latest/admin-guide/README.html#configuring-the-kernel)
 - Detailed article: [Exploring the Linux kernel: The secrets of Kconfig/kbuild](https://opensource.com/article/18/10/kbuild-and-kconfig)
 
@@ -135,6 +136,7 @@ For the reader's convenience, below are chapter-wise links to the *Further Readi
 	- Blog article: ["Static analysis on the Linux kernel"](http://smackerelofopinion.blogspot.com/2017/09/static-analysis-on-linux-kernel.html)
 	- PDF: ["Static code checking In the Linux kernel", Arnd Bergmann, Linaro](https://elinux.org/images/d/d3/Bargmann.pdf)
 	- Thesis paper: ["Automatic Bug-finding Techniques for Large Software Projects", Jiri Slaby](https://www.fi.muni.cz/~xslaby/sklad/dis.pdf)
+- A book on static analysis with the opensource SonarQube tool: ['SonarQube in Action', G. Ann Campbell and Patroklos P. Papapetrou, Oct 2013] https://www.manning.com/books/sonarqube-in-action#toc
 
 - Blog article: ["LINUX KERNEL DEVELOPMENT – KERNEL MODULE PARAMETERS", Liran B.H.](http://devarea.com/linux-kernel-development-kernel-module-parameters/)
 - Useful Arch Linux Wiki on kernel module - gathering info, auto-loading, aliasing, blacklisting, etc: ["Kernel module"](https://wiki.archlinux.org/index.php/Kernel_module)
@@ -145,6 +147,7 @@ For the reader's convenience, below are chapter-wise links to the *Further Readi
 
 - Linux Kernel Security
 	- The [Kernel Self Protection Project](https://kernsec.org/wiki/index.php/Kernel_Self_Protection_Project)  (KSPP, Kees Cook)
+	- Regular updates on the state of kernel secuirty: [codeblog, by Kees Cook](https://outflux.net/blog/)
 	- Arch Linux wiki: ["Security / Kernel hardening"](https://wiki.archlinux.org/index.php/security#Kernel_hardening)
 	- ["The status of kernel hardening", LWN, Nov 2016](https://lwn.net/Articles/705262/)
 	- Blog article: ["Effectively bypassing kptr_restrict on Android"](http://bits-please.blogspot.com/2015/08/effectively-bypassing-kptrrestrict-on.html)
