@@ -55,6 +55,7 @@ HDR_1="/*
 
 INC_1="
 #include <linux/init.h>
+#include <linux/kernel.h>
 #include <linux/module.h>
 "
 
