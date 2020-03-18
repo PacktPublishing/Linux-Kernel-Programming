@@ -18,7 +18,7 @@ endif
 
 PWD	       := $(shell pwd)
 obj-m          += dbgfs_showall_threads.o
-EXTRA_CFLAGS   += -DDEBUG
+EXTRA_CFLAGS   += -DDEBUG #-Werror=format-security
 $(info Building for: KREL=${KERNELRELEASE} ARCH=${ARCH} CROSS_COMPILE=${CROSS_COMPILE} EXTRA_CFLAGS=${EXTRA_CFLAGS})
 
 all:
