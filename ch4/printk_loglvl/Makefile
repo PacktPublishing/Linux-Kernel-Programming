@@ -4,7 +4,8 @@
 PWD          := $(shell pwd)
 obj-m        += printk_loglvl.o
 
-# Enable the pr_debug() as well (rm the comment from one of the lines below)
+# Enable the pr_debug() and pr_devel() as well by removing the comment from
+# one of the lines below
 #EXTRA_CFLAGS += -DDEBUG
 #CFLAGS_printk_loglvl.o := -DDEBUG
 
