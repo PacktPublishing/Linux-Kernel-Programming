@@ -13,7 +13,7 @@ VERBOSE=0
 
 # *** IMP! UPDATE as required ***
 # Kernel source tree locations for various targets
-KSRC_ARM_TARGET="${HOME}/rpi_kernel"
+KSRC_ARM_TARGET=~/rpi_work/kernel_rpi/linux  # the R Pi kernel
 KSRC_PPC64_TARGET="${HOME}/linux-4.9.1"
 
 # Toolchain prefixes for various targets
@@ -92,8 +92,10 @@ cat > Makefile << EOF
 # For architecture (cpu) 'arch', invoke make as:
 # make ARCH=<arch> CROSS_COMPILE=<cross-compiler-prefix>
 ifeq (\$(ARCH),arm)
-    # *UPDATE* 'KDIR' below to point to the ARM Linux kernel source tree on your box
-    KDIR ?= ${KSRC_ARM_TARGET}
+    # **NOTE** Do *UPDATE* 'KDIR' below to point to the ARM Linux kernel
+    # source tree on your box
+    KDIR ?= ${KSRC_ARM_TARGET}   # the R Pi kernel
+
 else ifeq (\$(ARCH),powerpc)
     # *UPDATE* 'KDIR' below to point to the PPC64 Linux kernel source tree on your box
     KDIR ?= ${KSRC_PPC64_TARGET}
