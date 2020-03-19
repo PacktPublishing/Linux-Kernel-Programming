@@ -50,7 +50,7 @@ static int __init modparams2_init(void)
 
 	/* param 'control_freak': if it hasn't been passed (implicit guess), or is
 	 * the same old value, or isn't within the right range,
-	 * it's Unacceptable!
+	 * it's Unacceptable!  :-)
 	 */
 	if ((control_freak < 1) || (control_freak > 5)) {
 		pr_warn("%s: Must pass along module parameter"
