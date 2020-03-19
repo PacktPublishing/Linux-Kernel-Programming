@@ -22,6 +22,7 @@
  * For details, please refer the book, Ch 5.
  */
 #include <linux/init.h>
+#include <linux/kernel.h>
 #include <linux/module.h>
 
 MODULE_AUTHOR("<insert your name here>");
