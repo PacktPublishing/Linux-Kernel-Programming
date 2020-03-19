@@ -4,10 +4,11 @@
 # For architecture (cpu) 'arch', invoke make as:
 # make ARCH=<arch> CROSS_COMPILE=<cross-compiler-prefix> 
 ifeq ($(ARCH),arm)
-    # *UPDATE* 'KDIR' below to point to the ARM Linux kernel source tree on your box
-    KDIR ?= /home/llkd/rpi_work/rpi_kernel
+    # **NOTE** Do *UPDATE* 'KDIR' below to point to the ARM Linux kernel
+    # source tree on your box
+    KDIR ?= ~/rpi_work/kernel_rpi/linux  # the R Pi kernel
 else ifeq ($(ARCH),arm64)
-    # *UPDATE* 'KDIR' below to point to the PPC64 Linux kernel source tree on your box
+    # *UPDATE* 'KDIR' below to point to the Aarch64 Linux kernel source tree on your box
     KDIR ?= /mnt/par3/rpi_work/rpi_64bit/linux
 else ifeq ($(ARCH),powerpc)
     # *UPDATE* 'KDIR' below to point to the PPC64 Linux kernel source tree on your box

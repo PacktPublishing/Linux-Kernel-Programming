@@ -5,7 +5,7 @@
 # make ARCH=<arch> CROSS_COMPILE=<cross-compiler-prefix> 
 ifeq ($(ARCH),arm)
     # *UPDATE* 'KDIR' below to point to the ARM Linux kernel source tree on your box
-    KDIR ?= /home/kai/rpi_work/rpi_kernel
+    KDIR ?= ~/rpi_work/kernel_rpi/linux  # the R Pi kernel
 else ifeq ($(ARCH),powerpc)
     # *UPDATE* 'KDIR' below to point to the PPC64 Linux kernel source tree on your box
     KDIR ?= /home/kai/kernel/linux-4.9.1
