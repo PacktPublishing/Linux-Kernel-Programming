@@ -124,6 +124,7 @@ For the reader's convenience, below are chapter-wise links to the *Further Readi
     - Selecting a license
         - [Open Source Licenses Comparison -Guide](https://itsfoss.com/open-source-licenses-explained/), Leroux, Nov 2019
         - [Choose an open source license](https://choosealicense.com/)
+            - [Appendix; a convenient comparison table of OSS licenses](https://choosealicense.com/appendix/)
 
 - Arithmetic Overflow
     - An excellent must-read whitepaper: ['Understanding Integer Overflow in C/C++', Dietz, et al, June 2012](http://www.cs.utah.edu/~regehr/papers/overflow12.pdf)
