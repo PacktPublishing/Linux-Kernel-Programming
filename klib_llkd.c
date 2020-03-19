@@ -20,9 +20,11 @@
 /* 
  * show_phy_pages - show the virtual, physical addresses and PFNs of the memory
  *            range provided on a per-page basis.
- * !NOTE! The starting kernel address MUST be within the 'lowmem'direct-mapped
- * region of the kernel segment, else this will Not work and can possibly
- * crash the system.
+ *
+ * ! NOTE   NOTE   NOTE !
+ * The starting kernel address MUST be within the 'lowmem' direct-mapped region
+ * of the kernel segment, else this will Not work and can possibly crash the
+ * system.
  *
  * @kaddr: the starting kernel virtual address; MUST be a 'lowmem' region addr
  * @len: length of the memory piece (bytes)
