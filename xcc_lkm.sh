@@ -1,10 +1,18 @@
 #!/bin/bash
 # xcc_lkm.sh
-# Part of the source code for the book 'Learn Linux Kernel Development',
-# by Kaiwan N Billimoria, Packt.
+# **********************************************************************
+# This program is part of the source code released for the book
+#  "Learn Linux Kernel Development"
+#  (c) Author: Kaiwan N Billimoria
+#  Publisher:  Packt
+#  GitHub repository:
+#  https://github.com/PacktPublishing/Learn-Linux-Kernel-Development
+# **********************************************************************
+# Brief Description:
 #
-# Currently we support cross-compiling for the ARM-32 and PowerPC (64-bit)
-# archs, and 'normal' build for the x86[-64].
+# This script generates a Makefile to build the given kernel module (works only
+# for simple cases). Currently we support cross-compiling for the ARM-32 and
+# PowerPC (64-bit) archs, and 'normal' build for the x86[-64].
 name=$(basename "$0")
 
 #--- Global config
@@ -13,7 +21,7 @@ VERBOSE=0
 
 # *** IMP! UPDATE as required ***
 # Kernel source tree locations for various targets
-KSRC_ARM_TARGET=~/rpi_work/kernel_rpi/linux  # the R Pi kernel
+KSRC_ARM_TARGET=~/rpi_work/kernel_rpi/linux  # the Raspberry Pi kernel src
 KSRC_PPC64_TARGET="${HOME}/linux-4.9.1"
 
 # Toolchain prefixes for various targets
@@ -74,7 +82,7 @@ fi
     exit 1
   }
 }
-[ -z "${ARCH}" ] && {    # ${ARCH} NUL implies x86[-64]
+[ -z "${ARCH}" ] && {    # ${ARCH} == NULL implies x86[-64]
   [ ! -d /lib/modules/"$(uname -r)"/build/ ] && {
     echo "[!] x86[-64]: failed to locate /lib/modules/$(uname -r)/build/.
 Package kernel-headers required to be installed? Aborting..."
@@ -130,6 +138,7 @@ BUILD_LKM=0   # set to 1 to build it
   exit 0
 }
 
+# Ok, lets build it!
 echo "[+] make clean"
 make clean
 

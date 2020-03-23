@@ -65,7 +65,7 @@ MAC_1="
 
 MOD_STUFF="
 MODULE_AUTHOR(\"<insert your name here>\");
-MODULE_DESCRIPTION(\"<insert your module desc>\");
+MODULE_DESCRIPTION(\"<insert your module desc here>\");
 MODULE_LICENSE(\"Dual MIT/GPL\");
 MODULE_VERSION(\"0.1\");
 "
@@ -110,6 +110,7 @@ EOF
 echo "[+] LKM $1/$1.c generated"
 ls -l "$1".c
 
+# If our build /cross-compile script is available, lets use it
 which xcc_lkm.sh >/dev/null 2>&1 || {
  echo "[!] xcc_lkm.sh script not found (not in PATH?), unable to generate Makefile"
  exit 1
@@ -117,3 +118,4 @@ which xcc_lkm.sh >/dev/null 2>&1 || {
 echo "[+] Generating the $1/Makefile for $1.c (via xcc_lkm.sh)..."
 xcc_lkm.sh "$1"
 )
+exit 0
