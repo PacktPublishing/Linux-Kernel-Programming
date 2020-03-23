@@ -33,7 +33,7 @@ int main(int argc, char **argv)
 		perror("netlink_u: netlink socket creation failed");
 		exit(EXIT_FAILURE);
 	}
-	printf("%s:%d: netlink socket created\n", argv[0], getpid());
+	printf("%s:PID %d: netlink socket created\n", argv[0], getpid());
 
 	/* Setup the netlink source addr structure and bind it */
 	memset(&src_nl, 0, sizeof(src_nl));
@@ -66,14 +66,14 @@ int main(int argc, char **argv)
 	nlhdr->nlmsg_pid = getpid(); //USER_NL_ID;
 
 	/* Setup the payload to transmit */
-	strncpy(NLMSG_DATA(nlhdr), thedata, strlen(thedata));
+	strncpy(NLMSG_DATA(nlhdr), thedata, strlen(thedata)+1);
 	printf("%s: destination struct, netlink hdr, payload setup\n", argv[0]);
 
 	/* Setup the iovec */
 	memset(&iov, 0, sizeof(struct iovec));
 	iov.iov_base = (void *)nlhdr;
 	iov.iov_len = nlhdr->nlmsg_len;
-	printf("%s: folded nl header into iov structure\n", argv[0]);
+	printf("%s: initialized iov structure (nl header folded in)\n", argv[0]);
 
 	/* Setup the message header structure */
 	memset(&msg, 0, sizeof(struct msghdr));
@@ -81,7 +81,7 @@ int main(int argc, char **argv)
 	msg.msg_namelen = sizeof(dest_nl); // size of dest addr
 	msg.msg_iov = &iov;
 	msg.msg_iovlen = 1; // # elements in msg_iov
-	printf("%s: initialized msghdr structure\n", argv[0]);
+	printf("%s: initialized msghdr structure (iov folded in)\n", argv[0]);
 	
 	/* Actually (finally!) send the message via sendmsg(2) */
 	nsent = sendmsg(sd, &msg, 0);
@@ -94,7 +94,7 @@ int main(int argc, char **argv)
 		free(nlhdr);
 		exit(EXIT_FAILURE);
 	}
-	printf("%s:sendmsg(): *** success (sent %ld bytes)\n",
+	printf("%s:sendmsg(): *** success, sent %ld bytes all-inclusive (see kernel log for dtl)\n",
 		argv[0], nsent);
 	fflush(stdout);
 
@@ -106,7 +106,7 @@ int main(int argc, char **argv)
 		free(nlhdr);
 		exit(EXIT_FAILURE);
 	}
-	printf("%s:recvmsg(): *** success (got %ld bytes):"
+	printf("%s:recvmsg(): *** success, received %ld bytes (data payload):"
 		"\nmsg from kernel netlink: \"%s\"\n",
 		argv[0], nrecv, (char *)NLMSG_DATA(nlhdr));
 
