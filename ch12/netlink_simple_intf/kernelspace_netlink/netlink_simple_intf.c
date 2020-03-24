@@ -19,10 +19,20 @@ MODULE_LICENSE("Dual MIT/GPL");
 MODULE_VERSION("0.1");
 
 #define OURMODNAME   "netlink_simple_intf"
-#define NETLINK_MY_UNIT_PROTO 31  // kernel netlink protocol # that we're registering..
+#define NETLINK_MY_UNIT_PROTO   31
+	// kernel netlink protocol # that we're registering..
 
 static struct sock *nlsock;
 
+/*
+ * netlink_recv_and_reply
+ * When a userspace process (or thread) provides any input (i.e. transmits
+ * something) to us, this callback function is invoked. It's important to
+ * understand that it runs in process context (and not any kind of interrupt
+ * context).
+ * Here, we simply display the received 'message' and then reply by sending
+ * a sample message to our userspace peer (process).
+ */
 static void netlink_recv_and_reply(struct sk_buff *skb)
 {
 	struct nlmsghdr *nlh;
@@ -51,7 +61,7 @@ static void netlink_recv_and_reply(struct sk_buff *skb)
 	// Setup the payload
 	nlh = nlmsg_put(skb_tx, 0, 0, NLMSG_DONE, msgsz, 0);
 	NETLINK_CB(skb_tx).dst_group = 0;  // unicast only (cb is the
-		// skb's control buffer, dest group 0 => unicast
+		// skb's control buffer), dest group 0 => unicast
 	strncpy(nlmsg_data(nlh), reply, msgsz);
 
 	// Send it
