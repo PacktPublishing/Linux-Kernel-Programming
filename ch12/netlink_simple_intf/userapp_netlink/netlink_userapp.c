@@ -95,8 +95,8 @@ int main(int argc, char **argv)
 		free(nlhdr);
 		exit(EXIT_FAILURE);
 	}
-	printf("%s:sendmsg(): *** success, sent %ld bytes all-inclusive (see kernel log for dtl)\n",
-		argv[0], nsent);
+	printf("%s:sendmsg(): *** success, sent %ld bytes all-inclusive\n"
+		   " (see kernel log for dtl)\n", argv[0], nsent);
 	fflush(stdout);
 
 	/* 7. Block on incoming msg from the kernel-space netlink component */
@@ -107,7 +107,7 @@ int main(int argc, char **argv)
 		free(nlhdr);
 		exit(EXIT_FAILURE);
 	}
-	printf("%s:recvmsg(): *** success, received %ld bytes (of data):"
+	printf("%s:recvmsg(): *** success, received %ld bytes:"
 		"\nmsg from kernel netlink: \"%s\"\n",
 		argv[0], nrecv, (char *)NLMSG_DATA(nlhdr));
 
