@@ -285,7 +285,14 @@ The RTL Collaborative Project](https://wiki.linuxfoundation.org/realtime/rtl/sta
         - ["Writing a Linux device driver module for kernels 2.6 or later with udev", Pete's blog, Aug 2011](https://pete.akeo.ie/2011/08/writing-linux-device-driver-for-kernels.html)
         - [GitHub repo](https://github.com/pbatard/parrot/blob/master/parrot_driver.c)
     - tutorial: ["Creating a simple sysfs module in linux kernel", Penesive, Jul 2015](http://pradheepshrinivasan.github.io/2015/07/02/Creating-an-simple-sysfs/)
-    - 
+- Network programming with Sockets (userspace, with 'C' on Linux)
+    - ['Beej's Guide to Network Programming'](https://beej.us/guide/bgnet/)
+    - ['Socket programming in C on Linux – The Ultimate Guide for Beginners', Silver Moon, Apr 2019](https://www.binarytides.com/socket-programming-c-linux-tutorial/)
+- Netlink sockets
+    - [RFC: Linux Netlink as an IP Services Protocol](https://www.ietf.org/rfc/rfc3549.txt)
+    - ['Netlink: A Communication Mechanism in Linux', OpensourceForU, Yadav, Aug 2015](https://opensourceforu.com/2015/08/netlink-a-communication-mechanism-in-linux/)
+    - [Wikipedia page](https://en.wikipedia.org/wiki/Netlink)
+    - ['Kernel Korner - Why and How to Use Netlink Socket', LJ, Jan 2005](https://www.linuxjournal.com/article/7356)
 
 
 
