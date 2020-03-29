@@ -23,7 +23,10 @@ A. Major subsystems:
    into the kernel itself; why?
 A. A kernel module; it then has the advantages of not being tightly coupled
    with a particular kernel, can be easily re-compiled and deployed on various
-   distros or custom systems, productization advantages, etc
+   distros or custom systems, productization advantages, etc.
+   (Though uncommon, there could be circumstances where building a driver into
+   the kernel image itself is advantageous; some reasons, perhaps: performance,
+   for one, no dependencies on external code, and security).
 
 4. Can a kernel module be used to create a new CPU scheduler on Linux?
 A. No; the kernel module has access to only a subset of all kernel APIs and
