@@ -181,6 +181,8 @@ Software Developer’s Manual. Volume 3 (3A, 3B & 3C): System Programming Guide]
     - ["On vsyscalls and the vDSO"](https://lwn.net/Articles/446528/), LWN, Jon Corbet, June 2011
     - ["Are system calls the only way to interact with the Linux kernel from user land?", StackExchange, Apr 2014](https://unix.stackexchange.com/questions/124928/are-system-calls-the-only-way-to-interact-with-the-linux-kernel-from-user-land)
 
+- ['Linux Terminal: Check who uses all your memory with smem', Linuxaria, Oct 2013](https://linuxaria.com/pills/linux-terminal-check-who-uses-all-your-memory-with-smem)
+
 - Kernel memory optimization techniques
 	- [THP (Transparent Huge Pages)](https://www.kernel.org/doc/html/latest/admin-guide/mm/transhuge.html#admin-guide-transhuge)
 	- [KSM (Kernel Samepage Merging)](https://www.kernel.org/doc/html/latest/admin-guide/mm/ksm.html)

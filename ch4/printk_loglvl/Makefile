@@ -1,6 +1,4 @@
 # ch4/printk_loglvl/Makefile
-# Simplest kernel module Makefile
-
 PWD          := $(shell pwd)
 obj-m        += printk_loglvl.o
 
