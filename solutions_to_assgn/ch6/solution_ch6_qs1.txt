@@ -1,0 +1,22 @@
+------------------------------------------------------------------------------
+Solutions to selected assignments ::
+Ch 6: Kernel and Memory Management Internals Essentials
+(For your convenience, we have repeated the questions below and have provided
+answers / solutions to some of them).
+------------------------------------------------------------------------------
+1. Consider the following system scenario: there are a total of 125 processes,
+   and 164 threads alive, of which, 79 are kernel threads. Given this snapshot,
+   how many:
+   a) task structures will there be in kernel memory?
+   b) userspace stacks will there be in user memory?
+   c) kernel-mode stacks will there be in kernel memory?
+A. 
+a) 164 task structures (this is as _every_ thread has a task struct
+   representing it)
+b) every usermode thread will have 2 stacks - a user and a kernel stack;
+   so, there will be (164 - 79) = 85 usermode threads, and thus 85
+   usermode stacks
+c) by the above logic, there will be (85 + 79) = 164 kernel-mode stacks,
+   as there will be 85 usermode threads that have a kernel stack each + 79
+   kernel threads that have a kernel stack each.
+
