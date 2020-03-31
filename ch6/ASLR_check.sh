@@ -22,14 +22,18 @@ test_ASLR_abit()
 echo "
 Quick test: doing
  egrep \"heap|stack\" /proc/self/maps
-twice:"
+twice:
+"
+
 egrep "heap|stack" /proc/self/maps
 echo
 egrep "heap|stack" /proc/self/maps
 
 echo "
-With ASLR enabled, the uva's (user virtual addresses) should
-differ in each run."
+With ASLR:
+  enabled: the uva's (user virtual addresses) should differ in each run
+ disabled: the uva's (user virtual addresses) should be the same in each run.
+ "
 }
 
 # ASLR_set
@@ -37,7 +41,8 @@ differ in each run."
 # $1 : integer; value to set ASLR to
 ASLR_set()
 {
-echo "[+] Setting (usermode) ASLR value to \"$1\" now..."
+echo "
+[+] Setting (usermode) ASLR value to \"$1\" now..."
 echo -n $1 > /proc/sys/kernel/randomize_va_space
 echo -n "ASLR setting now is: "
 cat /proc/sys/kernel/randomize_va_space
@@ -55,7 +60,7 @@ kernel_ASLR_check()
 local KCONF KASLR_CONF
 
 echo "
-[+] Checking for kernel ASLR (KASLR) now ...
+[+] Checking for kernel ASLR (KASLR) support now ...
 (this kernel is ver $(uname -r), need >= 3.14)"
 
 # KASLR: from 3.14 onwards
@@ -107,8 +112,9 @@ usermode_ASLR_check()
 {
 local UASLR=$(cat /proc/sys/kernel/randomize_va_space)
 
-echo "[+] Checking for userspace ASLR now ...
- Current userspace ASLR setting : ${UASLR}"
+echo "[+] Checking for userspace ASLR support now ...
+ (in /proc/sys/kernel/randomize_va_space)
+ Current userspace ASLR setting = ${UASLR}"
 
 case "${UASLR}" in
  0) echo " => userspace ASLR is turned OFF" ;;
