@@ -20,7 +20,7 @@ name=$(basename $0)
 test_ASLR_abit()
 {
 echo "
-Quick test: doing
+ASLR quick test: doing
  egrep \"heap|stack\" /proc/self/maps
 twice:
 "
@@ -159,10 +159,9 @@ usermode_ASLR_check
 kernel_ASLR_check
 
 if [ $# -eq 1 ] ; then
-	echo "[+] Attempting to set ASLR value to \"$1\" now ..."
 	if [ $1 -ne 0 -a $1 -ne 1 -a $1 -ne 2 ] ; then
-		echo "${name}: invalid ASLR value (\"$1\"), aborting ..."
-		usage
+		echo
+		echo "${name}: set ASLR: invalid value (\"$1\"), aborting ..."
 		exit 1
 	else
 		ASLR_set $1
