@@ -64,6 +64,7 @@ static inline void show_ctx(char *nm)
 static int __init current_affairs_init(void)
 {
 	pr_debug("%s: inserted\n", OURMODNAME);
+	pr_info(" sizeof(struct task_struct)=%d\n", sizeof(struct task_struct));
 	show_ctx(OURMODNAME);
 	return 0;		/* success */
 }

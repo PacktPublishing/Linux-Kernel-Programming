@@ -8,7 +8,7 @@
  *  GitHub repository:
  *  https://github.com/PacktPublishing/Learn-Linux-Kernel-Development
  *
- * From: Ch 6 : Kernel and MM Internals - Essentials
+ * From: Ch 6 : Kernel and MM Internals Essentials
  ****************************************************************
  * Brief Description:
  * This kernel module iterates over the task structures of all *threads*
@@ -30,7 +30,7 @@
 #define OURMODNAME   "thrd_showall"
 
 MODULE_AUTHOR("Kaiwan N Billimoria");
-MODULE_DESCRIPTION("LLKD book:ch4/foreach/thrd_showall:"
+MODULE_DESCRIPTION("LLKD book:ch6/foreach/thrd_showall:"
 		   " demo to display all threads by iterating over the task list");
 MODULE_LICENSE("Dual MIT/GPL");
 MODULE_VERSION("0.1");
