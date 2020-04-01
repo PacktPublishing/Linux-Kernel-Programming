@@ -16,18 +16,31 @@
 # * For details, please refer the book, Ch 6.
 # ****************************************************************
 name=$(basename $0)
+PFX=$(dirname $(which $0))    # dir in which this script resides
+source ${PFX}/color.sh || {
+ echo "${name}: fatal: could not source ${PFX}/color.sh , aborting..."
+ exit 1
+}
+SEP="+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++"
 
 test_ASLR_abit()
 {
-echo "
-ASLR quick test: doing
+tput bold; fg_purple
+echo "${SEP}
+ASLR quick test:"
+color_reset
+
+echo "Doing
  egrep \"heap|stack\" /proc/self/maps
 twice:
 "
 
+fg_blue
 egrep "heap|stack" /proc/self/maps
 echo
+fg_cyan
 egrep "heap|stack" /proc/self/maps
+color_reset
 
 echo "
 With ASLR:
@@ -36,109 +49,144 @@ With ASLR:
  "
 }
 
+# disp_aslr_by_value
+# Parameters:
+#  $1 : integer; ASLR value to interpret
+disp_aslr_by_value()
+{
+case "$1" in
+ 0) tput bold ; fg_red
+	echo " => (usermode) ASLR is curently OFF"
+	;;
+ 1) tput bold ; fg_yellow; echo " => (usermode) ASLR ON: mmap(2)-based allocations, stack, vDSO page,"
+    echo " shlib, shmem locations are randomized on startup"
+	;;
+ 2) tput bold ; fg_green
+    echo " => (usermode) ASLR ON: mmap(2)-based allocations, stack, vDSO page,"
+    echo " shlib, shmem locations and heap are randomized on startup"
+	;;
+ *) tput bold ; fg_red ; echo " => invalid value? (shouldn't occur!)" ;;
+esac
+color_reset
+}
+
 # ASLR_set
 # Parameters:
-# $1 : integer; value to set ASLR to
+#  $1 : integer; value to set ASLR to
 ASLR_set()
 {
-echo "
+tput bold ; fg_purple
+echo "${SEP}
 [+] Setting (usermode) ASLR value to \"$1\" now..."
+color_reset
 echo -n $1 > /proc/sys/kernel/randomize_va_space
 echo -n "ASLR setting now is: "
 cat /proc/sys/kernel/randomize_va_space
-
-case "$1" in
- 0) echo " : turn OFF ASLR" ;;
- 1) echo " : turn ON ASLR only for stack, VDSO, shmem regions" ;;
- 2) echo " : turn ON ASLR for stack, VDSO, shmem regions and data segments [OS default]" ;;
- *) echo "Invalid!" ; exit 2 ;;
-esac
+disp_aslr_by_value $(cat /proc/sys/kernel/randomize_va_space)
 }
 
 kernel_ASLR_check()
 {
 local KCONF KASLR_CONF
 
-echo "
-[+] Checking for kernel ASLR (KASLR) support now ...
-(this kernel is ver $(uname -r), need >= 3.14)"
+tput bold ; fg_purple
+echo "${SEP}
+[+] Checking for kernel ASLR (KASLR) support now ..."
+color_reset
+echo "(this kernel is ver $(uname -r), need >= 3.14)"
 
 # KASLR: from 3.14 onwards
 local mj=$(uname -r |awk -F"." '{print $1}')
 local mn=$(uname -r |awk -F"." '{print $2}')
 [ ${mj} -lt 3 ] && {
+	tput bold ; fg_red
 	echo " KASLR : 2.6 or earlier kernel, no KASLR support (very old kernel?)"
+	color_reset
 	exit 1
 }
 [ ${mj} -eq 3 -a ${mn} -lt 14 ] && {
-	echo " KASLR : 3.14 or later kernel required for KASLR support."
+	tput bold ; fg_red ; echo " KASLR : 3.14 or later kernel required for KASLR support."
+	color_reset
 	exit 1
 }
 
 # ok, we're on >= 3.14
 grep -q -w "nokaslr" /proc/cmdline && {
-  echo " Kernel ASLR (KASLR) turned OFF! (via kernel cmdline; unusual)"
-} || {
-  # Attempt to gain access to the kernel config; first via /proc/config.gz
-  # and, if unavailable, via the /boot/config-<kver> file
-  sudo modprobe configs 2>/dev/null
-  if [ -f /proc/config.gz ] ; then
+  tput bold ; fg_red ; echo " Kernel ASLR (KASLR) turned OFF (via kernel cmdline)"
+  color_reset
+  return
+}
+
+# Attempt to gain access to the kernel config; first via /proc/config.gz
+# and, if unavailable, via the /boot/config-<kver> file
+sudo modprobe configs 2>/dev/null
+if [ -f /proc/config.gz ] ; then
     gunzip -c /proc/config.gz > /tmp/kconfig
     KCONF=/tmp/kconfig
-  elif [ -f /boot/config-$(uname -r) ] ; then
+elif [ -f /boot/config-$(uname -r) ] ; then
     KCONF=/boot/config-$(uname -r)
-  else
+else
+	tput bold ; fg_red
     echo "${name}: FATAL: oops, cannot gain access to kernel config, aborting..."
+	color_reset
     exit 1
-  fi
+fi
 
-  if [ ! -s ${KCONF} ]; then
+if [ ! -s ${KCONF} ]; then
+	tput bold ; fg_red
     echo "${name}: FATAL: oops, invalid kernel config file (${KCONF})? Aborting..."
+	color_reset
     exit 1
-  fi
+fi
 
-  KASLR_CONF=$(grep CONFIG_RANDOMIZE_BASE ${KCONF} |awk -F"=" '{print $2}')
-  if [ "${KASLR_CONF}" = "y" ]; then
-	  echo " Kernel ASLR (KASLR) is On [default]"
-  else 
+KASLR_CONF=$(grep CONFIG_RANDOMIZE_BASE ${KCONF} |awk -F"=" '{print $2}')
+if [ "${KASLR_CONF}" = "y" ]; then
+	tput bold ; fg_green
+	echo " Kernel ASLR (KASLR) is On [default]"
+	color_reset
+else 
 	grep -q -w "kaslr" /proc/cmdline && \
-		echo " Kernel ASLR (KASLR) turned ON via cmdline" || \
+		echo " Kernel ASLR (KASLR) turned ON via cmdline" || {
+			tput bold ; fg_red
 			echo " Kernel ASLR (KASLR) is OFF!"
-  fi
-}
+			color_reset
+		}
+fi
 }
 
 usermode_ASLR_check()
 {
 local UASLR=$(cat /proc/sys/kernel/randomize_va_space)
 
-echo "[+] Checking for userspace ASLR support now ...
- (in /proc/sys/kernel/randomize_va_space)
- Current userspace ASLR setting = ${UASLR}"
+tput bold ; fg_purple
+echo "${SEP}
+[+] Checking for (usermode) ASLR support now ..."
+color_reset
+echo " (in /proc/sys/kernel/randomize_va_space)
+ Current (usermode) ASLR setting = ${UASLR}"
 
-case "${UASLR}" in
- 0) echo " => userspace ASLR is turned OFF" ;;
- 1) echo " => userspace ASLR ON for stack, VDSO, shmem regions" ;;
- 2) echo " => userspace ASLR ON for stack, VDSO, shmem regions and data segments [OS default]" ;;
- *) echo " => invalid value? (shouldn't occur!)" ;;
-esac
+grep -q -w "norandmaps" /proc/cmdline && {
+	tput bold ; fg_red
+	echo " (Usermode) ASLR turned OFF via kernel cmdline"
+	color_reset
+	return
+}
+disp_aslr_by_value ${UASLR}
 }
 
 usage()
 {
-  local SEP="+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++"
-  echo "${SEP}
-Simple [Kernel] Address Space Layout Randomization / [K]ASLR checks:
-
-Usage: ${name} [ASLR_value] ; where 'ASLR_value' is one of:
+echo "${SEP}"
+tput bold
+echo "Simple [Kernel] Address Space Layout Randomization / [K]ASLR checks:"
+color_reset
+echo "Usage: ${name} [ASLR_value] ; where 'ASLR_value' is one of:
  0 = turn OFF ASLR
  1 = turn ON ASLR only for stack, VDSO, shmem regions
  2 = turn ON ASLR for stack, VDSO, shmem regions and data segments [OS default]
 
 The 'ASLR_value' parameter, setting the ASLR value, is optional; in any case,
-I shall run the checks... thanks and visit again!
-${SEP}
-"
+I shall run the checks... thanks and visit again!"
 }
 
 
@@ -150,6 +198,7 @@ ${SEP}
 usage
 
 [ ! -f /proc/sys/kernel/randomize_va_space ] && {
+	tput bold ; fg_red
 	echo "${name}: ASLR : no support (very old kernel (or, unlikely,"
 	" /proc not mounted)?)"
 	exit 1
@@ -160,8 +209,9 @@ kernel_ASLR_check
 
 if [ $# -eq 1 ] ; then
 	if [ $1 -ne 0 -a $1 -ne 1 -a $1 -ne 2 ] ; then
-		echo
+		fg red ; echo
 		echo "${name}: set ASLR: invalid value (\"$1\"), aborting ..."
+		color_reset
 		exit 1
 	else
 		ASLR_set $1
