@@ -49,7 +49,7 @@ MODULE_PARM_DESC(show_uservas,
 
 #if(BITS_PER_LONG == 32)
 	#define FMTSPC		"%08x"
-	#define FMTSPC_DEC	"%8d"
+	#define FMTSPC_DEC	"%7d"
 	#define TYPECST		unsigned int
 #elif(BITS_PER_LONG == 64)
 	#define FMTSPC		"%016lx"
@@ -125,18 +125,31 @@ static void show_kernelseg_info(void)
 	"+-------------------------------------------------------------+\n");
 #ifdef ARM
 	pr_info(
-	"|vector table:     "
+	"|vector table:       "
 	" 0x" FMTSPC " - 0x" FMTSPC " | [" FMTSPC_DEC " KB]\n",
 		SHOW_DELTA_K((TYPECST)VECTORS_BASE, (TYPECST)VECTORS_BASE+PAGE_SIZE));
 #endif
 
 	/* kernel fixmap region */
-#include <asm/fixmap.h>
 	pr_info(
 	ELLPS
 	"|fixmap region:      "
 	" 0x" FMTSPC " - 0x" FMTSPC " | [" FMTSPC_DEC " MB]\n",
-		SHOW_DELTA_M((TYPECST)FIXADDR_START, (TYPECST)FIXADDR_START+FIXADDR_SIZE));
+#ifdef CONFIG_ARM
+	/* We seem to have an issue on ARM; the compile fails with:
+	 *  "./include/asm-generic/fixmap.h:29:38: error: invalid storage
+	 *   class for function ‘fix_to_virt’"
+	 * ### So, okay, as a *really silly* workaround am simply copying in the
+	 * required macros from the fixmap.h header manually here ###
+	 * (seems to work fine on x86).
+	 */
+#define FIXADDR_START   0xffc00000UL
+#define FIXADDR_END     0xfff00000UL
+                SHOW_DELTA_M((TYPECST)FIXADDR_START, (TYPECST)FIXADDR_END));
+#else
+#include <asm/fixmap.h>
+                SHOW_DELTA_M((TYPECST)FIXADDR_START, (TYPECST)FIXADDR_START+FIXADDR_SIZE));
+#endif
 
 	/* kernel module region
 	 * It's high in the kernel segment for typical 64-bit systems, but the
