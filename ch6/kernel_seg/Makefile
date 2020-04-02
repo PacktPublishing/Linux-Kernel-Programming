@@ -7,7 +7,7 @@
 # make ARCH=<arch> CROSS_COMPILE=<cross-compiler-prefix> 
 ifeq ($(ARCH),arm)
     # *UPDATE* 'KDIR' below to point to the ARM Linux kernel source tree on your box
-	KDIR ?= ~/rpi_work/kernel_rpi/linux  # the R Pi kernel
+    KDIR ?= ~/rpi_work/kernel_rpi/linux  # the R Pi kernel
 else ifeq ($(ARCH),arm64)
     # *UPDATE* 'KDIR' below to point to the PPC64 Linux kernel source tree on your box
     KDIR ?= /mnt/par3/rpi_work/rpi_64bit/linux
@@ -19,10 +19,11 @@ else
     KDIR ?= /lib/modules/$(shell uname -r)/build
 endif
 
-PWD	       := $(shell pwd)
-obj-m          += kernel_seg.o
-EXTRA_CFLAGS   += -DDEBUG
-$(info Building for: ARCH=${ARCH} CROSS_COMPILE=${CROSS_COMPILE} EXTRA_CFLAGS=${EXTRA_CFLAGS})
+PWD	              := $(shell pwd)
+obj-m                 += show_kernel_seg.o
+show_kernel_seg-objs  += kernel_seg.o ../../klib_llkd.o
+EXTRA_CFLAGS += -DDEBUG -Wformat=0
+$(info Building for: KREL=${KERNELRELEASE} ARCH=${ARCH} CROSS_COMPILE=${CROSS_COMPILE} EXTRA_CFLAGS=${EXTRA_CFLAGS})
 
 all:
 	make -C $(KDIR) M=$(PWD) modules

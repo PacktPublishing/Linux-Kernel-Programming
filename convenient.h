@@ -115,6 +115,14 @@
 #define QPDS
 #endif
 
+/* SHOW_DELTA_*(low, hi) :
+ * Show the low val, high val and the delta (hi-low) in MB/GB.
+ * Inspired from raspberry pi kernel src: arch/arm/mm/init.c:MLM()
+ */
+#define SHOW_DELTA_M(low, hi) (low), (hi), (((hi) - (low)) >> 20)
+#define SHOW_DELTA_G(low, hi) (low), (hi), (((hi) - (low)) >> 30)
+#define SHOW_DELTA_MG(low, hi) (low), (hi), (((hi) - (low)) >> 20), (((hi) - (low)) >> 30)
+
 #ifdef __KERNEL__
 /*------------------------ PRINT_CTX ---------------------------------*/
 /* 

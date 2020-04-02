@@ -8,14 +8,15 @@
  *  GitHub repository:
  *  https://github.com/PacktPublishing/Learn-Linux-Kernel-Development
  *
- * From: Ch 6: Kernel and Memory Management Internals -Essentials Part 2
+ * From: Ch 6: Kernel and Memory Management Internals Essentials
  ****************************************************************
  * Brief Description:
  * A kernel module to show us stuff regarding the layout of the kernel segment;
  * the kernel VAS (Virtual Address Space). In effect, showing us a simple memory
  * map of the kernel. Works on both 32 and 64-bit systems of differing
- * architectures (CPUs).
- * Optionally also displays key segment of the user VAS if the module parameter
+ * architectures (CPUs; note, though, this is only lightly tested on ARM and
+ * x86 32 and 64-bit systems).
+ * Optionally also displays key info of the user VAS if the module parameter
  * show_uservas is set to 1.
  *
  * For details, please refer the book, Ch 6.
@@ -29,12 +30,14 @@
 #include <linux/slab.h>
 #include <linux/vmalloc.h>
 #include <asm/pgtable.h>
+#include "../../klib_llkd.h"
 #include "../../convenient.h"
 
 #define OURMODNAME   "kernel_seg"
 
 MODULE_AUTHOR("Kaiwan N Billimoria");
-MODULE_DESCRIPTION("LLKD book:ch4/kernel_seg: display some kernel space details");
+MODULE_DESCRIPTION(
+	"LLKD book:ch6/kernel_seg: display some kernel segment details");
 MODULE_LICENSE("Dual MIT/GPL");
 MODULE_VERSION("0.1");
 
@@ -48,61 +51,20 @@ MODULE_PARM_DESC(show_uservas,
 	#define FMTSPC		"%08x"
 	#define FMTSPC_DEC	"%08d"
 	#define TYPECST		unsigned int
-	#define MY_PATTERN1     0xdeadface
-	#define MY_PATTERN2     0xffeeddcc
 #elif(BITS_PER_LONG == 64)
 	#define FMTSPC		"%016lx"
 	#define FMTSPC_DEC	"%9ld"
 	#define TYPECST	        unsigned long
-	#define MY_PATTERN1     0xdeadfacedeadface
-	#define MY_PATTERN2     0xffeeddccbbaa9988
 #endif
 
-/* From the ch6/min_sysinfo LKM */
-void llkd_sysinfo2(void);
+extern void llkd_minsysinfo(void);	// it's in our 'library'
 
-static int __init kernel_seg_init(void)
+/* 
+ * show_userspace_info
+ * Display some arch-independent details of the usermode VAS
+ */
+static void show_userspace_info(void)
 {
-	pr_debug("%s: inserted\n", OURMODNAME);
-
-	/* Display some minimal system info
-	 * Note- this function is exported via the min_sysinfo.ko LKM;
-	 * hence we have a dependency; that LKM must be loaded up first.
-	 */
-	llkd_sysinfo2();
-
-	pr_info(
-    "\nSome Kernel Details [by decreasing address]\n"
-	"+-------------------------------------------------------------+\n"
-	"|                           [ . . . ]                         |\n"
-	"|Module space:       "
-	" 0x" FMTSPC " - 0x" FMTSPC " | [" FMTSPC_DEC " MB]\n",
-		(TYPECST)MODULES_VADDR, (TYPECST)MODULES_END,
-		(TYPECST)((MODULES_END-MODULES_VADDR)/(1024*1024)));
-
-#ifdef CONFIG_KASAN  // Kernel Address SANitizer
-	pr_info(
-	"|KASAN shadow:       "
-	" 0x" FMTSPC " - 0x" FMTSPC " | [" FMTSPC_DEC " GB]\n",
-	(TYPECST)KASAN_SHADOW_START, (TYPECST)KASAN_SHADOW_END,
-	(TYPECST)((KASAN_SHADOW_END-KASAN_SHADOW_START)/(1024*1024*1024)));
-#endif
-
-	pr_info(
-	"|Vmalloc region:     "
-	" 0x" FMTSPC " - 0x" FMTSPC " | [" FMTSPC_DEC " MB = " FMTSPC_DEC " GB]" "\n"
-	"[Lowmem:PAGE_OFFSET = 0x" FMTSPC " : start of all phy mapped RAM (here to RAM-size)]\n"
-	"|                           [ . . . ]                         |\n",
-		(TYPECST)VMALLOC_START, (TYPECST)VMALLOC_END,
-		(TYPECST)((VMALLOC_END-VMALLOC_START)/(1024*1024)), 
-		(TYPECST)((VMALLOC_END-VMALLOC_START)/(1024*1024*1024)),
-		(TYPECST)PAGE_OFFSET);
-
-	if (!show_uservas) {
-		pr_info("%s: skipping show userspace...\n", OURMODNAME);
-		return 0;
-	}
-
 	pr_info (
 	"+------------ Above, kernel-space; Below, userspace ----------+\n"
 	"|                           [ . . . ]                         |\n"
@@ -141,12 +103,66 @@ static int __init kernel_seg_init(void)
 	"Above: TASK_SIZE         = 0x" FMTSPC " size of userland  [  " FMTSPC_DEC " GB]\n"
 	" # userspace memory regions (VMAs) = %d\n"
 	" Above statistics are wrt 'current' thread (see below):\n",
-		(TYPECST)TASK_SIZE, (TYPECST)TASK_SIZE/(1024*1024*1024),
+		(TYPECST)TASK_SIZE, (TYPECST)(TASK_SIZE >> 30),
 		current->mm->map_count);
-		//current->tgid, current->pid, current->comm);
-	PRINT_CTX();       // see it in the convenient.h header
 
-	return 0;
+	PRINT_CTX();       /* show which process is the one in context;
+			    * see the definition in the convenient.h header */
+}
+
+/* 
+ * show_kernelseg_info
+ * Display kernel segment details as applicable to the architecture we're
+ * currently running upon.
+ */
+static void show_kernelseg_info(void)
+{
+	pr_info(
+    "\nSome Kernel Details [by decreasing address]\n"
+	"+-------------------------------------------------------------+\n"
+	"|                           [ . . . ]                         |\n"
+	"|module space:       "
+	" 0x" FMTSPC " - 0x" FMTSPC " | [" FMTSPC_DEC " MB]\n",
+		SHOW_DELTA_M((TYPECST)MODULES_VADDR, (TYPECST)MODULES_END));
+
+#ifdef CONFIG_KASAN  // Kernel Address SANitizer
+	pr_info(
+	"|KASAN shadow:       "
+	" 0x" FMTSPC " - 0x" FMTSPC " | [" FMTSPC_DEC " GB]\n",
+		SHOW_DELTA_G((TYPECST)KASAN_SHADOW_START, (TYPECST)KASAN_SHADOW_END));
+#endif
+
+	pr_info(
+	"|vmalloc region:     "
+	" 0x" FMTSPC " - 0x" FMTSPC " | [" FMTSPC_DEC " MB = " FMTSPC_DEC " GB]"
+	"\n"
+	"|lowmem region:      "
+	" 0x" FMTSPC " - 0x" FMTSPC " | [" FMTSPC_DEC " MB = " FMTSPC_DEC " GB]"
+	" (from PAGE_OFFSET to RAM-size)\n"
+	"|                           [ . . . ]                         |\n",
+		SHOW_DELTA_MG((TYPECST)VMALLOC_START, (TYPECST)VMALLOC_END),
+		SHOW_DELTA_MG((TYPECST)PAGE_OFFSET, (TYPECST)high_memory)
+		);
+}
+
+static int __init kernel_seg_init(void)
+{
+	pr_debug("%s: inserted\n", OURMODNAME);
+
+	/* Display some minimal system info
+	 * Note: this function is within our kernel 'library' here:
+	 *  ../../llkd_klib.c
+	 * Hence, we must arrange to link it in (see the Makefile)
+	 */
+	llkd_minsysinfo();
+	show_kernelseg_info();
+
+	if (show_uservas)
+		show_userspace_info();
+	else
+		pr_info("%s: skipping show userspace...\n", OURMODNAME);
+
+	return 0;	/* success */
 }
 
 static void __exit kernel_seg_exit(void)
