@@ -49,13 +49,15 @@ MODULE_PARM_DESC(show_uservas,
 
 #if(BITS_PER_LONG == 32)
 	#define FMTSPC		"%08x"
-	#define FMTSPC_DEC	"%08d"
+	#define FMTSPC_DEC	"%8d"
 	#define TYPECST		unsigned int
 #elif(BITS_PER_LONG == 64)
 	#define FMTSPC		"%016lx"
 	#define FMTSPC_DEC	"%9ld"
 	#define TYPECST	        unsigned long
 #endif
+
+#define ELLPS "|                           [ . . . ]                         |\n"
 
 extern void llkd_minsysinfo(void);	// it's in our 'library'
 
@@ -67,7 +69,7 @@ static void show_userspace_info(void)
 {
 	pr_info (
 	"+------------ Above, kernel-space; Below, userspace ----------+\n"
-	"|                           [ . . . ]                         |\n"
+	ELLPS
 	"|Process environment "
 	" 0x" FMTSPC " - 0x" FMTSPC " | [" FMTSPC_DEC " bytes]\n"
 	"|          arguments "
@@ -79,7 +81,7 @@ static void show_userspace_info(void)
 	" 0x" FMTSPC " - 0x" FMTSPC " | [" FMTSPC_DEC " bytes]\n"
 	"|       text segment "
 	" 0x" FMTSPC " - 0x" FMTSPC " | [" FMTSPC_DEC " bytes]\n"
-	"|                           [ . . . ]                         |\n"
+	ELLPS
 	"+-------------------------------------------------------------+\n",
 		(TYPECST)current->mm->env_end,
 		(TYPECST)current->mm->env_start,
@@ -114,35 +116,70 @@ static void show_userspace_info(void)
  * show_kernelseg_info
  * Display kernel segment details as applicable to the architecture we're
  * currently running upon.
+ * We try to order it by descending address but this doesn't always work out
+ * as ordering of regions differs by arch.
  */
 static void show_kernelseg_info(void)
 {
+	pr_info("\nSome Kernel Details [by decreasing address]\n"
+	"+-------------------------------------------------------------+\n");
+#ifdef ARM
 	pr_info(
-    "\nSome Kernel Details [by decreasing address]\n"
-	"+-------------------------------------------------------------+\n"
-	"|                           [ . . . ]                         |\n"
-	"|module space:       "
+	"|vector table:     "
+	" 0x" FMTSPC " - 0x" FMTSPC " | [" FMTSPC_DEC " KB]\n",
+		SHOW_DELTA_K((TYPECST)VECTORS_BASE, (TYPECST)VECTORS_BASE+PAGE_SIZE));
+#endif
+
+	/* kernel fixmap region */
+#include <asm/fixmap.h>
+	pr_info(
+	ELLPS
+	"|fixmap region:      "
+	" 0x" FMTSPC " - 0x" FMTSPC " | [" FMTSPC_DEC " MB]\n",
+		SHOW_DELTA_M((TYPECST)FIXADDR_START, (TYPECST)FIXADDR_START+FIXADDR_SIZE));
+
+	/* kernel module region
+	 * It's high in the kernel segment for typical 64-bit systems, but the
+	 * other way around on 32-bit; so our 'show in descending order' thing
+	 * won't really work here!
+	 */
+	pr_info(
+	"|module region:      "
 	" 0x" FMTSPC " - 0x" FMTSPC " | [" FMTSPC_DEC " MB]\n",
 		SHOW_DELTA_M((TYPECST)MODULES_VADDR, (TYPECST)MODULES_END));
 
-#ifdef CONFIG_KASAN  // Kernel Address SANitizer
+#ifdef CONFIG_KASAN  // KASAN region: Kernel Address SANitizer
 	pr_info(
 	"|KASAN shadow:       "
 	" 0x" FMTSPC " - 0x" FMTSPC " | [" FMTSPC_DEC " GB]\n",
 		SHOW_DELTA_G((TYPECST)KASAN_SHADOW_START, (TYPECST)KASAN_SHADOW_END));
 #endif
-
 	pr_info(
 	"|vmalloc region:     "
 	" 0x" FMTSPC " - 0x" FMTSPC " | [" FMTSPC_DEC " MB = " FMTSPC_DEC " GB]"
 	"\n"
 	"|lowmem region:      "
 	" 0x" FMTSPC " - 0x" FMTSPC " | [" FMTSPC_DEC " MB = " FMTSPC_DEC " GB]"
-	" (from PAGE_OFFSET to RAM-size)\n"
-	"|                           [ . . . ]                         |\n",
+	" (PAGE_OFFSET to RAM-size)\n"
+	ELLPS,
 		SHOW_DELTA_MG((TYPECST)VMALLOC_START, (TYPECST)VMALLOC_END),
-		SHOW_DELTA_MG((TYPECST)PAGE_OFFSET, (TYPECST)high_memory)
-		);
+		SHOW_DELTA_MG((TYPECST)PAGE_OFFSET, (TYPECST)high_memory));
+
+#ifdef CONFIG_HIGHMEM  // zone HIGHMEM may be present on 32-bit systems with more RAM
+	pr_info(
+	"|HIGHMEM(pkmap) region: "
+	" 0x" FMTSPC " - 0x" FMTSPC " | [" FMTSPC_DEC " GB]\n",
+		SHOW_DELTA_M((TYPECST)PKMAP_BASE,
+			     (TYPECST)(PKMAP_BASE)+(LAST_PKMAP*PAGE_SIZE)));
+#endif
+	/*
+	 * Symbols for kernel:
+	 *   text begin/end (_text/_etext)
+	 *   init begin/end (__init_begin, __init_end)
+	 *   data begin/end (_sdata, _edata)
+	 *   bss begin/end (__bss_start, __bss_stop)
+	 * are only defined *within* (in-tree) and aren't available for modules
+	 */
 }
 
 static int __init kernel_seg_init(void)
