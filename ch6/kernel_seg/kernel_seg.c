@@ -165,17 +165,14 @@ static void show_kernelseg_info(void)
 	" 0x" FMTSPC " - 0x" FMTSPC " | [" FMTSPC_DEC " GB]\n",
 		SHOW_DELTA_G((TYPECST)KASAN_SHADOW_START, (TYPECST)KASAN_SHADOW_END));
 #endif
+
+	/* vmalloc region */
 	pr_info(
 	"|vmalloc region:     "
-	" 0x" FMTSPC " - 0x" FMTSPC " | [" FMTSPC_DEC " MB = " FMTSPC_DEC " GB]"
-	"\n"
-	"|lowmem region:      "
-	" 0x" FMTSPC " - 0x" FMTSPC " | [" FMTSPC_DEC " MB = " FMTSPC_DEC " GB]"
-	" (PAGE_OFFSET to highmem)\n"
-	ELLPS,
-		SHOW_DELTA_MG((TYPECST)VMALLOC_START, (TYPECST)VMALLOC_END),
-		SHOW_DELTA_MG((TYPECST)PAGE_OFFSET, (TYPECST)high_memory));
+	" 0x" FMTSPC " - 0x" FMTSPC " | [" FMTSPC_DEC " MB = " FMTSPC_DEC " GB]\n",
+		SHOW_DELTA_MG((TYPECST)VMALLOC_START, (TYPECST)VMALLOC_END));
 
+	/* (possible) highmem region */
 #ifdef CONFIG_HIGHMEM  // zone HIGHMEM may be present on 32-bit systems with more RAM
 	pr_info(
 	"|HIGHMEM(pkmap) region: "
@@ -183,6 +180,15 @@ static void show_kernelseg_info(void)
 		SHOW_DELTA_M((TYPECST)PKMAP_BASE,
 			     (TYPECST)(PKMAP_BASE)+(LAST_PKMAP*PAGE_SIZE)));
 #endif
+
+	/* lowmem region */
+	pr_info(
+	"|lowmem region:      "
+	" 0x" FMTSPC " - 0x" FMTSPC " | [" FMTSPC_DEC " MB = " FMTSPC_DEC " GB]"
+	" (PAGE_OFFSET to highmem)\n"
+	ELLPS,
+		SHOW_DELTA_MG((TYPECST)PAGE_OFFSET, (TYPECST)high_memory));
+
 	/*
 	 * Symbols for kernel:
 	 *   text begin/end (_text/_etext)
