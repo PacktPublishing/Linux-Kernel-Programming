@@ -119,6 +119,7 @@
  * Show the low val, high val and the delta (hi-low) in MB/GB.
  * Inspired from raspberry pi kernel src: arch/arm/mm/init.c:MLM()
  */
+#define SHOW_DELTA_b(low, hi) (low), (hi), ((hi) - (low))
 #define SHOW_DELTA_K(low, hi) (low), (hi), (((hi) - (low)) >> 10)
 #define SHOW_DELTA_M(low, hi) (low), (hi), (((hi) - (low)) >> 20)
 #define SHOW_DELTA_G(low, hi) (low), (hi), (((hi) - (low)) >> 30)

@@ -63,12 +63,17 @@ extern void llkd_minsysinfo(void);	// it's in our klib_llkd 'library'
 
 /* 
  * show_userspace_info
- * Display some arch-independent details of the usermode VAS
+ * Display some arch-independent details of the usermode VAS.
+ * Format (for most of the details):
+ *  |<name of region>:   start_addr - end_addr        | [ size in KB/MB/GB]
+ * f.e. on an x86_64 VM w/ 2047 MB RAM
+ *  | text segment  0x0000563022f3ed90 - 0x0000563022f1c000 | [   142736 bytes]
+ * We order it by descending address (here, uva's).
  */
 static void show_userspace_info(void)
 {
 	pr_info (
-	"+------------ Above, kernel-space; Below, userspace ----------+\n"
+	"+------------ Above is kernel-seg; below, user VAS  ----------+\n"
 	ELLPS
 	"|Process environment "
 	" 0x" FMTSPC " - 0x" FMTSPC " | [" FMTSPC_DEC " bytes]\n"
@@ -83,29 +88,12 @@ static void show_userspace_info(void)
 	" 0x" FMTSPC " - 0x" FMTSPC " | [" FMTSPC_DEC " bytes]\n"
 	ELLPS
 	"+-------------------------------------------------------------+\n",
-		(TYPECST)current->mm->env_end,
-		(TYPECST)current->mm->env_start,
-		(TYPECST)(current->mm->env_end-current->mm->env_start),
-
-		(TYPECST)current->mm->arg_end, 
-		(TYPECST)current->mm->arg_start,
-		(TYPECST)(current->mm->arg_end-current->mm->arg_start),
-
+		SHOW_DELTA_b((TYPECST)current->mm->env_start, (TYPECST)current->mm->env_end),
+		SHOW_DELTA_b((TYPECST)current->mm->arg_start, (TYPECST)current->mm->arg_end),
 		(TYPECST)current->mm->start_stack,
-		/* current_stack_pointer returns [R]SP of the *kernel* stack,
-		so forget it... */
-
-		(TYPECST)current->mm->brk,
-		(TYPECST)current->mm->start_brk,
-		(TYPECST)(current->mm->brk-current->mm->start_brk),
-
-		(TYPECST)current->mm->end_data,
-		(TYPECST)current->mm->start_data,
-		(TYPECST)(current->mm->end_data-current->mm->start_data),
-
-		(TYPECST)current->mm->end_code,
-		(TYPECST)current->mm->start_code,
-		(TYPECST)(current->mm->end_code-current->mm->start_code)
+		SHOW_DELTA_b((TYPECST)current->mm->start_brk, (TYPECST)current->mm->brk),
+		SHOW_DELTA_b((TYPECST)current->mm->start_data, (TYPECST)current->mm->end_data),
+		SHOW_DELTA_b((TYPECST)current->mm->start_code, (TYPECST)current->mm->end_code)
 		);
 
 	pr_info(
@@ -115,16 +103,19 @@ static void show_userspace_info(void)
 		(TYPECST)TASK_SIZE, (TYPECST)(TASK_SIZE >> 30),
 		current->mm->map_count);
 
-	PRINT_CTX();       /* show which process is the one in context;
-			    * see the definition in the convenient.h header */
+	PRINT_CTX();       /* show which process is the one in context */
 }
 
 /* 
  * show_kernelseg_info
  * Display kernel segment details as applicable to the architecture we're
  * currently running upon.
- * We try to order it by descending address but this doesn't always work out
- * as ordering of regions differs by arch.
+ * Format (for most of the details):
+ *  |<name of region>:   start_addr - end_addr        | [ size in KB/MB/GB]
+ * f.e. on an x86_64 VM w/ 2047 MB RAM
+ *  |lowmem region:   0xffffa0dfc0000000 - 0xffffa0e03fff0000 | [ 2047 MB = 1 GB]
+ * We try to order it by descending address (here, kva's) but this doesn't
+ * always work out as ordering of regions differs by arch.
  */
 static void show_kernelseg_info(void)
 {
@@ -180,7 +171,7 @@ static void show_kernelseg_info(void)
 	"\n"
 	"|lowmem region:      "
 	" 0x" FMTSPC " - 0x" FMTSPC " | [" FMTSPC_DEC " MB = " FMTSPC_DEC " GB]"
-	" (PAGE_OFFSET to RAM-size)\n"
+	" (PAGE_OFFSET to highmem)\n"
 	ELLPS,
 		SHOW_DELTA_MG((TYPECST)VMALLOC_START, (TYPECST)VMALLOC_END),
 		SHOW_DELTA_MG((TYPECST)PAGE_OFFSET, (TYPECST)high_memory));
