@@ -188,7 +188,7 @@ static void show_kernelseg_info(void)
 	pr_info(
 	"|lowmem region:      "
 	" 0x" FMTSPC " - 0x" FMTSPC " | [" FMTSPC_DEC " MB = " FMTSPC_DEC " GB]"
-	"\n|                                    (PAGE_OFFSET to highmem) |\n",
+	"\n|                    (PAGE_OFFSET to highmem)                 |\n",
 		SHOW_DELTA_MG((TYPECST)PAGE_OFFSET, (TYPECST)high_memory));
 
 	/*
