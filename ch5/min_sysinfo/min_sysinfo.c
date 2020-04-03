@@ -167,7 +167,6 @@ static void llkd_sysinfo(void)
 #endif
 	pr_info("%s", msg);
 }
-
 EXPORT_SYMBOL(llkd_sysinfo);
 
 static int __init min_sysinfo_init(void)
