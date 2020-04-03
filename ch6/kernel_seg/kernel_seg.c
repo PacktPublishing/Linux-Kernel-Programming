@@ -124,7 +124,7 @@ static void show_kernelseg_info(void)
 #ifdef ARM
 	pr_info(
 	"|vector table:       "
-	" 0x" FMTSPC " - 0x" FMTSPC " | [" FMTSPC_DEC " KB]\n",
+	" 0x" FMTSPC " - 0x" FMTSPC " | [" FMTSPC_DEC " KB]  |\n",
 		SHOW_DELTA_K((TYPECST)VECTORS_BASE, (TYPECST)VECTORS_BASE+PAGE_SIZE));
 #endif
 
@@ -132,7 +132,7 @@ static void show_kernelseg_info(void)
 	pr_info(
 	ELLPS
 	"|fixmap region:      "
-	" 0x" FMTSPC " - 0x" FMTSPC " | [" FMTSPC_DEC " MB]\n",
+	" 0x" FMTSPC " - 0x" FMTSPC " | [" FMTSPC_DEC " MB]  |\n",
 #ifdef CONFIG_ARM
 	/* We seem to have an issue on ARM; the compile fails with:
 	 *  "./include/asm-generic/fixmap.h:29:38: error: invalid storage
@@ -150,14 +150,17 @@ static void show_kernelseg_info(void)
 #endif
 
 	/* kernel module region
-	 * It's high in the kernel segment for typical 64-bit systems, but the
-	 * other way around on 32-bit; so our 'show in descending order' thing
-	 * won't really work here!
+	 * For the modules region, it's high in the kernel segment on typical 64-bit
+	 * systems, but the other way around on many 32-bit systems (particularly
+	 * ARM-32); so we rearrange the order in which it's shown depending on the
+	 * arch, thus trying to maintain a 'by descending address' ordering.
 	 */
+#if(BITS_PER_LONG == 64)
 	pr_info(
 	"|module region:      "
-	" 0x" FMTSPC " - 0x" FMTSPC " | [" FMTSPC_DEC " MB]\n",
+	" 0x" FMTSPC " - 0x" FMTSPC " | [" FMTSPC_DEC " MB]  |\n",
 		SHOW_DELTA_M((TYPECST)MODULES_VADDR, (TYPECST)MODULES_END));
+#endif
 
 #ifdef CONFIG_KASAN  // KASAN region: Kernel Address SANitizer
 	pr_info(
@@ -185,8 +188,7 @@ static void show_kernelseg_info(void)
 	pr_info(
 	"|lowmem region:      "
 	" 0x" FMTSPC " - 0x" FMTSPC " | [" FMTSPC_DEC " MB = " FMTSPC_DEC " GB]"
-	" (PAGE_OFFSET to highmem)\n"
-	ELLPS,
+	"\n|                                    (PAGE_OFFSET to highmem) |\n",
 		SHOW_DELTA_MG((TYPECST)PAGE_OFFSET, (TYPECST)high_memory));
 
 	/*
@@ -195,8 +197,17 @@ static void show_kernelseg_info(void)
 	 *   init begin/end (__init_begin, __init_end)
 	 *   data begin/end (_sdata, _edata)
 	 *   bss begin/end (__bss_start, __bss_stop)
-	 * are only defined *within* (in-tree) and aren't available for modules.
+	 * are only defined *within* (in-tree) and aren't available for modules;
+	 * thus we don't attempt to print them.
 	 */
+
+#if(BITS_PER_LONG == 32)  /* modules region: see the comment above reg this */
+	pr_info(
+	"|module region:      "
+	" 0x" FMTSPC " - 0x" FMTSPC " | [" FMTSPC_DEC " MB]  |\n",
+		SHOW_DELTA_M((TYPECST)MODULES_VADDR, (TYPECST)MODULES_END));
+#endif
+	pr_info(ELLPS);
 }
 
 static int __init kernel_seg_init(void)
@@ -213,8 +224,10 @@ static int __init kernel_seg_init(void)
 
 	if (show_uservas)
 		show_userspace_info();
-	else
+	else {
+		pr_info("+-------------------------------------------------------------+\n");
 		pr_info("%s: skipping show userspace...\n", OURMODNAME);
+	}
 
 	return 0;	/* success */
 }
