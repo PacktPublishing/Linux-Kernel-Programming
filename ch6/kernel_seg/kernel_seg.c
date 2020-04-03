@@ -59,7 +59,7 @@ MODULE_PARM_DESC(show_uservas,
 
 #define ELLPS "|                           [ . . . ]                         |\n"
 
-extern void llkd_minsysinfo(void);	// it's in our 'library'
+extern void llkd_minsysinfo(void);	// it's in our klib_llkd 'library'
 
 /* 
  * show_userspace_info
@@ -86,16 +86,23 @@ static void show_userspace_info(void)
 		(TYPECST)current->mm->env_end,
 		(TYPECST)current->mm->env_start,
 		(TYPECST)(current->mm->env_end-current->mm->env_start),
+
 		(TYPECST)current->mm->arg_end, 
 		(TYPECST)current->mm->arg_start,
 		(TYPECST)(current->mm->arg_end-current->mm->arg_start),
+
 		(TYPECST)current->mm->start_stack,
+		/* current_stack_pointer returns [R]SP of the *kernel* stack,
+		so forget it... */
+
 		(TYPECST)current->mm->brk,
 		(TYPECST)current->mm->start_brk,
 		(TYPECST)(current->mm->brk-current->mm->start_brk),
+
 		(TYPECST)current->mm->end_data,
 		(TYPECST)current->mm->start_data,
 		(TYPECST)(current->mm->end_data-current->mm->start_data),
+
 		(TYPECST)current->mm->end_code,
 		(TYPECST)current->mm->start_code,
 		(TYPECST)(current->mm->end_code-current->mm->start_code)
@@ -141,13 +148,13 @@ static void show_kernelseg_info(void)
 	 *   class for function ‘fix_to_virt’"
 	 * ### So, okay, as a *really silly* workaround am simply copying in the
 	 * required macros from the fixmap.h header manually here ###
-	 * (seems to work fine on x86).
 	 */
 #define FIXADDR_START   0xffc00000UL
 #define FIXADDR_END     0xfff00000UL
                 SHOW_DELTA_M((TYPECST)FIXADDR_START, (TYPECST)FIXADDR_END));
 #else
 #include <asm/fixmap.h>
+	 // seems to work fine on x86
                 SHOW_DELTA_M((TYPECST)FIXADDR_START, (TYPECST)FIXADDR_START+FIXADDR_SIZE));
 #endif
 
@@ -191,7 +198,7 @@ static void show_kernelseg_info(void)
 	 *   init begin/end (__init_begin, __init_end)
 	 *   data begin/end (_sdata, _edata)
 	 *   bss begin/end (__bss_start, __bss_stop)
-	 * are only defined *within* (in-tree) and aren't available for modules
+	 * are only defined *within* (in-tree) and aren't available for modules.
 	 */
 }
 
