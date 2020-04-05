@@ -116,7 +116,8 @@
 #endif
 
 /* SHOW_DELTA_*(low, hi) :
- * Show the low val, high val and the delta (hi-low) in MB/GB.
+ * Show the low val, high val and the delta (hi-low) in either bytes/KB/MB/GB,
+ * as required.
  * Inspired from raspberry pi kernel src: arch/arm/mm/init.c:MLM()
  */
 #define SHOW_DELTA_b(low, hi) (low), (hi), ((hi) - (low))

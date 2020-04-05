@@ -348,4 +348,12 @@ Paul E. McKenney, IBM LTC, June 2010](http://www.rdrop.com/~paulmck/scalability/
 
 [\[Top\]](https://github.com/PacktPublishing/Linux-Kernel-Development-Cookbook/blob/master/Further_Reading.md#further-reading)
 
+
+## Miscellaneous (not specific to a chapter or topic) - Further Reading ##
+
+- [LWN Linux Kernel Index](https://lwn.net/Kernel/Index/) ; all kernel-related articles correctly indexed, right from 2004! Very valuable resource
+- [Lowlevel programming University, gurugio](https://github.com/gurugio/lowlevelprogramming-university)
+- 
+
+
 [End of Doc]
