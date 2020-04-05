@@ -134,11 +134,12 @@ static void show_kernelseg_info(void)
 	"|fixmap region:      "
 	" 0x" FMTSPC " - 0x" FMTSPC " | [" FMTSPC_DEC " MB]  |\n",
 #ifdef CONFIG_ARM
-	/* We seem to have an issue on ARM; the compile fails with:
+	/* RELOOK: We seem to have an issue on ARM; the compile fails with:
 	 *  "./include/asm-generic/fixmap.h:29:38: error: invalid storage
 	 *   class for function ‘fix_to_virt’"
 	 * ### So, okay, as a *really silly* workaround am simply copying in the
-	 * required macros from the fixmap.h header manually here ###
+	 * required macros from the arch/arm/include/asm/fixmap.h header
+	 * manually here ###
 	 */
 #define FIXADDR_START   0xffc00000UL
 #define FIXADDR_END     0xfff00000UL
@@ -175,25 +176,25 @@ static void show_kernelseg_info(void)
 	" 0x" FMTSPC " - 0x" FMTSPC " | [" FMTSPC_DEC " MB = " FMTSPC_DEC " GB]\n",
 		SHOW_DELTA_MG((TYPECST)VMALLOC_START, (TYPECST)VMALLOC_END));
 
-	/* (possible) highmem region */
-#ifdef CONFIG_HIGHMEM  // zone HIGHMEM may be present on 32-bit systems with more RAM
-	pr_info(
-	"|HIGHMEM(pkmap) region: "
-	" 0x" FMTSPC " - 0x" FMTSPC " | [" FMTSPC_DEC " GB]\n",
-		SHOW_DELTA_M((TYPECST)PKMAP_BASE,
-			     (TYPECST)(PKMAP_BASE)+(LAST_PKMAP*PAGE_SIZE)));
-#endif
-
 	/* lowmem region */
 	pr_info(
 	"|lowmem region:      "
 	" 0x" FMTSPC " - 0x" FMTSPC " | [" FMTSPC_DEC " MB = " FMTSPC_DEC " GB]"
 #if(BITS_PER_LONG == 32)
-	"\n|                    (PAGE_OFFSET - highmem)                     |\n",
+	"\n|             (above:PAGE_OFFSET - highmem)                   |\n",
 #else
-	"\n|                        (PAGE_OFFSET    -      highmem)      |\n",
+	"\n|                  (above:PAGE_OFFSET    -      highmem)      |\n",
 #endif
 		SHOW_DELTA_MG((TYPECST)PAGE_OFFSET, (TYPECST)high_memory));
+
+	/* (possible) highmem region */
+#ifdef CONFIG_HIGHMEM  // zone HIGHMEM may be present on 32-bit systems with more RAM
+	pr_info(
+	"|HIGHMEM region:     "
+	" 0x" FMTSPC " - 0x" FMTSPC " | [" FMTSPC_DEC " MB]\n",
+		SHOW_DELTA_M((TYPECST)PKMAP_BASE,
+			     (TYPECST)(PKMAP_BASE)+(LAST_PKMAP*PAGE_SIZE)));
+#endif
 
 	/*
 	 * Symbols for kernel:
