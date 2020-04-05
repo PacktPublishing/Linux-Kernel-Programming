@@ -11,13 +11,18 @@
  * From: Ch 6: Kernel and Memory Management Internals Essentials
  ****************************************************************
  * Brief Description:
- * A kernel module to show us stuff regarding the layout of the kernel segment;
- * the kernel VAS (Virtual Address Space). In effect, showing us a simple memory
- * map of the kernel. Works on both 32 and 64-bit systems of differing
- * architectures (CPUs; note, though, this is only lightly tested on ARM and
+ * A kernel module to show us some relevant details wrt the layout of the
+ * kernel segment, IOW, the kernel VAS (Virtual Address Space). In effect,
+ * this shows a simple memory map of the kernel. Works on both 32 and 64-bit
+ * systems of differing architectures (note: only lightly tested on ARM and
  * x86 32 and 64-bit systems).
  * Optionally also displays key info of the user VAS if the module parameter
  * show_uservas is set to 1.
+ *
+ * Useful! With show_uservas=1 we literally 'see' the full memory map of the
+ * process, including kernel-space.
+ * (Also, fyi, for a more detailed view of the user VAS, see our 'vasu_grapher'
+ * utility).
  *
  * For details, please refer the book, Ch 6.
  */
@@ -54,7 +59,7 @@ MODULE_PARM_DESC(show_uservas,
 #elif(BITS_PER_LONG == 64)
 	#define FMTSPC		"%016lx"
 	#define FMTSPC_DEC	"%9ld"
-	#define TYPECST	        unsigned long
+	#define TYPECST	    unsigned long
 #endif
 
 #define ELLPS "|                           [ . . . ]                         |\n"
@@ -66,6 +71,7 @@ extern void llkd_minsysinfo(void);	// it's in our klib_llkd 'library'
  * Display some arch-independent details of the usermode VAS.
  * Format (for most of the details):
  *  |<name of region>:   start_addr - end_addr        | [ size in KB/MB/GB]
+ *
  * f.e. on an x86_64 VM w/ 2047 MB RAM
  *  | text segment  0x0000563022f3ed90 - 0x0000563022f1c000 | [   142736 bytes]
  * We order it by descending address (here, uva's).
@@ -112,6 +118,7 @@ static void show_userspace_info(void)
  * currently running upon.
  * Format (for most of the details):
  *  |<name of region>:   start_addr - end_addr        | [ size in KB/MB/GB]
+ *
  * f.e. on an x86_64 VM w/ 2047 MB RAM
  *  |lowmem region:   0xffffa0dfc0000000 - 0xffffa0e03fff0000 | [ 2047 MB = 1 GB]
  * We try to order it by descending address (here, kva's) but this doesn't
@@ -187,8 +194,8 @@ static void show_kernelseg_info(void)
 #endif
 		SHOW_DELTA_MG((TYPECST)PAGE_OFFSET, (TYPECST)high_memory));
 
-	/* (possible) highmem region */
-#ifdef CONFIG_HIGHMEM  // zone HIGHMEM may be present on 32-bit systems with more RAM
+	/* (possible) highmem region;  may be present on some 32-bit systems */
+#ifdef CONFIG_HIGHMEM
 	pr_info(
 	"|HIGHMEM region:     "
 	" 0x" FMTSPC " - 0x" FMTSPC " | [" FMTSPC_DEC " MB]\n",
