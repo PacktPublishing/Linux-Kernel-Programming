@@ -20,3 +20,15 @@ c) by the above logic, there will be (85 + 79) = 164 kernel-mode stacks,
    as there will be 85 usermode threads that have a kernel stack each + 79
    kernel threads that have a kernel stack each.
 
+4. Run the show_kernel_seg kernel module on your x86_64 system (also enable
+   showing the userspace details via the module parameter provided); study
+   the output and understand the complete memory map it effectively displays
+A.
+   We've included two screenshots that display the output from:
+   a) kseg-x86_64.png:
+       screenshot of output on a native x86_64 box with 16 GB RAM running
+	   Ubuntu 18.04 LTS
+   b) kseg_on_bbb_arm32.png:
+      screenshot of output on a BBB (BeagleBone Black) with 512 MB RAM; it
+	  uses the TI AM35XX SoC (ARM core)
+   Do look up and study them!
