@@ -103,10 +103,18 @@ static void show_userspace_info(void)
 		);
 
 	pr_info(
+#if(BITS_PER_LONG == 64)
 	"Above: TASK_SIZE         = 0x" FMTSPC " size of userland  [  " FMTSPC_DEC " GB]\n"
+#else   // 32-bit
+	"Above: TASK_SIZE         = 0x" FMTSPC " size of userland  [  " FMTSPC_DEC " MB]\n"
+#endif
 	" # userspace memory regions (VMAs) = %d\n"
 	" Above statistics are wrt 'current' thread (see below):\n",
+#if(BITS_PER_LONG == 64)
 		(TYPECST)TASK_SIZE, (TYPECST)(TASK_SIZE >> 30),
+#else   // 32-bit
+		(TYPECST)TASK_SIZE, (TYPECST)(TASK_SIZE >> 20),
+#endif
 		current->mm->map_count);
 
 	PRINT_CTX();       /* show which process is the one in context */
