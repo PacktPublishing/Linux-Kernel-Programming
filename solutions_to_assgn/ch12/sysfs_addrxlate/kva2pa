@@ -1,0 +1,31 @@
+#!/bin/sh
+# Simple script wrapper over the sysfs_addrxlate LKM 
+name=$(basename $0)
+[ $# -ne 1 ] && {
+  echo "Usage: ${name} kernel-virtual-address-to-translate-to-phyaddr (in hex)
+NOTE! The kva passed as parameter MUST be a valid kernel virtual addr;
+it must lie within the kernel 'lowmem' segment, i.e., between PAGE_OFFSET
+and high_memory
+Eg. on a 32-bit system with a 3:1 VM split:
+ ${name} 0xc000a000      <-- specify addr in hex pl"
+  exit 1
+}
+
+MOD=sysfs_addrxlate
+SYSFS_FILE=/sys/devices/platform/llkd_sysfs_addrxlate/addrxlate_kva2pa
+
+lsmod |grep -q ${MOD} || {
+  echo "${name}: kernel module '${MOD}' not loaded? aborting..."
+  exit 1
+}
+[ -e ${SYSFS_FILE} ] || {
+  echo "${name}: sysfs file \"${SYSFS_FILE}\" missing? aborting...(check kernel log)"
+  exit 1
+}
+
+# Write the kva to transalte to pa to our sysfs file (as root)
+sudo bash -c "echo $1 > /sys/devices/platform/llkd_sysfs_addrxlate/addrxlate_kva2pa"
+# Read the result and display
+cat /sys/devices/platform/llkd_sysfs_addrxlate/addrxlate_kva2pa
+
+exit 0
