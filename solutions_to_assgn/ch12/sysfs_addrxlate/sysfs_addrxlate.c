@@ -41,9 +41,9 @@ MODULE_DESCRIPTION
 MODULE_LICENSE("Dual MIT/GPL");
 MODULE_VERSION("0.1");
 
-#define OURMODNAME		"sysfs_addrxlate"
-#define SYSFS_FILE1		addrxlate_kva2pa
-//#define SYSFS_FILE2           llkdsysfs_pgoff
+#define OURMODNAME	"sysfs_addrxlate"
+#define SYSFS_FILE1	addrxlate_kva2pa
+#define SYSFS_FILE2	addrxlate_pa2kva
 
 //--- our MSG() macro
 #ifdef DEBUG
@@ -56,7 +56,8 @@ MODULE_VERSION("0.1");
 #endif
 
 /* We use a mutex lock; details in Ch 15 and Ch 16 */
-static DEFINE_MUTEX(mtx);
+static DEFINE_MUTEX(mtx1);
+static DEFINE_MUTEX(mtx2);
 static struct platform_device *sysfs_demo_platdev;	/* Device structure */
 
 /* Note that in both the show and store methods, the buffer 'buf' is
@@ -74,11 +75,82 @@ struct device_attribute {
 };
 */
 
-/*------------------ sysfs file 1 (RW) -------------------------------------*/
-
 #define MANUALLY
 #define ADDR_MAXLEN	20
-static phys_addr_t gxlate_addr_kva2pa;
+static phys_addr_t gxlated_addr_kva2pa;
+static u64 gxlated_addr_pa2kva;
+
+/*------------------ sysfs file 2 (RW) -------------------------------------*/
+
+/* xlateaddr_pa2kva: sysfs entry point for the 'show' (read) callback */
+static ssize_t addrxlate_pa2kva_show(struct device *dev,
+				     struct device_attribute *attr, char *buf)
+{
+	int n;
+
+	if (mutex_lock_interruptible(&mtx2))
+		return -ERESTARTSYS;
+	MSG("In the 'show' method\n");
+	n = snprintf(buf, ADDR_MAXLEN, "0x%llx\n", gxlated_addr_pa2kva);
+	mutex_unlock(&mtx2);
+
+	return n;
+}
+
+/* xlateaddr_pa2kva: sysfs entry point for the 'store' (write) callback */
+static ssize_t addrxlate_pa2kva_store(struct device *dev,
+				      struct device_attribute *attr,
+				      const char *buf, size_t count)
+{
+	int ret = (int)count;
+	char s_addr[ADDR_MAXLEN];
+	phys_addr_t pa = 0x0;
+
+	if (mutex_lock_interruptible(&mtx2))
+		return -ERESTARTSYS;
+
+	memset(s_addr, 0, ADDR_MAXLEN);
+	strncpy(s_addr, buf, strlen(buf));
+	s_addr[strlen(s_addr) - 1] = '\0';	// rm trailing newline char
+	if (count == 0 || count > ADDR_MAXLEN) {
+		ret = -EINVAL;
+		goto out;
+	}
+
+	ret = kstrtoull(s_addr, 0, &pa);
+	if (ret < 0) {
+		mutex_unlock(&mtx2);
+		pr_warn("%s:%s:%d: kstrtoull failed!\n",
+			OURMODNAME, __func__, __LINE__);
+		return ret;
+	}
+
+	/* Verify that the passed pa is valid
+	 * WARNING! the below validity checks are very simplistic; YMMV!
+	 */
+	if (pa > PAGE_OFFSET) {
+		pr_info("%s(): invalid physical address (0x%llx)?\n", __func__, pa);
+		return -EFAULT;
+	}
+
+	/* All okay (fingers crossed), perform the address translation! */
+	gxlated_addr_pa2kva = (u64)phys_to_virt(pa);
+	pr_debug("pa 0x%llx = kva 0x%016llx\n", pa, gxlated_addr_pa2kva);
+
+#ifdef MANUALLY
+	/* 'Manually' perform the address translation */
+	pr_info("%s: manually: pa 0x%llx = kva 0x%016llx\n",
+		OURMODNAME, pa, (pa + PAGE_OFFSET));
+#endif
+	ret = count;
+ out:
+	mutex_unlock(&mtx2);
+	return ret;
+}
+
+static DEVICE_ATTR_RW(SYSFS_FILE2);	/* it's show/store callbacks are above */
+
+/*------------------ sysfs file 1 (RW) -------------------------------------*/
 
 /* xlateaddr_kva2pa: sysfs entry point for the 'show' (read) callback */
 static ssize_t addrxlate_kva2pa_show(struct device *dev,
@@ -86,11 +158,11 @@ static ssize_t addrxlate_kva2pa_show(struct device *dev,
 {
 	int n;
 
-	if (mutex_lock_interruptible(&mtx))
+	if (mutex_lock_interruptible(&mtx1))
 		return -ERESTARTSYS;
 	MSG("In the 'show' method\n");
-	n = snprintf(buf, ADDR_MAXLEN, "0x%llx\n", gxlate_addr_kva2pa);
-	mutex_unlock(&mtx);
+	n = snprintf(buf, ADDR_MAXLEN, "0x%llx\n", gxlated_addr_kva2pa);
+	mutex_unlock(&mtx1);
 
 	return n;
 }
@@ -104,7 +176,7 @@ static ssize_t addrxlate_kva2pa_store(struct device *dev,
 	char s_addr[ADDR_MAXLEN];
 	unsigned long long kva = 0x0;
 
-	if (mutex_lock_interruptible(&mtx))
+	if (mutex_lock_interruptible(&mtx1))
 		return -ERESTARTSYS;
 
 	memset(s_addr, 0, ADDR_MAXLEN);
@@ -117,7 +189,7 @@ static ssize_t addrxlate_kva2pa_store(struct device *dev,
 
 	ret = kstrtoull(s_addr, 0, &kva);
 	if (ret < 0) {
-		mutex_unlock(&mtx);
+		mutex_unlock(&mtx1);
 		pr_warn("%s:%s:%d: kstrtoull failed!\n",
 			OURMODNAME, __func__, __LINE__);
 		return ret;
@@ -144,8 +216,8 @@ static ssize_t addrxlate_kva2pa_store(struct device *dev,
 	}
 
 	/* All okay (fingers crossed), perform the address translation! */
-	gxlate_addr_kva2pa = virt_to_phys((volatile void *)kva);
-	pr_debug("kva 0x%016llx = pa 0x%llx\n", kva, gxlate_addr_kva2pa);
+	gxlated_addr_kva2pa = virt_to_phys((volatile void *)kva);
+	pr_debug("kva 0x%016llx = pa 0x%llx\n", kva, gxlated_addr_kva2pa);
 
 #ifdef MANUALLY
 	/* 'Manually' perform the address translation */
@@ -155,7 +227,7 @@ static ssize_t addrxlate_kva2pa_store(struct device *dev,
 
 	ret = count;
  out:
-	mutex_unlock(&mtx);
+	mutex_unlock(&mtx1);
 	return ret;
 }
 
@@ -205,7 +277,7 @@ static int __init sysfs_addrxlate_init(void)
 		goto out1;
 	}
 
-	// 1. Create our first sysfile file : llkdsysfs_debug_level
+	// 1. Create our first sysfile file : addrxlate_kva2pa
 	/* The device_create_file() API creates a sysfs attribute file for
 	 * given device (1st parameter); the second parameter is the pointer
 	 * to it's struct device_attribute structure dev_attr_<name> which was
@@ -222,8 +294,24 @@ static int __init sysfs_addrxlate_init(void)
 	MSG("sysfs file [1] (/sys/devices/platform/%s/%s) created\n",
 	    PLAT_NAME, __stringify(SYSFS_FILE1));
 
+	// 2. Create our second sysfile file : addrxlate_pa2kva
+	stat =
+	    device_create_file(&sysfs_demo_platdev->dev, &dev_attr_SYSFS_FILE2);
+	if (stat) {
+		pr_info
+		    ("%s: device_create_file [2] failed (%d), aborting now\n",
+		     OURMODNAME, stat);
+		goto out3;
+	}
+	MSG("sysfs file [2] (/sys/devices/platform/%s/%s) created\n",
+	    PLAT_NAME, __stringify(SYSFS_FILE2));
+
+
 	pr_info("%s initialized\n", OURMODNAME);
 	return 0;		/* success */
+
+ out3:
+	device_remove_file(&sysfs_demo_platdev->dev, &dev_attr_SYSFS_FILE1);
  out2:
 	platform_device_unregister(sysfs_demo_platdev);
  out1:
@@ -232,10 +320,9 @@ static int __init sysfs_addrxlate_init(void)
 
 static void __exit sysfs_addrxlate_cleanup(void)
 {
-	/* Cleanup sysfs nodes
-	   device_remove_file(&sysfs_demo_platdev->dev, &dev_attr_llkdsysfs_pgoff); */
+	/* Cleanup sysfs nodes */
+	device_remove_file(&sysfs_demo_platdev->dev, &dev_attr_SYSFS_FILE2);
 	device_remove_file(&sysfs_demo_platdev->dev, &dev_attr_SYSFS_FILE1);
-
 	/* Unregister the (dummy) platform device */
 	platform_device_unregister(sysfs_demo_platdev);
 	pr_info("%s removed\n", OURMODNAME);
