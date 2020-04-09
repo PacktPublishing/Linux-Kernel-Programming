@@ -17,7 +17,6 @@
 #include <linux/kernel.h>
 #include <linux/module.h>
 #include <linux/init.h>
-//#include <linux/fs.h>
 #include <linux/types.h>
 #include <linux/platform_device.h>
 #include <linux/mutex.h>
@@ -242,7 +241,7 @@ static ssize_t addrxlate_kva2pa_store(struct device *dev,
 #endif
 	if (!valid) {
 		pr_info("%s(): invalid virtual address (0x" FMTSPC "),"
-		" must be a valid linear addr (kva)\n",
+		" must be a valid linear addr within the kernel lowmem region\n",
 			__func__, kva);
 		return -EFAULT;
 	}
@@ -255,7 +254,7 @@ static ssize_t addrxlate_kva2pa_store(struct device *dev,
 #ifdef MANUALLY
 	/* 'Manually' perform the address translation */
 	//pr_info("%s: manually: kva 0x%016llx = pa 0x%llx\n",
-	pr_info("%s: manually: kva 0x" FMTSPC " = pa 0x" FMTSPC "\n",
+	pr_info("%s: manually: kva 0x" FMTSPC " = pa  0x" FMTSPC "\n",
 		OURMODNAME, kva,
 #if(BITS_PER_LONG == 32)
 		(unsigned int)(kva - PAGE_OFFSET));
@@ -329,7 +328,7 @@ static int __init sysfs_addrxlate_init(void)
 		     OURMODNAME, stat);
 		goto out2;
 	}
-	MSG("sysfs file [1] (/sys/devices/platform/%s/%s) created\n",
+	pr_info("sysfs file [1] (/sys/devices/platform/%s/%s) created\n",
 	    PLAT_NAME, __stringify(SYSFS_FILE1));
 
 	// 2. Create our second sysfile file : addrxlate_pa2kva
@@ -341,9 +340,8 @@ static int __init sysfs_addrxlate_init(void)
 		     OURMODNAME, stat);
 		goto out3;
 	}
-	MSG("sysfs file [2] (/sys/devices/platform/%s/%s) created\n",
+	pr_info("sysfs file [2] (/sys/devices/platform/%s/%s) created\n",
 	    PLAT_NAME, __stringify(SYSFS_FILE2));
-
 
 	pr_info("%s initialized\n", OURMODNAME);
 	return 0;		/* success */
