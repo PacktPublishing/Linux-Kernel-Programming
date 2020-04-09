@@ -17,9 +17,11 @@
 #include <linux/kernel.h>
 #include <linux/module.h>
 #include <linux/init.h>
-#include <linux/fs.h>
+//#include <linux/fs.h>
+#include <linux/types.h>
 #include <linux/platform_device.h>
 #include <linux/mutex.h>
+#include <linux/mm.h>	    // for high_memory
 
 // copy_[to|from]_user()
 #include <linux/version.h>
@@ -55,6 +57,16 @@ MODULE_VERSION("0.1");
 #define MSG(string, args...)
 #endif
 
+#if(BITS_PER_LONG == 32)
+	#define FMTSPC		"%08x"
+	#define TYPECST		unsigned long
+	typedef u32 addr_t;
+#elif(BITS_PER_LONG == 64)
+	#define FMTSPC		"%016llx"
+	#define TYPECST	    	unsigned long long
+	typedef u64 addr_t;
+#endif
+
 /* We use a mutex lock; details in Ch 15 and Ch 16 */
 static DEFINE_MUTEX(mtx1);
 static DEFINE_MUTEX(mtx2);
@@ -78,7 +90,7 @@ struct device_attribute {
 #define MANUALLY
 #define ADDR_MAXLEN	20
 static phys_addr_t gxlated_addr_kva2pa;
-static u64 gxlated_addr_pa2kva;
+static addr_t gxlated_addr_pa2kva;
 
 /*------------------ sysfs file 2 (RW) -------------------------------------*/
 
@@ -91,7 +103,8 @@ static ssize_t addrxlate_pa2kva_show(struct device *dev,
 	if (mutex_lock_interruptible(&mtx2))
 		return -ERESTARTSYS;
 	MSG("In the 'show' method\n");
-	n = snprintf(buf, ADDR_MAXLEN, "0x%llx\n", gxlated_addr_pa2kva);
+	n = snprintf(buf, ADDR_MAXLEN, "0x" FMTSPC "\n", gxlated_addr_pa2kva);
+	//n = snprintf(buf, ADDR_MAXLEN, "0x%llx\n", gxlated_addr_pa2kva);
 	mutex_unlock(&mtx2);
 
 	return n;
@@ -110,14 +123,18 @@ static ssize_t addrxlate_pa2kva_store(struct device *dev,
 		return -ERESTARTSYS;
 
 	memset(s_addr, 0, ADDR_MAXLEN);
-	strncpy(s_addr, buf, strlen(buf));
+	strncpy(s_addr, buf, ADDR_MAXLEN);
 	s_addr[strlen(s_addr) - 1] = '\0';	// rm trailing newline char
 	if (count == 0 || count > ADDR_MAXLEN) {
 		ret = -EINVAL;
 		goto out;
 	}
 
+#if(BITS_PER_LONG == 32)
+	ret = kstrtoul(s_addr, 0, (long unsigned int *)&pa);
+#else
 	ret = kstrtoull(s_addr, 0, &pa);
+#endif
 	if (ret < 0) {
 		mutex_unlock(&mtx2);
 		pr_warn("%s:%s:%d: kstrtoull failed!\n",
@@ -129,18 +146,26 @@ static ssize_t addrxlate_pa2kva_store(struct device *dev,
 	 * WARNING! the below validity checks are very simplistic; YMMV!
 	 */
 	if (pa > PAGE_OFFSET) {
-		pr_info("%s(): invalid physical address (0x%llx)?\n", __func__, pa);
+		pr_info("%s(): invalid physical address (0x" FMTSPC ")?\n", __func__, pa);
+		//pr_info("%s(): invalid physical address (0x%llx)?\n", __func__, pa);
 		return -EFAULT;
 	}
 
 	/* All okay (fingers crossed), perform the address translation! */
-	gxlated_addr_pa2kva = (u64)phys_to_virt(pa);
-	pr_debug("pa 0x%llx = kva 0x%016llx\n", pa, gxlated_addr_pa2kva);
+	gxlated_addr_pa2kva = (TYPECST)phys_to_virt(pa);
+	pr_debug("pa 0x" FMTSPC " = kva 0x" FMTSPC "\n", pa, gxlated_addr_pa2kva);
+	//pr_debug("pa 0x%llx = kva 0x%016llx\n", pa, gxlated_addr_pa2kva);
 
 #ifdef MANUALLY
 	/* 'Manually' perform the address translation */
-	pr_info("%s: manually: pa 0x%llx = kva 0x%016llx\n",
-		OURMODNAME, pa, (pa + PAGE_OFFSET));
+	//pr_info("%s: manually: pa 0x%llx = kva 0x%016llx\n",
+	pr_info("%s: manually:  pa 0x" FMTSPC " = kva 0x" FMTSPC "\n",
+		OURMODNAME, pa,
+#if(BITS_PER_LONG == 32)
+		(unsigned int)(pa + PAGE_OFFSET));
+#else
+		(pa + PAGE_OFFSET));
+#endif
 #endif
 	ret = count;
  out:
@@ -161,7 +186,8 @@ static ssize_t addrxlate_kva2pa_show(struct device *dev,
 	if (mutex_lock_interruptible(&mtx1))
 		return -ERESTARTSYS;
 	MSG("In the 'show' method\n");
-	n = snprintf(buf, ADDR_MAXLEN, "0x%llx\n", gxlated_addr_kva2pa);
+	n = snprintf(buf, ADDR_MAXLEN, "0x" FMTSPC "\n", gxlated_addr_kva2pa);
+	//n = snprintf(buf, ADDR_MAXLEN, "0x%llx\n", gxlated_addr_kva2pa);
 	mutex_unlock(&mtx1);
 
 	return n;
@@ -174,20 +200,26 @@ static ssize_t addrxlate_kva2pa_store(struct device *dev,
 {
 	int ret = (int)count, valid = 1;
 	char s_addr[ADDR_MAXLEN];
-	unsigned long long kva = 0x0;
+	addr_t kva = 0x0;
+	//unsigned long long kva = 0x0;
 
 	if (mutex_lock_interruptible(&mtx1))
 		return -ERESTARTSYS;
 
 	memset(s_addr, 0, ADDR_MAXLEN);
-	strncpy(s_addr, buf, strlen(buf));
+	strncpy(s_addr, buf, ADDR_MAXLEN);
 	s_addr[strlen(s_addr) - 1] = '\0';	// rm trailing newline char
 	if (count == 0 || count > ADDR_MAXLEN) {
 		ret = -EINVAL;
 		goto out;
 	}
 
+//	ret = kstrtoull(s_addr, 0, &kva);
+#if(BITS_PER_LONG == 32)
+	ret = kstrtoul(s_addr, 0, (long unsigned int *)&kva);
+#else
 	ret = kstrtoull(s_addr, 0, &kva);
+#endif
 	if (ret < 0) {
 		mutex_unlock(&mtx1);
 		pr_warn("%s:%s:%d: kstrtoull failed!\n",
@@ -205,11 +237,11 @@ static ssize_t addrxlate_kva2pa_store(struct device *dev,
 		valid = 0;
 #else
 	// WARNING! the below validity checks are very simplistic; YMMV!
-	if ((kva < PAGE_OFFSET) || (kva > high_memory))
+	if ((kva < PAGE_OFFSET) || (kva > (addr_t)high_memory))
 		valid = 0;
 #endif
 	if (!valid) {
-		pr_info("%s(): invalid virtual address (0x%llx),"
+		pr_info("%s(): invalid virtual address (0x" FMTSPC "),"
 		" must be a valid linear addr (kva)\n",
 			__func__, kva);
 		return -EFAULT;
@@ -217,14 +249,20 @@ static ssize_t addrxlate_kva2pa_store(struct device *dev,
 
 	/* All okay (fingers crossed), perform the address translation! */
 	gxlated_addr_kva2pa = virt_to_phys((volatile void *)kva);
-	pr_debug("kva 0x%016llx = pa 0x%llx\n", kva, gxlated_addr_kva2pa);
+	pr_debug("kva 0x" FMTSPC " = pa 0x" FMTSPC "\n", kva, gxlated_addr_kva2pa);
+	//pr_debug("kva 0x%016llx = pa 0x%llx\n", kva, gxlated_addr_kva2pa);
 
 #ifdef MANUALLY
 	/* 'Manually' perform the address translation */
-	pr_info("%s: manually: kva 0x%016llx = pa 0x%llx\n",
-		OURMODNAME, kva, (kva - PAGE_OFFSET));
+	//pr_info("%s: manually: kva 0x%016llx = pa 0x%llx\n",
+	pr_info("%s: manually: kva 0x" FMTSPC " = pa 0x" FMTSPC "\n",
+		OURMODNAME, kva,
+#if(BITS_PER_LONG == 32)
+		(unsigned int)(kva - PAGE_OFFSET));
+#else
+		(kva - PAGE_OFFSET));
 #endif
-
+#endif
 	ret = count;
  out:
 	mutex_unlock(&mtx1);
