@@ -241,7 +241,8 @@ static ssize_t addrxlate_kva2pa_store(struct device *dev,
 #endif
 	if (!valid) {
 		pr_info("%s(): invalid virtual address (0x" FMTSPC "),"
-		" must be a valid linear addr within the kernel lowmem region\n",
+		" must be a valid linear addr within the kernel lowmem region\n"
+		" IOW, *only* kernel direct mapped RAM locations are valid\n",
 			__func__, kva);
 		return -EFAULT;
 	}

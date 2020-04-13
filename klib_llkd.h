@@ -19,6 +19,7 @@
 #define __KLIB_LLKD_H__
 
 #include <linux/init.h>
+#include <linux/kernel.h>
 #include <linux/module.h>
 
 void llkd_minsysinfo(void);

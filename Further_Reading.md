@@ -351,7 +351,11 @@ Paul E. McKenney, IBM LTC, June 2010](http://www.rdrop.com/~paulmck/scalability/
 
 ## Miscellaneous (not specific to a chapter or topic) - Further Reading ##
 
+- ['You can be a kernel hacker!', Julia Evans blog](https://jvns.ca/blog/2014/09/18/you-can-be-a-kernel-hacker/)
 - [LWN Linux Kernel Index](https://lwn.net/Kernel/Index/) ; all kernel-related articles correctly indexed, right from 2004! Very valuable resource
+- Tip (reprodcued from Ch 5):  
+"Is there a really practical hands-on tip, an almost guaranteed way to become a kernel hacker? Of course, keep reading this book! Ha ha, yes, besides, do partake in the [simply awesome Eudyptula Challenge](http://www.eudyptula-challenge.org/). Hang on, it's - very unfortuantely, and as of this writing - closed down.
+Fear not, [here's a site with all the challenges](https://github.com/agelastic/eudyptula) (and solutions, don't cheat!) posted; do check it out and ry the challenges."
 - [Lowlevel programming University, gurugio](https://github.com/gurugio/lowlevelprogramming-university)
 - 
 
