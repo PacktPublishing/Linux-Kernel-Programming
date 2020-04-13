@@ -1,5 +1,5 @@
 /*
- * ch12/debugfs_simple_intf/debugfs_simple_intf.c
+ * ch13/debugfs_simple_intf/debugfs_simple_intf.c
  **************************************************************************
  * This program is part of the source code released for the book
  *  "Learn Linux Kernel Development"
@@ -8,11 +8,11 @@
  *  GitHub repository:
  *  https://github.com/PacktPublishing/Learn-Linux-Kernel-Development
  *
- * From: Ch 12 : User-Kernel communication pathways
+ * From: Ch 13 : User-Kernel communication pathways
  **************************************************************************
  * Brief Description:
  *
- * For details, please refer the book, Ch 12.
+ * For details, please refer the book, Ch 13.
  */
 #include <linux/kernel.h>
 #include <linux/module.h>
@@ -20,8 +20,6 @@
 #include <linux/sched.h>
 #include <linux/debugfs.h>
 #include <linux/slab.h>
-#include "../../convenient.h"
-
 #include <linux/version.h>
 #if LINUX_VERSION_CODE >= KERNEL_VERSION(4,11,0)
 #include <linux/uaccess.h>
@@ -29,14 +27,23 @@
 #else
 #include <asm/uaccess.h>
 #endif
+#include "../../convenient.h"
 
 #define OURMODNAME      "dbgfs_simple_intf"
 
 MODULE_AUTHOR("<insert name here>");
 MODULE_DESCRIPTION(
-"LLKD book:ch12/dbgfs_simple_intf: simple demo for U<->K interfacing via debugfs");
+"LLKD book:ch13/dbgfs_simple_intf: simple demo for U<->K interfacing via debugfs");
 MODULE_LICENSE("Dual MIT/GPL");
 MODULE_VERSION("0.1");
+
+/* Module parameters */
+static int cause_an_oops;
+module_param(cause_an_oops, int, 0644);
+MODULE_PARM_DESC(cause_an_oops,
+  "Setting this to 1 can cause a kernel bug, an Oops; if 1, we do NOT perform"
+  " required cleanup! so, after removal, any op on the debugfs files will cause"
+  " an Oops! (default is 0, no bug)");
 
 static struct dentry *gparent;
 
@@ -177,7 +184,8 @@ static int debugfs_simple_intf_init(void)
 	pr_debug("%s: debugfs file 2 <debugfs_mountpt>/%s/%s created\n",
 		 OURMODNAME, OURMODNAME, DBGFS_FILE2);
 
-	pr_info("%s initialized\n", OURMODNAME);
+	pr_info("%s initialized (fyi, our 'cause an Oops' setting is currently %s)\n",
+		OURMODNAME, cause_an_oops==1?"On":"Off");
 	return 0;
 
  out_fail_3:
@@ -191,7 +199,8 @@ static int debugfs_simple_intf_init(void)
 static void debugfs_simple_intf_cleanup(void)
 {
 	kfree(gdrvctx);
-	debugfs_remove_recursive(gparent);
+	if (!cause_an_oops)
+		debugfs_remove_recursive(gparent);
 	pr_info("%s removed\n", OURMODNAME);
 }
 
