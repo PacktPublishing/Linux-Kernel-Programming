@@ -1,5 +1,5 @@
 /*
- * solutions_to_assgn/ch12/sysfs_addrxlate/sysfs_addrxlate.c
+ * solutions_to_assgn/ch13/sysfs_addrxlate/sysfs_addrxlate.c
  ***************************************************************
  * This program is part of the source code released for the book
  *  "Learn Linux Kernel Development"
@@ -8,11 +8,20 @@
  *  GitHub repository:
  *  https://github.com/PacktPublishing/Learn-Linux-Kernel-Development
  *
- * From: Ch 12 : User-Kernel communication pathways
+ * From: Ch 13 : User-Kernel communication pathways
  ****************************************************************
  * Brief Description:
+ * This is an assignment from the chapter:
  *
- * Simple kernel module to demo interfacing with userspace via sysfs.
+ * sysfs_addrxlate: sysfs assignment #2 (a bit more advanced):
+ * Address translation: exploiting the knowledge gained from this chapter and
+ * Ch 7 section 'Direct-mapped RAM and address translation', write a simple
+ * platform driver that provides two sysfs interface files called
+ * addrxlate_kva2pa and addrxlate_pa2kva; the way it should work: writing a
+ * kva (kernel virtual address) into the sysfs file addrxlate_kva2pa should
+ * have the driver read and translate the kva into it's corresponding physical
+ * address (pa); then reading from the same file should cause the pa to be
+ * displayed. Vice-versa with the addrxlate_pa2kva sysfs file.
  */
 #include <linux/kernel.h>
 #include <linux/module.h>
@@ -103,7 +112,6 @@ static ssize_t addrxlate_pa2kva_show(struct device *dev,
 		return -ERESTARTSYS;
 	MSG("In the 'show' method\n");
 	n = snprintf(buf, ADDR_MAXLEN, "0x" FMTSPC "\n", gxlated_addr_pa2kva);
-	//n = snprintf(buf, ADDR_MAXLEN, "0x%llx\n", gxlated_addr_pa2kva);
 	mutex_unlock(&mtx2);
 
 	return n;
@@ -146,18 +154,15 @@ static ssize_t addrxlate_pa2kva_store(struct device *dev,
 	 */
 	if (pa > PAGE_OFFSET) {
 		pr_info("%s(): invalid physical address (0x" FMTSPC ")?\n", __func__, pa);
-		//pr_info("%s(): invalid physical address (0x%llx)?\n", __func__, pa);
 		return -EFAULT;
 	}
 
 	/* All okay (fingers crossed), perform the address translation! */
 	gxlated_addr_pa2kva = (TYPECST)phys_to_virt(pa);
-	pr_debug("pa 0x" FMTSPC " = kva 0x" FMTSPC "\n", pa, gxlated_addr_pa2kva);
-	//pr_debug("pa 0x%llx = kva 0x%016llx\n", pa, gxlated_addr_pa2kva);
+	pr_debug(" pa 0x" FMTSPC " = kva 0x" FMTSPC "\n", pa, gxlated_addr_pa2kva);
 
 #ifdef MANUALLY
 	/* 'Manually' perform the address translation */
-	//pr_info("%s: manually: pa 0x%llx = kva 0x%016llx\n",
 	pr_info("%s: manually:  pa 0x" FMTSPC " = kva 0x" FMTSPC "\n",
 		OURMODNAME, pa,
 #if(BITS_PER_LONG == 32)
@@ -213,7 +218,6 @@ static ssize_t addrxlate_kva2pa_store(struct device *dev,
 		goto out;
 	}
 
-//	ret = kstrtoull(s_addr, 0, &kva);
 #if(BITS_PER_LONG == 32)
 	ret = kstrtoul(s_addr, 0, (long unsigned int *)&kva);
 #else
@@ -249,13 +253,11 @@ static ssize_t addrxlate_kva2pa_store(struct device *dev,
 
 	/* All okay (fingers crossed), perform the address translation! */
 	gxlated_addr_kva2pa = virt_to_phys((volatile void *)kva);
-	pr_debug("kva 0x" FMTSPC " = pa 0x" FMTSPC "\n", kva, gxlated_addr_kva2pa);
-	//pr_debug("kva 0x%016llx = pa 0x%llx\n", kva, gxlated_addr_kva2pa);
+	pr_debug("kva 0x" FMTSPC " =  pa 0x" FMTSPC "\n", kva, gxlated_addr_kva2pa);
 
 #ifdef MANUALLY
 	/* 'Manually' perform the address translation */
-	//pr_info("%s: manually: kva 0x%016llx = pa 0x%llx\n",
-	pr_info("%s: manually: kva 0x" FMTSPC " = pa  0x" FMTSPC "\n",
+	pr_info("%s: manually: kva 0x" FMTSPC " =  pa 0x" FMTSPC "\n",
 		OURMODNAME, kva,
 #if(BITS_PER_LONG == 32)
 		(unsigned int)(kva - PAGE_OFFSET));
