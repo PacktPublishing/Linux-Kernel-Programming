@@ -15,8 +15,8 @@
 #
 # * For details, please refer the book, Ch 6.
 # ****************************************************************
-name=$(basename $0)
-PFX=$(dirname $(which $0))    # dir in which this script resides
+name=$(basename "$0")
+PFX=$(dirname "$(which "$0")")    # dir in which this script resides
 source ${PFX}/color.sh || {
  echo "${name}: fatal: could not source ${PFX}/color.sh , aborting..."
  exit 1
@@ -31,15 +31,15 @@ ASLR quick test:"
 color_reset
 
 echo "Doing
- egrep \"heap|stack\" /proc/self/maps
+ grep -E \"heap|stack\" /proc/self/maps
 twice:
 "
 
 fg_blue
-egrep "heap|stack" /proc/self/maps
+grep -E "heap|stack" /proc/self/maps
 echo
 fg_cyan
-egrep "heap|stack" /proc/self/maps
+grep -E "heap|stack" /proc/self/maps
 color_reset
 
 echo "
@@ -79,10 +79,10 @@ tput bold ; fg_purple
 echo "${SEP}
 [+] Setting (usermode) ASLR value to \"$1\" now..."
 color_reset
-echo -n $1 > /proc/sys/kernel/randomize_va_space
+echo -n "$1" > /proc/sys/kernel/randomize_va_space
 echo -n "ASLR setting now is: "
 cat /proc/sys/kernel/randomize_va_space
-disp_aslr_by_value $(cat /proc/sys/kernel/randomize_va_space)
+disp_aslr_by_value "$(cat /proc/sys/kernel/randomize_va_space)"
 }
 
 kernel_ASLR_check()
@@ -93,18 +93,18 @@ tput bold ; fg_purple
 echo "${SEP}
 [+] Checking for kernel ASLR (KASLR) support now ..."
 color_reset
-echo "(this kernel is ver $(uname -r), need >= 3.14)"
+echo "(need >= 3.14, this kernel is ver $(uname -r))"
 
 # KASLR: from 3.14 onwards
 local mj=$(uname -r |awk -F"." '{print $1}')
 local mn=$(uname -r |awk -F"." '{print $2}')
-[ ${mj} -lt 3 ] && {
+[ "${mj}" -lt 3 ] && {
 	tput bold ; fg_red
 	echo " KASLR : 2.6 or earlier kernel, no KASLR support (very old kernel?)"
 	color_reset
 	exit 1
 }
-[ ${mj} -eq 3 -a ${mn} -lt 14 ] && {
+[ "${mj}" -eq 3 -a "${mn}" -lt 14 ] && {
 	tput bold ; fg_red ; echo " KASLR : 3.14 or later kernel required for KASLR support."
 	color_reset
 	exit 1
@@ -123,7 +123,7 @@ sudo modprobe configs 2>/dev/null
 if [ -f /proc/config.gz ] ; then
     gunzip -c /proc/config.gz > /tmp/kconfig
     KCONF=/tmp/kconfig
-elif [ -f /boot/config-$(uname -r) ] ; then
+elif [ -f /boot/config-"$(uname -r)" ] ; then
     KCONF=/boot/config-$(uname -r)
 else
 	tput bold ; fg_red
@@ -132,14 +132,14 @@ else
     exit 1
 fi
 
-if [ ! -s ${KCONF} ]; then
+if [ ! -s "${KCONF}" ]; then
 	tput bold ; fg_red
     echo "${name}: FATAL: oops, invalid kernel config file (${KCONF})? Aborting..."
 	color_reset
     exit 1
 fi
 
-KASLR_CONF=$(grep CONFIG_RANDOMIZE_BASE ${KCONF} |awk -F"=" '{print $2}')
+KASLR_CONF=$(grep CONFIG_RANDOMIZE_BASE "${KCONF}" |awk -F"=" '{print $2}')
 if [ "${KASLR_CONF}" = "y" ]; then
 	tput bold ; fg_green
 	echo " Kernel ASLR (KASLR) is On [default]"
@@ -214,7 +214,7 @@ if [ $# -eq 1 ] ; then
 		color_reset
 		exit 1
 	else
-		ASLR_set $1
+		ASLR_set "$1"
 	fi
 fi
 test_ASLR_abit
