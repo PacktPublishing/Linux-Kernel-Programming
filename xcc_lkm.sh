@@ -42,7 +42,7 @@ usage()
  To select which architecture (cpu) the kernel module is to be (cross) compiled
  for, pl set the environment variable ARCH=<arch>. Currently, we support (cross)
  compiling for:
-  x86[-64] : ARCH=(null)    [default]
+  x86[_64] : ARCH=(null)    [default]
   ARM-32   : ARCH=arm
   PPC-64   : ARCH=powerpc
 
