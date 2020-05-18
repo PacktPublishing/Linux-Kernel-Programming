@@ -95,7 +95,7 @@ void show_phy_pages(const void *kaddr, size_t len, bool contiguity_check)
 	void *vaddr = kaddr;
 #if(BITS_PER_LONG == 64)
 	const char *hdr = "-pg#-  --------va--------   ----pa----   -PFN--\n";
-#else // 32-bit
+#else             // 32-bit
 	const char *hdr = "-pg#-  ----va----   ----pa----   -PFN--\n";
 #endif
 	phys_addr_t pa;
@@ -110,7 +110,7 @@ void show_phy_pages(const void *kaddr, size_t len, bool contiguity_check)
 	}
 #endif
 
-	pr_info("%s(): start kaddr 0x%llx, len %zu, contiguity_check is %s\n",
+	pr_info("%s(): start kaddr " FMTSPC ", len %zu, contiguity_check is %s\n",
 		       __func__, vaddr, len, contiguity_check?"on":"off");
 	pr_info("%s", hdr);
 	if (len % PAGE_SIZE)
@@ -131,11 +131,7 @@ void show_phy_pages(const void *kaddr, size_t len, bool contiguity_check)
 		/* Below we show the actual virt addr and not a hashed value by
 		 * using the 0x%[ll]x format specifier instead of the %pK as we
 		 * should for security */
-#if(BITS_PER_LONG == 64)
-		pr_info("%05d  0x%llx   0x%x   %ld\n",
-#else   // 32-bit
-		pr_info("%05d  0x%08x   0x%x   %ld\n",
-#endif
+		pr_info("%05d  " FMTSPC "   0x%x   %ld\n",
 			i, vaddr+(i*PAGE_SIZE), pa, pfn);
 		if (!!contiguity_check)
 			prev_pfn = pfn;
