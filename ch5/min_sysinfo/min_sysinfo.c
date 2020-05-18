@@ -119,7 +119,6 @@ static void llkd_sysinfo2(void)
 #endif
 	    );
 }
-
 EXPORT_SYMBOL(llkd_sysinfo2);
 
 static void llkd_sysinfo(void)
