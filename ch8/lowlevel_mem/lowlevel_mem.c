@@ -80,7 +80,7 @@ static int bsa_alloc(void)
 
 	/* 2. Allocate 2^bsa_alloc_order pages with the __get_free_pages() API */
 	numpg2alloc = powerof(2, bsa_alloc_order); // returns 2^bsa_alloc_order
-	gptr2 = (void *) __get_free_pages(GFP_KERNEL, bsa_alloc_order);
+	gptr2 = (void *) __get_free_pages(GFP_KERNEL|__GFP_ZERO, bsa_alloc_order);
 	if (!gptr2) {
 		/* no error/warning printk now; see above comment */
 		goto out2;
