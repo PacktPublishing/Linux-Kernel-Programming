@@ -124,13 +124,16 @@ void show_phy_pages(const void *kaddr, size_t len, bool contiguity_check)
 		 * a 'C' trick: ensures that the if condition always evaluates
 		 * to a boolean - either 0 or 1
 		 */
-			if (i && pfn != prev_pfn + 1)
-				pr_notice(" *** physical NON-contiguity detected ***\n");
+			if (i && pfn != prev_pfn + 1) {
+				pr_notice(" *** physical NON-contiguity detected (i=%d) ***\n", i);
+				break;
+			}
 		}
 
 		/* Below we show the actual virt addr and not a hashed value by
 		 * using the 0x%[ll]x format specifier instead of the %pK as we
 		 * should for security */
+		/* if(!(i%100)) */
 		pr_info("%05d  " FMTSPC "   0x%x   %ld\n",
 			i, vaddr+(i*PAGE_SIZE), pa, pfn);
 		if (!!contiguity_check)
