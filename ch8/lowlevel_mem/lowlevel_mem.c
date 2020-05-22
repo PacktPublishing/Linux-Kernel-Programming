@@ -120,7 +120,7 @@ static int bsa_alloc(void)
 	}
 	gptr4 = page_address(pg_ptr1);
 	pr_info("%s: 4. alloc_page() alloc'ed 1 page from the BSA @ 0x%pK (" FMTSPC ")\n"
-		" (struct page addr=0x%pK (" FMTSPC ")\n",
+		" (struct page addr=0x%pK (" FMTSPC "))\n",
 		OURMODNAME, (void *)gptr4, (void *)gptr4, pg_ptr1, pg_ptr1);
 
 	/* 5. Allocate and init 2^5 = 32 pages with the alloc_pages() API.
