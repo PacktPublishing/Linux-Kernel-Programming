@@ -21,6 +21,8 @@ For the reader's convenience, below are chapter-wise links to the *Further Readi
 
 ## Chapter 1, Kernel Development Workspace Setup - Further Reading
 
+
+- ['Share Folders between Host and Guest OS in VirtualBox', S Butler, April 2020](https://helpdeskgeek.com/virtualization/virtualbox-share-folder-host-guest/)
 - [Emulating Raspberry Pi on Linux](http://embedonix.com/articles/linux/emulating-raspberry-pi-on-linux/)
 
 - [qemu-rpi-kernel, GitHub](https://github.com/dhruvvyas90/qemu-rpi-kernel/wiki)
@@ -111,6 +113,9 @@ For the reader's convenience, below are chapter-wise links to the *Further Readi
 - [Linux console (on Wikipedia)](https://en.wikipedia.org/wiki/Linux_console)
 - [Debugging by printing, eLinux](https://elinux.org/Debugging_by_printing)
 - Blog article: ["MAKEFILES TUTORIAL", Liran B.H.](http://devarea.com/makefiles-tutorial/)
+- Blog article: [A Standalone Linux Kernel Module, Levinzon, Medium, May 2020](https://medium.com/@eitan.levinzon/a-standalone-linux-kernel-module-df54283d4803)
+
+
 
 ## Chapter 5, Writing your first Kernel Module-LKMs Part 2 - Further Reading
 
@@ -160,22 +165,27 @@ For the reader's convenience, below are chapter-wise links to the *Further Readi
 
 - [The Eudyptula Challenge](http://eudyptula-challenge.org/): "The Eudyptula Challenge was a series of programming exercises for the Linux kernel, that started from a very basic "Hello world" kernel module, moving on up in complexity to getting patches accepted into the main Linux kernel source tree." It's really cool but NOT active as of this writing though.
 
-## Chapter 6, Essentials of Kernel and Memory Management Internals - Further Reading
+## Chapter 6, Kernel Internals Essentials - Processes and Threads - Further Reading
 - Book: [Hands-On System Programming with Linux", Kaiwan N Billimoria, Packt](https://www.packtpub.com/networking-and-servers/hands-system-programming-linux). Prerequisites to this chapter (essential reading, really):
 	- Ch 1 : Linux System Architecture
 	- Ch 2 : Virtual Memory
-- Books: Linux kernel memory management Internals
-	- ['Professional Linux Kernel Architecture', Mauerer, Wrox Press](https://www.amazon.in/Professional-Linux-Kernel-Architecture-Programmer/dp/0470343435/ref=sr_1_1?ie=UTF8&qid=1547525512&sr=8-1&keywords=Professional%20Linux%20Kernel%20Architecture%27)
-	- ['Understanding the Linux Virtual Memory Manager', Mel Gorman (Bruce Perens Open Source)](https://www.amazon.in/Understanding-Virtual-Memory-Manager-Perens/dp/0131453483/ref=sr_1_1?ie=UTF8&qid=1547529951&sr=8-1&keywords=mel%20gorman)
-
 -   CPU ABI (Application Binary Interface) documentation, blog article : 'APPLICATION BINARY INTERFACE (ABI) DOCS AND THEIR MEANING' :  [https://kaiwantech.wordpress.com/2018/05/07/application-binary-interface-abi-docs-and-their-meaning/](https://kaiwantech.wordpress.com/2018/05/07/application-binary-interface-abi-docs-and-their-meaning/)
-- Deep detail on MM and paging on the Intel processors can be found in their excellent manuals here (Ch 4, Paging): [Intel® 64 and IA-32 Architectures
-Software Developer’s Manual. Volume 3 (3A, 3B & 3C): System Programming Guide](https://software.intel.com/en-us/download/intel-64-and-ia-32-architectures-sdm-combined-volumes-3a-3b-3c-and-3d-system-programming-guide)
-	- [All Intel 64 and IA-32 architecture and programming environment manuals](https://software.intel.com/en-us/articles/intel-sdm)
+
 - Blog article: ['Some Tricks used by the Linux kernel'](https://geeksww.com/tutorials/operating_systems/linux/tips_and_tricks/some_tricks_used_by_the_linux_kernel.php)
 - [un]likely() macros:
 	- [likely()/unlikely() macros in the Linux kernel - how do they work? What's their benefit?](https://stackoverflow.com/questions/109710/likely-unlikely-macros-in-the-linux-kernel-how-do-they-work-whats-their)
 	- [Why do we use __builtin_expect when a straightforward way is to use if-else](https://stackoverflow.com/questions/7346929/why-do-we-use-builtin-expect-when-a-straightforward-way-is-to-use-if-else)
+
+
+## Chapter 7, Memory Management Internals Essentials - Further Reading
+- Books: Linux kernel memory management Internals
+	- ['Professional Linux Kernel Architecture', Mauerer, Wrox Press](https://www.amazon.in/Professional-Linux-Kernel-Architecture-Programmer/dp/0470343435/ref=sr_1_1?ie=UTF8&qid=1547525512&sr=8-1&keywords=Professional%20Linux%20Kernel%20Architecture%27)
+	- ['Understanding the Linux Virtual Memory Manager', Mel Gorman (Bruce Perens Open Source)](https://www.amazon.in/Understanding-Virtual-Memory-Manager-Perens/dp/0131453483/ref=sr_1_1?ie=UTF8&qid=1547529951&sr=8-1&keywords=mel%20gorman)
+
+- [x86 Paging Tutorial, C Santilli](https://cirosantilli.com/x86-paging)
+- Deep detail on MM and paging on the Intel processors can be found in their excellent manuals here (Ch 4, Paging): [Intel® 64 and IA-32 Architectures
+Software Developer’s Manual. Volume 3 (3A, 3B & 3C): System Programming Guide](https://software.intel.com/en-us/download/intel-64-and-ia-32-architectures-sdm-combined-volumes-3a-3b-3c-and-3d-system-programming-guide)
+	- [All Intel 64 and IA-32 architecture and programming environment manuals](https://software.intel.com/en-us/articles/intel-sdm)
 
 - vsyscall, vdso and VVAR
     - ["On vsyscalls and the vDSO"](https://lwn.net/Articles/446528/), LWN, Jon Corbet, June 2011
@@ -189,7 +199,7 @@ Software Developer’s Manual. Volume 3 (3A, 3B & 3C): System Programming Guide]
 - ['Virtual Memory and Linux', PDF, Matt Porter, Alan Ott](https://elinux.org/images/b/b0/Introduction_to_Memory_Management_in_Linux.pdf)
 
 
-## Ch 7 and Ch 8, Kernel Memory Allocation for Module Authors - Further Reading
+## Ch 8 and Ch 9, Kernel Memory Allocation for Module Authors - Further Reading
 
 - Book: ['Hands-On System Programming with Linux', Kaiwan N Billimoria, Packt](https://www.packtpub.com/networking-and-servers/hands-system-programming-linux). Prerequisites to this chapter (essential reading, really):
 	- Ch 1 : Linux System Architecture
@@ -206,6 +216,9 @@ Software Developer’s Manual. Volume 3 (3A, 3B & 3C): System Programming Guide]
     -   Blog article ['INTERESTING NUMBERS'](https://kaiwantech.wordpress.com/2015/05/01/interesting-numbers/); see the section on *Networking* for some information on how the network subsystem has time critical code paths (and the resource links that follow)
 - ["GNUPLOT 4.2 - A Brief Manual and Tutorial", Duke University](https://people.duke.edu/~hpgavin/gnuplot.html)
 - ['Object-oriented design patterns in the kernel, part 1', Neil Brown, LWN, June 2011](https://lwn.net/Articles/444910/)
+
+
+
 - ['kvmalloc()', Jon Corbet, LWN, Jan 2017](https://lwn.net/Articles/711653/)
 - ['The "too small to fail" memory-allocation rule', Jon Corbet, LWN, Dec 2014](https://lwn.net/Articles/627419/)
 - Blog article: ['linux slab poisoning 101', Mar 2009](http://www.chizang.net/alex/2009/03/11/linux-slab-poisoning-101/)
