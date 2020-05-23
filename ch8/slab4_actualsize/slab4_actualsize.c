@@ -62,12 +62,12 @@ static int test_maxallocsz(void)
 
 static int __init slab4_actualsize_init(void)
 {
-	pr_debug("%s: inserted\n", OURMODNAME);
+	pr_info("%s: inserted\n", OURMODNAME);
 	return test_maxallocsz();
 }
 static void __exit slab4_actualsize_exit(void)
 {
-	pr_debug("%s: removed\n", OURMODNAME);
+	pr_info("%s: removed\n", OURMODNAME);
 }
 
 module_init(slab4_actualsize_init);
