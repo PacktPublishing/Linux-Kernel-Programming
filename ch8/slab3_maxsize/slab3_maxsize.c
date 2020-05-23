@@ -38,10 +38,10 @@ static int test_maxallocsz(void)
 	while (1) {
 		p = kmalloc(size2alloc, GFP_KERNEL);
 		if (!p) {
-			pr_alert("kmalloc fail, size2alloc=%zd\n", size2alloc);
+			pr_alert("kmalloc fail, size2alloc=%zu\n", size2alloc);
 			return -ENOMEM;
 		}
-		pr_info("kmalloc(%7zd) = 0x%pK\n", size2alloc, p);
+		pr_info("kmalloc(%7zu) = 0x%pK\n", size2alloc, p);
 		kfree(p);
 		size2alloc += stepsz;
 	}
