@@ -26,6 +26,11 @@
 #define OURMODNAME   "slab_custom"
 #define OURCACHENAME "our_ctx"
 
+static int use_ctor = 1;
+module_param(use_ctor, uint, 0);
+MODULE_PARM_DESC(use_ctor, "if set to 1 (default), our custom ctor routine"
+" will initialize slabmem; when 0, no custom constructor will run");
+
 MODULE_AUTHOR("Kaiwan N Billimoria");
 MODULE_DESCRIPTION("LLKD book:ch9/slab_custom: simple demo of creating a custom slab cache");
 MODULE_LICENSE("Dual MIT/GPL");
@@ -47,13 +52,13 @@ static void use_our_cache(void)
 	struct myctx *obj = NULL;
 
 #if LINUX_VERSION_CODE < KERNEL_VERSION(2,6,39)
-	pr_info("Cache name is %s\n", kmem_cache_name(gctx_cachep));
+	pr_debug("Cache name is %s\n", kmem_cache_name(gctx_cachep));
 #else
-	pr_info("[ker ver > 2.6.38 cache name deprecated...]\n");
+	pr_debug("[ker ver > 2.6.38 cache name deprecated...]\n");
 #endif
 
 	obj = kmem_cache_alloc(gctx_cachep, GFP_KERNEL);
-	if (!obj) {  /* pedantic warning printk */
+	if (!obj) {  /* pedantic warning printk below... */
 		pr_warn("%s:%s():kmem_cache_alloc() failed\n",
 			OURMODNAME, __func__);
 	}
@@ -87,14 +92,17 @@ static void our_ctor(void *new)
 		p->nvcsw, p->nivcsw, p->min_flt, p->maj_flt);
 }
 
-#define USE_CONSTRUCTOR    1
 static int create_our_cache(void)
 {
 	int ret = 0;
+	void *ctor_fn = NULL;
+
+	if (use_ctor == 1)
+		ctor_fn = our_ctor;
 
 	pr_info("%s: sizeof our ctx structure is %zu bytes\n"
 		" using custom constructor routine? %s\n",
-		OURMODNAME, sizeof(struct myctx), USE_CONSTRUCTOR==1?"yes":"no");
+		OURMODNAME, sizeof(struct myctx), use_ctor==1?"yes":"no");
 
 	/* Create a new slab cache:
 	 * kmem_cache_create(const char *name, unsigned int size, unsigned int align,
@@ -103,12 +111,7 @@ static int create_our_cache(void)
 	gctx_cachep = kmem_cache_create(OURCACHENAME, sizeof(struct myctx),
 			sizeof(long),
 			SLAB_POISON | SLAB_RED_ZONE | SLAB_HWCACHE_ALIGN,
-		#if USE_CONSTRUCTOR
-			our_ctor
-		#else
-			NULL
-		#endif
-			);
+			ctor_fn);
 	if (!gctx_cachep) {
 		/* When a mem alloc fails we'll usually not require a warning
 		 * message as the kernel will definitely emit warning printk's
