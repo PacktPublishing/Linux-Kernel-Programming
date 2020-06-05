@@ -70,12 +70,15 @@ static void use_our_cache(void)
  * our custom slab cache; here, this is our 'constructor' routine; so, we
  * initialize our just allocated memory object.
  */
-static void our_ctor(void *foo)
+static void our_ctor(void *new)
 {
-	struct myctx *ctx = foo;
+	struct myctx *ctx = new;
 	struct task_struct *p = current;
 
+	pr_info("%s:%s(): in ctor: just alloced mem object is @ 0x%llx\n",
+		OURMODNAME, __func__, (unsigned long long)ctx);
 	memset(ctx, 0, sizeof(struct myctx));
+
 	/* As a demo, we init the 'config' field of our structure to some
 	 * (arbitrary) 'accounting' values from our task_struct
 	 */
@@ -84,12 +87,15 @@ static void our_ctor(void *foo)
 		p->nvcsw, p->nivcsw, p->min_flt, p->maj_flt);
 }
 
+#define USE_CONSTRUCTOR    1
 static int create_our_cache(void)
 {
 	int ret = 0;
 
-	pr_info("%s: sizeof our ctx structure is %zu bytes\n",
-		OURMODNAME, sizeof(struct myctx));
+	pr_info("%s: sizeof our ctx structure is %zu bytes\n"
+		" using custom constructor routine? %s\n",
+		OURMODNAME, sizeof(struct myctx), USE_CONSTRUCTOR==1?"yes":"no");
+
 	/* Create a new slab cache:
 	 * kmem_cache_create(const char *name, unsigned int size, unsigned int align,
                  slab_flags_t flags, void (*ctor)(void *));
@@ -97,7 +103,12 @@ static int create_our_cache(void)
 	gctx_cachep = kmem_cache_create(OURCACHENAME, sizeof(struct myctx),
 			sizeof(long),
 			SLAB_POISON | SLAB_RED_ZONE | SLAB_HWCACHE_ALIGN,
-			our_ctor);
+		#if USE_CONSTRUCTOR
+			our_ctor
+		#else
+			NULL
+		#endif
+			);
 	if (!gctx_cachep) {
 		/* When a mem alloc fails we'll usually not require a warning
 		 * message as the kernel will definitely emit warning printk's
