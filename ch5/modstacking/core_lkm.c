@@ -27,7 +27,7 @@
 #define THE_ONE   0xfedface
 MODULE_LICENSE("Dual MIT/GPL");
 
-static int exp_int = 200;
+int exp_int = 200;
 EXPORT_SYMBOL_GPL(exp_int);
 
 /* Functions to be called from other LKMs */
@@ -38,7 +38,7 @@ EXPORT_SYMBOL_GPL(exp_int);
  * Based on it's report, we change the strlen, and replace the strncat with
  * strlcat.
  */
-static void llkd_sysinfo2(void)
+void llkd_sysinfo2(void)
 {
 #define MSGLEN   128
 	char msg[MSGLEN];
@@ -87,9 +87,9 @@ static void llkd_sysinfo2(void)
 EXPORT_SYMBOL(llkd_sysinfo2);
 
 #if(BITS_PER_LONG == 32)
-static u32 get_skey(int p)
+u32 get_skey(int p)
 #else   // 64-bit
-static u64 get_skey(int p)
+u64 get_skey(int p)
 #endif
 {
 #if(BITS_PER_LONG == 32)
