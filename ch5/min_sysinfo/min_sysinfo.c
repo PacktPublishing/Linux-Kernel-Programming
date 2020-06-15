@@ -20,6 +20,7 @@
 #include <linux/init.h>
 #include <linux/module.h>
 #include <linux/kernel.h>
+#include <linux/limits.h>
 
 #define MYMODNAME   "min_sysinfo"
 MODULE_AUTHOR("<insert your name here>");
@@ -101,22 +102,31 @@ static void llkd_sysinfo2(void)
 
 	show_sizeof();
 
-	/* Word ranges: min & max: defines are in include/linux/kernel.h */
+	/* Word ranges: min & max: defines are in include/linux/limits.h */
 	pr_info
 	    ("Word [U|S][8|16|32|64] ranges: unsigned max, signed max, signed min:\n"
-	     " U8_MAX = %20u,  S8_MAX = %20d,  S8_MIN = %20d\n"
-	     "U16_MAX = %20u, S16_MAX = %20d, S16_MIN = %20d\n"
-	     "U32_MAX = %20u, S32_MAX = %20d, S32_MIN = %20d\n"
-	     "U64_MAX = %20llu, S64_MAX = %20lld, S64_MIN = %20lld\n"
+	     " U8_MAX = %20u = 0x%16x,  S8_MAX = %20d = 0x%16x,  S8_MIN = %20d = 0x%16x\n"
+	     "U16_MAX = %20u = 0x%16x, S16_MAX = %20d = 0x%16x, S16_MIN = %20d = 0x%16x\n"
+	     "U32_MAX = %20u = 0x%16x, S32_MAX = %20d = 0x%16x, S32_MIN = %20d = 0x%16x\n"
+	     "U64_MAX = %20llu = 0x%16llx, S64_MAX = %20lld = 0x%16llx, S64_MIN = %20lld = 0x%16llx\n"
+	/* PHYS_ADDR_MAX is a mask of all address bits set to 1 (32 or 64
+	 * depending on the processor; However, it doesn't seem to compile on
+	 * distro kernels, but does work on mainline 5.4. Thus here, we simply
+	 * leave it commented out due to this uncertainty.
+	 *
 #if defined (CONFIG_X86)
-	     "PHYS_ADDR_MAX = %llu\n"
+	     "PHYS_ADDR_MAX = %llu = 0x%llx\n"
 #endif
-	     , U8_MAX, S8_MAX, S8_MIN,
-	     U16_MAX, S16_MAX, S16_MIN,
-	     U32_MAX, S32_MAX, S32_MIN, U64_MAX, S64_MAX, S64_MIN
+	 */
+	     , U8_MAX, U8_MAX, S8_MAX, S8_MAX, S8_MIN, S8_MIN,
+	     U16_MAX, U16_MAX, S16_MAX, S16_MAX, S16_MIN, S16_MIN,
+	     U32_MAX, U32_MAX, S32_MAX, S32_MAX, S32_MIN, S32_MIN,
+	     U64_MAX, U64_MAX, S64_MAX, S64_MAX, S64_MIN, S64_MIN
+/*
 #if defined (CONFIG_X86)
-	     , PHYS_ADDR_MAX
+	     , PHYS_ADDR_MAX, PHYS_ADDR_MAX
 #endif
+*/
 	    );
 }
 EXPORT_SYMBOL(llkd_sysinfo2);
