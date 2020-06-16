@@ -80,7 +80,7 @@ static void our_ctor(void *new)
 	struct myctx *ctx = new;
 	struct task_struct *p = current;
 
-	pr_info("%s:%s(): in ctor: just alloced mem object is @ 0x%llx\n",
+	pr_info("%s:%s(): in ctor: just alloced mem object is @ 0x%llx\n", /* %pK in production */
 		OURMODNAME, __func__, (unsigned long long)ctx);
 	memset(ctx, 0, sizeof(struct myctx));
 

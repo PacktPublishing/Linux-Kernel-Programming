@@ -107,7 +107,7 @@ static int bsa_alloc(void)
 	pr_info("%s: 3. get_zeroed_page() alloc'ed 1 page from the BSA @ 0x%pK (" FMTSPC ")\n",
 		OURMODNAME, gptr3, gptr3);
 
-	/* 4. Allocate and init one page with the alloc_page() API.
+	/* 4. Allocate one page with the alloc_page() API.
 	 * Careful! It does not return the alloc'ed page ptr but rather the pointer
 	 * to the metadata structure 'page' representing the allocated page:
 	 *    struct page * alloc_page(gfp_mask);
