@@ -96,7 +96,7 @@ sa_sparse:
 	@echo
 	@echo "--- static analysis with sparse ---"
 	@echo
-	make C=2 -C $(KDIR) M=$(PWD) modules
+	make C=2 CHECK="/usr/bin/sparse" -C $(KDIR) M=$(PWD) modules
 
 # static analysis with gcc
 sa_gcc:
