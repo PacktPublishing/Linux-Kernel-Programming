@@ -83,6 +83,11 @@ int main(int argc, char **argv)
 	if ('w' == opt)
 		num = strlen(argv[3])+1; // IMP! +1 to include the NULL byte!
 	else
+	if ('w' == opt) {
+		num = strnlen(argv[3], MAXBYTES) + 1;	// IMP! +1 to include the NULL byte!
+		if (num > MAXBYTES)
+			num = MAXBYTES;
+	} else
 		num = MAXBYTES;
 
 	buf = malloc(num);
