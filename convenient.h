@@ -254,6 +254,7 @@ static inline void beep(int what)
 /*------------------------------------------------------------------------*/
 
 #ifdef __KERNEL__
+void delay_sec(long);
 /*------------ delay_sec --------------------------------------------------
  * Delays execution for @val seconds.
  * If @val is -1, we sleep forever!
