@@ -1,5 +1,5 @@
 /*
- * ch12/procfs_simple_intf/procfs_simple_intf.c
+ * ch13/procfs_simple_intf/procfs_simple_intf.c
  ***************************************************************
  * This program is part of the source code released for the book
  *  "Linux Kernel Development Cookbook"
@@ -8,14 +8,15 @@
  *  GitHub repository:
  *  https://github.com/PacktPublishing/Learn-Linux-Kernel-Development
  *
- * From: Ch 12 : User-Kernel communication pathways
+ * From: Ch 13 : User-Kernel communication pathways
  ****************************************************************
  * Brief Description:
  * Simple kernel module to demo interfacing with userspace via procfs.
- * In order to demonstrate (and let you easily contrast) the different ways
- * in which one can create interfaces between the kernel and userspace,
- * we issue appropriate kernel APIs to have the interface create four 'files'
- * or 'objects'.
+ * Procfs is one of several available user<->kernel interfaces; the others
+ * include sysfs, debugfs, netlink sockets and the ioctl.
+ * In order to demonstrate (and let you easily contrast) between these
+ * user<->kernel interfaces, in all cases we create four 'files' or 'objects'
+ * (by issuing the appropriate kernel APIs).
  * In this particular case, the interface is via procfs, so we create four
  * procfs 'objects' - pseudo-files - under a directory whose name is the name
  * given to this kernel module. These four procfs 'files', what they are named
@@ -39,18 +40,18 @@
  *      R: read retrieves (to userspace) the value of PAGE_OFFSET
  *      file perms: 0444
  * (3) llkdproc_show_drvctx : R-
- *      R: read retrieves (to userspace) the values in the driver context
- *         data structure
+ *      R: read retrieves (to userspace) the values in our sample 'driver
+ *         context' data structure
  *      file perms: 0440
  * (4) llkdproc_config1     : RW
- *      R: read retrieves (to userspace) the current value of the driver
- *         context variable drvctx->config1
+ *      R: read retrieves (to userspace) the current value of the 'driver
+ *         context' variable drvctx->config1
  *      W: write a value (from userspace) to drvctx->config1
  *      file perms: 0644
  *  (for fun, we treat this value 'config1' as also representing the
  *   driver debug_level)
  *
- * For details, please refer the book, Ch 12.
+ * For details, please refer the book, Ch 13.
  */
 #include <linux/kernel.h>
 #include <linux/module.h>
@@ -70,7 +71,7 @@
 #endif
 
 MODULE_AUTHOR("Kaiwan N Billimoria");
-MODULE_DESCRIPTION("LLKD book:ch12/procfs_simple_intf: simple procfs interfacing demo");
+MODULE_DESCRIPTION("LLKD book:ch13/procfs_simple_intf: simple procfs interfacing demo");
 MODULE_LICENSE("Dual MIT/GPL");
 MODULE_VERSION("0.1");
 
@@ -86,18 +87,18 @@ MODULE_VERSION("0.1");
 
 //--- our MSG() macro
 #ifdef DEBUG
-#define MSG(string, args...)  do {                                   \
-	pr_info("%s:%s():%d: " string,                               \
+#define MSG(string, args...)  do {                   \
+	pr_info("%s:%s():%d: " string,                   \
 			OURMODNAME, __func__, __LINE__, ##args); \
 } while (0)
 #else
 #define MSG(string, args...)
 #endif
 
-/* We use a mutex lock; details in Ch 15 and Ch 16 */
+/* We use a mutex lock here; details in Ch 16 and Ch 17 */
 DEFINE_MUTEX(mtx);
 
-/* Borrowed from ch11; the 'driver context' data structure;
+/* Borrowed from ch12; the 'driver context' data structure:
  * all relevant 'state info' reg the driver and (fictional) 'device'
  * is maintained here.
  */
@@ -202,13 +203,14 @@ static const struct file_operations fops_show_drvctx = {
 	.release = single_release,
 };
 
-static struct drv_ctx *alloc_init_drvctx(void)
+static struct drv_ctx * alloc_init_drvctx(void)
 {
 	struct drv_ctx *drvctx = NULL;
 
 	drvctx = kzalloc(sizeof(struct drv_ctx), GFP_KERNEL);
 	if (!drvctx)
 		return ERR_PTR(-ENOMEM);
+	/* initialize our 'driver context' with something... */
 	drvctx->config1 = 0x0;
 	drvctx->config2 = 0x48524a5f;
 	drvctx->config3 = 0x424c0a52;
@@ -292,6 +294,7 @@ static int myproc_open_dbg_level(struct inode *inode, struct file *file)
 {
 	return single_open(file, proc_show_debug_level, NULL);
 }
+
 static const struct file_operations fops_rdwr_dbg_level = {
 	.owner = THIS_MODULE,
 	.open = myproc_open_dbg_level,
@@ -308,7 +311,7 @@ static int __init procfs_simple_intf_init(void)
 {
 	int stat = 0;
 
-	if(!IS_ENABLED(CONFIG_PROC_FS)) {
+	if(unlikely(!IS_ENABLED(CONFIG_PROC_FS))) {
 		pr_warn("%s: procfs unsupported! Aborting ...\n", OURMODNAME);
 		return -EINVAL;
 	}
@@ -324,7 +327,10 @@ static int __init procfs_simple_intf_init(void)
 
 	/* 1. Create the PROC_FILE1 proc entry under the parent dir OURMODNAME;
 	 * this will serve as the 'dynamically view/modify debug_level'
-	 * (pseudo) file
+	 * (pseudo) file. API used:
+	 * struct proc_dir_entry *proc_create(const char *name, umode_t mode,
+     *             struct proc_dir_entry *parent,
+     *             const struct file_operations *proc_fops)
 	 */
 	if (!proc_create(PROC_FILE1, PROC_FILE1_PERMS, gprocdir,
 			&fops_rdwr_dbg_level)) {
@@ -339,10 +345,13 @@ static int __init procfs_simple_intf_init(void)
 	 * as it serves precisely one purpose, we use the convenience API
 	 * proc_create_single_data() to create this entry. The third parameter
 	 * is the function that is called back when this proc entry is read
-	 * from userspace.
+	 * from userspace. API:
+	 * struct proc_dir_entry *proc_create_single_data(const char *name, umode_t mode,
+	 *			struct proc_dir_entry *parent,
+	 *			int (*show)(struct seq_file *, void *), void *data)
 	 */
-	if (!proc_create_single_data(PROC_FILE2, PROC_FILE2_PERMS, gprocdir,
-					proc_show_pgoff, 0)) {
+	if (!proc_create_single_data(PROC_FILE2, PROC_FILE2_PERMS,
+					gprocdir, proc_show_pgoff, 0)) {
 		pr_warn("%s: proc_create [2] failed, aborting...\n", OURMODNAME);
 		stat = -ENOMEM;
 		goto out_fail_2;
@@ -353,7 +362,7 @@ static int __init procfs_simple_intf_init(void)
 	 * Then create the PROC_FILE3 proc entry under the parent dir OURMODNAME;
 	 * this will serve as the 'show driver context' (pseudo) file.
 	 * When read from userspace, the callback function will dump the content
-	 * of our 'driver context' data structure.
+	 * of our 'driver context' data structure. API: proc_create()
 	 */
 	gdrvctx = alloc_init_drvctx();
 	if (IS_ERR(gdrvctx)) {
@@ -370,7 +379,8 @@ static int __init procfs_simple_intf_init(void)
 	MSG("proc file 3 (/proc/%s/%s) created\n", OURMODNAME, PROC_FILE3);
 
 	/* 4. Create the PROC_FILE1 proc entry under the parent dir OURMODNAME;
-	 * this will serve as the 'read/write drv_ctx->config1' (pseudo) file
+	 * this will serve as the 'read/write drv_ctx->config1' (pseudo) file.
+	 * API: proc_create()
 	 */
 	if (!proc_create(PROC_FILE4, PROC_FILE4_PERMS, gprocdir, &fops_rdwr_config1)) {
 		pr_warn("%s: proc_create [4] failed, aborting...\n", OURMODNAME);
@@ -383,7 +393,7 @@ static int __init procfs_simple_intf_init(void)
 	return 0;	/* success */
 
  out_fail_3:
-	kfree(gdrvctx);
+	kzfree(gdrvctx);
  out_fail_2:
 	remove_proc_subtree(OURMODNAME, NULL);
  out_fail_1:
@@ -394,7 +404,7 @@ static void __exit procfs_simple_intf_cleanup(void)
 {
 	gdrvctx->power = 0;
 	remove_proc_subtree(OURMODNAME, NULL);
-	kfree(gdrvctx);
+	kzfree(gdrvctx);
 	pr_info("%s removed\n", OURMODNAME);
 }
 
