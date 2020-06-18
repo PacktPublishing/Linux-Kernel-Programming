@@ -1,5 +1,5 @@
 /*
- * ch12/sysfs_simple_intf/sysfs_simple_intf.c
+ * ch13/sysfs_simple_intf/sysfs_simple_intf.c
  ***************************************************************
  * This program is part of the source code released for the book
  *  "Learn Linux Kernel Development"
@@ -8,16 +8,17 @@
  *  GitHub repository:
  *  https://github.com/PacktPublishing/Learn-Linux-Kernel-Development
  *
- * From: Ch 12 : User-Kernel communication pathways
+ * From: Ch 13 : User-Kernel communication pathways
  ****************************************************************
  * Brief Description:
  *
  * Simple kernel module to demo interfacing with userspace via sysfs.
- * In order to demonstrate (and let you easily contrast) the different ways
- * in which one can create interfaces between the kernel and userspace,
- * we issue appropriate kernel APIs to have the interface create three sysfs
- * 'files' or 'objects'.
- * In this particular case, the interface is via sysfs, so we create three
+ * Sysfs is one of several available user<->kernel interfaces; the others
+ * include sysfs, debugfs, netlink sockets and the ioctl.
+ * In order to demonstrate (and let you easily contrast) between these
+ * user<->kernel interfaces, in all cases we create three (or four) 'files' or
+ * 'objects' (by issuing the appropriate kernel APIs).
+ * In this particular case, the interface is via sysfs, we create three
  * sysfs pseudo-files under a directory whose name is the name given to this
  * kernel module. These three sysfs 'files', what they are named and meant for
  * is summarized below:
@@ -43,7 +44,7 @@
  *         variable gpressure
  *      file perms: 0440
  *
- * For details, please refer the book, Ch 12.
+ * For details, please refer the book, Ch 13.
  */
 #include <linux/kernel.h>
 #include <linux/module.h>
@@ -62,12 +63,12 @@
 
 MODULE_AUTHOR("Kaiwan N Billimoria");
 MODULE_DESCRIPTION
-    ("LLKD book:ch12/sysfs_simple_intf: simple sysfs interfacing demo");
+    ("LLKD book:ch13/sysfs_simple_intf: simple sysfs interfacing demo");
 /*
  * We *require* the module to be released under GPL license (as well) to please
  * several core driver routines (like sysfs_create_group,
  * platform_device_register_simple, etc which are exported to GPL only (using
- * the EXPORT_SYMBOL_GPL() macro)
+ * the EXPORT_SYMBOL_GPL() macro))
  */
 MODULE_LICENSE("Dual MIT/GPL");
 MODULE_VERSION("0.1");
@@ -77,7 +78,7 @@ MODULE_VERSION("0.1");
 #define SYSFS_FILE2		llkdsysfs_pgoff
 #define SYSFS_FILE3		llkdsysfs_pressure
 
-//--- our MSG() macro
+//--- debug printk's via our MSG() macro:
 #ifdef DEBUG
 #define MSG(string, args...)  do {                       \
 	pr_info("%s:%s():%d: " string,                   \
@@ -230,14 +231,17 @@ static int __init sysfs_simple_intf_init(void)
 {
 	int stat = 0;
 
-	if (!IS_ENABLED(CONFIG_SYSFS)) {
+	if (unlikely(!IS_ENABLED(CONFIG_SYSFS))) {
 		pr_warn("%s: sysfs unsupported! Aborting ...\n", OURMODNAME);
 		return -EINVAL;
         }
 
 	/* 0. Register a (dummy) platform device; required as we need a
 	 * struct device *dev pointer to create the sysfs file with
-	 * the device_create_file() API
+	 * the device_create_file() API:
+	 *  struct platform_device *platform_device_register_simple(
+         *		const char *name, int id,
+         *		const struct resource *res, unsigned int num);
 	 */
 #define PLAT_NAME	"llkd_sysfs_simple_intf_device"
 	sysfs_demo_platdev =
@@ -249,14 +253,31 @@ static int __init sysfs_simple_intf_init(void)
 		     OURMODNAME, stat);
 		goto out1;
 	}
+
 	// 1. Create our first sysfile file : llkdsysfs_debug_level
 	/* The device_create_file() API creates a sysfs attribute file for
 	 * given device (1st parameter); the second parameter is the pointer
 	 * to it's struct device_attribute structure dev_attr_<name> which was
 	 * instantiated by our DEV_ATTR{_RW|RO} macros above ...
+	 * API used:
+	 * int device_create_file(struct device *dev,
+	 *		const struct device_attribute *attr);
 	 */
 	stat =
 	    device_create_file(&sysfs_demo_platdev->dev, &dev_attr_SYSFS_FILE1);
+	    /*
+	     * A potentially confusing aspect: as this is the first time, we
+	     * explain it via this comment:
+	     * The &dev_attr_SYSFS_FILE1 above (2nd param to the
+	     * device_create_file() API), is actually *instantiated* via this
+	     * declaration above:
+	     *  static DEVICE_ATTR_RW(SYSFS_FILE1);
+	     * This DEVICE_ATTR{_RW|RO|WO}() macro instantiates a
+	     *  struct device_attribute dev_attr_<name>    data structure!
+	     * ... and hence we automatically get the rd/wr callbacks registered.
+	     * (IOW, the DEVICE_ATTR_XX(name) macro becomes a
+	     *  struct device_attribute dev_attr_name data structure!)
+	     */
 	if (stat) {
 		pr_info
 		    ("%s: device_create_file [1] failed (%d), aborting now\n",
@@ -270,6 +291,12 @@ static int __init sysfs_simple_intf_init(void)
 	stat =
 	    device_create_file(&sysfs_demo_platdev->dev,
 			       &dev_attr_llkdsysfs_pgoff);
+	/* As explained above, the
+	 *  static DEVICE_ATTR_RO(llkdsysfs_pgoff);
+	 * declaration above actually *instantiates* this data structure
+	 * (IOW, the DEVICE_ATTR_XX(name) macro becomes a
+	 *  struct device_attribute dev_attr_name data structure!)
+	 */
 	if (stat) {
 		pr_info
 		    ("%s: device_create_file [2] failed (%d), aborting now\n",
@@ -280,10 +307,16 @@ static int __init sysfs_simple_intf_init(void)
 		PLAT_NAME, __stringify(SYSFS_FILE2));
 
 	// 3. Create our third sysfile file : llkdsysfs_pressure
-	gpressure = 25;
+	gpressure = 25;  // arbitrary 'pressure' value of 25 assigned here..
 	stat =
 	    device_create_file(&sysfs_demo_platdev->dev,
 			       &dev_attr_llkdsysfs_pressure);
+	/* As explained above, the
+	 *  static DEVICE_ATTR_RO(llkdsysfs_pressure);
+	 * declaration above actually *instantiates* this data structure
+	 * (IOW, the DEVICE_ATTR_XX(name) macro becomes a
+	 *  struct device_attribute dev_attr_name data structure!)
+	 */
 	if (stat) {
 		pr_info
 		    ("%s: device_create_file [3] failed (%d), aborting now\n",
