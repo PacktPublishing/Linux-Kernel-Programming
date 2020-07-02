@@ -53,13 +53,14 @@ static int vmalloc_try(void)
 {
 	/* 1. vmalloc(); mem contents are random */
 	if (!(vptr_rndm = vmalloc(10000))) {
-		// The pr_warn() below isn't really required; being pedantic, we keep it..
+		/* The pr_warn() below isn't really required; being pedantic here,
+		 * we keep it.. ditto for the remaining cases below...
+		 */
 		pr_warn("%s: vmalloc failed\n", OURMODNAME);
 		goto err_out1;
 	}
 	pr_info("1. vmalloc():   vptr_rndm = 0x%pK (actual=" FMTSPC ")\n", 
 		vptr_rndm, (TYPECST)vptr_rndm);
-	//pr_info("vmalloc(): vptr_rndm = %pK (actual = 0x%llx)\n", vptr_rndm, (unsigned long long)vptr_rndm);
 	print_hex_dump_bytes(" content: ", DUMP_PREFIX_NONE, vptr_rndm, DISP_BYTES);
 
 	/* 2. vzalloc(); mem contents are set to zeroes */
@@ -73,14 +74,14 @@ static int vmalloc_try(void)
 
 	/* 3. kvmalloc(): allocate 'kvnum' bytes with the kvmalloc(); if kvnum is
 	 * large (enough), this should become a vmalloc() under the hood, else
-	 * becomes a kmalloc()
+	 * it fals back to a kmalloc()
 	 */
 	if (!(kv = kvmalloc(kvnum, GFP_KERNEL))) {
 		pr_warn("%s: kvmalloc failed\n", OURMODNAME);
 		goto err_out3;
 	}
 	pr_info("3. kvmalloc() :        kv = 0x%pK (actual=" FMTSPC ")\n"
-			" (for %d bytes)\n",
+			"    (for %d bytes)\n",
 			kv, (TYPECST)kv, kvnum);
 	print_hex_dump_bytes(" content: ", DUMP_PREFIX_NONE, kv, KVN_MIN_BYTES);
 
@@ -97,7 +98,7 @@ static int vmalloc_try(void)
 	/* 5. __vmalloc(): allocate some 42 pages and set protections to RO */
 #undef WR2ROMEM_BUG
 /* #define WR2ROMEM_BUG */   /* 'Normal' usage: keep this commented out, else
-		      we will crash! Read the book, Ch 8, for details  :-) */
+ * we will crash! Read the book, Ch 9, for details  :-) */
 	if (!(vrx = __vmalloc(42*PAGE_SIZE, GFP_KERNEL, PAGE_KERNEL_RO))) {
 		pr_warn("%s: __vmalloc failed\n", OURMODNAME);
 		goto err_out5;
@@ -112,7 +113,7 @@ static int vmalloc_try(void)
 	 * (emits an Oops!) */
 	*(u64 *)(vrx+4) = 0xba;
 #endif
-	return 0;
+	return 0;	/* success */
 err_out5:
 	vfree(kvarr);
 err_out4:
