@@ -13,7 +13,7 @@
  * Brief Description:
  * If you set the macro BUGGY to 1 (it's 0 by default), then a dangerous bug
  * surfaces! Check it out - in the init code, on the second loop iteration,
- * the kmalloc() will not be invoked as the if(kptr == NULL) condition will
+ * the kmalloc() will not be invoked as the if (kptr == NULL) condition will
  * evaluate to false; but, the kfree() is still invoked, now on an invalid
  * parameter (it actually becomes a double-free bug)! On our test system,
  * the entire machine just froze. 
@@ -38,7 +38,7 @@ static int __init slab2_buggy_init(void)
 
 	pr_info("%s: inserted\n", OURMODNAME);
 
-#define BUGGY    1   /* by default it's set to 0 to rm the bug(s) :-) */
+#define BUGGY    0   /* by default it's set to 0 to rm the bug(s) :-) */
 
 	while (++i < 4) {
 #if (BUGGY == 1)
