@@ -44,7 +44,7 @@ module_param(kvnum, int, 0644);
 MODULE_PARM_DESC(kvnum,
  "number of bytes to allocate with the kvmalloc(); (defaults to 5 MB)");
 
-#define KVN_MIN_BYTES    8
+#define KVN_MIN_BYTES   16
 #define DISP_BYTES      16 
 
 static void *vptr_rndm, *vptr_init, *kv, *kvarr, *vrx;
