@@ -7,6 +7,7 @@ answers / solutions to some of them).
 
 1. Does a call to malloc() in userspace immediately translate to a call to
 kmalloc() within the kernel?
+
 A. NO! it doesn't...
    These areas are actually covered in some detail in Ch 9 section 'A brief
    note on memory allocations and Demand Paging' and Ch 9 section 'Demand
@@ -20,6 +21,7 @@ be changed via the _______ system call(s)
 2. False, True, mprotect()
 3. True, True, mlock()/mlockall()
 4. False, False, brk()
+
 A. option 3
 
 5. Consider: ptr = __get_free_pages(GFP_ATOMIC | __GFP_ZERO, 0); . If
@@ -29,6 +31,7 @@ the just allocated memory region will be _____
 2. 4096, zeroed out (null)
 3. 1024, random
 4. 10240, random
+
 A. option 2
 
 6. The kmalloc() and kzalloc() slab APIs are meant for the common use case
@@ -38,6 +41,7 @@ where _____________
 megabyte
 3. the amount of memory to be allocated is more than a page
 4. interrupt handlers require RAM
+
 A. option 1
 
 7. A "golden rule": one cannot invoke the __________ function directly or indirectly
@@ -47,6 +51,7 @@ memory allocation in such cases, you must do so with the _________
 2. schedule(), GFP_KERNEL flag
 3. schedule(), GFP_ATOMIC flag
 4. kzalloc() , angels and demons prayer :)
+
 A. option 3
 
 <end document>
