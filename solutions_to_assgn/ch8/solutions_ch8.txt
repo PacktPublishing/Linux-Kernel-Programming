@@ -1,0 +1,52 @@
+------------------------------------------------------------------------------
+Solutions to selected assignments ::
+Ch 8: Kernel Memory Allocation for Module Authors Part 1
+(For your convenience, we have repeated the questions below and have provided
+answers / solutions to some of them).
+------------------------------------------------------------------------------
+
+1. Does a call to malloc() in userspace immediately translate to a call to
+kmalloc() within the kernel?
+A. NO! it doesn't...
+   These areas are actually covered in some detail in Ch 9 section 'A brief
+   note on memory allocations and Demand Paging' and Ch 9 section 'Demand
+   Paging and OOM'.
+   Please do ensure you read it carefully when you cover Ch 9!
+
+2. Kernel memory is not swappable (can't be written to the swap area): ___ ;
+userspace memory always is swappable (by default): ___ ; for userspace this can
+be changed via the _______ system call(s)
+1. True, False, mprotect()
+2. False, True, mprotect()
+3. True, True, mlock()/mlockall()
+4. False, False, brk()
+A. option 3
+
+5. Consider: ptr = __get_free_pages(GFP_ATOMIC | __GFP_ZERO, 0); . If
+successful, ptr now points to a memory region of size __ byte(s); the content of
+the just allocated memory region will be _____
+1. 1, zeroed out (null)
+2. 4096, zeroed out (null)
+3. 1024, random
+4. 10240, random
+A. option 2
+
+6. The kmalloc() and kzalloc() slab APIs are meant for the common use case
+where _____________
+1. the amount of memory to be allocated is less than a page
+2. the amount of memory to be allocated is between 384 KB and a
+megabyte
+3. the amount of memory to be allocated is more than a page
+4. interrupt handlers require RAM
+A. option 1
+
+7. A "golden rule": one cannot invoke the __________ function directly or indirectly
+in any form in any kind of atomic (or interrupt) context; if you’re is performing a
+memory allocation in such cases, you must do so with the _________
+1. kmalloc(), GFP_ATOMIC flag
+2. schedule(), GFP_KERNEL flag
+3. schedule(), GFP_ATOMIC flag
+4. kzalloc() , angels and demons prayer :)
+A. option 3
+
+<end document>
