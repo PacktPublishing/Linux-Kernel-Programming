@@ -30,7 +30,7 @@
  *      |---llkdsysfs_pressure
  *
  * Summary of our sysfs files and how they can be used (R=>read,W=>write)
- * (1) llkdsysfs_dbg_level   : RW
+ * (1) llkdsysfs_debug_level   : RW
  *      R: read retrieves (to userspace) the current value of the global var
  *         debug_level
  *      W: write a value (from userspace) to the global var debug_level, thus
@@ -127,6 +127,7 @@ static ssize_t llkdsysfs_pressure_show(struct device *dev,
 
 /* The DEVICE_ATTR{_RW|RO|WO}() macro instantiates a struct device_attribute
  * dev_attr_<name> here...
+ * The name of the 'show' callback function is llkdsysfs_pressure_show
  */
 static DEVICE_ATTR_RO(llkdsysfs_pressure);
 
@@ -146,6 +147,7 @@ static ssize_t llkdsysfs_pgoff_show(struct device *dev,
 
 /* The DEVICE_ATTR{_RW|RO|WO}() macro instantiates a struct device_attribute
  * dev_attr_<name> here...
+ * The name of the 'show' callback function is llkdsysfs_pgoff_show
  */
 static DEVICE_ATTR_RO(llkdsysfs_pgoff);	/* it's show callback is above.. */
 
@@ -207,6 +209,8 @@ static ssize_t llkdsysfs_debug_level_store(struct device *dev,
 
 /* The DEVICE_ATTR{_RW|RO|WO}() macro instantiates a struct device_attribute
  * dev_attr_<name> (as the comments below help explain ...) here...
+ * The name of the 'show' callback function is SYSFS_FILE1_show; similarly,
+ * the name of the 'store' callback function is SYSFS_FILE1_store
  */
 static DEVICE_ATTR_RW(SYSFS_FILE1);  /* it's show/store callbacks are above */
 

@@ -67,7 +67,7 @@ int main(int argc, char **argv)
 	nlhdr->nlmsg_pid = getpid();
 
 	/* Setup the payload to transmit */
-	strncpy(NLMSG_DATA(nlhdr), thedata, strlen(thedata)+1);
+	strncpy(NLMSG_DATA(nlhdr), thedata, strnlen(thedata, NLSPACE)+1);
 	printf("%s: destination struct, netlink hdr, payload setup\n", argv[0]);
 
 	/* 5. Setup the iovec and ... */
