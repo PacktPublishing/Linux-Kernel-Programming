@@ -3,6 +3,9 @@ Modules). Please do go through the files in it carefully and follow the
 conventions and style; particularly, see and follow the various Makefile
 targets.
 
+By 'follow', we really mean, use them! They help you perform key sanity checks
+on your code, via code-style checking, static and dynamic analysis tools.
+
 The output of the 'make help' below shows the targets:
 
 $ make help 

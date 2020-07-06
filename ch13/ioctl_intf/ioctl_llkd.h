@@ -8,7 +8,7 @@
  */
 
 /* The 'magic' number for our driver; see
- * Documentation/ioctl/ioctl-number.rst 
+ * Documentation/ioctl/ioctl-number.rst
  * Of course, we don't know for _sure_ if the magic # we choose here this
  * will remain free; it really doesn't matter, this is just for demo purposes;
  * don't try and upstream this without further investigation :-)

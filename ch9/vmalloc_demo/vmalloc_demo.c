@@ -73,7 +73,7 @@ static int vmalloc_try(void)
 	print_hex_dump_bytes(" content: ", DUMP_PREFIX_NONE, vptr_init, DISP_BYTES);
 
 	/* 3. kvmalloc(): allocate 'kvnum' bytes with the kvmalloc(); if kvnum is
-	 * large (enough), this should become a vmalloc() under the hood, else
+	 * large (enough), this will become a vmalloc() under the hood, else
 	 * it fals back to a kmalloc()
 	 */
 	if (!(kv = kvmalloc(kvnum, GFP_KERNEL))) {
@@ -88,7 +88,7 @@ static int vmalloc_try(void)
 	/* 4. kcalloc(): allocate an array of 1000 64-bit quantities and zero
 	 * out the memory */
 	if (!(kvarr = kcalloc(1000, sizeof(u64), GFP_KERNEL))) {
-		pr_warn("%s: kvmalloc_array failed\n", OURMODNAME);
+		pr_warn("%s: kcalloc failed\n", OURMODNAME);
 		goto err_out4;
 	}
 	pr_info("4. kcalloc() :      kvarr = 0x%pK (actual=" FMTSPC ")\n",

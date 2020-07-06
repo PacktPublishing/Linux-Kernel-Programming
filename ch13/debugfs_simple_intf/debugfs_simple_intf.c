@@ -47,7 +47,7 @@ MODULE_PARM_DESC(cause_an_oops,
 
 static struct dentry *gparent;
 
-/* We use a mutex lock; details in Ch 15 and Ch 16 */
+/* We use a mutex lock; details in Ch 16 and Ch 17 */
 DEFINE_MUTEX(mtx);
 
 /* Borrowed from ch11; the 'driver context' data structure;

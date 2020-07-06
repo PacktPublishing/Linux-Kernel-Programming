@@ -14,13 +14,14 @@
 #include "../../../convenient.h"
 
 MODULE_AUTHOR("<insert your name here>");
-MODULE_DESCRIPTION("ch12/netlink_simple_intf: simple netlink recv/send demo kernel module");
+MODULE_DESCRIPTION("ch13/netlink_simple_intf: simple netlink recv/send demo kernel module");
 MODULE_LICENSE("Dual MIT/GPL");
 MODULE_VERSION("0.1");
 
 #define OURMODNAME   "netlink_simple_intf"
 #define NETLINK_MY_UNIT_PROTO   31
 	// kernel netlink protocol # that we're registering..
+#define NLSPACE              1024
 
 static struct sock *nlsock;
 
@@ -51,7 +52,7 @@ static void netlink_recv_and_reply(struct sk_buff *skb)
 		OURMODNAME, pid, (char *)NLMSG_DATA(nlh));
 
 	//--- Lets be polite and reply
-	msgsz = strlen(reply);
+	msgsz = strnlen(reply, NLSPACE);
 	skb_tx = nlmsg_new(msgsz, 0);
 	if (!skb_tx) {
 		pr_warn("skb alloc failed!\n");
@@ -60,8 +61,8 @@ static void netlink_recv_and_reply(struct sk_buff *skb)
 
 	// Setup the payload
 	nlh = nlmsg_put(skb_tx, 0, 0, NLMSG_DONE, msgsz, 0);
-	NETLINK_CB(skb_tx).dst_group = 0;  // unicast only (cb is the
-		// skb's control buffer), dest group 0 => unicast
+	NETLINK_CB(skb_tx).dst_group = 0;  /* unicast only (cb is the
+ 		        * skb's control buffer), dest group 0 => unicast */
 	strncpy(nlmsg_data(nlh), reply, msgsz);
 
 	// Send it

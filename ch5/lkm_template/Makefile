@@ -12,9 +12,16 @@
 # Brief Description:
 # A very simple Loadable Kernel Module (LKM) 'template' of sorts; the good
 # stuff's actually within it's Makefile.
+# A better Makefile template for Linux LKMs (Loadable Kernel Modules); besides
+# the 'usual' targets (the build, install and clean), we incorporate targets to
+# do useful (and indeed required) stuff like:
+#  - adhering to kernel coding style (indent+checkpatch)
+#  - several static analysis targets (via sparse, gcc, flawfinder, cppcheck)
+#  - two 'dummy' dynamic analysis targets (KASAN, LOCKDEP)
+#  - a packaging (.tar.xz) target and
+#  - a help target.
 #
 # For details, please refer the book, Ch 5.
-#
 
 # To support cross-compiling for kernel modules:
 # For architecture (cpu) 'arch', invoke make as:
@@ -30,7 +37,9 @@ else ifeq ($(ARCH),powerpc)
   # *UPDATE* 'KDIR' below to point to the PPC64 Linux kernel source tree on your box
   KDIR ?= ~/kernel/linux-4.9.1
 else
-  # x86[_64]: 'KDIR' is the Linux kernel source tree (headers) on your box
+  # 'KDIR' is the Linux 'kernel headers' package on your host system; this is
+  # usually an x86_64, but could be anything, really (f.e. building directly
+  # on a Raspberry Pi implies that it's the host)
   KDIR ?= /lib/modules/$(shell uname -r)/build
 endif
 
@@ -47,6 +56,8 @@ install:
 	@echo "--- installing ---"
 	@echo
 	make -C $(KDIR) M=$(PWD) modules_install
+	# RELOOK :: seems to work with M=$(shell pwd) ?
+	#make -C $(KDIR) M=$(shell pwd) modules_install
 clean:
 	@echo
 	@echo "--- cleaning ---"

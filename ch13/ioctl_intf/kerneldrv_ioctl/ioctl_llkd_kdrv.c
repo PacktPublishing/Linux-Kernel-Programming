@@ -25,13 +25,13 @@
 #include "../../../convenient.h"
 
 #define OURMODNAME   "ioctl_llkd_kdrv"
-MODULE_AUTHOR("<insert name here>");
+MODULE_AUTHOR("Kaiwan N Billimoria");
 MODULE_DESCRIPTION(
-	"LLKD book:ch12/ioctl_intf: simple demo for using the ioctl interface");
+	"LLKD book:ch13/ioctl_intf: simple demo for using the ioctl interface");
 MODULE_LICENSE("Dual MIT/GPL");
 MODULE_VERSION("0.1");
 
-static int ioctl_intf_major = 0,
+static int ioctl_intf_major,
 	power = 1; /* 'powered on' by default */
 
 /* 

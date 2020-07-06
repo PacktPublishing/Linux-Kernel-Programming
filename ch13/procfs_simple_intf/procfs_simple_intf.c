@@ -378,7 +378,7 @@ static int __init procfs_simple_intf_init(void)
 	}
 	MSG("proc file 3 (/proc/%s/%s) created\n", OURMODNAME, PROC_FILE3);
 
-	/* 4. Create the PROC_FILE1 proc entry under the parent dir OURMODNAME;
+	/* 4. Create the PROC_FILE4 proc entry under the parent dir OURMODNAME;
 	 * this will serve as the 'read/write drv_ctx->config1' (pseudo) file.
 	 * API: proc_create()
 	 */
