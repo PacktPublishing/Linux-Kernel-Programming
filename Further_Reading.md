@@ -223,12 +223,15 @@ Software Developer’s Manual. Volume 3 (3A, 3B & 3C): System Programming Guide]
 - ['The "too small to fail" memory-allocation rule', Jon Corbet, LWN, Dec 2014](https://lwn.net/Articles/627419/)
 - Blog article: ['linux slab poisoning 101', Mar 2009](http://www.chizang.net/alex/2009/03/11/linux-slab-poisoning-101/)
 - ['The slab and protected-memory allocators', LWN, May 2018](https://lwn.net/Articles/753154/)
+
+
 - DMA - Direct Memory Access
     - Books: 'Essential Linux Device Drivers', S Venkateswaran, and 'Linux Device Drivers', Rubini, Corbet & Hartman
     - ['DMAEngine documentation', Linux kernel](https://www.kernel.org/doc/html/latest/driver-api/dmaengine/index.html#dmaengine-documentation)
     - ['A deep dive into CMA', LWN, Mar 2012](https://lwn.net/Articles/486301/)
     - A quite simple and interesting example of a “DMA test application” device driver is from Xilinx (for it's Zynq PL330 DMA controller); [wiki page here](http://www.wiki.xilinx.com/Zynq+Linux+pl330+DMA)
     - [Q&A on SO: Linux DMA: Using the DMAengine for scatter-gather transactions, May 2016](http://stackoverflow.com/questions/37119332/linux-dma-using-the-dmaengine-for-scatter-gather-transactions)
+    
 - VM Overcommit
     - [Quora: What are the disadvantages of disabling memory overcommit in Linux?](https://www.quora.com/What-are-the-disadvantages-of-disabling-memory-overcommit-in-Linux)
     - [Linux kernel documentation](https://www.kernel.org/doc/Documentation/vm/overcommit-accounting)
