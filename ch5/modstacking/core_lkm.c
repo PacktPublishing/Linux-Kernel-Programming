@@ -84,25 +84,27 @@ void llkd_sysinfo2(void)
 #endif
 	pr_info("%s", msg);
 }
+
 EXPORT_SYMBOL(llkd_sysinfo2);
 
 #if(BITS_PER_LONG == 32)
 u32 get_skey(int p)
-#else   // 64-bit
+#else				// 64-bit
 u64 get_skey(int p)
 #endif
 {
 #if(BITS_PER_LONG == 32)
 	u32 secret = 0x567def;
-#else   // 64-bit
+#else				// 64-bit
 	u64 secret = 0x123abc567def;
 #endif
 	pr_info("%s: %s:%s():%d: I've been called\n",
-		MODNAME, __FILE__, __FUNCTION__, __LINE__);
+		MODNAME, __FILE__, __func__, __LINE__);
 	if (p == THE_ONE)
 		return secret;
 	return 0;
 }
+
 EXPORT_SYMBOL(get_skey);
 
 static int __init core_lkm_init(void)
