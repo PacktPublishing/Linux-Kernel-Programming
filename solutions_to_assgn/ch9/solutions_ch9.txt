@@ -1,0 +1,46 @@
+------------------------------------------------------------------------------
+Solutions to selected assignments ::
+Ch 9: Kernel Memory Allocation for Module Authors Part 2
+Answers to a few selected questions only.
+(For your convenience, we have repeated the questions below and have provided
+answers / solutions to some of them).
+------------------------------------------------------------------------------
+
+2. Spot the bug(s) in the pseudo code below! Bug(s): ________
+1. memory leak: memory pointed to by p isn’t freed when
+the vmalloc() fails plus out-of-scope: cannot return automatic/local
+variable to caller
+2. memory leak: memory pointed to by p isn’t freed when
+the vmalloc() fails
+3. cannot use GFP_KERNEL in process context plus memory leak: memory
+pointed to by p isn’t freed when the vmalloc() fails
+4. cannot use vmalloc() in process context plus memory leak: memory
+pointed to by p isn’t freed when the vmalloc() fails
+< Pl refer to the book for the code screenshot >
+
+A. option 1
+
+3. If the processor's silicon memory unit is passed an address it cannot
+translate, it invokes the OS's registered _________
+1. party animals
+2. slab cache
+3. OOM killer
+4. page fault handler
+
+A. option 4
+
+4. Consider the userspace malloc() below (made by a thread X) has succeeded
+and that 'ptr' is non-NULL: 
+... ptr = malloc(getpagesize()*10); ...
+From the kernel perspective though, there is no guarantee the memory is
+physically allocated right away - this is called ‘demand paging’. Physical
+memory allocation will only happen on a page-by-page basis when thread X _____
+any address within the page, thus causing a _____
+1. accesses (for r/w/x), segmentation fault
+2. writes, page fault
+3. accesses (for rd/wr/exec), page fault
+4. reads, page fault
+
+A. option 3
+
+<end document>
