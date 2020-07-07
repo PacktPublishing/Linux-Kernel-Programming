@@ -50,21 +50,21 @@ static inline void show_ctx(char *nm)
 			/* better to use the helper methods provided */
 			task_pid_nr(current), task_tgid_nr(current),
 			/* ... rather than the 'usual' direct lookups:
-			   current->pid, current->tgid, */
+			 * current->pid, current->tgid,
+			 */
 			uid, euid,
 			(euid == 0 ? "have" : "don't have"),
 			current->comm,
-			current, (long unsigned)current,
-			current->stack, (long unsigned)current->stack);
+			current, (unsigned long)current,
+			current->stack, (unsigned long)current->stack);
 	} else
-		pr_alert("%s: in interrupt context [Should NOT Happen here!]\n",
-			 nm);
+		pr_alert("%s: in interrupt context [Should NOT Happen here!]\n", nm);
 }
 
 static int __init current_affairs_init(void)
 {
-	pr_debug("%s: inserted\n", OURMODNAME);
-	pr_info(" sizeof(struct task_struct)=%d\n", sizeof(struct task_struct));
+	pr_info("%s: inserted\n", OURMODNAME);
+	pr_info(" sizeof(struct task_struct)=%ld\n", sizeof(struct task_struct));
 	show_ctx(OURMODNAME);
 	return 0;		/* success */
 }
@@ -72,7 +72,7 @@ static int __init current_affairs_init(void)
 static void __exit current_affairs_exit(void)
 {
 	show_ctx(OURMODNAME);
-	pr_debug("%s: removed\n", OURMODNAME);
+	pr_info("%s: removed\n", OURMODNAME);
 }
 
 module_init(current_affairs_init);
