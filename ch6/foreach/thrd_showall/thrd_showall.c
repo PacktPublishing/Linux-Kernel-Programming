@@ -19,8 +19,8 @@
  * For details, please refer the book, Ch 6.
  */
 #include <linux/init.h>
-#include <linux/kernel.h>
 #include <linux/module.h>
+#include <linux/kernel.h>
 #include <linux/sched.h>     /* current() */
 #include <linux/version.h>
 #if LINUX_VERSION_CODE > KERNEL_VERSION(4, 10, 0)
@@ -31,11 +31,11 @@
 
 MODULE_AUTHOR("Kaiwan N Billimoria");
 MODULE_DESCRIPTION("LLKD book:ch6/foreach/thrd_showall:"
-		   " demo to display all threads by iterating over the task list");
+	   " demo to display all threads by iterating over the task list");
 MODULE_LICENSE("Dual MIT/GPL");
 MODULE_VERSION("0.1");
 
-/* Display just this CPU's idle thread, i.e., the pid 0 task,
+/* Display just CPU 0's idle thread, i.e., the pid 0 task,
  * the (terribly named) 'swapper/n'; n = 0, 1, 2,...
  * Again, init_task is always the task structure of the first CPU's
  * idle thread, i.e., we're referencing swapper/0.
@@ -52,7 +52,7 @@ static inline void disp_idle_thread(void)
 
 static int showthrds(void)
 {
-	struct task_struct *g, *t;	/* 'g' : process ptr; 't': thread ptr */
+	struct task_struct *g = NULL, *t = NULL; /* 'g' : process ptr; 't': thread ptr */
 	int nr_thrds = 1, total = 1;    /* total init to 1 for the idle thread */
 #define BUFMAX		256
 #define TMPMAX		128
@@ -65,8 +65,8 @@ static int showthrds(void)
 	pr_info("%s", hdr);
 #if 0
 	/* the tasklist_lock reader-writer spinlock for the task list 'should'
-	 * be used here, but, it's not exported, hence unavailable to our
-	 * kernel module */
+	 * be used here, but, it's not exported, hence unavailable to our kernel module
+	 */
 	read_lock(&tasklist_lock);
 #endif
 
@@ -79,9 +79,9 @@ static int showthrds(void)
 
 		/* task_struct addr and kernel-mode stack addr */
 		snprintf(tmp, TMPMAX-1, "  0x%016lx", (unsigned long)t);
-		strncat(buf, tmp, TMPMAX);
+		strlcat(buf, tmp, TMPMAX);
 		snprintf(tmp, TMPMAX-1, "  0x%016lx", (unsigned long)t->stack);
-		strncat(buf, tmp, TMPMAX);
+		strlcat(buf, tmp, TMPMAX);
 
 		if (!g->mm) {	// kernel thread
 		/* One might question why we don't use the get_task_comm() to
@@ -94,7 +94,7 @@ static int showthrds(void)
 		} else {
 			snprintf(tmp, TMPMAX-1, "  %16s ", t->comm);
 		}
-		strncat(buf, tmp, TMPMAX);
+		strlcat(buf, tmp, TMPMAX);
 
 		/* Is this the "main" thread of a multithreaded process?
 		 * We check by seeing if (a) it's a userspace thread,
@@ -106,11 +106,11 @@ static int showthrds(void)
 		nr_thrds = get_nr_threads(g);
 		if (g->mm && (g->tgid == t->pid) && (nr_thrds > 1)) {
 			snprintf(tmp, TMPMAX-1, " %3d", nr_thrds);
-			strncat(buf, tmp, TMPMAX);
+			strlcat(buf, tmp, TMPMAX);
 		}
 
 		snprintf(tmp, 2, "\n");
-		strncat(buf, tmp, 2);
+		strlcat(buf, tmp, 2);
 		pr_info("%s", buf);
 
 		total++;
@@ -122,7 +122,6 @@ static int showthrds(void)
 	/* <same as above, reg the reader-writer spinlock for the task list> */
 	read_unlock(&tasklist_lock);
 #endif
-
 	return total;
 }
 
@@ -130,7 +129,7 @@ static int __init thrd_showall_init(void)
 {
 	int total;
 
-	pr_debug("%s: inserted\n", OURMODNAME);
+	pr_info("%s: inserted\n", OURMODNAME);
 	total = showthrds();
 	pr_info("%s: total # of threads on the system: %d\n",
 		OURMODNAME, total);
@@ -140,7 +139,7 @@ static int __init thrd_showall_init(void)
 
 static void __exit thrd_showall_exit(void)
 {
-	pr_debug("%s: removed\n", OURMODNAME);
+	pr_info("%s: removed\n", OURMODNAME);
 }
 
 module_init(thrd_showall_init);
