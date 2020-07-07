@@ -45,7 +45,7 @@ static inline void disp_idle_thread(void)
 	struct task_struct *t = &init_task;
 
 	/* We know that the swapper is a kernel thread */
-	pr_info("%6d %6d   0x%016lx  0x%016lx [%16s]\n",
+	pr_info("%8d %8d   0x%016lx  0x%016lx [%16s]\n",
 		t->pid, t->pid, (unsigned long)t,
 		(unsigned long)t->stack, t->comm);
 }
@@ -75,13 +75,14 @@ static int showthrds(void)
 	do_each_thread(g, t) {     /* 'g' : process ptr; 't': thread ptr */
 		task_lock(t);
 
-		snprintf(buf, BUFMAX-1, "%6d %6d ", g->tgid, t->pid);
+		snprintf(buf, BUFMAX-1, "%8d %8d ", g->tgid, t->pid);
 
 		/* task_struct addr and kernel-mode stack addr */
 		snprintf(tmp, TMPMAX-1, "  0x%016lx", (unsigned long)t);
-		strlcat(buf, tmp, TMPMAX);
+		strncat(buf, tmp, TMPMAX);
+		//snprintf(buf, TMPMAX-1, "%s%s  0x%016lx", buf, tmp, (unsigned long)t->stack);
 		snprintf(tmp, TMPMAX-1, "  0x%016lx", (unsigned long)t->stack);
-		strlcat(buf, tmp, TMPMAX);
+		strncat(buf, tmp, TMPMAX);
 
 		if (!g->mm) {	// kernel thread
 		/* One might question why we don't use the get_task_comm() to
@@ -94,7 +95,7 @@ static int showthrds(void)
 		} else {
 			snprintf(tmp, TMPMAX-1, "  %16s ", t->comm);
 		}
-		strlcat(buf, tmp, TMPMAX);
+		strncat(buf, tmp, TMPMAX);
 
 		/* Is this the "main" thread of a multithreaded process?
 		 * We check by seeing if (a) it's a userspace thread,
@@ -106,11 +107,11 @@ static int showthrds(void)
 		nr_thrds = get_nr_threads(g);
 		if (g->mm && (g->tgid == t->pid) && (nr_thrds > 1)) {
 			snprintf(tmp, TMPMAX-1, " %3d", nr_thrds);
-			strlcat(buf, tmp, TMPMAX);
+			strncat(buf, tmp, TMPMAX);
 		}
 
 		snprintf(tmp, 2, "\n");
-		strlcat(buf, tmp, 2);
+		strncat(buf, tmp, 2);
 		pr_info("%s", buf);
 
 		total++;
