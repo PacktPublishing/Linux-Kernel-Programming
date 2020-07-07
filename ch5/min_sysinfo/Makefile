@@ -52,6 +52,7 @@ all:
 	@echo '--- Building : KDIR=${KDIR} ARCH=${ARCH} CROSS_COMPILE=${CROSS_COMPILE} EXTRA_CFLAGS=${EXTRA_CFLAGS} ---'
 	@echo
 	make -C $(KDIR) M=$(PWD) modules
+# TIP: if it fails, try running this target as: sudo -E make install
 install:
 	@echo
 	@echo "--- installing ---"
