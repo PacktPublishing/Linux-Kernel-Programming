@@ -26,7 +26,7 @@
 
 # To support cross-compiling for kernel modules:
 # For architecture (cpu) 'arch', invoke make as:
-#  make ARCH=<arch> CROSS_COMPILE=<cross-compiler-prefix> 
+#  make ARCH=<arch> CROSS_COMPILE=<cross-compiler-prefix>
 ifeq ($(ARCH),arm)
   # *UPDATE* 'KDIR' below to point to the ARM Linux kernel source tree on your box
   KDIR ?= ~/rpi_work/kernel_rpi/linux

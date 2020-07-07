@@ -51,9 +51,10 @@ static int show_prcs_in_tasklist(void)
 	pr_info("%s\n", &hdr[0]);
 	for_each_process(p) {
 		memset(tmp, 0, 128);
-		n = snprintf(tmp, 128, "%-16s|%7d|%7d|%7u|%7u\n", p->comm, p->tgid, p->pid,
-			     /* (old way): p->uid, p->euid
+		n = snprintf(tmp, 128, "%-16s|%8d|%8d|%7u|%7u\n", p->comm, p->tgid, p->pid,
+			     /* (old way to disp credentials): p->uid, p->euid -or-
 			      *	current_uid().val, current_euid().val
+				  * better way using kernel helper __kuid_val():
 			      */
 			     __kuid_val(p->cred->uid), __kuid_val(p->cred->euid)
 		    );
@@ -72,7 +73,7 @@ static int __init prcs_showall_init(void)
 {
 	int total;
 
-	pr_debug("%s: inserted\n", OURMODNAME);
+	pr_info("%s: inserted\n", OURMODNAME);
 	total = show_prcs_in_tasklist();
 	pr_info("%s: total # of processes on system: %d\n", OURMODNAME, total);
 
@@ -81,7 +82,7 @@ static int __init prcs_showall_init(void)
 
 static void __exit prcs_showall_exit(void)
 {
-	pr_debug("%s: removed\n", OURMODNAME);
+	pr_info("%s: removed\n", OURMODNAME);
 }
 
 module_init(prcs_showall_init);
