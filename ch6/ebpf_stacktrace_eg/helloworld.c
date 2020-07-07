@@ -29,4 +29,3 @@ int main()
 	}
 	exit(EXIT_SUCCESS);
 }
-/* a comment */

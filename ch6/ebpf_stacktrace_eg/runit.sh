@@ -22,6 +22,6 @@ which ${PRG} >/dev/null
   exit 1
 }
 
-echo "sudo ${PRG} -p ${PID} -r "SyS_write.*" -v -d"
-sudo ${PRG} -p ${PID} -r "SyS_write.*" -v -d
+echo "sudo ${PRG} -p ${PID} -r ".*sys_write.*" -v -d"
+sudo ${PRG} -p ${PID} -r ".*sys_write.*" -v -d
 exit 0
