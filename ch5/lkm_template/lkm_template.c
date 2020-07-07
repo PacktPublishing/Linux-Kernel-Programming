@@ -11,8 +11,9 @@
  * From: Ch 5 : Writing Your First Kernel Module LKMs, Part 2
  ****************************************************************
  * Brief Description:
- * A very simple Loadable Kernel Module (LKM) 'template' of sorts; the good
- * stuff's actually within it's Makefile.
+ * A very simple 'template' of sorts for a Loadable Kernel Module(s) (LKM).
+ * Do take the time and trouble to study it via the book's Ch 5; don't ignore
+ * it's 'better' Makefile !
  *
  * For details, please refer the book, Ch 5.
  */

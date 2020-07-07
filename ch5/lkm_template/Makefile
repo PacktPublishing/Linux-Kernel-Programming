@@ -10,9 +10,7 @@
 # From: Ch 5 : Writing Your First Kernel Module LKMs, Part 2
 # ***************************************************************
 # Brief Description:
-# A very simple Loadable Kernel Module (LKM) 'template' of sorts; the good
-# stuff's actually within it's Makefile.
-# A better Makefile template for Linux LKMs (Loadable Kernel Modules); besides
+# A 'better' Makefile template for Linux LKMs (Loadable Kernel Modules); besides
 # the 'usual' targets (the build, install and clean), we incorporate targets to
 # do useful (and indeed required) stuff like:
 #  - adhering to kernel coding style (indent+checkpatch)
@@ -20,6 +18,9 @@
 #  - two 'dummy' dynamic analysis targets (KASAN, LOCKDEP)
 #  - a packaging (.tar.xz) target and
 #  - a help target.
+#
+# To get started, just type:
+#  make help
 #
 # For details, please refer the book, Ch 5.
 
@@ -90,7 +91,7 @@ checkpatch:
 	@echo
 	@echo "--- kernel code style check with checkpatch.pl ---"
 	@echo
-	$(KDIR)/scripts/checkpatch.pl --no-tree -f *.c
+	$(KDIR)/scripts/checkpatch.pl --no-tree -f --max-line-length=95 *.[ch]
 	  # add source files as required
 
 #--- Static Analysis
@@ -107,6 +108,7 @@ sa_sparse:
 	@echo
 	@echo "--- static analysis with sparse ---"
 	@echo
+# if you feel it's too much, use C=1 instead
 	make C=2 CHECK="/usr/bin/sparse" -C $(KDIR) M=$(PWD) modules
 
 # static analysis with gcc
@@ -123,7 +125,7 @@ sa_flawfinder:
 	@echo
 	@echo "--- static analysis with flawfinder ---"
 	@echo
-	flawfinder *.c
+	flawfinder *.[ch]
 
 # static analysis with cppcheck
 sa_cppcheck:
