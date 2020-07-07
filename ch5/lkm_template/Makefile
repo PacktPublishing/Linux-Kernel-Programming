@@ -82,7 +82,7 @@ indent:
 	@echo "--- applying kernel code style indentation with indent ---"
 	@echo
 	mkdir bkp 2> /dev/null; cp -f *.[chsS] bkp/
-	${INDENT} -linux *.[chsS]
+	${INDENT} -linux --line-length95 *.[chsS]
 	  # add source files as required
 
 # Detailed check on the source code styling / etc
