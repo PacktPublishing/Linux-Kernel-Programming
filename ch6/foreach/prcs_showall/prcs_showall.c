@@ -51,11 +51,11 @@ static int show_prcs_in_tasklist(void)
 	pr_info("%s\n", &hdr[0]);
 	for_each_process(p) {
 		memset(tmp, 0, 128);
-		n = snprintf(tmp, 128, "%-16s|%7d|%7d|%7u|%7u\n",
-			p->comm, p->tgid, p->pid,
-			/* (old way): p->uid, p->euid
-		        current_uid().val, current_euid().val */
-		     __kuid_val(p->cred->uid), __kuid_val(p->cred->euid)
+		n = snprintf(tmp, 128, "%-16s|%7d|%7d|%7u|%7u\n", p->comm, p->tgid, p->pid,
+			     /* (old way): p->uid, p->euid
+			      *	current_uid().val, current_euid().val
+			      */
+			     __kuid_val(p->cred->uid), __kuid_val(p->cred->euid)
 		    );
 		numread += n;
 		pr_info("%s", tmp);
