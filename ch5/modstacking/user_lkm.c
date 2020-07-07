@@ -15,7 +15,7 @@
  *    user_lkm           [<--- this code]
  *        |
  *    core_lkm
- * The user_lkm kernel module calls an (exported) function that resides 
+ * The user_lkm kernel module calls an (exported) function that resides
  * in the core_lkm kernel module.
  *
  * For details, please refer the book, Ch 5.
@@ -40,8 +40,8 @@ static int __init user_lkm_init(void)
 #define THE_ONE   0xfedface
 	pr_info("%s: inserted\n", MODNAME);
 	u64 sk = get_skey(THE_ONE);
-	pr_debug("%s: Called get_skey(), ret = 0x%llx = %llu\n",
-		 MODNAME, sk, sk);
+
+	pr_debug("%s: Called get_skey(), ret = 0x%llx = %llu\n", MODNAME, sk, sk);
 	pr_debug("%s: exp_int = %d\n", MODNAME, exp_int);
 	llkd_sysinfo2();
 

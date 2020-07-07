@@ -15,7 +15,7 @@
  *    user_lkm
  *        |
  *    core_lkm           [<--- this code]
- * The user_lkm kernel module calls an (exported) function that resides 
+ * The user_lkm kernel module calls an (exported) function that resides
  * in the core_lkm kernel module.
  *
  * For details, please refer the book, Ch 5.
@@ -47,9 +47,10 @@ void llkd_sysinfo2(void)
 	snprintf(msg, 48, "%s(): minimal Platform Info:\nCPU: ", __func__);
 
 	/* Strictly speaking, all this #if... is considered ugly and should be
-	   isolated as far as is possible */
+	 * isolated as far as is possible
+	 */
 #ifdef CONFIG_X86
-#if(BITS_PER_LONG == 32)
+#if (BITS_PER_LONG == 32)
 	strlcat(msg, "x86-32, ", MSGLEN);
 #else
 	strlcat(msg, "x86_64, ", MSGLEN);
@@ -77,34 +78,31 @@ void llkd_sysinfo2(void)
 	strlcat(msg, "little-endian; ", MSGLEN);
 #endif
 
-#if(BITS_PER_LONG == 32)
+#if (BITS_PER_LONG == 32)
 	strlcat(msg, "32-bit OS.\n", MSGLEN);
 #elif(BITS_PER_LONG == 64)
 	strlcat(msg, "64-bit OS.\n", MSGLEN);
 #endif
 	pr_info("%s", msg);
 }
-
 EXPORT_SYMBOL(llkd_sysinfo2);
 
-#if(BITS_PER_LONG == 32)
+#if (BITS_PER_LONG == 32)
 u32 get_skey(int p)
 #else				// 64-bit
 u64 get_skey(int p)
 #endif
 {
-#if(BITS_PER_LONG == 32)
+#if (BITS_PER_LONG == 32)
 	u32 secret = 0x567def;
 #else				// 64-bit
 	u64 secret = 0x123abc567def;
 #endif
-	pr_info("%s: %s:%s():%d: I've been called\n",
-		MODNAME, __FILE__, __func__, __LINE__);
+	pr_info("%s: %s:%s():%d: I've been called\n", MODNAME, __FILE__, __func__, __LINE__);
 	if (p == THE_ONE)
 		return secret;
 	return 0;
 }
-
 EXPORT_SYMBOL(get_skey);
 
 static int __init core_lkm_init(void)

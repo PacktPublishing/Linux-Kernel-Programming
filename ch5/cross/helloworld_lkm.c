@@ -1,5 +1,5 @@
 /*
- * ch5/cross/hello.c
+ * ch5/cross/helloworld_lkm.c
  ***************************************************************
  * This program is part of the source code released for the book
  *  "Learn Linux Kernel Development"
@@ -25,20 +25,20 @@
 #include <linux/kernel.h>
 #include <linux/module.h>
 
-MODULE_AUTHOR("<insert your name here>");
+MODULE_AUTHOR("Kaiwan N Billimoria");
 MODULE_DESCRIPTION("LLKD book:ch5/cross: hello, world, our first Raspberry Pi LKM");
 MODULE_LICENSE("Dual MIT/GPL");
 MODULE_VERSION("0.1");
 
 static int __init hello_LLKD_init(void)
 {
-	printk(KERN_INFO "Hello, Raspberry Pi world\n");
+	pr_info("Hello, Raspberry Pi world\n");
 	return 0;		/* success */
 }
 
 static void __exit hello_LLKD_exit(void)
 {
-	printk(KERN_INFO "Goodbye, Raspberry Pi world\n");
+	pr_info("Goodbye, Raspberry Pi world\n");
 }
 
 module_init(hello_LLKD_init);

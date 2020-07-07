@@ -22,7 +22,7 @@
 
 #define OUR_MODNAME    "modparams2"
 MODULE_AUTHOR("<insert your name here>");
-MODULE_DESCRIPTION("LLKD book:ch3/modparams/modparams2: module parameters");
+MODULE_DESCRIPTION("LLKD book:ch5/modparams/modparams2: module parameters");
 MODULE_LICENSE("Dual MIT/GPL");
 MODULE_VERSION("0.1");
 
@@ -30,7 +30,7 @@ MODULE_VERSION("0.1");
 static int mp_debug_level;
 module_param(mp_debug_level, int, 0660);
 MODULE_PARM_DESC(mp_debug_level,
-	"Debug level [0-2]; 0 => no debug messages, 2 => high verbosity");
+		 "Debug level [0-2]; 0 => no debug messages, 2 => high verbosity");
 
 static char *mp_strparam = "My string param";
 module_param(mp_strparam, charp, 0660);
@@ -45,8 +45,8 @@ static int __init modparams2_init(void)
 	pr_info("%s: inserted\n", OUR_MODNAME);
 	if (mp_debug_level > 0)
 		pr_info("module parameters passed: "
-		"mp_debug_level=%d mp_strparam=%s\ncontrol_freak=%d\n",
-		mp_debug_level, mp_strparam, control_freak);
+			"mp_debug_level=%d mp_strparam=%s\ncontrol_freak=%d\n",
+			mp_debug_level, mp_strparam, control_freak);
 
 	/* param 'control_freak': if it hasn't been passed (implicit guess), or is
 	 * the same old value, or isn't within the right range,
@@ -58,14 +58,14 @@ static int __init modparams2_init(void)
 			OUR_MODNAME);
 		return -EINVAL;
 	}
-	return 0;	/* success */
+	return 0;		/* success */
 }
 
 static void __exit modparams2_exit(void)
 {
 	if (mp_debug_level > 0)
 		pr_info("module parameters passed: mp_debug_level=%d mp_strparam=%s\n",
-		mp_debug_level, mp_strparam);
+			mp_debug_level, mp_strparam);
 	pr_info("%s: removed\n", OUR_MODNAME);
 }
 

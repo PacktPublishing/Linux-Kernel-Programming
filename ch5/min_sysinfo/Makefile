@@ -1,4 +1,4 @@
-# ch5/lkm_template/Makefile
+# ch5/min_sysinfo/Makefile
 # ***************************************************************
 # This program is part of the source code released for the book
 #  "Learn Linux Kernel Development"
@@ -10,7 +10,7 @@
 # From: Ch 5 : Writing Your First Kernel Module LKMs, Part 2
 # ***************************************************************
 # Brief Description:
-# A better Makefile template for Linux LKMs (Loadable Kernel Modules); besides
+# A 'better' Makefile template for Linux LKMs (Loadable Kernel Modules); besides
 # the 'usual' targets (the build, install and clean), we incorporate targets to
 # do useful (and indeed required) stuff like:
 #  - adhering to kernel coding style (indent+checkpatch)
@@ -19,6 +19,9 @@
 #  - a packaging (.tar.xz) target and
 #  - a help target.
 #
+# To get started, just type:
+#  make help
+#
 # For details, please refer the book, Ch 5.
 
 # To support cross-compiling for kernel modules:
@@ -26,7 +29,7 @@
 #  make ARCH=<arch> CROSS_COMPILE=<cross-compiler-prefix> 
 ifeq ($(ARCH),arm)
   # *UPDATE* 'KDIR' below to point to the ARM Linux kernel source tree on your box
-  KDIR ?= ~/rpi_work/kernel_rpi
+  KDIR ?= ~/rpi_work/kernel_rpi/linux
 else ifeq ($(ARCH),arm64)
   # *UPDATE* 'KDIR' below to point to the ARM64 (Aarch64) Linux kernel source
   # tree on your box
@@ -54,8 +57,6 @@ install:
 	@echo "--- installing ---"
 	@echo
 	make -C $(KDIR) M=$(PWD) modules_install
-	# RELOOK :: seems to work with M=$(shell pwd) ?
-	#make -C $(KDIR) M=$(shell pwd) modules_install
 clean:
 	@echo
 	@echo "--- cleaning ---"
@@ -79,7 +80,7 @@ indent:
 	@echo "--- applying kernel code style indentation with indent ---"
 	@echo
 	mkdir bkp 2> /dev/null; cp -f *.[chsS] bkp/
-	${INDENT} -linux *.[chsS]
+	${INDENT} -linux --line-length95 *.[chsS]
 	  # add source files as required
 
 # Detailed check on the source code styling / etc
@@ -88,7 +89,7 @@ checkpatch:
 	@echo
 	@echo "--- kernel code style check with checkpatch.pl ---"
 	@echo
-	$(KDIR)/scripts/checkpatch.pl --no-tree -f *.c
+	$(KDIR)/scripts/checkpatch.pl --no-tree -f --max-line-length=95 *.[ch]
 	  # add source files as required
 
 #--- Static Analysis
@@ -105,6 +106,7 @@ sa_sparse:
 	@echo
 	@echo "--- static analysis with sparse ---"
 	@echo
+# if you feel it's too much, use C=1 instead
 	make C=2 CHECK="/usr/bin/sparse" -C $(KDIR) M=$(PWD) modules
 
 # static analysis with gcc
@@ -121,7 +123,7 @@ sa_flawfinder:
 	@echo
 	@echo "--- static analysis with flawfinder ---"
 	@echo
-	flawfinder *.c
+	flawfinder *.[ch]
 
 # static analysis with cppcheck
 sa_cppcheck:

@@ -18,13 +18,14 @@
  */
 #include <linux/init.h>
 #include <linux/module.h>
+#include <linux/kernel.h>
 #include <asm/fpu/api.h>
 
 #define OURMODNAME   "fp_in_lkm"
 
 MODULE_AUTHOR("<insert your name here>");
-MODULE_DESCRIPTION("LLKD book:ch5/fp_in_lkm: no performing FP"
-			" (floating point) arithmetic in kernel mode");
+MODULE_DESCRIPTION("LLKD book:ch5/fp_in_lkm: no performing FP \
+(floating point) arithmetic in kernel mode");
 MODULE_LICENSE("Dual MIT/GPL");
 MODULE_VERSION("0.1");
 
@@ -32,13 +33,13 @@ static double num = 22.0, den = 7.0, mypi;
 
 static int __init fp_in_lkm_init(void)
 {
-	pr_debug("%s: inserted\n", OURMODNAME);
+	pr_info("%s: inserted\n", OURMODNAME);
 
 	kernel_fpu_begin();
-	mypi = num/den;
+	mypi = num / den;
 	kernel_fpu_end();
 #if 1
-	pr_info("%s: PI = %.4f = %.4f\n", OURMODNAME, mypi, num/den);
+	pr_info("%s: PI = %.4f = %.4f\n", OURMODNAME, mypi, num / den);
 #endif
 
 	return 0;		/* success */
@@ -50,7 +51,7 @@ static void __exit fp_in_lkm_exit(void)
 	pr_info("%s: mypi = %f\n", OURMODNAME, mypi);
 	kernel_fpu_end();
 
-	pr_debug("%s: removed\n", OURMODNAME);
+	pr_info("%s: removed\n", OURMODNAME);
 }
 
 module_init(fp_in_lkm_init);

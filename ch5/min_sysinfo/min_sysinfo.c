@@ -33,7 +33,7 @@ MODULE_VERSION("0.1");
  * Simply displays the sizeof data types on the platform.
  */
 /* Portability: set the printk formatting appropriately for 32 and 64-bit */
-#if(BITS_PER_LONG == 32)
+#if (BITS_PER_LONG == 32)
 #define FMT   "%2u"
 #else
 #define FMT   "%2ld"
@@ -63,9 +63,10 @@ static void llkd_sysinfo2(void)
 	snprintf(msg, 48, "%s(): minimal Platform Info:\nCPU: ", __func__);
 
 	/* Strictly speaking, all this #if... is considered ugly and should be
-	   isolated as far as is possible */
+	 * isolated as far as is possible
+	 */
 #ifdef CONFIG_X86
-#if(BITS_PER_LONG == 32)
+#if (BITS_PER_LONG == 32)
 	strlcat(msg, "x86-32, ", MSGLEN);
 #else
 	strlcat(msg, "x86-64, ", MSGLEN);
@@ -93,7 +94,7 @@ static void llkd_sysinfo2(void)
 	strlcat(msg, "little-endian; ", MSGLEN);
 #endif
 
-#if(BITS_PER_LONG == 32)
+#if (BITS_PER_LONG == 32)
 	strlcat(msg, "32-bit OS.\n", MSGLEN);
 #elif(BITS_PER_LONG == 64)
 	strlcat(msg, "64-bit OS.\n", MSGLEN);
@@ -109,15 +110,15 @@ static void llkd_sysinfo2(void)
 	     "U16_MAX = %20u = 0x%16x, S16_MAX = %20d = 0x%16x, S16_MIN = %20d = 0x%16x\n"
 	     "U32_MAX = %20u = 0x%16x, S32_MAX = %20d = 0x%16x, S32_MIN = %20d = 0x%16x\n"
 	     "U64_MAX = %20llu = 0x%16llx, S64_MAX = %20lld = 0x%16llx, S64_MIN = %20lld = 0x%16llx\n"
-	/* PHYS_ADDR_MAX is a mask of all address bits set to 1 (32 or 64
-	 * depending on the processor; However, it doesn't seem to compile on
-	 * distro kernels, but does work on mainline 5.4. Thus here, we simply
-	 * leave it commented out due to this uncertainty.
-	 *
-#if defined (CONFIG_X86)
-	     "PHYS_ADDR_MAX = %llu = 0x%llx\n"
-#endif
-	 */
+	     /* PHYS_ADDR_MAX is a mask of all address bits set to 1 (32 or 64
+	      * depending on the processor; However, it doesn't seem to compile on
+	      * distro kernels, but does work on mainline 5.4. Thus here, we simply
+	      * leave it commented out due to this uncertainty.
+	      *
+	      #if defined (CONFIG_X86)
+	      "PHYS_ADDR_MAX = %llu = 0x%llx\n"
+	      #endif
+	      */
 	     , U8_MAX, U8_MAX, S8_MAX, S8_MAX, S8_MIN, S8_MIN,
 	     U16_MAX, U16_MAX, S16_MAX, S16_MAX, S16_MIN, S16_MIN,
 	     U32_MAX, U32_MAX, S32_MAX, S32_MAX, S32_MIN, S32_MIN,
@@ -139,9 +140,10 @@ static void llkd_sysinfo(void)
 	snprintf(msg, 47, "%s(): minimal Platform Info:\nCPU: ", __func__);
 
 	/* Strictly speaking, all this #if... is considered ugly and should be
-	   isolated as far as is possible */
+	 * isolated as far as is possible
+	 */
 #ifdef CONFIG_X86
-#if(BITS_PER_LONG == 32)
+#if (BITS_PER_LONG == 32)
 	strncat(msg, "x86-32, ", 9);
 #else
 	strncat(msg, "x86-64, ", 9);
@@ -169,7 +171,7 @@ static void llkd_sysinfo(void)
 	strncat(msg, "little-endian; ", 16);
 #endif
 
-#if(BITS_PER_LONG == 32)
+#if (BITS_PER_LONG == 32)
 	strncat(msg, "32-bit OS.\n", 12);
 #elif(BITS_PER_LONG == 64)
 	strncat(msg, "64-bit OS.\n", 12);
