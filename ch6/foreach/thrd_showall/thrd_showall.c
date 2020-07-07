@@ -58,9 +58,9 @@ static int showthrds(void)
 #define TMPMAX		128
 	char buf[BUFMAX], tmp[TMPMAX];
 	const char hdr[] =
-"--------------------------------------------------------------------------------\n"
-"    TGID   PID         current        stack-start      Thread Name   MT? # thrds\n"
-"--------------------------------------------------------------------------------\n";
+"------------------------------------------------------------------------------------------\n"
+"    TGID     PID         current           stack-start         Thread Name     MT? # thrds\n"
+"------------------------------------------------------------------------------------------\n";
 
 	pr_info("%s", hdr);
 #if 0
@@ -79,10 +79,15 @@ static int showthrds(void)
 
 		/* task_struct addr and kernel-mode stack addr */
 		snprintf(tmp, TMPMAX-1, "  0x%016lx", (unsigned long)t);
-		strncat(buf, tmp, TMPMAX);
-		//snprintf(buf, TMPMAX-1, "%s%s  0x%016lx", buf, tmp, (unsigned long)t->stack);
-		snprintf(tmp, TMPMAX-1, "  0x%016lx", (unsigned long)t->stack);
-		strncat(buf, tmp, TMPMAX);
+		/*
+		 * To concatenate the temp string to our buffer, we could go with the
+		 * strncat() here; flawfinder, though, points out this is potentially
+		 * dangerous; so we simply use another snprintf() to achieve the same.
+		 * Why not use strlcat() instead? Here, it runs into trouble - being
+		 * called in an atomic context, which isn't ok (due to the
+		 * might_sleep() within it's code)...
+		 */
+		snprintf(buf, BUFMAX-1, "%s%s  0x%016lx", buf, tmp, (unsigned long)t->stack);
 
 		if (!g->mm) {	// kernel thread
 		/* One might question why we don't use the get_task_comm() to
@@ -95,7 +100,7 @@ static int showthrds(void)
 		} else {
 			snprintf(tmp, TMPMAX-1, "  %16s ", t->comm);
 		}
-		strncat(buf, tmp, TMPMAX);
+		snprintf(buf, BUFMAX-1, "%s%s", buf, tmp);
 
 		/* Is this the "main" thread of a multithreaded process?
 		 * We check by seeing if (a) it's a userspace thread,
@@ -107,11 +112,10 @@ static int showthrds(void)
 		nr_thrds = get_nr_threads(g);
 		if (g->mm && (g->tgid == t->pid) && (nr_thrds > 1)) {
 			snprintf(tmp, TMPMAX-1, " %3d", nr_thrds);
-			strncat(buf, tmp, TMPMAX);
+			snprintf(buf, BUFMAX-1, "%s%s", buf, tmp);
 		}
 
-		snprintf(tmp, 2, "\n");
-		strncat(buf, tmp, 2);
+		snprintf(buf, BUFMAX-1, "%s\n", buf);
 		pr_info("%s", buf);
 
 		total++;
