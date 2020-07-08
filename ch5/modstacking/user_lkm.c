@@ -22,6 +22,7 @@
  */
 #include <linux/init.h>
 #include <linux/module.h>
+#include <linux/kernel.h>
 
 #define MODNAME     "user_lkm"
 #if 1

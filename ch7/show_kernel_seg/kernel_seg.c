@@ -27,8 +27,8 @@
  * For details, please refer the book, Ch 6.
  */
 #include <linux/init.h>
-#include <linux/kernel.h>
 #include <linux/module.h>
+#include <linux/kernel.h>
 #include <linux/sched.h>
 #include <linux/mm.h>
 #include <linux/highmem.h>
@@ -232,7 +232,7 @@ static void show_kernelseg_info(void)
 
 static int __init kernel_seg_init(void)
 {
-	pr_debug("%s: inserted\n", OURMODNAME);
+	pr_info("%s: inserted\n", OURMODNAME);
 
 	/* Display some minimal system info
 	 * Note: this function is within our kernel 'library' here:
@@ -254,7 +254,7 @@ static int __init kernel_seg_init(void)
 
 static void __exit kernel_seg_exit(void)
 {
-	pr_debug("%s: removed\n", OURMODNAME);
+	pr_info("%s: removed\n", OURMODNAME);
 }
 
 module_init(kernel_seg_init);

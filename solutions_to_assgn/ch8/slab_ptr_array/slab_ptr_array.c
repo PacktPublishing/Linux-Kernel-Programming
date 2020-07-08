@@ -30,8 +30,8 @@
  * For details, please refer the book, Ch 8.
  */
 #include <linux/init.h>
-#include <linux/kernel.h>
 #include <linux/module.h>
+#include <linux/kernel.h>
 #include <linux/slab.h>
 
 #define OURMODNAME       "slab_ptr_array"

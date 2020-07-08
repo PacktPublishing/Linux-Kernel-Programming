@@ -19,8 +19,8 @@
  * For details, please refer the book, Ch 9.
  */
 #include <linux/init.h>
-#include <linux/kernel.h>
 #include <linux/module.h>
+#include <linux/kernel.h>
 #include <linux/slab.h>
 #include <linux/version.h>
 #include <linux/sched.h>   /* current */

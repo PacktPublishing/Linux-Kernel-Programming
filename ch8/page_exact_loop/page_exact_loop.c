@@ -19,8 +19,8 @@
  * For details, please refer the book, Ch 8.
  */
 #include <linux/init.h>
-#include <linux/kernel.h>
 #include <linux/module.h>
+#include <linux/kernel.h>
 #include <linux/delay.h>
 
 #define OURMODNAME   "page_exact_loop"
@@ -81,7 +81,7 @@ static void __exit page_exact_loop_exit(void)
 
 	for (i=0; i < MAXTIMES; i++)
 		free_pages_exact(gptr[i], gsz);
-	pr_debug("%s: mem freed, removed\n", OURMODNAME);
+	pr_info("%s: mem freed, removed\n", OURMODNAME);
 }
 
 module_init(page_exact_loop_init);

@@ -19,8 +19,8 @@
  * For details, please refer the book, Ch 4.
  */
 #include <linux/init.h>
-#include <linux/kernel.h>
 #include <linux/module.h>
+#include <linux/kernel.h>
 
 MODULE_AUTHOR("<insert your name here>");
 MODULE_DESCRIPTION("LLKD book:ch4/printk_loglvl: print at each kernel log level");

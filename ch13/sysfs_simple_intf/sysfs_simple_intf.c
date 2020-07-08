@@ -46,9 +46,9 @@
  *
  * For details, please refer the book, Ch 13.
  */
-#include <linux/kernel.h>
-#include <linux/module.h>
 #include <linux/init.h>
+#include <linux/module.h>
+#include <linux/kernel.h>
 #include <linux/fs.h>
 #include <linux/platform_device.h>
 #include <linux/mutex.h>

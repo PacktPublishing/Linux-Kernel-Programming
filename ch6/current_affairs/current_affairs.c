@@ -15,8 +15,8 @@
  * For details, please refer the book, Ch 6.
  */
 #include <linux/init.h>
-#include <linux/kernel.h>
 #include <linux/module.h>
+#include <linux/kernel.h>
 #include <linux/sched.h>	/* current() */
 #include <linux/preempt.h>	/* in_interrupt() */
 #include <linux/cred.h>		/* current_{e}{u,g}id() */

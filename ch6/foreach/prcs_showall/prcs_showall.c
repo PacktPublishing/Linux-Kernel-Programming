@@ -18,7 +18,6 @@
  * For details, please refer the book, Ch 6.
  */
 #include <linux/init.h>
-#include <linux/kernel.h>
 #include <linux/module.h>
 #include <linux/kernel.h>
 #include <linux/sched.h>

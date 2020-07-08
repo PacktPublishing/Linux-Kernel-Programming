@@ -23,9 +23,9 @@
  * address (pa); then reading from the same file should cause the pa to be
  * displayed. Vice-versa with the addrxlate_pa2kva sysfs file.
  */
-#include <linux/kernel.h>
-#include <linux/module.h>
 #include <linux/init.h>
+#include <linux/module.h>
+#include <linux/kernel.h>
 #include <linux/types.h>
 #include <linux/platform_device.h>
 #include <linux/mutex.h>

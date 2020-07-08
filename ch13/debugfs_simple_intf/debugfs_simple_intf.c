@@ -14,9 +14,9 @@
  *
  * For details, please refer the book, Ch 13.
  */
-#include <linux/kernel.h>
-#include <linux/module.h>
 #include <linux/init.h>
+#include <linux/module.h>
+#include <linux/kernel.h>
 #include <linux/sched.h>
 #include <linux/debugfs.h>
 #include <linux/slab.h>
@@ -114,7 +114,7 @@ static struct drv_ctx *alloc_init_drvctx(void)
 	drvctx->power = 1;
 	strncpy(drvctx->oursecret, "AhA yyy", 8);
 
-	pr_debug("%s: allocated and init the driver context structure\n",
+	pr_info("%s: allocated and init the driver context structure\n",
 		 OURMODNAME);
 	return drvctx;
 }

@@ -1,5 +1,5 @@
 /*
- * solutions_to_assgn/ch3/libtest/mylib.c
+ * solutions_to_assgn/ch5/libtest/mylib.c
  ***************************************************************
  * This program is part of the source code released for the book
  *  "Linux Kernel Development Cookbook"
@@ -8,19 +8,20 @@
  *  GitHub repository:
  *  https://github.com/PacktPublishing/Linux-Kernel-Development-Cookbook
  *
- * From: Ch 3: Writing your First Kernel Module- LKMs Part 2
+ * From: Ch 5: Writing your First Kernel Module- LKMs Part 2
  ****************************************************************
  * Brief Description: Assignment:
-3.1 : libtest: Write a kernel module called mycaller.c; it must invoke a
-'library' routine called 'product' that lives within another 'C' file (mylib.c).
- int product(int a, int b); returns (a*b)
-Link them into a single kernel module called libtest.ko and verify that the
-caller can indeed correctly invoke code from the 'library'.
-
+ * 5.1 : libtest: Write a kernel module called mycaller.c; it must invoke a
+ * 'library' routine called 'product' that lives within another 'C' file (mylib.c).
+ *  int product(int a, int b); returns (a*b)
+ * Link them into a single kernel module called libtest.ko and verify that the
+ * caller can indeed correctly invoke code from the 'library'.
+ * 
  * This is the mylib.c - the 'library' - code.
  */
 #include <linux/init.h>
 #include <linux/module.h>
+#include <linux/kernel.h>
 
 #if 0
 int product(int a, int b)

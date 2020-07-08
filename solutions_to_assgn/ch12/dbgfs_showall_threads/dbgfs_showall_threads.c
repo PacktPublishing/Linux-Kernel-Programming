@@ -27,9 +27,9 @@
  *
  * For details, please refer the book, Ch 12.
  */
-#include <linux/kernel.h>
-#include <linux/module.h>
 #include <linux/init.h>
+#include <linux/module.h>
+#include <linux/kernel.h>
 #include <linux/sched.h>
 #include <linux/debugfs.h>
 #include <linux/vmalloc.h>

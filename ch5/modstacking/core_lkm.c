@@ -22,6 +22,7 @@
  */
 #include <linux/init.h>
 #include <linux/module.h>
+#include <linux/kernel.h>
 
 #define MODNAME   "core_lkm"
 #define THE_ONE   0xfedface
@@ -51,7 +52,7 @@ void llkd_sysinfo2(void)
 	 */
 #ifdef CONFIG_X86
 #if (BITS_PER_LONG == 32)
-	strlcat(msg, "x86-32, ", MSGLEN);
+	strlcat(msg, "x86_32, ", MSGLEN);
 #else
 	strlcat(msg, "x86_64, ", MSGLEN);
 #endif

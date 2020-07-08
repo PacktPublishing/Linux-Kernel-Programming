@@ -16,6 +16,7 @@
  */
 #include <linux/init.h>
 #include <linux/module.h>
+#include <linux/kernel.h>
 
 #define OUR_MODNAME    "modparams1"
 MODULE_AUTHOR("<insert your name here>");
