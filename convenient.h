@@ -22,45 +22,46 @@
 #ifdef __KERNEL__
 #include <linux/ratelimit.h>
 
-/* 
-   *** PLEASE READ this first ***
-
-    We can reduce the load, and increase readability, by using the trace_printk
-    instead of printk. To see the trace_printk() output do:
-       cat /sys/kernel/debug/tracing/trace
-
-    If we insist on using the regular printk, lets at least rate-limit it.
-	For the programmers' convenience, this too is programatically controlled 
-	(by an integer var USE_RATELIMITING [default: On]).
-
- 	*** Kernel module authors Note: ***
-	To use the trace_printk(), pl #define the symbol USE_FTRACE_PRINT in your
-	Makefile:
-	 EXTRA_CFLAGS += -DUSE_FTRACE_PRINT
-	If you do not do this, we will use the usual printk() .
-
-	To view :
-	  printk's       : dmesg
-      trace_printk's : cat /sys/kernel/debug/tracing/trace
-
-	 Default: printk (with rate-limiting)
+/*
+ *** PLEASE READ this first ***
+ *
+ *  We can reduce the load, and increase readability, by using the trace_printk
+ *  instead of printk. To see the trace_printk() output do:
+ *     cat /sys/kernel/debug/tracing/trace
+ *
+ *  If we insist on using the regular printk, lets at least rate-limit it.
+ *	For the programmers' convenience, this too is programatically controlled
+ *	(by an integer var USE_RATELIMITING [default: On]).
+ *
+ *** Kernel module authors Note: ***
+ *	To use the trace_printk(), pl #define the symbol USE_FTRACE_PRINT in your
+ *	Makefile:
+ *	 EXTRA_CFLAGS += -DUSE_FTRACE_PRINT
+ *	If you do not do this, we will use the usual printk() .
+ *
+ *	To view :
+ *	  printk's       : dmesg
+ *     trace_printk's : cat /sys/kernel/debug/tracing/trace
+ *
+ *	 Default: printk (with rate-limiting)
  */
 /* Keep this defined to use the FTRACE-style trace_printk(), else will use
-   regular printk() */
+ * regular printk()
+ */
 //#define USE_FTRACE_BUFFER
 #undef USE_FTRACE_BUFFER
 
 #ifdef USE_FTRACE_BUFFER
 #define DBGPRINT(string, args...)                                       \
-     trace_printk(string, ##args);
+	trace_printk(string, ##args);
 #else
 #define DBGPRINT(string, args...) do {                                  \
-     int USE_RATELIMITING=0;                                            \
-	 if (USE_RATELIMITING) {                                            \
-	   pr_info_ratelimited(pr_fmt(string), ##args);                     \
-	 }                                                                  \
-	 else                                                               \
-           pr_info(pr_fmt(string), ##args);                             \
+	int USE_RATELIMITING=0;                                             \
+	if (USE_RATELIMITING) {                                             \
+		pr_info_ratelimited(pr_fmt(string), ##args);                    \
+	}                                                                   \
+	else                                                                \
+		pr_info(pr_fmt(string), ##args);                                \
 } while (0)
 #endif
 #endif				/* #ifdef __KERNEL__ */
@@ -69,11 +70,11 @@
 #ifdef DEBUG
 #ifdef __KERNEL__
 #define MSG(string, args...) do {                                       \
-	DBGPRINT("%s:%d : " string, __FUNCTION__, __LINE__, ##args);        \
+	DBGPRINT("%s:%d : " string, __func__, __LINE__, ##args);            \
 } while (0)
 #else
 #define MSG(string, args...) do {                                       \
-	fprintf(stderr, "%s:%d : " string, __FUNCTION__, __LINE__, ##args); \
+	fprintf(stderr, "%s:%d : " string, __func__, __LINE__, ##args);     \
 } while (0)
 #endif
 
@@ -182,7 +183,7 @@
 #define PRINT_CTX() do {                                                                 \
 	DBGPRINT("PRINT_CTX:: [cpu %02d]%s:%d\n", smp_processor_id(), __func__,              \
 			current->pid);                                                               \
-	if (!in_interrupt()) {                                                               \
+	if (in_task()) {                                                                     \
   		DBGPRINT(" in process context:%c%s%c:%d\n",                                      \
 		    (!current->mm?'[':' '), current->comm, (!current->mm?']':' '),               \
 				current->pid);                                                           \
@@ -265,7 +266,7 @@ void delay_sec(long);
 void delay_sec(long val)
 {
 	asm ("");    // force the compiler to not inline it!
-	if (!in_interrupt()) {
+	if (in_task()) {
 		set_current_state(TASK_INTERRUPTIBLE);
 		if (-1 == val)
 			schedule_timeout(MAX_SCHEDULE_TIMEOUT);
