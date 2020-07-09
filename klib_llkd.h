@@ -24,10 +24,10 @@
 
 /* Portability */
 #if(BITS_PER_LONG == 32)
- #define FMTSPC "0x%08x"
+ #define FMTSPC "%08x"
  #define TYPECST unsigned int
 #elif(BITS_PER_LONG == 64)
- #define FMTSPC "0x%016lx"
+ #define FMTSPC "%016lx"
  #define TYPECST unsigned long
 #endif
 
