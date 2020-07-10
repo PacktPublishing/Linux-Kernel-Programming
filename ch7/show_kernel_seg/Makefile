@@ -44,6 +44,7 @@ else
   KDIR ?= /lib/modules/$(shell uname -r)/build
 endif
 
+PWD                   := $(shell pwd)
 obj-m                 += show_kernel_seg.o
 show_kernel_seg-objs  += kernel_seg.o ../../klib_llkd.o
 EXTRA_CFLAGS          += -DDEBUG -Wformat=0

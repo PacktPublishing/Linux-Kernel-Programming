@@ -44,6 +44,7 @@ else
   KDIR ?= /lib/modules/$(shell uname -r)/build
 endif
 
+PWD            := $(shell pwd)
 obj-m          += modparams1.o
 EXTRA_CFLAGS   += -DDEBUG
 

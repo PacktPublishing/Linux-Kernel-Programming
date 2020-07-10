@@ -44,6 +44,7 @@ else
   KDIR ?= /lib/modules/$(shell uname -r)/build
 endif
 
+PWD            := $(shell pwd)
 obj-m          += core_lkm.o
 obj-m          += user_lkm.o
 EXTRA_CFLAGS   += -DDEBUG
