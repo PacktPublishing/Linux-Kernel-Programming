@@ -18,7 +18,7 @@
 #include <linux/module.h>
 #include <linux/kernel.h>
 #include <linux/sched.h>	/* current() */
-#include <linux/preempt.h>	/* in_interrupt() */
+#include <linux/preempt.h>	/* in_task() */
 #include <linux/cred.h>		/* current_{e}{u,g}id() */
 #include <linux/uidgid.h>	/* {from,make}_kuid() */
 
@@ -37,7 +37,7 @@ static inline void show_ctx(char *nm)
 	unsigned int euid = from_kuid(&init_user_ns, current_euid());
 
 	pr_info("%s:%s():%d ", nm, __func__, __LINE__);
-	if (likely(!in_interrupt())) {
+	if (likely(in_task())) {
 		pr_info("%s: in process context ::\n"
 			" PID         : %6d\n"
 			" TGID        : %6d\n"
