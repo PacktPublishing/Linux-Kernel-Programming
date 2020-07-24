@@ -21,8 +21,8 @@
  *
  * Useful! With show_uservas=1 we literally 'see' the full memory map of the
  * process, including kernel-space.
- * (Also, fyi, for a more detailed view of the user VAS, see our 'vasu_grapher'
- * utility).
+ * (Also, fyi, for a more detailed view of the kernel/user VAS, check out the
+ * 'procmap' utility).
  *
  * For details, please refer the book, Ch 7.
  */
@@ -34,6 +34,7 @@
 #include <linux/highmem.h>
 #include <linux/slab.h>
 #include <linux/vmalloc.h>
+#include <linux/version.h>
 #include <asm/pgtable.h>
 #include "../../klib_llkd.h"
 #include "../../convenient.h"
@@ -41,7 +42,7 @@
 #define OURMODNAME   "kernel_seg"
 
 MODULE_AUTHOR("Kaiwan N Billimoria");
-MODULE_DESCRIPTION("LLKD book:ch6/kernel_seg: display some kernel segment details");
+MODULE_DESCRIPTION("LLKD book:ch7/kernel_seg: display some kernel segment details");
 MODULE_LICENSE("Dual MIT/GPL");
 MODULE_VERSION("0.1");
 
@@ -133,10 +134,13 @@ static void show_kernelseg_info(void)
 {
 	pr_info("\nSome Kernel Details [by decreasing address]\n"
 		"+-------------------------------------------------------------+\n");
-#ifdef ARM
+#ifdef CONFIG_ARM
+	/* On ARM, the definition of VECTORS_BASE turns up only in kernels >= 4.11 */
+#if LINUX_VERSION_CODE > KERNEL_VERSION(4, 11, 0)
 	pr_info("|vector table:       "
 		" 0x" FMTSPC " - 0x" FMTSPC " | [" FMTSPC_DEC " KB]  |\n",
 		SHOW_DELTA_K((TYPECST) VECTORS_BASE, (TYPECST) VECTORS_BASE + PAGE_SIZE));
+#endif
 #endif
 
 	/* kernel fixmap region */
