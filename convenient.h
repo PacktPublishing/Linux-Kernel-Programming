@@ -53,15 +53,15 @@
 
 #ifdef USE_FTRACE_BUFFER
 #define DBGPRINT(string, args...)                                       \
-	trace_printk(string, ##args)
+	trace_printk(string, ##args);
 #else
 #define DBGPRINT(string, args...) do {                                  \
-	int USE_RATELIMITING = 0;                                           \
+	int USE_RATELIMITING = 1;                                           \
 	if (USE_RATELIMITING) {                                             \
-		pr_info_ratelimited(pr_fmt(string), ##args);                    \
+		pr_info_ratelimited(string, ##args);                            \
 	}                                                                   \
 	else                                                                \
-		pr_info(pr_fmt(string), ##args);                                \
+		pr_info(string, ##args);                                        \
 } while (0)
 #endif
 #endif				/* #ifdef __KERNEL__ */
@@ -157,7 +157,7 @@
 #define PRINT_CTX() do {                                                                \
 	char sep = '|', intr = '.';                                                         \
 																						\
-	if (in_interrupt()) {                                                               \
+	if (!in_task()) {                                                                   \
 		if (in_irq() && in_softirq())                                                   \
 			intr = 'H';                                                                 \
 		else if (in_irq())                                                              \
