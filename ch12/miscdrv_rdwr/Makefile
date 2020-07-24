@@ -65,6 +65,13 @@ clean:
 	make -C $(KDIR) M=$(PWD) clean
 	rm -f *~   # from 'indent'
 
+# userspace target
+rdwr_drv_secret: rdwr_drv_secret.c
+	@echo
+	@echo "-- building the userspace app --"
+	@echo
+	gcc -Wall -Os rdwr_drv_secret.c -o rdwr_drv_secret
+
 #--------------- More (useful) targets! -------------------------------
 INDENT := indent
 
