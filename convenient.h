@@ -158,23 +158,22 @@
  */
 #include <linux/sched.h>
 #include <linux/interrupt.h>
-#ifndef USE_FTRACE_BUFFER	// 'normal' printk(), lets emulate ftrace latency format
 
-#define PRINT_CTX() do {                                                             \
-	int PRINTCTX_SHOWHDR = 0;                                                    \
-	char intr = '.';                                                             \
-	if (!in_task()) {                                                            \
-		if (in_irq() && in_softirq())                                        \
-			intr = 'H'; /* hardirq occurred inside a softirq */          \
-		else if (in_irq())                                                   \
-			intr = 'h'; /* hardirq is running */                         \
-		else if (in_softirq())                                               \
-			intr = 's';                                                  \
-	}                                                                            \
-	else                                                                         \
-		intr = '.';                                                          \
-										     \
-	if (PRINTCTX_SHOWHDR == 1)                                                   \
+#define PRINT_CTX() do {                                                      \
+	int PRINTCTX_SHOWHDR = 0;                                                 \
+	char intr = '.';                                                          \
+	if (!in_task()) {                                                         \
+		if (in_irq() && in_softirq())                                         \
+			intr = 'H'; /* hardirq occurred inside a softirq */               \
+		else if (in_irq())                                                    \
+			intr = 'h'; /* hardirq is running */                              \
+		else if (in_softirq())                                                \
+			intr = 's';                                                       \
+	}                                                                         \
+	else                                                                      \
+		intr = '.';                                                           \
+										                                      \
+	if (PRINTCTX_SHOWHDR == 1)                                                \
 		pr_debug("CPU)  task_name:PID  | irqs,need-resched,hard/softirq,preempt-depth  /* func_name() */\n"); \
 	pr_debug(                                                                    \
 	"%03d) %c%s%c:%d   |  "                                                      \
@@ -189,22 +188,6 @@
 	__func__                                                                     \
 	);                                                                           \
 } while (0)
-#else				// using ftrace trace_prink() internally
-#define PRINT_CTX() do {                                                                        \
-	DBGPRINT("PRINT_CTX:: [cpu %02d]%s:%d\n", smp_processor_id(), __func__,                 \
-			current->pid);                                                          \
-	if (in_task()) {                                                                        \
-		DBGPRINT(" in process context:%c%s%c:%d\n",                                     \
-		    (!current->mm?'[':' '), current->comm, (!current->mm?']':' '),              \
-			current->pid);																\
-	} else {                                                                                \
-		DBGPRINT(" in interrupt context: in_interrupt:%3s. in_irq:%3s. in_softirq:%3s. "\
-		"in_serving_softirq:%3s. preempt_count=0x%x\n",                                 \
-		(in_interrupt()?"yes":"no"), (in_irq()?"yes":"no"), (in_softirq()?"yes":"no"),  \
-		(in_serving_softirq()?"yes":"no"), (preempt_count() && 0xff));                  \
-	}                                                                                       \
-} while (0)
-#endif
 #endif
 
 /*------------------------ assert ---------------------------------------
