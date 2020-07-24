@@ -63,7 +63,7 @@ clean:
 	@echo "--- cleaning ---"
 	@echo
 	make -C $(KDIR) M=$(PWD) clean
-	rm -f *~   # from 'indent'
+	rm -f *~ rdwr_drv_secret   # from 'indent'
 
 # userspace target
 rdwr_drv_secret: rdwr_drv_secret.c
