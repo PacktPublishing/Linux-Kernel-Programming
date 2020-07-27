@@ -293,12 +293,9 @@ static int __init miscdrv_init(void)
 
 static void __exit miscdrv_exit(void)
 {
-	//kzfree(ctx);
 	misc_deregister(&llkd_miscdev);
 	pr_info("%s: LKDC misc driver deregistered, bye\n", OURMODNAME);
-	dev_dbg(dev,
-		"A sample print via the dev_dbg(): driver %s deregistered, bye\n",
-		OURMODNAME);
+	pr_debug("driver %s deregistered, bye\n", OURMODNAME);
 }
 
 module_init(miscdrv_init);
