@@ -131,13 +131,8 @@
 #ifdef __KERNEL__
 /*------------------------ PRINT_CTX ---------------------------------*/
 /*
- * An interesting way to print the context info:
- * If USE_FTRACE_BUFFER is On, it implies we'll use trace_printk(), else the vanilla
- * printk() (see above).
- * If we are using trace_printk(), we will automatically get output in the ftrace
- * latency format (see below):
-
- * The Ftrace 'latency-format' :
+ * An interesting way to print the context info; we mimic the kernel
+ * Ftrace 'latency-format' :
  *                       _-----=> irqs-off          [d]
  *                      / _----=> need-resched      [N]
  *                     | / _---=> hardirq/softirq   [H|h|s] [1]
@@ -152,9 +147,7 @@
  *  CPU)  task_name:PID  | irqs,need-resched,hard/softirq,preempt-depth  \* func_name() *\
  *  001)  rdwr_drv_secret -4857   |  ...0   \* read_miscdrv_rdwr() *\
  *
- * However, if we're _not_ using ftrace trace_printk(), then we'll _emulate_ the same
- * with the printk() !
- * (of course, without the 'Duration' and 'Function Calls' fields).
+ * (of course, above, we don't display the 'Duration' and 'Function Calls' fields)
  */
 #include <linux/sched.h>
 #include <linux/interrupt.h>
