@@ -24,14 +24,15 @@
 #define OURMODNAME   "slab4_actualsz_wstg_plot"
 
 MODULE_AUTHOR("Kaiwan N Billimoria");
-MODULE_DESCRIPTION("LLKD book:ch8/slab4_actualsz_wstg_plot: test slab alloc with the ksize(), minimal ver");
+MODULE_DESCRIPTION
+("LLKD book:ch8/slab4_actualsz_wstg_plot: test slab alloc with the ksize(), minimal ver");
 MODULE_LICENSE("Dual MIT/GPL");
 MODULE_VERSION("0.1");
 
 static int stepsz = 20000;
 module_param(stepsz, int, 0644);
 MODULE_PARM_DESC(stepsz,
- "Amount to increase allocation by on each loop iteration (default=200000");
+		 "Amount to increase allocation by on each loop iteration (default=200000");
 
 static int test_maxallocsz(void)
 {
@@ -50,7 +51,7 @@ static int test_maxallocsz(void)
 		actual_alloced = ksize(p);
 		/* Only print the size2alloc (required) and the percentage of waste */
 		pr_info("%zu  %3zu\n",
-			size2alloc, (((actual_alloced-size2alloc)*100)/size2alloc));
+			size2alloc, (((actual_alloced - size2alloc) * 100) / size2alloc));
 		kfree(p);
 		size2alloc += stepsz;
 	}
@@ -62,6 +63,7 @@ static int __init slab4_actualsz_wstg_plot_init(void)
 	pr_info("%s: inserted\n", OURMODNAME);
 	return test_maxallocsz();
 }
+
 static void __exit slab4_actualsz_wstg_plot_exit(void)
 {
 	pr_info("%s: removed\n", OURMODNAME);

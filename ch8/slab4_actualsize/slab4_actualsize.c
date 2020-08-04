@@ -30,7 +30,7 @@ MODULE_VERSION("0.1");
 static int stepsz = 200000;
 module_param(stepsz, int, 0644);
 MODULE_PARM_DESC(stepsz,
- "Amount to increase allocation by on each loop iteration (default=200000");
+		 "Amount to increase allocation by on each loop iteration (default=200000");
 
 static int test_maxallocsz(void)
 {
@@ -48,12 +48,12 @@ static int test_maxallocsz(void)
 		}
 		actual_alloced = ksize(p);
 		/* Print the size2alloc, the amount actually allocated,
-	         * the delta between the two, and the percentage of waste
+		 * the delta between the two, and the percentage of waste
 		 * (integer arithmetic, of course :-)
 		 */
 		pr_info("kmalloc(%7zu) : %7zu : %7zu : %3zu%%\n",
-                        size2alloc, actual_alloced, (actual_alloced-size2alloc),
-			(((actual_alloced-size2alloc)*100)/size2alloc));
+			size2alloc, actual_alloced, (actual_alloced - size2alloc),
+			(((actual_alloced - size2alloc) * 100) / size2alloc));
 		kfree(p);
 		size2alloc += stepsz;
 	}
@@ -65,6 +65,7 @@ static int __init slab4_actualsize_init(void)
 	pr_info("%s: inserted\n", OURMODNAME);
 	return test_maxallocsz();
 }
+
 static void __exit slab4_actualsize_exit(void)
 {
 	pr_info("%s: removed\n", OURMODNAME);

@@ -28,15 +28,14 @@ MODULE_VERSION("0.1");
 static int stepsz = 200000;
 module_param(stepsz, int, 0644);
 MODULE_PARM_DESC(stepsz,
-"Amount to increase allocation by on each loop iteration (default=200000");
+		 "Amount to increase allocation by on each loop iteration (default=200000");
 
 static int test_maxallocsz(void)
 {
 	size_t size2alloc = 0;
-	void *p;
 
 	while (1) {
-		p = kmalloc(size2alloc, GFP_KERNEL);
+		void *p = kmalloc(size2alloc, GFP_KERNEL);
 		if (!p) {
 			pr_alert("kmalloc fail, size2alloc=%zu\n", size2alloc);
 			return -ENOMEM;
@@ -53,6 +52,7 @@ static int __init slab3_maxsize_init(void)
 	pr_info("%s: inserted\n", OURMODNAME);
 	return test_maxallocsz();
 }
+
 static void __exit slab3_maxsize_exit(void)
 {
 	pr_info("%s: removed\n", OURMODNAME);

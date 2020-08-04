@@ -35,17 +35,9 @@
 
 #define OURMODNAME    "lowlevel_mem"
 
-#if(BITS_PER_LONG == 32)
- #define FMTSPC "0x%08x"
- #define TYPECST unsigned int
-#elif(BITS_PER_LONG == 64)
- #define FMTSPC "0x%016lx"
- #define TYPECST unsigned long
-#endif
-
 MODULE_DESCRIPTION("Ch 8: Demo kernel module to exercise essential page allocator APIs");
 MODULE_AUTHOR("Kaiwan N Billimoria");
-MODULE_LICENSE("MIT");
+MODULE_LICENSE("Dual MIT/GPL");
 
 static const void *gptr1, *gptr2, *gptr3, *gptr4, *gptr5;
 static int bsa_alloc_order = 3;
@@ -63,7 +55,7 @@ static int bsa_alloc(void)
 	const struct page *pg_ptr1;
 
 	/* 1. Allocate one page with the __get_free_page() API */
-	gptr1 = (void *) __get_free_page(GFP_KERNEL);
+	gptr1 = (void *)__get_free_page(GFP_KERNEL);
 	if (!gptr1) {
 		pr_warn("%s: __get_free_page() failed!\n", OURMODNAME);
 		/* As per convention, we emit a printk above saying that the
@@ -79,8 +71,8 @@ static int bsa_alloc(void)
 		OURMODNAME, gptr1, gptr1);
 
 	/* 2. Allocate 2^bsa_alloc_order pages with the __get_free_pages() API */
-	numpg2alloc = powerof(2, bsa_alloc_order); // returns 2^bsa_alloc_order
-	gptr2 = (void *) __get_free_pages(GFP_KERNEL|__GFP_ZERO, bsa_alloc_order);
+	numpg2alloc = powerof(2, bsa_alloc_order);	// returns 2^bsa_alloc_order
+	gptr2 = (void *)__get_free_pages(GFP_KERNEL | __GFP_ZERO, bsa_alloc_order);
 	if (!gptr2) {
 		/* no error/warning printk now; see above comment */
 		goto out2;
@@ -100,10 +92,9 @@ static int bsa_alloc(void)
 	show_phy_pages(gptr2, numpg2alloc * PAGE_SIZE, 1);
 
 	/* 3. Allocate and init one page with the get_zeroed_page() API */
-	gptr3 = (void *) get_zeroed_page(GFP_KERNEL);
-	if (!gptr3) {
+	gptr3 = (void *)get_zeroed_page(GFP_KERNEL);
+	if (!gptr3)
 		goto out3;
-	}
 	pr_info("%s: 3. get_zeroed_page() alloc'ed 1 page from the BSA @ 0x%pK (" FMTSPC ")\n",
 		OURMODNAME, gptr3, gptr3);
 
@@ -115,9 +106,8 @@ static int bsa_alloc(void)
 	 * logical (or virtual) address.
 	 */
 	pg_ptr1 = alloc_page(GFP_KERNEL);
-	if (!pg_ptr1) {
+	if (!pg_ptr1)
 		goto out4;
-	}
 	gptr4 = page_address(pg_ptr1);
 	pr_info("%s: 4. alloc_page() alloc'ed 1 page from the BSA @ 0x%pK (" FMTSPC ")\n"
 		" (struct page addr=0x%pK (" FMTSPC "))\n",
@@ -127,22 +117,21 @@ static int bsa_alloc(void)
 	 * < Same warning as above applies here too! >
 	 */
 	gptr5 = page_address(alloc_pages(GFP_KERNEL, 5));
-	if (!gptr5) {
+	if (!gptr5)
 		goto out5;
-	}
 	pr_info("%s: 5. alloc_pages() alloc'ed %lld pages from the BSA @ 0x%pK (" FMTSPC ")\n",
 		OURMODNAME, powerof(2, 5), (void *)gptr5, (void *)gptr5);
 
 	return 0;
-out5:
-	free_page((unsigned long) gptr4);
-out4:
-	free_page((unsigned long) gptr3);
-out3:
-	free_pages((unsigned long) gptr2, bsa_alloc_order);
-out2:
-	free_page((unsigned long) gptr1);
-out1:
+ out5:
+	free_page((unsigned long)gptr4);
+ out4:
+	free_page((unsigned long)gptr3);
+ out3:
+	free_pages((unsigned long)gptr2, bsa_alloc_order);
+ out2:
+	free_page((unsigned long)gptr1);
+ out1:
 	return stat;
 }
 
@@ -155,13 +144,13 @@ static void __exit lowlevel_mem_exit(void)
 {
 	pr_info("%s: free-ing up the BSA memory chunks...\n", OURMODNAME);
 	/* Free 'em! We follow the convention of freeing them in the reverse
-	 * order from which they were allocated 
+	 * order from which they were allocated
 	 */
-	free_pages((unsigned long) gptr5, 3);
-	free_page((unsigned long) gptr4);
-	free_page((unsigned long) gptr3);
-	free_pages((unsigned long) gptr2, bsa_alloc_order);
-	free_page((unsigned long) gptr1);
+	free_pages((unsigned long)gptr5, 3);
+	free_page((unsigned long)gptr4);
+	free_page((unsigned long)gptr3);
+	free_pages((unsigned long)gptr2, bsa_alloc_order);
+	free_page((unsigned long)gptr1);
 	pr_info("%s: removed\n", OURMODNAME);
 }
 

@@ -62,9 +62,9 @@ static int __init slab1_init(void)
 
 	return 0;		/* success */
 
-out_fail2:
+ out_fail2:
 	kfree(gkptr);
-out_fail1:
+ out_fail1:
 	return -ENOMEM;
 }
 

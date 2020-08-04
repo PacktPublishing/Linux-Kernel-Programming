@@ -16,7 +16,7 @@
  * the kmalloc() will not be invoked as the if (kptr == NULL) condition will
  * evaluate to false; but, the kfree() is still invoked, now on an invalid
  * parameter (it actually becomes a double-free bug)! On our test system,
- * the entire machine just froze. 
+ * the entire machine just froze.
  *
  * For details, please refer the book, Ch 8.
  */
@@ -38,13 +38,13 @@ static int __init slab2_buggy_init(void)
 
 	pr_info("%s: inserted\n", OURMODNAME);
 
-#define BUGGY    0   /* by default it's set to 0 to rm the bug(s) :-) */
+#define BUGGY    0		/* by default it's set to 0 to rm the bug(s) :-) */
 
 	while (++i < 4) {
 #if (BUGGY == 1)
 		if (kptr == NULL)
 #endif
-		  kptr = kmalloc(1024, GFP_KERNEL);
+			kptr = kmalloc(1024, GFP_KERNEL);
 		if (!kptr) {
 			pr_warn("%s: kmalloc failed!\n", OURMODNAME);
 			/* Bug: we don't free the prev allocated mem, if any,
@@ -52,7 +52,7 @@ static int __init slab2_buggy_init(void)
 			 */
 			return -ENOMEM;
 		}
-		memset(kptr, i-1+0x61, 1024); // 0x61 = 'a'
+		memset(kptr, i - 1 + 0x61, 1024);	// 0x61 = 'a'
 		print_hex_dump_bytes("kptr: ", DUMP_PREFIX_OFFSET, kptr, 16);
 		kfree(kptr);
 #if (BUGGY == 1)
