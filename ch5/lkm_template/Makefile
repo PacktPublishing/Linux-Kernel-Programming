@@ -132,7 +132,7 @@ sa_cppcheck:
 	@echo
 	@echo "--- static analysis with cppcheck ---"
 	@echo
-	cppcheck -v --force .
+	cppcheck -v --force --enable=all -i .tmp_versions/ *.mod.c --suppress=missingIncludeSystem .
 
 # Packaging; just tar.xz as of now
 PKG_NAME := lkm_template
@@ -166,9 +166,10 @@ help:
 	@echo
 	@echo '--- kernel static analyzer targets ---'
 	@echo 'sa         : "wrapper" target over the following kernel static analyzer targets'
-	@echo ' sa_sparse  : run the static analysis sparse tool on the source file(s)'
-	@echo ' sa_gcc     : run gcc with option -W1 ("Generally useful warnings") on the source file(s)'
+	@echo ' sa_sparse     : run the static analysis sparse tool on the source file(s)'
+	@echo ' sa_gcc        : run gcc with option -W1 ("Generally useful warnings") on the source file(s)'
 	@echo ' sa_flawfinder : run the static analysis flawfinder tool on the source file(s)'
+	@echo ' sa_cppcheck   : run the static analysis cppcheck tool on the source file(s)'
 	@echo 'TIP: use coccinelle as well (requires spatch): https://www.kernel.org/doc/html/v4.15/dev-tools/coccinelle.html'
 
 	@echo
