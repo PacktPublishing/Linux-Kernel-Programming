@@ -132,7 +132,7 @@ sa_cppcheck:
 	@echo
 	@echo "--- static analysis with cppcheck ---"
 	@echo
-	cppcheck -v --force --enable=all -i .tmp_versions/ *.mod.c --suppress=missingIncludeSystem .
+	cppcheck -v --force --enable=all -i .tmp_versions/ -i *.mod.c -i bkp/ --suppress=missingIncludeSystem .
 
 # Packaging; just tar.xz as of now
 PKG_NAME := lkm_template
