@@ -29,100 +29,103 @@ MODULE_LICENSE("Dual MIT/GPL");
 MODULE_VERSION("0.1");
 
 /* Portability for 32 and 64-bit systems */
-#if(BITS_PER_LONG == 32)
-	#define FMTSPC		"0x%08x"
-	#define FMTSPC_DEC	"%7d"
-	#define TYPECST		unsigned int
+#if (BITS_PER_LONG == 32)
+#define FMTSPC		"0x%08x"
+#define FMTSPC_DEC	"%7d"
+#define TYPECST		unsigned int
 #elif(BITS_PER_LONG == 64)
-	#define FMTSPC		"0x%016lx"
-	#define FMTSPC_DEC	"%9ld"
-	#define TYPECST	    unsigned long
+#define FMTSPC		"0x%016lx"
+#define FMTSPC_DEC	"%9ld"
+#define TYPECST	    unsigned long
 #endif
 
-static int kvnum = 5*1024*1024;  // 5 MB
+static int kvnum = 5 * 1024 * 1024;	// 5 MB
 module_param(kvnum, int, 0644);
-MODULE_PARM_DESC(kvnum,
- "number of bytes to allocate with the kvmalloc(); (defaults to 5 MB)");
+MODULE_PARM_DESC(kvnum, "number of bytes to allocate with the kvmalloc(); (defaults to 5 MB)");
 
 #define KVN_MIN_BYTES   16
-#define DISP_BYTES      16 
+#define DISP_BYTES      16
 
 static void *vptr_rndm, *vptr_init, *kv, *kvarr, *vrx;
 
 static int vmalloc_try(void)
 {
 	/* 1. vmalloc(); mem contents are random */
-	if (!(vptr_rndm = vmalloc(10000))) {
+	vptr_rndm = vmalloc(10000);
+	if (!vptr_rndm) {
 		/* The pr_warn() below isn't really required; being pedantic here,
 		 * we keep it.. ditto for the remaining cases below...
 		 */
 		pr_warn("%s: vmalloc failed\n", OURMODNAME);
 		goto err_out1;
 	}
-	pr_info("1. vmalloc():   vptr_rndm = 0x%pK (actual=" FMTSPC ")\n", 
-		vptr_rndm, (TYPECST)vptr_rndm);
+	pr_info("1. vmalloc():   vptr_rndm = 0x%pK (actual=" FMTSPC ")\n",
+		vptr_rndm, (TYPECST) vptr_rndm);
 	print_hex_dump_bytes(" content: ", DUMP_PREFIX_NONE, vptr_rndm, DISP_BYTES);
 
 	/* 2. vzalloc(); mem contents are set to zeroes */
-	if (!(vptr_init = vzalloc(10000))) {
+	vptr_init = vzalloc(10000);
+	if (!vptr_init) {
 		pr_warn("%s: vzalloc failed\n", OURMODNAME);
 		goto err_out2;
 	}
 	pr_info("2. vzalloc():   vptr_init = 0x%pK (actual=" FMTSPC ")\n",
-		vptr_init, (TYPECST)vptr_init);
+		vptr_init, (TYPECST) vptr_init);
 	print_hex_dump_bytes(" content: ", DUMP_PREFIX_NONE, vptr_init, DISP_BYTES);
 
 	/* 3. kvmalloc(): allocate 'kvnum' bytes with the kvmalloc(); if kvnum is
 	 * large (enough), this will become a vmalloc() under the hood, else
 	 * it fals back to a kmalloc()
 	 */
-	if (!(kv = kvmalloc(kvnum, GFP_KERNEL))) {
+	kv = kvmalloc(kvnum, GFP_KERNEL);
+	if (!kv) {
 		pr_warn("%s: kvmalloc failed\n", OURMODNAME);
 		goto err_out3;
 	}
 	pr_info("3. kvmalloc() :        kv = 0x%pK (actual=" FMTSPC ")\n"
-			"    (for %d bytes)\n",
-			kv, (TYPECST)kv, kvnum);
+		"    (for %d bytes)\n", kv, (TYPECST) kv, kvnum);
 	print_hex_dump_bytes(" content: ", DUMP_PREFIX_NONE, kv, KVN_MIN_BYTES);
 
 	/* 4. kcalloc(): allocate an array of 1000 64-bit quantities and zero
 	 * out the memory */
-	if (!(kvarr = kcalloc(1000, sizeof(u64), GFP_KERNEL))) {
+	kvarr = kcalloc(1000, sizeof(u64), GFP_KERNEL);
+	if (!kvarr) {
 		pr_warn("%s: kcalloc failed\n", OURMODNAME);
 		goto err_out4;
 	}
 	pr_info("4. kcalloc() :      kvarr = 0x%pK (actual=" FMTSPC ")\n",
-		kvarr, (TYPECST)kvarr);
+		kvarr, (TYPECST) kvarr);
 	print_hex_dump_bytes(" content: ", DUMP_PREFIX_NONE, kvarr, DISP_BYTES);
 
 	/* 5. __vmalloc(): allocate some 42 pages and set protections to RO */
 #undef WR2ROMEM_BUG
-/* #define WR2ROMEM_BUG */   /* 'Normal' usage: keep this commented out, else
- * we will crash! Read the book, Ch 9, for details  :-) */
-	if (!(vrx = __vmalloc(42*PAGE_SIZE, GFP_KERNEL, PAGE_KERNEL_RO))) {
+	/* #define WR2ROMEM_BUG *//* 'Normal' usage: keep this commented out, else
+	 * we will crash! Read the book, Ch 9, for details  :-) */
+	vrx = __vmalloc(42 * PAGE_SIZE, GFP_KERNEL, PAGE_KERNEL_RO);
+	if (!vrx) {
 		pr_warn("%s: __vmalloc failed\n", OURMODNAME);
 		goto err_out5;
 	}
 	pr_info("5. __vmalloc():       vrx = 0x%pKi (actual=" FMTSPC ")\n",
-		vrx, (TYPECST)vrx);
+		vrx, (TYPECST) vrx);
 
 	/* Try reading the memory, should be fine */
 	print_hex_dump_bytes(" content: ", DUMP_PREFIX_NONE, vrx, DISP_BYTES);
 #ifdef WR2ROMEM_BUG
 	/* Try writing to the RO memory! We find that the kernel crashes
 	 * (emits an Oops!) */
-	*(u64 *)(vrx+4) = 0xba;
+	*(u64 *) (vrx + 4) = 0xba;
 #endif
-	return 0;	/* success */
-err_out5:
+	return 0;		/* success */
+ err_out5:
 	vfree(kvarr);
-err_out4:
+ err_out4:
 	vfree(kv);
-err_out3:
+ err_out3:
 	vfree(vptr_init);
-err_out2:
+ err_out2:
 	vfree(vptr_rndm);
-err_out1:
+ err_out1:
 	return -ENOMEM;
 }
 

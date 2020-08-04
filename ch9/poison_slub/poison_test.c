@@ -23,7 +23,7 @@
 #include <linux/kernel.h>
 #include <linux/slab.h>
 #include <linux/version.h>
-#include <linux/sched.h>   /* current */
+#include <linux/sched.h>	/* current */
 
 #define OURMODNAME   "poison_test"
 #define OURCACHENAME "poison_test"
@@ -48,7 +48,7 @@ struct myctx {
 	char config[64];
 };
 static struct kmem_cache *gctx_cachep;
-struct myctx *obj = NULL;
+struct myctx *obj;
 
 static void use_the_object(void *s, u8 c, size_t n)
 {
@@ -60,16 +60,15 @@ static void use_the_object(void *s, u8 c, size_t n)
 static void use_our_cache(void)
 {
 
-#if LINUX_VERSION_CODE < KERNEL_VERSION(2,6,39)
+#if LINUX_VERSION_CODE < KERNEL_VERSION(2, 6, 39)
 	pr_debug("Cache name is %s\n", kmem_cache_name(gctx_cachep));
 #else
 	pr_debug("[ker ver > 2.6.38 cache name deprecated...]\n");
 #endif
 
 	obj = kmem_cache_alloc(gctx_cachep, GFP_KERNEL);
-	if (!obj) {  /* pedantic warning printk below... */
-		pr_warn("%s:%s():kmem_cache_alloc() failed\n",
-			OURMODNAME, __func__);
+	if (!obj) {		/* pedantic warning printk below... */
+		pr_warn("%s:%s():kmem_cache_alloc() failed\n", OURMODNAME, __func__);
 	}
 
 	pr_info("Our cache object (@ 0x%pK, actual=0x%llx) size is %u bytes; ksize=%zu\n",
@@ -88,16 +87,15 @@ static void our_ctor(void *new)
 	struct myctx *ctx = new;
 	struct task_struct *p = current;
 
-	pr_info("%s:%s(): in ctor: just alloced mem object is @ 0x%llx\n", /* %pK in production */
+	pr_info("%s:%s(): in ctor: just alloced mem object is @ 0x%llx\n",	/* %pK in production */
 		OURMODNAME, __func__, (unsigned long long)ctx);
 	memset(ctx, 0, sizeof(struct myctx));
 
 	/* As a demo, we init the 'config' field of our structure to some
 	 * (arbitrary) 'accounting' values from our task_struct
 	 */
-	snprintf(ctx->config, 6*sizeof(u64)+5, "%d.%d,%ld.%ld,%ld,%ld",
-		p->tgid, p->pid,
-		p->nvcsw, p->nivcsw, p->min_flt, p->maj_flt);
+	snprintf(ctx->config, 6 * sizeof(u64) + 5, "%d.%d,%ld.%ld,%ld,%ld",
+		 p->tgid, p->pid, p->nvcsw, p->nivcsw, p->min_flt, p->maj_flt);
 }
 
 static int create_our_cache(void)
@@ -110,23 +108,22 @@ static int create_our_cache(void)
 
 	pr_info("%s: sizeof our ctx structure is %zu bytes\n"
 		" using custom constructor routine? %s\n",
-		OURMODNAME, sizeof(struct myctx), use_ctor==1?"yes":"no");
+		OURMODNAME, sizeof(struct myctx), use_ctor == 1 ? "yes" : "no");
 
 	/* Create a new slab cache:
 	 * kmem_cache_create(const char *name, unsigned int size, unsigned int align,
-                 slab_flags_t flags, void (*ctor)(void *));
+	 slab_flags_t flags, void (*ctor)(void *));
 	 */
 	gctx_cachep = kmem_cache_create(OURCACHENAME, sizeof(struct myctx),
-			sizeof(long),
-			SLAB_POISON | SLAB_RED_ZONE | SLAB_HWCACHE_ALIGN,
-			ctor_fn);
+					sizeof(long),
+					SLAB_POISON | SLAB_RED_ZONE | SLAB_HWCACHE_ALIGN,
+					ctor_fn);
 	if (!gctx_cachep) {
 		/* When a mem alloc fails we'll usually not require a warning
 		 * message as the kernel will definitely emit warning printk's
 		 * We do so here pedantically...
 		 */
-		pr_warn("%s:%s():kmem_cache_create() failed\n",
-			OURMODNAME, __func__);
+		pr_warn("%s:%s():kmem_cache_create() failed\n", OURMODNAME, __func__);
 		if (IS_ERR(gctx_cachep))
 			ret = PTR_ERR(gctx_cachep);
 	}

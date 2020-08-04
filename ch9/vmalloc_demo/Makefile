@@ -1,4 +1,4 @@
-# ch5/lkm_template/Makefile
+# Makefile (for kernel modules)
 # ***************************************************************
 # This program is part of the source code released for the book
 #  "Learn Linux Kernel Development"
@@ -22,7 +22,7 @@
 # To get started, just type:
 #  make help
 #
-# For details, please refer the book, Ch 5.
+# For details on this Makefile 'template', please refer the book, Ch 5.
 
 # To support cross-compiling for kernel modules:
 # For architecture (cpu) 'arch', invoke make as:
@@ -45,7 +45,7 @@ else
 endif
 
 PWD            := $(shell pwd)
-obj-m          += lkm_template.o
+obj-m          += vmalloc_demo.o
 EXTRA_CFLAGS   += -DDEBUG
 
 all:
@@ -132,10 +132,10 @@ sa_cppcheck:
 	@echo
 	@echo "--- static analysis with cppcheck ---"
 	@echo
-	cppcheck -v --force .
+	cppcheck -v --force --enable=all -i .tmp_versions/ -i *.mod.c -i bkp/ --suppress=missingIncludeSystem .
 
 # Packaging; just tar.xz as of now
-PKG_NAME := lkm_template
+PKG_NAME := vmalloc_demo
 tarxz-pkg:
 	rm -f ../${PKG_NAME}.tar.xz 2>/dev/null
 	make clean
@@ -166,9 +166,10 @@ help:
 	@echo
 	@echo '--- kernel static analyzer targets ---'
 	@echo 'sa         : "wrapper" target over the following kernel static analyzer targets'
-	@echo ' sa_sparse  : run the static analysis sparse tool on the source file(s)'
-	@echo ' sa_gcc     : run gcc with option -W1 ("Generally useful warnings") on the source file(s)'
+	@echo ' sa_sparse     : run the static analysis sparse tool on the source file(s)'
+	@echo ' sa_gcc        : run gcc with option -W1 ("Generally useful warnings") on the source file(s)'
 	@echo ' sa_flawfinder : run the static analysis flawfinder tool on the source file(s)'
+	@echo ' sa_cppcheck   : run the static analysis cppcheck tool on the source file(s)'
 	@echo 'TIP: use coccinelle as well (requires spatch): https://www.kernel.org/doc/html/v4.15/dev-tools/coccinelle.html'
 
 	@echo
