@@ -6,16 +6,18 @@
 #  (c) Author: Kaiwan N Billimoria
 #  Publisher:  Packt
 #  GitHub repository:
-#  https://github.com/PacktPublishing/Linux-Kernel-Development-Cookbook
+#  https://github.com/PacktPublishing/Learn-Linux-Kernel-Development
 # ****************************************************************
 # Brief Description:
 #
 # Query the scheduling attributes (policy and RT (static) priority) of 
 # all threads currently alive on the system. Just a simple wrapper around
 # chrt(1).
-# Tip: One can always pipe this output to grep for FIFO / RR tasks..
+# Tips: 
+# - One can always pipe this output to grep for FIFO / RR tasks..
+# - the tuna(8) program performs this and much more! check it out...
 i=1
-printf "  PID       TID            Name                 Sched Policy Prio    *RT\n"
+printf "  PID       TID            Name                     Sched Policy  Prio    *RT\n"
 prev_pid=1
 
 IFS=$'\n'
@@ -42,9 +44,9 @@ do
      printf "%6d  " ${pid}
      # if it's a child thread ...
      if [ ${pid} -ne 1 -a ${pid} -eq ${prev_pid} ] ; then
-        printf "  %6d%28s" ${tid} ${comm}   # ... indent to the right
+        printf "  %6d%32s" ${tid} ${comm}   # ... indent to the right
      else
-        printf "%6d  %28s" ${tid} ${comm}
+        printf "%6d  %32s" ${tid} ${comm}
      fi
      printf "   %12s   %2d" ${policy} ${prio}
 
