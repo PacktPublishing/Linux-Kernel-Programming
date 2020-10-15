@@ -5,19 +5,19 @@
 # Lightly modified for our purposes..
 #----------------------------------------------------------------------
 # This program is part of the source code released for the book
-#  "Linux Kernel Development Cookbook"
+#  "Learn Linux Kernel Development"
 #  (c) Author: Kaiwan N Billimoria
 #  Publisher:  Packt
 #  GitHub repository:
-#  https://github.com/PacktPublishing/Linux-Kernel-Development-Cookbook
+#  https://github.com/PacktPublishing/Learn-Linux-Kernel-Development
 # 
-# From: Ch 7 : The CPU Scheduler
+# For details, refer the book, Ch 11.
 #----------------------------------------------------------------------
 # Notes/Ref:
-#  http://www.osadl.org/Create-a-latency-plot-from-cyclictest-hi.bash-script-for-latency-plot.0.html
-# Detailed slides on cyclictest, good for understanding latency and it's
+# a) http://www.osadl.org/Create-a-latency-plot-from-cyclictest-hi.bash-script-for-latency-plot.0.html
+# b) Detailed slides on cyclictest, good for understanding latency and it's
 # measurement: 'Using and Understanding the Real-Time Cyclictest Benchmark',
-# Rowand, Oct 2013: #  https://events.static.linuxfound.org/sites/events/files/slides/cyclictest.pdf
+# Rowand, Oct 2013: https://events.static.linuxfound.org/sites/events/files/slides/cyclictest.pdf
 name=$(basename $0)
 
 [ $# -ne 1 ] && {
@@ -31,7 +31,7 @@ title="$1"
 }
 
 which cyclictest >/dev/null && pfx="" || {
-pfx=~/kaiwantech/rtl/rt-tests/   # adjust as required !
+pfx=~/rtl_llkd/rt-tests/                    # adjust as required !
  [ ! -x ${pfx}/cyclictest ] && {
    echo "${name}: cyclictest not located, aborting..."
    exit 1
@@ -55,6 +55,7 @@ loops=100000000
 # (Please note that this with loops==100,000,000 will take 5 hours and 33 minutes.)
 # alternatively: run cyclictest by duration
 duration=12h
+duration=2m
 echo "sudo ${pfx}cyclictest --duration=${duration} -m -Sp90 -i200 -h400 -q >output"
 sudo ${pfx}cyclictest --duration=${duration} -m -Sp90 -i200 -h400 -q >output
 
@@ -72,7 +73,7 @@ grep -v -e "^#" -e "^$" output | tr " " "\t" >histogram
 #cores=4
 # (If the script is used on a variety of systems with a different number of cores,
 # this can, of course, be determined from the system.)
-cores=$(lscpu |grep "^CPU(s)" | awk -F: '{print $2}' |awk '{$1=$1};1')
+cores=$(nproc)
 
 # 5. Create two-column data sets with latency classes and frequency values for each core
 for i in $(seq 1 $cores)
