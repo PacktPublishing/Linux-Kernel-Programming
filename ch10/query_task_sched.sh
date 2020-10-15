@@ -16,6 +16,8 @@
 # Tips: 
 # - One can always pipe this output to grep for FIFO / RR tasks..
 # - the tuna(8) program performs this and much more! check it out...
+#
+# For details, pl refer to the book Ch 10.
 i=1
 printf "  PID       TID            Name                     Sched Policy  Prio    *RT\n"
 prev_pid=1
