@@ -10,10 +10,11 @@
 # For details, refer the book, Ch 11.
 #----------------------------------------------------------------------
 LAT=~/booksrc/ch11/latency_tests
+TIMEOUT_HOURS=1
 
 echo "================================================================="
 ${LAT}/latency_test.sh "running 'stress'" &
-CMD="stress --cpu 6 --io 2 --hdd 4 --hdd-bytes 1MB --vm 2 --vm-bytes 128M --timeout 2m"
+CMD="stress --cpu 6 --io 2 --hdd 4 --hdd-bytes 1MB --vm 2 --vm-bytes 128M --timeout ${TIMEOUT_HOURS}h"
 (cd ${KSRC}
 sync ; date
 echo "${CMD}"

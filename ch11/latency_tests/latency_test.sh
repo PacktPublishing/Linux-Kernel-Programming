@@ -49,13 +49,10 @@ echo
 
 # 1. Redirect the output of cyclictest to a file, for example
 loops=100000000
-# use -n : clock_nanosleep() ??
-#echo "sudo ${pfx}cyclictest -l${loops} -m -Sp90 -i200 -h400 -q >output"
-#sudo ${pfx}cyclictest -l${loops} -m -Sp90 -i200 -h400 -q >output
 # (Please note that this with loops==100,000,000 will take 5 hours and 33 minutes.)
 # alternatively: run cyclictest by duration
-duration=12h
-duration=2m
+#duration=12h
+duration=1h
 echo "sudo ${pfx}cyclictest --duration=${duration} -m -Sp90 -i200 -h400 -q >output"
 sudo ${pfx}cyclictest --duration=${duration} -m -Sp90 -i200 -h400 -q >output
 
