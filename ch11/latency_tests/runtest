@@ -9,8 +9,22 @@
 #
 # For details, refer the book, Ch 11.
 #----------------------------------------------------------------------
+name=$(basename $0)
 LAT=~/booksrc/ch11/latency_tests
 TIMEOUT_HOURS=1
+
+[ ! -f ${LAT}/latency_test.sh ] && {
+   echo "${name}: latency_test.sh script not present? aborting..."
+   exit 1
+}
+which cyclictest >/dev/null 2>&1 || {
+   echo "${name}: install the 'rt-tests' package and retry; aborting..."
+   exit 1
+}
+which stress >/dev/null 2>&1 || {
+   echo "${name}: install the 'stress' package and retry; aborting..."
+   exit 1
+}
 
 echo "================================================================="
 ${LAT}/latency_test.sh "running 'stress'" &
