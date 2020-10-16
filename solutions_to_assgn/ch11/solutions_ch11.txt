@@ -1,0 +1,44 @@
+------------------------------------------------------------------------------
+Solutions to selected assignments ::
+Ch 11: The CPU Scheduler, Part 2
+Answers to a few selected questions only.
+(For your convenience, we have repeated the questions below and have provided
+answers / solutions to some of them).
+------------------------------------------------------------------------------
+
+2. Consider a Linux system with 8 CPU cores (numbered from 0 to 7); on it, a
+process’s CPU affinity mask shows up as 0xed ; this implies that the process is
+not allowed to execute on CPU cores _______
+ 1. 0 and 3, 5
+ 2. 0,2,3,5,6 and 7
+ 3. 1 and 4
+ 4. 1,2,3,5,6 and 7
+
+A. option 2
+
+4. The above feature's has a pseudo filesystem typically mounted at ________
+ 1. /cgr/fs
+ 2. /sys/fs
+ 3. /proc/cgroup_cpu
+ 4. /sys/fs/cgroup
+
+A. option 4
+
+5. Vanilla or standard Linux is an OS that is __
+ 1. good on occasion
+ 2. purely general purpose (GPOS; no form of realtime)
+ 3. hard realtime (RTOS)
+ 4. general purpose + can easily take on soft realtime workloads
+
+A. option 4
+
+6. By applying a patch, Linux can be run as a hard realtime OS (an RTOS): T/F: ___ ;
+if true, this effort is now called _______ and is a Linux Foundation project
+ 1. True, Preempt-RT
+ 2. True, RTL (Real-Time Linux)
+ 3. False, <it’s not possible>
+ 4. True, HardLinx
+
+A. option 2
+
+<end document>
