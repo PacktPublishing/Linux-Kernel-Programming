@@ -1,0 +1,99 @@
+------------------------------------------------------------------------------
+Solutions to selected assignments ::
+Ch 10: The CPU Scheduler, Part 1
+Answers to a few selected questions only.
+(For your convenience, we have repeated the questions below and have provided
+answers / solutions to some of them).
+------------------------------------------------------------------------------
+
+1. The KSE (Kernel Schedulable Entity) on Linux is ________; this implies that the
+application developer can specify and control the scheduling policy and priority
+of each _______ in an application!
+ 1. a thread, thread
+ 2. a process, process
+ 3. a process group, process group
+ 4. a user’s processes, user
+
+A. option 1
+
+3. SCHED_FIFO and SCHED_RR are considered to be ________ policies, with
+_______ being the aggressive one
+ 1. hard realtime, SCHED_RR
+ 2. hard realtime, SCHED_FIFO
+ 3. soft realtime, SCHED_FIFO
+ 4. soft realtime, SCHED_RR
+
+A. option 3
+
+4. The (soft) realtime priority range supported by vanilla Linux is _____, with __
+being the highest priority wrt the userspace developer
+ 1. 0 to 99, 99
+ 2. 1 to 4, 4
+ 3. -20 to +20, 20
+ 4. 1 to 99, 99
+
+A. option 4
+
+5. A soft realtime task will run until __________
+ 1. a higher priority real-time task becomes runnable
+ 2. is stopped or dies
+ 3. gets blocked (sleeps) on a blocking call
+ 4. any of the above options occurs
+
+A. option 4
+
+7. The CFS implementation has an important member within the kernel called
+vruntime; it represents the __________; it’s unit is ______
+ 1. weighted cumulative amount of time spent on the CPU by the task in
+    this scheduling cycle, nanoseconds
+ 2. variable individual runtime spent on CPU, milliseconds
+ 3. per cycle amount of time spent on the CPU by the task, milliseconds
+ 4. total runtime accumulated by all tasks in the runqueue, seconds
+
+A. option 1
+
+8. On a modern Linux system with 4 CPU cores, there will be ___ runqueue(s) for
+SMP scalability; how many waitqueues can it have: __
+ 1. 1, 4
+ 2. 4, any number
+ 3. 4, 1
+ 4. any number of, any number
+
+A. option 2
+
+9. Consider a modern Linux system with 1 CPU core; userspace process ‘A’ whose
+only code is while(1); . Thus, when it runs, no other process will ever get the
+CPU? (T/F) ____ ; Why? _____
+ 1. True, Linux is a fair-share OS but the process is running while(1);
+ 2. False, Linux is a user-mode preemptive OS; it will preempt ‘A’
+    allowing other tasks to run
+
+A. option 2
+
+10. Consider a modern Linux system with 1 CPU core; a kernel thread ‘K’ whose
+only code is a while(1); thus, when it runs, no other process will ever get the
+CPU? (T/F) ____ ; Why? _______
+ 1. False, >= 2.6 Linux can be configured to be kernel-preemptible; if so, it
+    will preempt ‘K’ allowing other tasks to run
+ 2. True, the kernel can never be preempted
+
+A. option 1
+
+11. Find the bug(s)! ... in the the pseudo-code snippet below: bug(s): _________
+if (in_interrupt()) {
+	do_task_x();
+	if (<no-data-available>) {
+		schedule(); /* no data; block until it arrives */
+		if (<data-now-available>)
+			// ... do work ...
+ 1. the ‘golden rule’ is violated! cannot call schedule() directly or
+    indirectly in process context
+ 2. in_interrupt() : no such function or macro exists
+ 3. the ‘golden rule’ is violated! cannot call schedule() directly or
+    indirectly in any kind of atomic or interrupt context; one cannot
+    schedule in an atomic context!
+ 4. there's no bug, it's fine
+
+A. option 3
+
+<end document>
