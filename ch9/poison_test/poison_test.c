@@ -11,10 +11,10 @@
  * From: Ch 9 : Kernel Memory Allocation for Module Authors, Part 2
  ****************************************************************
  * Brief Description:
- * Simple demo of using the slab layer (exorted) APIs to create our very own
+ * Simple demo of using the slab layer (exported) APIs to create our very own
  * custom slab cache. We deliberately introduce a UAF (Use After Free) memory
- * bug; it is indeed caught by the kernel SLUB debug code provided of course
- * it's enabled.
+ * bug; it is indeed caught by the kernel SLUB debug code - provided of course
+ * that SLUB debug is enabled.
  *
  * For details, please refer the book, Ch 9.
  */
