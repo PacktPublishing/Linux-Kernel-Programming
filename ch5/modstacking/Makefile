@@ -57,8 +57,12 @@ all:
 install:
 	@echo
 	@echo "--- installing ---"
+	@echo " [First, invoke the 'make' ]"
+	make
 	@echo
-	make -C $(KDIR) M=$(PWD) modules_install
+	@echo " [Now for the 'sudo make install' ]"
+	sudo make -C $(KDIR) M=$(PWD) modules_install
+	sudo depmod
 clean:
 	@echo
 	@echo "--- cleaning ---"
@@ -133,10 +137,10 @@ sa_cppcheck:
 	@echo
 	@echo "--- static analysis with cppcheck ---"
 	@echo
-	cppcheck -v --force .
+	cppcheck -v --force --enable=all -i .tmp_versions/ -i *.mod.c -i bkp/ --suppress=missingIncludeSystem .
 
 # Packaging; just tar.xz as of now
-PKG_NAME := lkm_template
+PKG_NAME := ch5_modstacking
 tarxz-pkg:
 	rm -f ../${PKG_NAME}.tar.xz 2>/dev/null
 	make clean
@@ -155,7 +159,7 @@ help:
 
 	@echo '--- 'usual' kernel LKM targets ---'
 	@echo 'typing "make" or "all" target : builds the kernel module object (the .ko)'
-	@echo 'install     : installs the kernel module(s) to INSTALL_MOD_PATH (defaults: /lib/modules/$(uname -r)/'
+	@echo 'install     : installs the kernel module(s) to INSTALL_MOD_PATH (default here: /lib/modules/$(uname -r)/'
 	@echo 'clean       : cleanup - remove all kernel objects, temp files/dirs, etc'
 
 	@echo
@@ -170,6 +174,7 @@ help:
 	@echo ' sa_sparse  : run the static analysis sparse tool on the source file(s)'
 	@echo ' sa_gcc     : run gcc with option -W1 ("Generally useful warnings") on the source file(s)'
 	@echo ' sa_flawfinder : run the static analysis flawfinder tool on the source file(s)'
+	@echo ' sa_cppcheck   : run the static analysis cppcheck tool on the source file(s)'
 	@echo 'TIP: use coccinelle as well (requires spatch): https://www.kernel.org/doc/html/v4.15/dev-tools/coccinelle.html'
 
 	@echo
