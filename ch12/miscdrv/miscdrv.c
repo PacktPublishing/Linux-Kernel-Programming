@@ -21,7 +21,7 @@
 #include <linux/kernel.h>
 #include <linux/module.h>
 #include <linux/miscdevice.h>
-#include <linux/fs.h>            /* the fops, file data structures */
+#include <linux/fs.h>		/* the fops, file data structures */
 #include "../../convenient.h"
 
 #define OURMODNAME   "miscdrv"
@@ -41,13 +41,12 @@ MODULE_VERSION("0.1");
  */
 static int open_miscdrv(struct inode *inode, struct file *filp)
 {
-	PRINT_CTX(); // displays process (or intr) context info
+	PRINT_CTX();		// displays process (or intr) context info
 
 	pr_info("%s:%s():\n"
 		" filename: \"%s\"\n"
 		" wrt open file: f_flags = 0x%x\n",
-	       OURMODNAME, __func__,
-	       filp->f_path.dentry->d_iname, filp->f_flags);
+		OURMODNAME, __func__, filp->f_path.dentry->d_iname, filp->f_flags);
 
 	return 0;
 }
@@ -60,8 +59,7 @@ static int open_miscdrv(struct inode *inode, struct file *filp)
  * the number of bytes read or written on success, 0 on EOF and -1 (-ve errno)
  * on failure; we simply return 'count', pretending that we 'always succeed'.
  */
-static ssize_t read_miscdrv(struct file *filp, char __user *ubuf,
-				size_t count, loff_t *off)
+static ssize_t read_miscdrv(struct file *filp, char __user *ubuf, size_t count, loff_t *off)
 {
 	pr_info("%s:%s():\n", OURMODNAME, __func__);
 	return count;
@@ -76,7 +74,7 @@ static ssize_t read_miscdrv(struct file *filp, char __user *ubuf,
  * on failure; we simply return 'count', pretending that we 'always succeed'.
  */
 static ssize_t write_miscdrv(struct file *filp, const char __user *ubuf,
-				size_t count, loff_t *off)
+			     size_t count, loff_t *off)
 {
 	pr_info("%s:%s():\n", OURMODNAME, __func__);
 	return count;
@@ -92,7 +90,7 @@ static ssize_t write_miscdrv(struct file *filp, const char __user *ubuf,
 static int close_miscdrv(struct inode *inode, struct file *filp)
 {
 	pr_info("%s:%s(): filename: \"%s\"\n",
-	       OURMODNAME, __func__, filp->f_path.dentry->d_iname);
+		OURMODNAME, __func__, filp->f_path.dentry->d_iname);
 	return 0;
 }
 
@@ -106,9 +104,9 @@ static const struct file_operations llkd_misc_fops = {
 static struct miscdevice llkd_miscdev = {
 	.minor = MISC_DYNAMIC_MINOR,	/* kernel dynamically assigns a free minor# */
 	.name = "llkd_miscdrv",	/* when misc_register() is invoked, the kernel
-							 * will auto-create device file as /dev/llkd_miscdrv ;
-							 * also populated within /sys/class/misc/ and /sys/devices/virtual/misc/ */
-	.mode = 0666,			/* ... dev node perms set as specified here */
+				 * will auto-create device file as /dev/llkd_miscdrv ;
+				 * also populated within /sys/class/misc/ and /sys/devices/virtual/misc/ */
+	.mode = 0666,		/* ... dev node perms set as specified here */
 	.fops = &llkd_misc_fops,	/* connect to this driver's 'functionality' */
 };
 
@@ -117,17 +115,16 @@ static int __init miscdrv_init(void)
 	int ret;
 	struct device *dev;
 
-	if ((ret = misc_register(&llkd_miscdev))) {
-		pr_notice("%s: misc device registration failed, aborting\n",
-			OURMODNAME);
+	ret = misc_register(&llkd_miscdev);
+	if (ret != 0) {
+		pr_notice("%s: misc device registration failed, aborting\n", OURMODNAME);
 		return ret;
 	}
 
 	/* Retrieve the device pointer for this device */
 	dev = llkd_miscdev.this_device;
 	pr_info("%s: LLKD misc driver (major # 10) registered, minor# = %d,"
-		" dev node is /dev/llkd_miscdrv\n",
-		OURMODNAME, llkd_miscdev.minor);
+		" dev node is /dev/llkd_miscdrv\n", OURMODNAME, llkd_miscdev.minor);
 
 	dev_info(dev, "sample dev_info(): minor# = %d\n", llkd_miscdev.minor);
 
