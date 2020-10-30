@@ -25,85 +25,95 @@
 #include <fcntl.h>
 #include <stdlib.h>
 
-#define READ_OPT	0
-#define WRITE_OPT	1
+#define READ_OPT	'r'
+#define WRITE_OPT	'w'
 
-static int stay_alive = 0;
+static int stay_alive;
 
 static inline void usage(char *prg)
 {
-	fprintf(stderr,"Usage: %s opt=read/write device_file num_bytes_to_read_or_write\n"
-			" opt = '0' => we shall issue the read(2)\n"
-			" opt = '1' => we shall issue the write(2)\n",
-			prg);
+	fprintf(stderr, "Usage: %s r|w device_file num_bytes\n"
+		" 'r' => read num_bytes bytes from the device node device_file\n"
+		" 'w' => write num_bytes bytes to the device node device_file\n", prg);
 }
 
 int main(int argc, char **argv)
 {
-	int fd, opt = READ_OPT, flags = O_RDONLY;
+	int fd, flags = O_RDONLY;
 	ssize_t n;
-	char *buf = NULL;
+	char opt, *buf = NULL;
 	size_t num = 0;
-	
-	if( argc != 4 ) {
+
+	if (argc != 4) {
 		usage(argv[0]);
 		exit(EXIT_FAILURE);
 	}
 
-	opt = atoi(argv[1]);
-	if (opt != 0 && opt != 1) {
+	opt = argv[1][0];
+	if (opt != 'r' && opt != 'w') {
 		usage(argv[0]);
 		exit(EXIT_FAILURE);
 	}
 	if (opt == WRITE_OPT)
 		flags = O_WRONLY;
 
-	if( (fd=open(argv[2], flags, 0)) == -1)
-		perror("open"),exit(1);
+	fd = open(argv[2], flags, 0);
+	if (fd == -1) {
+		perror("open");
+		exit(EXIT_FAILURE);
+	}
 	printf("Device file \"%s\" opened (in %s mode): fd=%d\n",
-		       argv[2], (flags == O_RDONLY ? "read-only" : "write-only"), fd);
+	       argv[2], (flags == O_RDONLY ? "read-only" : "write-only"), fd);
 
 	num = atoi(argv[3]);
-	if ((num < 0) || (num > INT_MAX)) {
-		fprintf(stderr,"%s: number of bytes '%ld' invalid.\n", argv[0], num);
+	/* if ((num < 0) || (num > INT_MAX)) { */
+	/* FYI, for the above line of code, the cppcheck(1) tool via the Makefile's
+	 * 'sa' target caught this:
+	 * "style: The unsigned expression 'num' will never be negative so it is either
+	 * pointless or an error to check if it is. [unsignedLessThanZero]"
+	 */
+	if (num > INT_MAX) {
+		fprintf(stderr, "%s: number of bytes '%zu' invalid.\n", argv[0], num);
 		close(fd);
 		exit(EXIT_FAILURE);
 	}
 
-	buf = malloc(num);
+	buf = calloc(num, 1);
 	if (!buf) {
-		fprintf(stderr,"%s: out of memory!\n", argv[0]);
+		fprintf(stderr, "%s: out of memory!\n", argv[0]);
 		close(fd);
 		exit(EXIT_FAILURE);
 	}
 
-	if (opt == READ_OPT) {			// test reading..
+	if (opt == READ_OPT) {	// test reading..
 		n = read(fd, buf, num);
-		if( n < 0 ) {
+		if (n < 0) {
 			perror("read failed");
 			fprintf(stderr, "Tip: see kernel log\n");
-			free(buf); close(fd);
+			free(buf);
+			close(fd);
 			exit(EXIT_FAILURE);
 		}
-		printf("%s: read %ld bytes from %s\n", argv[0], n, argv[2]);
+		printf("%s: read %zd bytes from %s\n", argv[0], n, argv[2]);
 		printf(" Data read:\n\"%.*s\"\n", (int)n, buf);
-	} else {						// test writing ..
+	} else {		// test writing ..
 		n = write(fd, buf, num);
-		if( n < 0 ) {
+		if (n < 0) {
 			perror("write failed");
 			fprintf(stderr, "Tip: see kernel log\n");
-			free(buf); close(fd);
+			free(buf);
+			close(fd);
 			exit(EXIT_FAILURE);
 		}
 		printf("%s: wrote %ld bytes to %s\n", argv[0], n, argv[2]);
 	}
 
-	if (1 == stay_alive) {
-		printf("%s:%d: stayin' alive (in pause()) ... \n", argv[0], getpid());
+	if (stay_alive == 1) {
+		printf("%s:%d: stayin' alive (in pause()) ...\n", argv[0], getpid());
 		pause();	/* block until a signal is received */
 	}
 
 	free(buf);
 	close(fd);
-	exit(EXIT_SUCCESS);       
+	exit(EXIT_SUCCESS);
 }
