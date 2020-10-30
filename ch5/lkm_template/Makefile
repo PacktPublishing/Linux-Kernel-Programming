@@ -59,8 +59,12 @@ all:
 install:
 	@echo
 	@echo "--- installing ---"
+	@echo " [First, invoke the 'make' ]"
+	make
 	@echo
-	make -C $(KDIR) M=$(PWD) modules_install
+	@echo " [Now for the 'sudo make install' ]"
+	sudo make -C $(KDIR) M=$(PWD) modules_install
+	sudo depmod
 clean:
 	@echo
 	@echo "--- cleaning ---"
@@ -157,7 +161,7 @@ help:
 
 	@echo '--- 'usual' kernel LKM targets ---'
 	@echo 'typing "make" or "all" target : builds the kernel module object (the .ko)'
-	@echo 'install     : installs the kernel module(s) to INSTALL_MOD_PATH (default: /lib/modules/$(shell uname -r)/)'
+	@echo 'install     : installs the kernel module(s) to INSTALL_MOD_PATH (default here: /lib/modules/$(shell uname -r)/)'
 	@echo 'clean       : cleanup - remove all kernel objects, temp files/dirs, etc'
 
 	@echo
