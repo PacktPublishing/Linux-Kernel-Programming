@@ -43,7 +43,7 @@ MODULE_VERSION("0.1");
  */
 static int open_miscdrv(struct inode *inode, struct file *filp)
 {
-	PRINT_CTX();		// displays process (or intr) context info
+	PRINT_CTX();		// displays process (or atomic) context info
 
 	pr_info(" opening \"%s\" now; wrt open file: f_flags = 0x%x\n",
 		filp->f_path.dentry->d_iname, filp->f_flags);

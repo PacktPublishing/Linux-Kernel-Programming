@@ -2,27 +2,31 @@
  * ch12/miscdrv_rdwr/miscdrv_rdwr.c
  ***************************************************************
  * This program is part of the source code released for the book
- *  "Linux Kernel Development Cookbook"
+ *  "Learn Linux Kernel Development"
  *  (c) Author: Kaiwan N Billimoria
  *  Publisher:  Packt
  *  GitHub repository:
- *  https://github.com/PacktPublishing/Linux-Kernel-Development-Cookbook
+ *  https://github.com/PacktPublishing/Learn-Linux-Kernel-Development
  *
  * From: Ch 12 : Writing a Simple Misc Character Device Driver
  ****************************************************************
  * Brief Description:
- * This driver is built upon our previous 'skeleton' ../miscdrv/ miscellaneous
- * driver. The key difference: we use a few global data items throughout; to do
- * so, we introduce the notion of a 'driver context' data structure. On init,
- * we allocate memory to it on init and initialize it; one of the members
+ * This driver is built upon our previous 'skeleton' ../miscdrv/ misc
+ * framework driver. The key difference: we use a few global data items within
+ * a driver 'private' data structure throughout.
+ * On init, we allocate memory to it and initialize it; one of the members
  * within is a so-called secret (the 'oursecret' member along with some fake
  * statistics and config words).
- * So, when a userpace process (or thread) opens the device file and issues a
- * read upon it, we pass back the 'secret' to it. When it writes data to us,
- * we consider that data to be the new 'secret' and update it here (in memory).
+ * Importantly here, we perform (basic) I/O - reading and writing:
+ * when a userpace process (or thread) opens our device file and issues a
+ * read(2) upon it, we pass back the 'secret' data string to it.
+ * When a user mode process writes data to us, we consider that data to be the
+ * new 'secret' string and update it here (in driver memory).
  *
  * For details, please refer the book, Ch 12.
  */
+#define pr_fmt(fmt) "%s:%s(): " fmt, KBUILD_MODNAME, __func__
+
 #include <linux/init.h>
 #include <linux/module.h>
 #include <linux/miscdevice.h>
@@ -42,8 +46,8 @@
 
 #define OURMODNAME   "miscdrv_rdwr"
 MODULE_AUTHOR("Kaiwan N Billimoria");
-MODULE_DESCRIPTION("LKDC book:ch12/miscdrv_rdwr: simple misc char driver with"
-		   " a 'secret' to read/write");
+MODULE_DESCRIPTION("LLKD book:ch12/miscdrv_rdwr: simple misc char driver with"
+" a 'secret' to read/write");
 MODULE_LICENSE("Dual MIT/GPL");
 MODULE_VERSION("0.1");
 
@@ -54,6 +58,7 @@ static struct device *dev;	/* device pointer */
  * all relevant 'state info' reg the driver is here.
  */
 struct drv_ctx {
+	struct device *dev;
 	int tx, rx, err, myword;
 	u32 config1, config2;
 	u64 config3;
@@ -74,18 +79,15 @@ static struct drv_ctx *ctx;
  */
 static int open_miscdrv_rdwr(struct inode *inode, struct file *filp)
 {
-	PRINT_CTX();		// displays process (or intr) context info
+	struct device *dev = ctx->dev;
 
+	PRINT_CTX();	// displays process (or atomic) context info
 	ga++;
 	gb--;
-	pr_info("%s:%s():\n"
-		" filename: \"%s\"\n"
-		" wrt open file: f_flags = 0x%x\n"
-		" ga = %d, gb = %d\n",
-		OURMODNAME, __func__, filp->f_path.dentry->d_iname,
-		filp->f_flags, ga, gb);
+	dev_info(dev, " opening \"%s\" now; wrt open file: f_flags = 0x%x\n",
+		filp->f_path.dentry->d_iname, filp->f_flags);
 
-	return 0;
+	return nonseekable_open(inode, filp);
 }
 
 /*
@@ -93,29 +95,28 @@ static int open_miscdrv_rdwr(struct inode *inode, struct file *filp)
  * The driver's read 'method'; it has effectively 'taken over' the read syscall
  * functionality!
  * The POSIX standard requires that the read() and write() system calls return
- * the number of bytes read or written on success, 0 on EOF and -1 (-ve errno)
- * on failure; here, we copy the 'secret' from our driver context structure
- * to the userspace app.
+ * the number of bytes read or written on success, 0 on EOF (for read), and -1
+ * (-ve errno) on failure; here, we copy the 'secret' from our driver context
+ * structure to the userspace app.
  */
 static ssize_t read_miscdrv_rdwr(struct file *filp, char __user * ubuf,
 				 size_t count, loff_t * off)
 {
 	int ret = count, secret_len = strnlen(ctx->oursecret, MAXBYTES);
+	struct device *dev = ctx->dev;
 
 	PRINT_CTX();
-	pr_info("%s:%s():\n %s wants to read (upto) %zu bytes\n",
-		OURMODNAME, __func__, current->comm, count);
+	dev_info(dev, "%s wants to read (upto) %zd bytes\n", current->comm, count);
 
 	ret = -EINVAL;
 	if (count < MAXBYTES) {
-		pr_warn("%s:%s(): request # of bytes (%zu) is < required size"
-			" (%d), aborting read\n",
-			OURMODNAME, __func__, count, MAXBYTES);
+		dev_warn(dev, "request # of bytes (%zu) is < required size"
+			" (%d), aborting read\n", count, MAXBYTES);
 		goto out_notok;
 	}
 	if (secret_len <= 0) {
-		pr_warn("%s:%s(): whoops, something's wrong, the 'secret' isn't"
-			" available..; aborting read\n", OURMODNAME, __func__);
+		dev_warn(dev, "whoops, something's wrong, the 'secret' isn't"
+			" available..; aborting read\n");
 		goto out_notok;
 	}
 
@@ -125,22 +126,21 @@ static ssize_t read_miscdrv_rdwr(struct file *filp, char __user * ubuf,
 	 * the copy_to_user() routine).
 	 * (FYI, the copy_to_user() routine is the *right* way to copy data from
 	 * userspace to kernel-space; the parameters are:
-	 *  'to-buffer', 'from-buffer', count
-	 *  Returns 0 on success, i.e., non-zero return implies an I/O fault).
+	 *  'to-buffer' (dest), 'from-buffer' (src), count (# of bytes)
+	 * Returns 0 on success, i.e., non-zero return implies an I/O fault).
 	 * Here, we simply copy the content of our context structure's 'secret'
 	 * member to userspace.
 	 */
 	ret = -EFAULT;
 	if (copy_to_user(ubuf, ctx->oursecret, secret_len)) {
-		pr_warn("%s:%s(): copy_to_user() failed\n", OURMODNAME,
-			__func__);
+		dev_warn(dev, "copy_to_user() failed\n");
 		goto out_notok;
 	}
 	ret = secret_len;
 
 	// Update stats
 	ctx->tx += secret_len;	// our 'transmit' is wrt this driver
-	pr_info(" %d bytes read, returning... (stats: tx=%d, rx=%d)\n",
+	dev_info(dev, " %d bytes read, returning... (stats: tx=%d, rx=%d)\n",
 		secret_len, ctx->tx, ctx->rx);
  out_notok:
 	return ret;
@@ -151,31 +151,29 @@ static ssize_t read_miscdrv_rdwr(struct file *filp, char __user * ubuf,
  * The driver's write 'method'; it has effectively 'taken over' the write syscall
  * functionality!
  * The POSIX standard requires that the read() and write() system calls return
- * the number of bytes read or written on success, 0 on EOF and -1 (-ve errno)
- * on failure; Here, we accept the string passed to us and update our 'secret'
- * value to it.
+ * the number of bytes read or written on success, 0 on EOF (for read), and -1
+ * (-ve errno) on failure; here, we copy the 'secret' from our driver context
+ * structure to the userspace app.
  */
 static ssize_t write_miscdrv_rdwr(struct file *filp, const char __user * ubuf,
 				  size_t count, loff_t * off)
 {
 	int ret = count;
 	void *kbuf = NULL;
+	struct device *dev = ctx->dev;
 
 	PRINT_CTX();
 	if (unlikely(count > MAXBYTES)) {	/* paranoia */
-		pr_warn("%s:%s(): count %zu exceeds max # of bytes allowed, "
-			"aborting write\n", OURMODNAME, __func__, count);
+		dev_warn(dev, "count %zd exceeds max # of bytes allowed, "
+			"aborting write\n", count);
 		goto out_nomem;
 	}
-	pr_info("%s:%s():\n %s wants to write %zu bytes\n",
-		OURMODNAME, __func__, current->comm, count);
+	dev_info(dev, "%s wants to write %zd bytes\n", current->comm, count);
 
 	ret = -ENOMEM;
 	kbuf = kvmalloc(count, GFP_KERNEL);
-	if (unlikely(!kbuf)) {
-		pr_warn("%s:%s(): kvmalloc() failed!\n", OURMODNAME, __func__);
+	if (unlikely(!kbuf))
 		goto out_nomem;
-	}
 	memset(kbuf, 0, count);
 
 	/* Copy in the user supplied buffer 'ubuf' - the data content to write -
@@ -187,8 +185,7 @@ static ssize_t write_miscdrv_rdwr(struct file *filp, const char __user * ubuf,
 	 */
 	ret = -EFAULT;
 	if (copy_from_user(kbuf, ubuf, count)) {
-		pr_warn("%s:%s(): copy_from_user() failed\n", OURMODNAME,
-			__func__);
+		dev_warn(dev, "copy_from_user() failed\n");
 		goto out_cfu;
 	}
 
@@ -207,9 +204,8 @@ static ssize_t write_miscdrv_rdwr(struct file *filp, const char __user * ubuf,
 	ctx->rx += count;	// our 'receive' is wrt this driver
 
 	ret = count;
-	pr_info(" %zu bytes written, returning... (stats: tx=%d, rx=%d)\n",
+	dev_info(dev, " %zd bytes written, returning... (stats: tx=%d, rx=%d)\n",
 		count, ctx->tx, ctx->rx);
-
  out_cfu:
 	kvfree(kbuf);
  out_nomem:
@@ -224,13 +220,14 @@ static ssize_t write_miscdrv_rdwr(struct file *filp, const char __user * ubuf,
  */
 static int close_miscdrv_rdwr(struct inode *inode, struct file *filp)
 {
-	PRINT_CTX();		// displays process (or intr) context info
+	struct device *dev = ctx->dev;
 
+	PRINT_CTX();		// displays process (or intr) context info
 	ga--;
 	gb++;
-	pr_info("%s:%s(): filename: \"%s\"\n"
+	dev_info(dev, " filename: \"%s\"\n"
 		" ga = %d, gb = %d\n",
-		OURMODNAME, __func__, filp->f_path.dentry->d_iname, ga, gb);
+		filp->f_path.dentry->d_iname, ga, gb);
 	return 0;
 }
 
@@ -244,34 +241,35 @@ static const struct file_operations llkd_misc_fops = {
 	/* As you learn more reg device drivers, you'll realize that the
 	 * ioctl() would be a very useful method here. As an exercise,
 	 * implement an ioctl method; when issued with the 'GETSTATS' 'command',
-	 * it should return the statistics (tx, rx, errors) to the calling app
+	 * it should return the statistics (tx, rx, errors) to the calling app.
+	 * Refer to our online material "User-Kernel Communication Pathways" for
+	 * the details oh how to use the ioctl(), etc.
 	 */
 };
 
 static struct miscdevice llkd_miscdev = {
 	.minor = MISC_DYNAMIC_MINOR,	/* kernel dynamically assigns a free minor# */
 	.name = "llkd_miscdrv_rdwr",	/* when misc_register() is invoked, the kernel
-					   will auto-create device file as /dev/llkd_miscdrv_rdwr;
-					   also populated within /sys/class/misc/ and /sys/devices/virtual/misc/ */
+		 * will auto-create device file as /dev/llkd_miscdrv_rdwr;
+		 *  also populated within /sys/class/misc/ and /sys/devices/virtual/misc/ */
 	.mode = 0666,		/* ... dev node perms set as specified here */
 	.fops = &llkd_misc_fops,	/* connect to this driver's 'functionality' */
 };
 
-static int __init miscdrv_init(void)
+static int __init miscdrv_rdwr_init(void)
 {
 	int ret = 0;
 
 	ret = misc_register(&llkd_miscdev);
 	if (ret) {
-		pr_notice("%s: misc device registration failed, aborting\n",
-			  OURMODNAME);
+		pr_notice("misc device registration failed, aborting\n");
 		return ret;
 	}
+
 	/* Retrieve the device pointer for this device */
 	dev = llkd_miscdev.this_device;
-	pr_info("%s: LLKD misc driver (major # 10) registered, minor# = %d,"
-		" dev node is /dev/llkd_miscdrv_rdwr\n",
-		OURMODNAME, llkd_miscdev.minor);
+	pr_info("LLKD misc driver (major # 10) registered, minor# = %d,"
+		" dev node is /dev/llkd_miscdrv_rdwr\n", llkd_miscdev.minor);
 
 	/* A 'managed' kzalloc(): use the 'devres' API devm_kzalloc() for mem
 	 * alloc; why? as the underlying kernel devres framework will take care of
@@ -279,24 +277,21 @@ static int __init miscdrv_init(void)
 	 * is unloaded from memory
 	 */
 	ctx = devm_kzalloc(dev, sizeof(struct drv_ctx), GFP_KERNEL);
-	if (unlikely(!ctx)) {
-		pr_notice("%s: kzalloc failed! aborting\n", OURMODNAME);
+	if (unlikely(!ctx))
 		return -ENOMEM;
-	}
+
+	ctx->dev = dev;
 	strlcpy(ctx->oursecret, "initmsg", 8);
-	dev_dbg(dev,
-		"A sample print via the dev_dbg(): driver %s initialized\n",
-		OURMODNAME);
+	dev_dbg(dev, "A sample print via the dev_dbg(): driver initialized\n");
 
 	return 0;		/* success */
 }
 
-static void __exit miscdrv_exit(void)
+static void __exit miscdrv_rdwr_exit(void)
 {
 	misc_deregister(&llkd_miscdev);
-	pr_info("%s: LKDC misc driver deregistered, bye\n", OURMODNAME);
-	pr_debug("driver %s deregistered, bye\n", OURMODNAME);
+	pr_info("LLKD misc (rdwr) driver deregistered, bye\n");
 }
 
-module_init(miscdrv_init);
-module_exit(miscdrv_exit);
+module_init(miscdrv_rdwr_init);
+module_exit(miscdrv_rdwr_exit);

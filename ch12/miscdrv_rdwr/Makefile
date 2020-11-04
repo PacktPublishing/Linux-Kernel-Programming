@@ -44,8 +44,11 @@ else
   KDIR ?= /lib/modules/$(shell uname -r)/build
 endif
 
+# Set FNAME_C to the kernel module name source filename (without .c)
+FNAME_C := miscdrv_rdwr
+
 PWD            := $(shell pwd)
-obj-m          += miscdrv_rdwr.o
+obj-m          += ${FNAME_C}.o
 EXTRA_CFLAGS   += -DDEBUG
 
 all:
@@ -56,21 +59,22 @@ all:
 install:
 	@echo
 	@echo "--- installing ---"
+	@echo " [First, invoke the 'make' ]"
+	make
 	@echo
-	make -C $(KDIR) M=$(PWD) modules_install
+	@echo " [Now for the 'sudo make install' ]"
+	sudo make -C $(KDIR) M=$(PWD) modules_install
+	sudo depmod
 clean:
 	@echo
 	@echo "--- cleaning ---"
 	@echo
 	make -C $(KDIR) M=$(PWD) clean
-	rm -f *~ rdwr_drv_secret   # from 'indent'
+	rm -f *~ rdwr_test_secret
 
-# userspace target
-rdwr_drv_secret: rdwr_drv_secret.c
-	@echo
-	@echo "-- building the userspace app --"
-	@echo
-	gcc -Wall -Os rdwr_drv_secret.c -o rdwr_drv_secret
+# special case: target to build our user mode test app
+rdwr_test_secret: rdwr_test_secret.c
+	${CROSS_COMPILE}gcc rdwr_test_secret.c -o rdwr_test_secret -Os -Wall
 
 #--------------- More (useful) targets! -------------------------------
 INDENT := indent
@@ -139,10 +143,10 @@ sa_cppcheck:
 	@echo
 	@echo "--- static analysis with cppcheck ---"
 	@echo
-	cppcheck -v --force .
+	cppcheck -v --force --enable=all -i .tmp_versions/ -i *.mod.c -i bkp/ --suppress=missingIncludeSystem .
 
 # Packaging; just tar.xz as of now
-PKG_NAME := lkm_template
+PKG_NAME := ${FNAME_C}
 tarxz-pkg:
 	rm -f ../${PKG_NAME}.tar.xz 2>/dev/null
 	make clean
@@ -161,7 +165,7 @@ help:
 
 	@echo '--- 'usual' kernel LKM targets ---'
 	@echo 'typing "make" or "all" target : builds the kernel module object (the .ko)'
-	@echo 'install     : installs the kernel module(s) to INSTALL_MOD_PATH (default: /lib/modules/$(shell uname -r)/)'
+	@echo 'install     : installs the kernel module(s) to INSTALL_MOD_PATH (default here: /lib/modules/$(shell uname -r)/)'
 	@echo 'clean       : cleanup - remove all kernel objects, temp files/dirs, etc'
 
 	@echo
@@ -173,9 +177,10 @@ help:
 	@echo
 	@echo '--- kernel static analyzer targets ---'
 	@echo 'sa         : "wrapper" target over the following kernel static analyzer targets'
-	@echo ' sa_sparse  : run the static analysis sparse tool on the source file(s)'
-	@echo ' sa_gcc     : run gcc with option -W1 ("Generally useful warnings") on the source file(s)'
+	@echo ' sa_sparse     : run the static analysis sparse tool on the source file(s)'
+	@echo ' sa_gcc        : run gcc with option -W1 ("Generally useful warnings") on the source file(s)'
 	@echo ' sa_flawfinder : run the static analysis flawfinder tool on the source file(s)'
+	@echo ' sa_cppcheck   : run the static analysis cppcheck tool on the source file(s)'
 	@echo 'TIP: use coccinelle as well (requires spatch): https://www.kernel.org/doc/html/v4.15/dev-tools/coccinelle.html'
 
 	@echo

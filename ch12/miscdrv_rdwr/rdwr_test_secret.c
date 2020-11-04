@@ -1,5 +1,5 @@
 /*
- * ch12/miscdrv_rdwr/rdwr_drv_secret.c
+ * ch12/miscdrv_rdwr/rdwr_test_secret.c
  ***************************************************************
  * This program is part of the source code released for the book
  *  "Linux Kernel Development Cookbook"
@@ -11,8 +11,8 @@
  * From: Ch 12 : Writing a Simple Misc Character Device Driver
  ****************************************************************
  * Brief Description:
- * A simple test bed for the miscdrv_rdwr demo driver; a small userspace app to
- * issue the read(2) and write(2) system calls upon a given (device) file.
+ * A simple test bed for the miscdrv_rdwr demo driver; a small user space app
+ * to issue the read(2) and write(2) system calls upon a given (device) file.
  * Also, again as a demo, we use the read(2) to retreive the 'secret' <eye-roll>
  * from the driver within kernel-space. Equivalently, one can use the write(2)
  * change the 'secret' (just plain text).
