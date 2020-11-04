@@ -96,6 +96,13 @@ int main(int argc, char **argv)
 		}
 		printf("%s: read %zd bytes from %s\n", argv[0], n, argv[2]);
 		printf(" Data read:\n\"%.*s\"\n", (int)n, buf);
+
+#if 0
+		/* Test the lseek; typically, it should fail */
+		off_t ret = lseek(fd, 100, SEEK_CUR);
+		if (ret == (off_t)-1)
+			fprintf(stderr, "%s: lseek on device failed\n", argv[0]);
+#endif
 	} else {		// test writing ..
 		n = write(fd, buf, num);
 		if (n < 0) {

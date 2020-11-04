@@ -17,6 +17,8 @@
  *
  * For details, please refer the book, Ch 12.
  */
+#define pr_fmt(fmt) "%s:%s(): " fmt, KBUILD_MODNAME, __func__
+
 #include <linux/init.h>
 #include <linux/kernel.h>
 #include <linux/module.h>
@@ -35,7 +37,7 @@ MODULE_VERSION("0.1");
  * open_miscdrv()
  * The driver's open 'method'; this 'hook' will get invoked by the kernel VFS
  * when the device file is opened. Here, we simply print out some relevant info.
- * The POSIX standard requires open() to return the file descriptor in success;
+ * The POSIX standard requires open() to return the file descriptor on success;
  * note, though, that this is done within the kernel VFS (when we return). So,
  * all we do here is return 0 indicating success.
  */
@@ -43,12 +45,10 @@ static int open_miscdrv(struct inode *inode, struct file *filp)
 {
 	PRINT_CTX();		// displays process (or intr) context info
 
-	pr_info("%s:%s():\n"
-		" filename: \"%s\"\n"
-		" wrt open file: f_flags = 0x%x\n",
-		OURMODNAME, __func__, filp->f_path.dentry->d_iname, filp->f_flags);
+	pr_info(" opening \"%s\" now; wrt open file: f_flags = 0x%x\n",
+		filp->f_path.dentry->d_iname, filp->f_flags);
 
-	return 0;
+	return nonseekable_open(inode, filp);
 }
 
 /*
@@ -61,7 +61,7 @@ static int open_miscdrv(struct inode *inode, struct file *filp)
  */
 static ssize_t read_miscdrv(struct file *filp, char __user *ubuf, size_t count, loff_t *off)
 {
-	pr_info("%s:%s():\n", OURMODNAME, __func__);
+	pr_info("to read %zd bytes\n", count);
 	return count;
 }
 
@@ -76,7 +76,7 @@ static ssize_t read_miscdrv(struct file *filp, char __user *ubuf, size_t count, 
 static ssize_t write_miscdrv(struct file *filp, const char __user *ubuf,
 			     size_t count, loff_t *off)
 {
-	pr_info("%s:%s():\n", OURMODNAME, __func__);
+	pr_info("to write %zd bytes\n", count);
 	return count;
 }
 
@@ -89,8 +89,7 @@ static ssize_t write_miscdrv(struct file *filp, const char __user *ubuf,
  */
 static int close_miscdrv(struct inode *inode, struct file *filp)
 {
-	pr_info("%s:%s(): filename: \"%s\"\n",
-		OURMODNAME, __func__, filp->f_path.dentry->d_iname);
+	pr_info("closing \"%s\"\n", filp->f_path.dentry->d_iname);
 	return 0;
 }
 
@@ -99,6 +98,7 @@ static const struct file_operations llkd_misc_fops = {
 	.read = read_miscdrv,
 	.write = write_miscdrv,
 	.release = close_miscdrv,
+	.llseek = no_llseek,
 };
 
 static struct miscdevice llkd_miscdev = {
