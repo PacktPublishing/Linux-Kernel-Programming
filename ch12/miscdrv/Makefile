@@ -70,7 +70,7 @@ clean:
 	@echo "--- cleaning ---"
 	@echo
 	make -C $(KDIR) M=$(PWD) clean
-	rm -f *~   # from 'indent'
+	rm -f rdwr_test *~   # from 'indent'
 
 # special case: target to build our user mode test app
 rdwr_test: rdwr_test.c
