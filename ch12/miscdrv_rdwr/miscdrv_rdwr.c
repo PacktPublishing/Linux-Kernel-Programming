@@ -53,8 +53,8 @@ MODULE_VERSION("0.1");
 
 static int ga, gb = 1;		/* ignore for now ... */
 
-static struct device *dev;	/* device pointer */
-/* The driver 'context' data structure;
+/*
+ * The driver 'context' (or private) data structure;
  * all relevant 'state info' reg the driver is here.
  */
 struct drv_ctx {
@@ -99,8 +99,8 @@ static int open_miscdrv_rdwr(struct inode *inode, struct file *filp)
  * (-ve errno) on failure; here, we copy the 'secret' from our driver context
  * structure to the userspace app.
  */
-static ssize_t read_miscdrv_rdwr(struct file *filp, char __user * ubuf,
-				 size_t count, loff_t * off)
+static ssize_t read_miscdrv_rdwr(struct file *filp, char __user *ubuf,
+				 size_t count, loff_t *off)
 {
 	int ret = count, secret_len = strnlen(ctx->oursecret, MAXBYTES);
 	struct device *dev = ctx->dev;
@@ -155,8 +155,8 @@ static ssize_t read_miscdrv_rdwr(struct file *filp, char __user * ubuf,
  * (-ve errno) on failure; here, we copy the 'secret' from our driver context
  * structure to the userspace app.
  */
-static ssize_t write_miscdrv_rdwr(struct file *filp, const char __user * ubuf,
-				  size_t count, loff_t * off)
+static ssize_t write_miscdrv_rdwr(struct file *filp, const char __user *ubuf,
+				  size_t count, loff_t *off)
 {
 	int ret = count;
 	void *kbuf = NULL;
@@ -225,9 +225,8 @@ static int close_miscdrv_rdwr(struct inode *inode, struct file *filp)
 	PRINT_CTX();		// displays process (or intr) context info
 	ga--;
 	gb++;
-	dev_info(dev, " filename: \"%s\"\n"
-		" ga = %d, gb = %d\n",
-		filp->f_path.dentry->d_iname, ga, gb);
+	dev_info(dev, " filename: \"%s\"\n", filp->f_path.dentry->d_iname);
+
 	return 0;
 }
 
@@ -266,8 +265,6 @@ static int __init miscdrv_rdwr_init(void)
 		return ret;
 	}
 
-	/* Retrieve the device pointer for this device */
-	dev = llkd_miscdev.this_device;
 	pr_info("LLKD misc driver (major # 10) registered, minor# = %d,"
 		" dev node is /dev/llkd_miscdrv_rdwr\n", llkd_miscdev.minor);
 
@@ -276,13 +273,15 @@ static int __init miscdrv_rdwr_init(void)
 	 * freeing the memory automatically upon driver 'detach' or when the driver
 	 * is unloaded from memory
 	 */
-	ctx = devm_kzalloc(dev, sizeof(struct drv_ctx), GFP_KERNEL);
+	ctx = devm_kzalloc(llkd_miscdev.this_device, sizeof(struct drv_ctx), GFP_KERNEL);
 	if (unlikely(!ctx))
 		return -ENOMEM;
 
-	ctx->dev = dev;
+	/* Retrieve the device pointer for this device */
+	ctx->dev = llkd_miscdev.this_device;
+	/* Initialize the "secret" value :-) */
 	strlcpy(ctx->oursecret, "initmsg", 8);
-	dev_dbg(dev, "A sample print via the dev_dbg(): driver initialized\n");
+	dev_dbg(ctx->dev, "A sample print via the dev_dbg(): driver initialized\n");
 
 	return 0;		/* success */
 }

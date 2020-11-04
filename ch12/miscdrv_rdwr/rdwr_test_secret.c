@@ -18,6 +18,7 @@
  * change the 'secret' (just plain text).
  *
  * For details, please refer the book, Ch 12.
+ * License: Dual MIT/GPL
  */
 #include <stdio.h>
 #include <unistd.h>
@@ -122,7 +123,7 @@ int main(int argc, char **argv)
 
 	if (stay_alive) {
 		printf("%s:%d: stayin' alive (in pause()) ... \n", argv[0],
-		       getpid());
+			getpid());
 		pause();
 	}
 
