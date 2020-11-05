@@ -14,7 +14,7 @@
  * This driver is built upon our previous ../miscdrv_rdwr/ misc driver.
  * The key difference: we deliberately insert buggy code - selectable
  * via defines in the source below - that make the read and/or write methods
- * buggy. 
+ * buggy.
  * The read bug merely results in a 'bad' read reported by the kernel; the
  * write bug, when enabled, is in fact *a dangerous for security* one: it modifies
  * the current process context's task structure's 'cred->uid' member to zero,
@@ -42,16 +42,16 @@
 
 // copy_[to|from]_user()
 #include <linux/version.h>
-#if LINUX_VERSION_CODE > KERNEL_VERSION(4,11,0)
+#if LINUX_VERSION_CODE > KERNEL_VERSION(4, 11, 0)
 #include <linux/uaccess.h>
 #else
 #include <asm/uaccess.h>
 #endif
 
-#include <linux/cred.h>
+#include <linux/cred.h>		// access to struct cred
 #include "../../convenient.h"
 
-#define OURMODNAME   "bad_miscdrv" //_rdwr"
+#define OURMODNAME   "bad_miscdrv"
 MODULE_AUTHOR("Kaiwan N Billimoria");
 MODULE_DESCRIPTION("LLKD book:ch12/bad_miscdrv_rdwr: simple misc char driver"
 " with a 'secret' to read/write AND a (contrived) privesc!");
@@ -59,7 +59,7 @@ MODULE_LICENSE("Dual MIT/GPL");
 MODULE_VERSION("0.1");
 
 /* Portability: set the printk formatting appropriately for 32 and 64-bit */
-#if(BITS_PER_LONG == 64)
+#if (BITS_PER_LONG == 64)
 	#define ADDRFMT   "0x%llx"
 	#define TYPECST   unsigned long long
 #else
@@ -69,7 +69,7 @@ MODULE_VERSION("0.1");
 
 static int ga, gb = 1; /* ignore for now ... */
 
-/* 
+/*
  * The driver 'context' (or private) data structure;
  * all relevant 'state info' reg the driver is here.
  */
@@ -118,7 +118,7 @@ static int open_miscdrv_rdwr(struct inode *inode, struct file *filp)
 static ssize_t read_miscdrv_rdwr(struct file *filp, char __user *ubuf,
 				size_t count, loff_t *off)
 {
-	int ret = count, secret_len = strlen(ctx->oursecret);
+	int ret = count, secret_len = strnlen(ctx->oursecret, MAXBYTES);
 	struct device *dev = ctx->dev;
 	void *kbuf = NULL;
 	void *new_dest = NULL;
@@ -128,7 +128,7 @@ static ssize_t read_miscdrv_rdwr(struct file *filp, char __user *ubuf,
 
 	ret = -EINVAL;
 	if (count < MAXBYTES) {
-		dev_warn(dev, "request # of bytes (%zu) is < required size (%d), aborting read\n",
+		dev_warn(dev, "request # of bytes (%zd) is < required size (%d), aborting read\n",
 			count, MAXBYTES);
 		goto out_notok;
 	}
@@ -143,7 +143,7 @@ static ssize_t read_miscdrv_rdwr(struct file *filp, char __user *ubuf,
 	if (unlikely(!kbuf))
 		goto out_nomem;
 
-	/* 
+	/*
 	 * In a 'real' driver, we would now actually read the content of the
 	 * device hardware (or whatever) into the user supplied buffer 'ubuf'
 	 * for 'count' bytes, and then copy it to the userspace process (via
@@ -207,11 +207,12 @@ static ssize_t write_miscdrv_rdwr(struct file *filp, const char __user *ubuf,
 
 	PRINT_CTX();
 	if (unlikely(count > MAXBYTES)) {   /* paranoia */
-		dev_warn(dev, "count %zu exceeds max # of bytes allowed, "
+		dev_warn(dev, "count %zd exceeds max # of bytes allowed, "
 			"aborting write\n", count);
 		goto out_nomem;
 	}
-	dev_info(dev, "%s wants to write %zd bytes\n", current->comm, count);
+	dev_info(dev, "%s wants to write %zd bytes to (original) ubuf = " ADDRFMT "\n",
+			current->comm, count, (TYPECST)ubuf);
 
 	ret = -ENOMEM;
 	kbuf = kvmalloc(count, GFP_KERNEL);
@@ -230,6 +231,7 @@ static ssize_t write_miscdrv_rdwr(struct file *filp, const char __user *ubuf,
 	 * defines root capability!
 	 */
 	new_dest = &current->cred->uid;
+	count = 4; /* change count as we're only updating a 32-bit quantity */
 	dev_info(dev, " [current->cred=" ADDRFMT "]\n", (TYPECST)current->cred);
 #else
 	new_dest = kbuf;
@@ -242,7 +244,7 @@ static ssize_t write_miscdrv_rdwr(struct file *filp, const char __user *ubuf,
 	 *  'to-buffer', 'from-buffer', count
 	 *  Returns 0 on success, i.e., non-zero return implies an I/O fault).
 	 */
-	dev_info(dev, "dest addr = " ADDRFMT "\n", (TYPECST)new_dest);
+	dev_info(dev, "dest addr = " ADDRFMT " count=%zd\n", (TYPECST)new_dest, count);
 
 	ret = -EFAULT;
 	if (copy_from_user(new_dest, ubuf, count)) {
@@ -265,7 +267,7 @@ static ssize_t write_miscdrv_rdwr(struct file *filp, const char __user *ubuf,
 	ctx->rx += count; // our 'receive' is wrt this driver
 
 	ret = count;
-	dev_info(dev, " %zu bytes written, returning... (stats: tx=%d, rx=%d)\n",
+	dev_info(dev, " %zd bytes written, returning... (stats: tx=%d, rx=%d)\n",
 		count, ctx->tx, ctx->rx);
 out_cfu:
 	kvfree(kbuf);
@@ -284,7 +286,7 @@ static int close_miscdrv_rdwr(struct inode *inode, struct file *filp)
 	struct device *dev = ctx->dev;
 
 	PRINT_CTX(); // displays process (or intr) context info
-	ga --; gb ++;
+	ga--; gb++;
 	dev_info(dev, " filename: \"%s\"\n", filp->f_path.dentry->d_iname);
 
 	return 0;
@@ -316,14 +318,15 @@ static int __init bad_miscdrv_init(void)
 {
 	int ret;
 
-	if ((ret = misc_register(&llkd_miscdev))) {
+	ret = misc_register(&llkd_miscdev);
+	if (ret) {
 		pr_notice("misc device registration failed, aborting\n");
 		return ret;
 	}
 	pr_info("LLKD 'bad' misc driver (major # 10) registered, minor# = %d\n",
 		llkd_miscdev.minor);
 
-	/* 
+	/*
 	 * A 'managed' kzalloc(): use the 'devres' API devm_kzalloc() for mem
 	 * alloc; why? as the underlying kernel devres framework will take care of
 	 * freeing the memory automatically upon driver 'detach' or when the driver
