@@ -1,5 +1,20 @@
 #!/bin/bash
-# irqsoff_latency_ftrc.sh
+# ch14/irqsoff_latency_ftrc.sh
+#----------------------------------------------------------------------
+# This program is part of the source code released for the book
+#  "Learn Linux Kernel Development"
+#  (c) Author: Kaiwan N Billimoria
+#  Publisher:  Packt
+#  GitHub repository:
+#  https://github.com/PacktPublishing/Learn-Linux-Kernel-Development
+# 
+# For details, refer the book, Ch 14.
+#----------------------------------------------------------------------
+# Brief Description:
+# This is a simple wrapper script; we use it to gauge the maximum IRQs-off
+# latency on the system. It exploits the kernel's Ftrace infrastructure.
+# For details, refer the book, Ch 14 - Handling hardware interrupts, section
+# 'Finding the interrupts disabled worst-case latency with Ftrace'.
 name=$(basename $(realpath $0))
 
 reset_ftrc()
@@ -27,9 +42,10 @@ FTRC=${DEBUGFS_MNT}/tracing
   exit 1
 }
 
-
 grep -w -q "irqsoff" ${FTRC}/available_tracers || {
   echo "${name}: 'irqsoff' tracer not available, aborting..."
+  echo "This implies you will have to configure your kernel (or a custom one),
+with the CONFIG_IRQSOFF_TRACER kernel config option turned on."
   exit 1
 }
 
