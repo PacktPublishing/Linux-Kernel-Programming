@@ -1,0 +1,47 @@
+Hello,
+
+Here's the link to our online materials (PDF) on the topic
+"User-Kernel Communication Pathways"
+
+<< insert link here >>
+
+A brief introduction follows:
+-------------------------------------------------------------------------------
+Consider this scenario: you've successfully developed a device driver for, say,
+a pressure sensor device (perhaps by using the kernel's I2C APIs to fetch the
+pressure from the chip via the I2C protocol). So, you have the current pressure
+value in a variable within the driver, which of course implies that it's within
+kernel-space. The issue at hand: how exactly do you now have a user space
+application retrieve this value? Well, as we learned in the previous chapter,
+you can always include a .read method in the driver's fops structure. When the
+user space app issues a read(2) system call, control will be diverted (via the
+VFS) to your driver's read method. In there, you perform a copy_to_user()
+(or equivalent), resulting in the usermode app receiving the value. Yes, but
+there are other, sometimes superior, ways to do so.
+
+In this chapter, we have you understand various available communication
+interfaces or pathways - means to communicate or interface between user and
+kernel address spaces. This is an important aspect of writing kernel/driver
+code, for without this knowledge, how will you be able to achieve a key thing
+- efficiently transfer information between a kernel-space component (often a
+device driver but it could be anything, really), and a userspace process or
+thread. Not only that, some of these techniques that we shall learn about, are
+quite often used for debug purposes as well. In this chapter, we c0ver several
+techniques to effect communication between the kernel and user (virtual)
+address spaces - communication via traditional proc filesystem - procfs, the
+better way for drivers via the 'sys' filesystem - sysfs, via a debug filesystem
+- debugfs, netlink sockets and the ioctl(2) system call.
+
+The following topics will be covered in this chapter:
+
+ - Approaches to communicating/interfacing a kernel module with userspace C app
+ - Interfacing via the proc filesystem (procfs)
+ - Interfacing via the sys filesystem (sysfs)
+ - Interfacing via the debug filesystem (debugfs)
+ - Interfacing via netlink sockets
+ - Interfacing via the ioctl system call.
+ - Comparing the interfacing methods
+
+-----------------------------------------------------------------------
+"Learn Linux Kernel Development", Kaiwan N Billimoria
+Publisher: Packt Publishers
