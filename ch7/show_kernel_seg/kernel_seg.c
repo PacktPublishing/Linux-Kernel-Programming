@@ -49,7 +49,7 @@ MODULE_VERSION("0.1");
 /* Module parameters */
 static int show_uservas;
 module_param(show_uservas, int, 0660);
-MODULE_PARM_DESC(show_uservas, "Show some userspace VAS details; 0 = no (default), 1 = show");
+MODULE_PARM_DESC(show_uservas, "Show some user space VAS details; 0 = no (default), 1 = show");
 
 #if (BITS_PER_LONG == 32)
 #define FMTSPC_DEC	"%7d"

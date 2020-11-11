@@ -320,7 +320,7 @@ static int __init bad_miscdrv_init(void)
 
 	ret = misc_register(&llkd_miscdev);
 	if (ret) {
-		pr_notice("misc device registration failed, aborting\n");
+		pr_notice("%s: misc device registration failed, aborting\n", OURMODNAME);
 		return ret;
 	}
 	pr_info("LLKD 'bad' misc driver (major # 10) registered, minor# = %d\n",

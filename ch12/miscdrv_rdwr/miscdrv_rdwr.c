@@ -261,14 +261,15 @@ static int __init miscdrv_rdwr_init(void)
 
 	ret = misc_register(&llkd_miscdev);
 	if (ret) {
-		pr_notice("misc device registration failed, aborting\n");
+		pr_notice("%s: misc device registration failed, aborting\n", OURMODNAME);
 		return ret;
 	}
 
 	pr_info("LLKD misc driver (major # 10) registered, minor# = %d,"
 		" dev node is /dev/llkd_miscdrv_rdwr\n", llkd_miscdev.minor);
 
-	/* A 'managed' kzalloc(): use the 'devres' API devm_kzalloc() for mem
+	/*
+	 * A 'managed' kzalloc(): use the 'devres' API devm_kzalloc() for mem
 	 * alloc; why? as the underlying kernel devres framework will take care of
 	 * freeing the memory automatically upon driver 'detach' or when the driver
 	 * is unloaded from memory
