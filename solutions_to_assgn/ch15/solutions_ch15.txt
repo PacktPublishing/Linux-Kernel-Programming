@@ -1,0 +1,46 @@
+------------------------------------------------------------------------------
+Solutions to selected assignments ::
+Ch 15: Timers, kernel threads, workqueues and more
+Answers to a few selected questions only.
+(For your convenience, we have repeated the questions below and have provided
+answers / solutions to some of them).
+------------------------------------------------------------------------------
+
+1. Spot the bug(s) in the pseudo-code snippet below:
+static my_chip_tasklet(void)
+{
+    // ... process data
+    if (!copy_to_user(to, from, count)) {
+        pr_warn("..."); [...]
+    }
+}
+static irqreturn_t chip_hardisr(int irq, void *data)
+{
+    // ack irq
+    // << ... fetch data into kfifo ... >>
+    // << ... call func_a(), delay, then call func_b() >>
+    func_a();
+    usleep(100); // 100 us delay required here! see datasheet pg ...
+    func_b();
+    tasklet_schedule(...);
+    return IRQ_HANDLED;
+}
+
+my_chip_probe(...)
+{
+    // ...
+    request_irq(CHIP_IRQ, chip_hardisr, ...);
+    // ...
+    tasklet_init(...);
+}
+
+A. Bugs: the functions chip_hardisr() and my_chip_tasklet() run in an atomic
+(interrupt) context; hence:
+a) usleep(100); <-- cannot do a blocking sleep in an atomic ctx (use
+   udelay() instead!)
+b) copy_to_user(...); <- cannot xfer data to & from user space in an atomic
+   (interrupt) ctx; possible solution: enqueue your data onto a kernel-space
+   data structure (a kfifo perhaps) and transfer to the user process at a
+   later safe time in process context (perhaps via a driver syscall method,
+   a kthread or a workqueue)
+
