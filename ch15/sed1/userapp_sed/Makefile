@@ -62,7 +62,8 @@ CPPCHECK := cppcheck
 VALGRIND := valgrind
 # update as required
 PKG_NAME := ${FNAME_C}
-CHECKPATCH := ../../checkpatch.pl
+KDIR ?= /lib/modules/$(shell uname -r)/build
+CHECKPATCH := ${KDIR}/scripts/checkpatch.pl
 CLANG_CHECK := clang-check
 
 # Targets and their rules

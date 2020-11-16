@@ -1,4 +1,4 @@
-/* 
+/*
  * sed_common.h
  *
  * Common header for both the userapp_sed1.c user space app and the
@@ -6,7 +6,7 @@
  */
 
 /* The 'magic' number for our driver; see
- * Documentation/ioctl/ioctl-number.rst 
+ * Documentation/ioctl/ioctl-number.rst
  * Of course, we don't know for _sure_ if the magic # we choose here this
  * will remain free; it really doesn't matter, this is just for demo purposes;
  * don't try and upstream this without further investigation :-)
@@ -44,13 +44,16 @@ enum xform { XF_NONE, XF_DECRYPT, XF_ENCRYPT };
 
 #define SHOW_TIME()		do {		\
 	pr_debug("%lld ns", ktime_get_real_ns()); \
-} while(0)
+} while (0)
 
 // t1, t2: nanosecond-accurate timestamps
 #define SHOW_DELTA(t1, t2)	do {	\
-	pr_debug("delta: %lld ns (= %lld us = %lld ms)",	\
+	if (time_after((unsigned long)t2, (unsigned long)t1)) {	\
+		pr_debug("delta: %lld ns (= %lld us = %lld ms)\n",	\
 		(t2) - (t1),	\
 		((t2) - (t1))/1000,	\
 		((t2) - (t1))/1000000	\
 		); \
-} while(0)
+	} else	\
+		pr_debug("SHOW_DELTA(): *invalid* t2 < t1?\n");	\
+} while (0)

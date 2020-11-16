@@ -12,7 +12,7 @@
 #include <string.h>
 #include "../sed_common.h"
 
-/* 
+/*
  * decrypt_msg
  * Sends an encrypted message to the underlying driver, which will decrypt it
  * and send it back here; the second parameter @msg is in effect an 'in-out'
@@ -51,8 +51,9 @@ static void decrypt_msg(int fd, char *msg, char *prg)
 
 	printf("ioctl IOCTL_LLKD_SED_IOC_DECRYPT_MSG done; len=%d\n", kd->len);
 #if 0
-	for (i=0; i<kd->len; i++)
-		printf("kd->data[%d] = %c (0x%x)\n", i, kd->data[i], kd->data[i] & 0xff);
+	for (i = 0; i < kd->len; i++)
+		printf("kd->data[%d] = %c (0x%x)\n", i, kd->data[i],
+		       kd->data[i] & 0xff);
 #endif
 	memcpy(msg, kd->data, kd->len);
 	free(kd);
@@ -96,8 +97,9 @@ static void encrypt_msg(int fd, char *msg, char *prg)
 
 	printf("ioctl IOCTL_LLKD_SED_IOC_ENCRYPT_MSG done; len=%d\n", kd->len);
 #if 0
-	for (i=0; i<kd->len; i++)
-		printf("kd->data[%d] = %c (0x%x)\n", i, kd->data[i], kd->data[i] & 0xff);
+	for (i = 0; i < kd->len; i++)
+		printf("kd->data[%d] = %c (0x%x)\n", i, kd->data[i],
+		       kd->data[i] & 0xff);
 #endif
 
 	memcpy(msg, kd->data, kd->len);
@@ -119,27 +121,19 @@ int main(int argc, char **argv)
 	}
 	memcpy(buf, argv[2], MAX_DATA);
 
-	if ((fd = open(argv[1], O_RDWR, 0)) == -1) {
+	fd = open(argv[1], O_RDWR, 0);
+	if (fd == -1) {
 		perror("open");
 		exit(EXIT_FAILURE);
 	}
 	printf("device opened: fd=%d\n", fd);
 
-/*
-	// 1. Reset
-	if (ioctl(fd, IOCTL_LLKD_KTIMR_IOCRESET, 0) == -1) {
-		perror("ioctl IOCTL_LLKD_KTIMR_IOCRESET failed");
-		close(fd);
-		exit(EXIT_FAILURE);
-	}
-	printf("%s: reset.\n", argv[0]);
-*/
 	encrypt_msg(fd, buf, argv[0]);
 	printf("msg after encrypt: %s\n\n", buf);
 	sleep(1);
 	decrypt_msg(fd, buf, argv[0]);
 	printf("msg after decrypt: %s\n", buf);
-		
+
 	close(fd);
 	exit(EXIT_SUCCESS);
 }
