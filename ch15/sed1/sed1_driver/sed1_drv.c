@@ -39,7 +39,7 @@
 #include "../sed_common.h"
 #include "../../../convenient.h"
 
-#define DRVNAME  "sed1_drv"
+#define DRVNAME			"sed1_drv"
 #define TIMER_EXPIRE_MS		1
 
 MODULE_DESCRIPTION
@@ -52,7 +52,7 @@ MODULE_VERSION("0.1");
 static int make_it_fail;
 module_param(make_it_fail, int, 0660);
 MODULE_PARM_DESC(make_it_fail,
-		 "Deliberately ensure that the kernel timeout occurs before proessing completes (default=0)");
+"Deliberately ensure that the kernel timeout occurs before proessing completes (default=0)");
 
 /*
  * The driver 'context' (or private) data structure;
@@ -92,7 +92,7 @@ static void encrypt_decrypt_payload(int work, struct sed_ds *kd, struct sed_ds *
 {
 	int i;
 	ktime_t t1, t2;		// a s64 qty
-	struct stMyCtx *priv = gpriv;	//plat0.dev.platform_data;
+	struct stMyCtx *priv = gpriv;
 
 	pr_debug("starting timer + processing now ...\n");
 	//print_hex_dump_bytes("kd: ", DUMP_PREFIX_OFFSET, kd, sizeof(struct sed_ds));
@@ -127,7 +127,7 @@ static void encrypt_decrypt_payload(int work, struct sed_ds *kd, struct sed_ds *
 	}
 	t2 = ktime_get_real_ns();
 
-	// done; cancel the timeout
+	// work done, cancel the timeout
 	del_timer(&priv->timr);
 	SHOW_DELTA(t1, t2);
 	pr_debug("processing complete, timeout cancelled\n");
@@ -174,9 +174,9 @@ static int ioctl_miscdrv(struct inode *ino, struct file *filp, unsigned int cmd,
 			 unsigned long arg)
 #endif
 {
-	int retval = 0;
+	int ret = 0;
 	struct sed_ds *kd, *kdret;
-	struct stMyCtx *priv = gpriv;	//plat0.dev.platform_data;
+	struct stMyCtx *priv = gpriv;
 
 	//pr_debug("In ioctl method, cmd=%d\n", _IOC_NR(cmd));
 
@@ -190,28 +190,27 @@ static int ioctl_miscdrv(struct inode *ino, struct file *filp, unsigned int cmd,
 		return -ENOTTY;
 	}
 
+	ret = -ENOMEM;
 	kd = kzalloc(sizeof(struct sed_ds), GFP_KERNEL);
 	if (!kd)
-		return -ENOMEM;
+		goto out_mem1;
 	kdret = kzalloc(sizeof(struct sed_ds), GFP_KERNEL);
 	if (!kdret)
-		return -ENOMEM;
+		goto out_mem2;
 
 	switch (cmd) {
 	case IOCTL_LLKD_SED_IOC_ENCRYPT_MSG:
 	case IOCTL_LLKD_SED_IOC_DECRYPT_MSG:
 		pr_debug("In ioctl cmd option: %s\narg=0x%lx\n",
 			 (cmd == IOCTL_LLKD_SED_IOC_ENCRYPT_MSG ? "encrypt" : "decrypt"), arg);
-#if 0
+#if 0	// only allow root?
 		if (!capable(CAP_SYS_ADMIN))
 			return -EPERM;
 #endif
+		ret = -EFAULT;
 		if (copy_from_user(kd, (struct sed_ds *)arg, sizeof(struct sed_ds))) {
 			pr_warn("copy_from_user() failed\n");
-			/* TODO : use goto */
-			kfree(kdret);
-			kfree(kd);
-			return -EFAULT;
+			goto out_cftu;
 		}
 		pr_debug("xform=%d, len=%d\n", kd->data_xform, kd->len);
 		print_hex_dump_bytes("payload: ", DUMP_PREFIX_OFFSET, kd->data, kd->len);
@@ -224,12 +223,10 @@ static int ioctl_miscdrv(struct inode *ino, struct file *filp, unsigned int cmd,
 				     kdret->len);
 
 		// write back processed payload to the user space process
-		if (copy_to_user
-		    ((struct sed_ds *)arg, (struct sed_ds *)kdret, sizeof(struct sed_ds))) {
+		ret = -EFAULT;
+		if (copy_to_user((struct sed_ds *)arg, (struct sed_ds *)kdret, sizeof(struct sed_ds))) {
 			pr_warn("copy_to_user() failed\n");
-			kfree(kdret);
-			kfree(kd);
-			return -EFAULT;
+			goto out_cftu;
 		}
 		break;
 	default:
@@ -238,12 +235,18 @@ static int ioctl_miscdrv(struct inode *ino, struct file *filp, unsigned int cmd,
 		return -ENOTTY;
 	}
 
+	ret = 0;
+out_cftu:
 	kfree(kdret);
+out_mem2:
 	kfree(kd);
-	return retval;
+out_mem1:
+	return ret;
 }
 
-/*----------- 'misc' methods -------------*/
+/*----------- 'misc' methods -------------
+ * dummy here...
+ */
 static int open_miscdrv(struct inode *inode, struct file *filp)
 {
 	PRINT_CTX();		// displays process (or atomic) context info
@@ -297,7 +300,7 @@ static struct miscdevice llkd_miscdev = {
 	.fops = &llkd_misc_fops,	/* connect to this driver's 'functionality' */
 };
 
-static int __init ktimer_drv_init(void)
+static int __init sed1_drv_init(void)
 {
 	int ret = 0;
 	struct device *dev;
@@ -333,19 +336,19 @@ static int __init ktimer_drv_init(void)
 	// Initialize our kernel timer
 	timer_setup(&priv->timr, timesup, 0);
 
-	pr_info("init done (make_it_fail is %s)\n", make_it_fail == 1 ? "on" : "off");
+	pr_info("init done (make_it_fail is %s)\n", make_it_fail == 1 ? "*on*" : "off");
 	dev_dbg(dev, "loaded.\n");
 	return ret;
 }
 
-static void __exit ktimer_drv_exit(void)
+static void __exit sed1_drv_exit(void)
 {
-	struct stMyCtx *priv = gpriv;	//plat0.dev.platform_data;
+	struct stMyCtx *priv = gpriv;
 
 	dev_dbg(priv->dev, "unloading\n");
 	del_timer_sync(&priv->timr);
 	misc_deregister(&llkd_miscdev);
 }
 
-module_init(ktimer_drv_init);
-module_exit(ktimer_drv_exit);
+module_init(sed1_drv_init);
+module_exit(sed1_drv_exit);

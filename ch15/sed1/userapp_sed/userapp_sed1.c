@@ -21,7 +21,6 @@
 static void decrypt_msg(int fd, char *msg, char *prg)
 {
 	struct sed_ds *kd;
-	//int i;
 
 	// Send a 'packet' to the underlying driver
 	kd = calloc(sizeof(struct sed_ds), 1);
@@ -46,14 +45,18 @@ static void decrypt_msg(int fd, char *msg, char *prg)
 	}
 	if (kd->timed_out == 1) {
 		fprintf(stderr, "*** Operation Timed Out ***\n");
+		memset(kd, 0, sizeof(struct sed_ds));
 		exit(EXIT_FAILURE);
 	}
 
 	printf("ioctl IOCTL_LLKD_SED_IOC_DECRYPT_MSG done; len=%d\n", kd->len);
 #if 0
+	{
+	int i;
 	for (i = 0; i < kd->len; i++)
 		printf("kd->data[%d] = %c (0x%x)\n", i, kd->data[i],
 		       kd->data[i] & 0xff);
+	}
 #endif
 	memcpy(msg, kd->data, kd->len);
 	free(kd);
@@ -68,7 +71,6 @@ static void decrypt_msg(int fd, char *msg, char *prg)
 static void encrypt_msg(int fd, char *msg, char *prg)
 {
 	struct sed_ds *kd;
-	//int i;
 
 	kd = calloc(sizeof(struct sed_ds), 1);
 	if (!kd) {
@@ -92,14 +94,18 @@ static void encrypt_msg(int fd, char *msg, char *prg)
 	}
 	if (kd->timed_out == 1) {
 		fprintf(stderr, "*** Operation Timed Out ***\n");
+		memset(kd, 0, sizeof(struct sed_ds));
 		exit(EXIT_FAILURE);
 	}
 
 	printf("ioctl IOCTL_LLKD_SED_IOC_ENCRYPT_MSG done; len=%d\n", kd->len);
 #if 0
+	{
+	int i;
 	for (i = 0; i < kd->len; i++)
 		printf("kd->data[%d] = %c (0x%x)\n", i, kd->data[i],
 		       kd->data[i] & 0xff);
+	}
 #endif
 
 	memcpy(msg, kd->data, kd->len);
