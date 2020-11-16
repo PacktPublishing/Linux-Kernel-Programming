@@ -12,6 +12,25 @@
  ****************************************************************
  * Brief Description:
  *
+ * sed = simple encrypt decrypt (!)
+ * In this 'driver', we have setup an interesting (though extremely trivial and
+ * simplistic) message encrypt/decrypt facility. The idea is this: a user mode
+ * app (it's in ../userapp_sed), opens this misc character driver's device file
+ * (it's /dev/sed1_drv) and issues an ioctl(2) upon it. The ioctl() call passes
+ * a data structure that encapsulates the data being passed, it's length, the
+ * operation (or "transform") to perform upon it, and a timed_out field (to
+ * figure out if it failed due to missing it's deadline).
+ * The valid ops are :
+ *  encrypt : XF_ENCRYPT
+ *  decrypt : XF_DECRYPT
+ * Associated with the operation is a deadline; it's defined as 1 millisecond.
+ * If the op takes longer, a kernel timer we've setup will expire; it will set
+ * the context structure's timed_out member to 1 signifying failure. We have
+ * the ability for the user mode app to receive all the details and interpret
+ * them.
+ * So, in a nutshell, the whole idea here is to demo using a kernel timer to
+ * timeout an operation.
+ *
  * For details, pl refer the book, Ch 15.
  */
 #define pr_fmt(fmt) "%s:%s(): " fmt, KBUILD_MODNAME, __func__
@@ -116,6 +135,7 @@ static void encrypt_decrypt_payload(int work, struct sed_ds *kd, struct sed_ds *
 		}
 	}
 	kdret->len = kd->len;
+	// work done!
 
 	if (make_it_fail == 1) {
 		// ok with msleep()+1 or, via mdelay(), with not less than mdelay()+10 !
