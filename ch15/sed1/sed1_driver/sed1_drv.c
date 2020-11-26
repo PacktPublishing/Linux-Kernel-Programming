@@ -138,19 +138,22 @@ static void encrypt_decrypt_payload(int work, struct sed_ds *kd, struct sed_ds *
 	// work done!
 
 	if (make_it_fail == 1) {
-		// ok with msleep()+1 or, via mdelay(), with not less than mdelay()+10 !
-#if 0
-		mdelay(TIMER_EXPIRE_MS + 10);
-#else
+	// ok with msleep(1ms)+1; via mdelay(), with not less than mdelay(1ms)+10 !
+#if 1
 		msleep(TIMER_EXPIRE_MS + 1);
+#else
+		mdelay(TIMER_EXPIRE_MS + 10);
 #endif
 	}
 	t2 = ktime_get_real_ns();
 
 	// work done, cancel the timeout
-	del_timer(&priv->timr);
+	if (del_timer(&priv->timr) == 0)
+		pr_debug("cancelled the timer while it's inactive! (deadline missed?)\n");
+	else
+		pr_debug("processing complete, timeout cancelled\n");
+
 	SHOW_DELTA(t1, t2);
-	pr_debug("processing complete, timeout cancelled\n");
 }
 
 /*
