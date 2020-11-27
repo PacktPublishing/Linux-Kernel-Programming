@@ -203,6 +203,8 @@ static int ioctl_miscdrv(struct inode *ino, struct file *filp, unsigned int cmd,
 
 	//pr_debug("In ioctl method, cmd=%d\n", _IOC_NR(cmd));
 
+// TODO :: use dev_*() instead of pr_*()
+
 	/* Verify stuff: is the ioctl's for us? etc.. */
 	if (_IOC_TYPE(cmd) != IOCTL_LLKD_SED_MAGIC) {
 		pr_warn("ioctl fail; magic # mismatch\n");
@@ -355,6 +357,7 @@ static int __init sed1_drv_init(void)
 	if (!priv)
 		return -ENOMEM;
 	priv->dev = llkd_miscdev.this_device;
+	atomic_set(&priv->timed_out, 0);
 
 	// Initialize our kernel timer
 	timer_setup(&priv->timr, timesup, 0);
