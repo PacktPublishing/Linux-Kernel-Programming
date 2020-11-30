@@ -51,14 +51,18 @@ enum xform { XF_NONE, XF_DECRYPT, XF_ENCRYPT };
 	pr_debug("%lld ns", ktime_get_real_ns()); \
 } while (0)
 
-// t1, t2: nanosecond-accurate timestamps
-#define SHOW_DELTA(t1, t2)	do {	\
-	if (time_after((unsigned long)t2, (unsigned long)t1)) {	\
-		pr_debug("delta: %lld ns (= %lld us = %lld ms)\n",	\
-		(t2) - (t1),	\
-		((t2) - (t1))/1000,	\
-		((t2) - (t1))/1000000	\
-		); \
-	} else	\
-		pr_debug("SHOW_DELTA(): *invalid* t2 < t1?\n");	\
+/*
+ * SHOW_DELTA() macro
+ * Show the difference between the timestamps passed
+ * @later, @earlier : nanosecond-accurate timestamps
+ */
+#define SHOW_DELTA(later, earlier)  do {    \
+    if (time_after((unsigned long)later, (unsigned long)earlier)) { \
+        pr_debug("delta: %lld ns (= %lld us = %lld ms)\n",  \
+            ktime_sub(later, earlier), \
+            ktime_sub(later, earlier)/1000, \
+            ktime_sub(later, earlier)/1000000 \
+        ); \
+    } else  \
+        pr_debug("SHOW_DELTA(): *invalid* earlier > later?\n"); \
 } while (0)
