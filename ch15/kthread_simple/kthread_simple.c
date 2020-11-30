@@ -51,7 +51,7 @@ static int simple_kthread(void *arg)
 	allow_signal(SIGINT);
 	allow_signal(SIGQUIT);
 
-	while(1) {
+	while(!kthread_should_stop()) {
 		pr_info("FYI, I, kernel thread PID %d, am going to sleep now...\n",
 		    current->pid);
 		set_current_state (TASK_INTERRUPTIBLE);
@@ -67,8 +67,8 @@ static int simple_kthread(void *arg)
 	set_current_state(TASK_RUNNING);
 	pr_info("FYI, I, kernel thread PID %d, have been rudely awoken; I shall"
 		" now exit... Good day Sir!\n", current->pid);
-	do_exit(0);
-	BUG(); // do_exit() should never return
+//	do_exit(0);
+//	BUG(); // do_exit() should never return
 
 	return 0;
 }
@@ -104,9 +104,9 @@ static int kthread_simple_init(void)
 static void kthread_simple_exit(void)
 {
 	if (atomic_read(&signalled) == 0)
-		pr_info("our kthread hasn't been awoken yet... pl do so by sending it "
-				"the signal SIGINT or SIGQUIT; only then will it terminate...\n");
-	kthread_stop(gkthrd_ts); /* "stops" the kthread; also, internally invokes the
+		pr_debug("FYI, our kthread hasn't been awoken yet... you could have done"
+		" so by sending it the signal SIGINT or SIGQUIT; we'll now anyway terminate...\n");
+	kthread_stop(gkthrd_ts); /* "stops" the kthread;  also, internally invokes the
 						      * matching put_task_struct() */
 	pr_info("kthread stopped, and LKM removed.\n");
 }
