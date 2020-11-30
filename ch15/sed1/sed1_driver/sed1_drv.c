@@ -74,7 +74,7 @@ MODULE_VERSION("0.1");
 static int make_it_fail;
 module_param(make_it_fail, int, 0660);
 MODULE_PARM_DESC(make_it_fail,
-"Deliberately ensure that the kernel timeout occurs before proessing completes (default=0)");
+"Deliberately ensure that the kernel timeout occurs before processing completes (default=0)");
 
 /*
  * The driver 'context' (or private) data structure;
