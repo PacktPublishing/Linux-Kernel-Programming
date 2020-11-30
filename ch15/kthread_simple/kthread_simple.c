@@ -35,7 +35,6 @@ MODULE_LICENSE("Dual MIT/GPL");	// or whatever
 MODULE_VERSION("0.1");
 
 static struct task_struct *gkthrd_ts;
-static atomic_t signalled = ATOMIC_INIT(0);
 
 /* Our simple kernel thread. */
 static int simple_kthread(void *arg)
@@ -57,8 +56,8 @@ static int simple_kthread(void *arg)
 		set_current_state (TASK_INTERRUPTIBLE);
 		schedule();	// yield the processor, go to sleep...
 		/* Aaaaaand we're back! Here, it's typically due to either the
-		 * SIGINT or SIGQUIT signal hitting us! */
-		atomic_set(&signalled, 1);
+		 * SIGINT or SIGQUIT signal hitting us, or due to the rmmod (or shutdown)
+		 */
 		if (signal_pending(current))
 			break;
 	}
@@ -66,9 +65,7 @@ static int simple_kthread(void *arg)
 	// We've been (rudely) interrupted by a signal...
 	set_current_state(TASK_RUNNING);
 	pr_info("FYI, I, kernel thread PID %d, have been rudely awoken; I shall"
-		" now exit... Good day Sir!\n", current->pid);
-//	do_exit(0);
-//	BUG(); // do_exit() should never return
+			" now exit... Good day Sir!\n", current->pid);
 
 	return 0;
 }
@@ -92,7 +89,6 @@ static int kthread_simple_init(void)
 		return ret;
 	}
 	get_task_struct(gkthrd_ts); // inc refcnt, marking the task struct as in use
-	atomic_set(&signalled, 0);
 
 	pr_info("Initialized, kernel thread task ptr is 0x%pK (actual=0x%llx)\n"
 	"See the new kernel thread 'llkd/%s' with ps (and kill it with SIGINT or SIGQUIT)\n",
@@ -103,11 +99,7 @@ static int kthread_simple_init(void)
 
 static void kthread_simple_exit(void)
 {
-	if (atomic_read(&signalled) == 0)
-		pr_debug("FYI, our kthread hasn't been awoken yet... you could have done"
-		" so by sending it the signal SIGINT or SIGQUIT; we'll now anyway terminate...\n");
-	kthread_stop(gkthrd_ts); /* "stops" the kthread;  also, internally invokes the
-						      * matching put_task_struct() */
+	kthread_stop(gkthrd_ts); /* waits for our kthread to terminate */
 	pr_info("kthread stopped, and LKM removed.\n");
 }
 
