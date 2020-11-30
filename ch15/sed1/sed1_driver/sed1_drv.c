@@ -30,6 +30,9 @@
  * them.
  * So, in a nutshell, the whole idea here is to demo using a kernel timer to
  * timeout an operation.
+ * (FYI, though we certainly could, we don't use the dev_<foo>() printk's as
+ * would usually be appropriate in a driver, we simply stick with the regular
+ * pr_<foo>() routines).
  *
  * For details, pl refer the book, Ch 15.
  */
@@ -104,8 +107,9 @@ static void timesup(struct timer_list *timer)
  * a ^ x = (a ^ x) ^ x
  * So, here in the encrypt routine, we perform the first part, the (a ^ x)
  *
+ * @work  : one of WORK_IS_ENCRYPT or WORK_IS_DECRYPT
  * @kd    : cleartext content
- * @kdret : will be set to the encrypted content
+ * @kdret : will be set to the en|de-crypted content
  */
 static void encrypt_decrypt_payload(int work, struct sed_ds *kd, struct sed_ds *kdret)
 {
