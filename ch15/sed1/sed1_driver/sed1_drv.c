@@ -157,7 +157,7 @@ static void encrypt_decrypt_payload(int work, struct sed_ds *kd, struct sed_ds *
 	else
 		pr_debug("processing complete, timeout cancelled\n");
 
-	SHOW_DELTA(t1, t2);
+	SHOW_DELTA(t2, t1);
 }
 
 /*
