@@ -58,33 +58,34 @@ static int destroy_msg(int fd)
  */
 static int decrypt_msg(int fd, char *msg, char *prg)
 {
-    struct sed_ds *kd;
+	struct sed_ds *kd;
 
-    kd = calloc(sizeof(struct sed_ds), 1);
-    if (!kd) {
-        fprintf(stderr, "%s: calloc() kd failed!\n", prg);
+	kd = calloc(sizeof(struct sed_ds), 1);
+	if (!kd) {
+		fprintf(stderr, "%s: calloc() kd failed!\n", prg);
 		return -1;
-    }
-    kd->data_xform = XF_DECRYPT;
+	}
+	kd->data_xform = XF_DECRYPT;
 
-    /* The 'returned' data payload will be in the last parameter kd;
-     * iow, it's an "in-out" / "value-result" style parameter
-     */
-    if (ioctl(fd, IOCTL_LLKD_SED_IOC_DECRYPT_MSG, kd) == -1) {
+	/* The 'returned' data payload will be in the last parameter kd;
+	 * iow, it's an "in-out" / "value-result" style parameter
+	 */
+	if (ioctl(fd, IOCTL_LLKD_SED_IOC_DECRYPT_MSG, kd) == -1) {
 		if (errno == ETIMEDOUT) {
-			fprintf(stderr, "ioctl IOCTL_LLKD_SED_IOC_DECRYPT_MSG failed: *** Operation Timed Out ***\n");
+			fprintf(stderr,
+				"ioctl IOCTL_LLKD_SED_IOC_DECRYPT_MSG failed: *** Operation Timed Out ***\n");
 			memset(kd, 0, sizeof(struct sed_ds));
 		} else
 			perror("ioctl IOCTL_LLKD_SED_IOC_DECRYPT_MSG failed");
-        free(kd);
+		free(kd);
 		return -1;
-    }
+	}
 
-    memcpy(msg, kd->shmem, kd->len);
-    free(kd);
+	memcpy(msg, kd->shmem, kd->len);
+	free(kd);
 
 	return 0;
-}   
+}
 
 /*
  * retrieve_msg
@@ -109,7 +110,8 @@ static int retrieve_msg(int fd, int *len, char *msg, char *prg)
 	 */
 	if (ioctl(fd, IOCTL_LLKD_SED_IOC_RETRIEVE_MSG, kd) == -1) {
 		if (errno == ETIMEDOUT) {
-			fprintf(stderr, "ioctl IOCTL_LLKD_SED_IOC_RETRIEVE_MSG failed: *** Operation Timed Out ***\n");
+			fprintf(stderr,
+				"ioctl IOCTL_LLKD_SED_IOC_RETRIEVE_MSG failed: *** Operation Timed Out ***\n");
 			memset(kd, 0, sizeof(struct sed_ds));
 		} else
 			perror("ioctl IOCTL_LLKD_SED_IOC_RETRIEVE_MSG failed");
@@ -176,7 +178,7 @@ static int encrypt_msg(int fd, char *msg, char *prg)
 		continue; \
 	}
 
-static void	menu_drive(int fd, char *buf, char *prg)
+static void menu_drive(int fd, char *buf, char *prg)
 {
 	static int first = 1;
 	int choice = 0, len = 0, ret, destroyed = 0;
@@ -188,23 +190,23 @@ static void	menu_drive(int fd, char *buf, char *prg)
 		exit(EXIT_FAILURE);
 	}
 
-	printf("---< Welcome to the SED (Simple Encrypt Decrypt) v2 User mode app >---\n"
-		"((c) 'Learn Linux Kernel Development', Kaiwan N Billimoria, Packt)\n\n");
+	printf
+	    ("---< Welcome to the SED (Simple Encrypt Decrypt) v2 User mode app >---\n"
+	     "((c) 'Learn Linux Kernel Development', Kaiwan N Billimoria, Packt)\n\n");
 
 	/* Check, is the driver already holding a message packet? */
 	ret = retrieve_msg(fd, &len, msg, prg);
 	if (ret == 0 && len > 0) {
 		printf("Detected that the driver already holds a message:\n"
-			"len = %d, msg = \"%.*s\"\n"
-			"RECOMMENDATION: Destroy the message and restart app.",
-			len, len, msg);
+		       "len = %d, msg = \"%.*s\"\n"
+		       "RECOMMENDATION: Destroy the message and restart app.",
+		       len, len, msg);
 		first = 0;
 	} else
 		printf("The message we shall work with is:\n\"%s\"\n", buf);
 
 	while (1) {
-		printf("\n"
-"     *** Menu ***\n\
+		printf("\n   ***  Menu  ***\n\
   --- Message Control ---\n\
 1. Encrypt the message\n\
 2. Retrieve the message (from the driver)\n\
@@ -216,83 +218,104 @@ static void	menu_drive(int fd, char *buf, char *prg)
 7. Quit\n\
 >  ");
 		if (scanf("%d", &choice) == EOF) {
-			printf("%s: reading your choice failed; pl try again...\n", prg);
+			printf
+			    ("%s: reading your choice failed; pl try again...\n",
+			     prg);
 			continue;
 		}
 
 		switch (choice) {
-		case 1 :	/* Encrypt the message (in the kernel driver) */
+		case 1:	/* Encrypt the message (in the kernel driver) */
 			CHECK_FOR_DESTROYED(destroyed);
 			ret = encrypt_msg(fd, buf, prg);
 			if (ret == -1) {
 				if (errno == EBADRQC)
-					fprintf(stderr, "Invalid request, message is already encrypted\n");
+					fprintf(stderr,
+						"Invalid request, message is already encrypted\n");
 				else
-					fprintf(stderr, "%s: *** encrypt op failed (see kernel logs) ***\n", prg);
+					fprintf(stderr,
+						"%s: *** encrypt op failed (see kernel logs) ***\n",
+						prg);
 				first = 1;
 			} else {
-				printf("\n---> Message ENCRYPTED in the kernel driver; retrieve to see <---\n"
-						"     (ioctl IOCTL_LLKD_SED_IOC_ENCRYPT_MSG successful)\n");
+				printf
+				    ("\n---> Message ENCRYPTED in the kernel driver; retrieve to see <---\n"
+				     "     (ioctl IOCTL_LLKD_SED_IOC_ENCRYPT_MSG successful)\n");
 				first = 0;
 			}
 			break;
-		case 2 :	/* Retrieve the (en|de-crypted) message (from the kernel driver) */
+		case 2:	/* Retrieve the (en|de-crypted) message (from the kernel driver) */
 			CHECK_FOR_DESTROYED(destroyed);
 			CHECK_FOR_ENCRYPT(first);
 			ret = retrieve_msg(fd, &len, msg, prg);
 			if (ret == -1)
-				fprintf(stderr, "%s: *** retrieve op failed (see kernel logs) ***\n", prg);
+				fprintf(stderr,
+					"%s: *** retrieve op failed (see kernel logs) ***\n",
+					prg);
 			else
-				printf("\n---> Message RETRIEVED from the kernel driver <---\n"
-					"     (ioctl IOCTL_LLKD_SED_IOC_RETRIEVE_MSG successful)\n"
-					"     len=%d, msg=\"%.*s\"\n", len, len, msg);
+				printf
+				    ("\n---> Message RETRIEVED from the kernel driver <---\n"
+				     "     (ioctl IOCTL_LLKD_SED_IOC_RETRIEVE_MSG successful)\n"
+				     "     len=%d, msg=\"%.*s\"\n", len, len,
+				     msg);
 			break;
-		case 3 :	/* Decrypt the message (in the kernel driver) */
+		case 3:	/* Decrypt the message (in the kernel driver) */
 			CHECK_FOR_DESTROYED(destroyed);
 			CHECK_FOR_ENCRYPT(first);
 			ret = decrypt_msg(fd, msg, prg);
 			if (ret == -1) {
 				if (errno == EBADRQC)
-					fprintf(stderr, "Invalid request, message is already decrypted\n");
+					fprintf(stderr,
+						"Invalid request, message is already decrypted\n");
 				else
-					fprintf(stderr, "%s: *** decrypt op failed (see kernel logs) ***\n", prg);
+					fprintf(stderr,
+						"%s: *** decrypt op failed (see kernel logs) ***\n",
+						prg);
 			} else
-				printf("\n---> Message DECRYPTED in the kernel driver; retrieve to see <---\n"
-					"     (ioctl IOCTL_LLKD_SED_IOC_DECRYPT_MSG successful)\n");
+				printf
+				    ("\n---> Message DECRYPTED in the kernel driver; retrieve to see <---\n"
+				     "     (ioctl IOCTL_LLKD_SED_IOC_DECRYPT_MSG successful)\n");
 			break;
-		case 4 :	/* Destroy the message (in the kernel driver) */
+		case 4:	/* Destroy the message (in the kernel driver) */
 			CHECK_FOR_DESTROYED(destroyed);
 			CHECK_FOR_ENCRYPT(first);
 			ret = destroy_msg(fd);
 			if (ret == -1)
-				fprintf(stderr, "%s: *** destroy op failed (see kernel logs) ***\n", prg);
+				fprintf(stderr,
+					"%s: *** destroy op failed (see kernel logs) ***\n",
+					prg);
 			else {
-				printf("\n---> Message DESTROYED within the kernel driver <---\n"
-					"     (ioctl IOCTL_LLKD_SED_IOC_DESTROY_MSG successful)\n"
-					"     Restart this app please ...\n");
+				printf
+				    ("\n---> Message DESTROYED within the kernel driver <---\n"
+				     "     (ioctl IOCTL_LLKD_SED_IOC_DESTROY_MSG successful)\n"
+				     "     Restart this app please ...\n");
 				destroyed = 1;
 			}
 			break;
-		case 5 :	/* View kernel log (dmesg) */
+		case 5:	/* View kernel log (dmesg) */
 			printf("---> View kernel log : dmesg(1) <---\n");
 			if (system("dmesg") < 0)
-				fprintf(stderr, "%s: *** system(3) on dmesg(1) failed ***\n", prg);
+				fprintf(stderr,
+					"%s: *** system(3) on dmesg(1) failed ***\n",
+					prg);
 			break;
-		case 6 :	/* Clear kernel log (sudo dmesg -C) */
+		case 6:	/* Clear kernel log (sudo dmesg -C) */
 			printf("---> Clear kernel log : sudo dmesg -C <---\n");
 			if (system("sudo dmesg -C") < 0)
-				fprintf(stderr, "%s: *** system(3) on sudo dmesg -C failed ***\n", prg);
+				fprintf(stderr,
+					"%s: *** system(3) on sudo dmesg -C failed ***\n",
+					prg);
 			break;
-		case 7 :	/* Exit */
+		case 7:	/* Exit */
 			printf("---> Exiting on user choice <---\n");
 			free(msg);
 			close(fd);
 			exit(EXIT_SUCCESS);
 		default:
-			printf("---> Unknown choice (%d) <---\n", choice); 
+			printf("---> Unknown choice (%d) <---\n", choice);
 			getchar();
-		} // switch
-	} // while (1)
+		}		// switch
+	}			// while (1)
 }
 
 int main(int argc, char **argv)
@@ -301,10 +324,11 @@ int main(int argc, char **argv)
 	char buf[MAX_DATA];
 
 	if (argc < 3) {
-		fprintf(stderr, "Usage: %s device_file message_to_encrypt\n", argv[0]);
+		fprintf(stderr, "Usage: %s device_file message_to_encrypt\n",
+			argv[0]);
 		exit(EXIT_FAILURE);
 	}
-	if (strlen(argv[2]) <= 0 || strlen(argv[2]) > MAX_DATA) {
+	if (strlen(argv[2]) == 0 || strlen(argv[2]) > MAX_DATA) {
 		fprintf(stderr, "%s: invalid message\n", argv[0]);
 		exit(EXIT_FAILURE);
 	}
@@ -318,5 +342,5 @@ int main(int argc, char **argv)
 	printf("device opened: fd=%d\n", fd);
 
 	menu_drive(fd, buf, argv[0]);
-	exit(EXIT_SUCCESS); // should not reach here..
+	exit(EXIT_SUCCESS);	// should not reach here..
 }

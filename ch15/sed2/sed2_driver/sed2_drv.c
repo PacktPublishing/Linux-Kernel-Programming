@@ -35,7 +35,7 @@
  * 2) The 'work' of encryption/decryption is now performed within a kernel
  * thread (that this driver spawns). We keep the kernel thread asleep; only
  * when 'work' arises, does the driver wake up the kthread and have it 'consume'
- * (execute) the work. 
+ * (execute) the work.
  * 3) Of course, we now run the kernel timer within the kthread's context and
  * show if it expires prematurely (indicating that the deadline wasn't met).
  * 4) A quick test reveals that eliminating the several pr_debug() printk's
@@ -96,8 +96,8 @@
 #define TIMER_EXPIRE_MS		10 // 1
 #define KTHREAD_NAME	"worker"
 
-MODULE_DESCRIPTION
-("sed2: simple encrypt-decrypt driver; demo misc driver for kernel thread usage, kernel timers (and ioctl)");
+MODULE_DESCRIPTION(
+"sed2: simple encrypt-decrypt driver; demo misc driver for kernel thread usage, kernel timers (and ioctl)");
 MODULE_AUTHOR("Kaiwan N Billimoria");
 MODULE_LICENSE("Dual MIT/GPL");
 MODULE_VERSION("0.1");
@@ -177,7 +177,7 @@ static int worker_kthread(void *arg)
 {
 	struct stMyCtx *priv = gpriv;
 
-	while(!kthread_should_stop()) {
+	while (!kthread_should_stop()) {
 		pr_debug("starting timer + processing now ...\n");
 		/* Start - the timer; set it to expire in TIMER_EXPIRE_MS ms */
 		if (mod_timer(&priv->timr, jiffies + msecs_to_jiffies(TIMER_EXPIRE_MS)))
@@ -224,7 +224,7 @@ static int worker_kthread(void *arg)
 
 		pr_info("[%d] FYI, work done, going to sleep now...\n",
 		    task_pid_nr(current));
-		set_current_state (TASK_INTERRUPTIBLE);
+		set_current_state(TASK_INTERRUPTIBLE);
 		schedule();	// yield the processor, go to sleep...
 
 		/* Aaaaaand we're back! Here, it's typically due to either the ioctl()
@@ -238,7 +238,7 @@ static int worker_kthread(void *arg)
 	return 0;
 }
 
-/* 
+/*
  * Is our kthread performing any ongoing work right now? poll...
  * Not ideal (but we'll live with it); ideally, use a lock (we cover locking in
  * this book's last two chapters)
@@ -283,7 +283,7 @@ static int ioctl_miscdrv(struct inode *ino, struct file *filp, unsigned int cmd,
 	case IOCTL_LLKD_SED_IOC_ENCRYPT_MSG: /* kthread: encrypts the msg passed in */
 		pr_debug("In ioctl 'encrypt' cmd option; arg=0x%lx\n", arg);
 #if 0	/* only allow root? here, it's just to demo that you can do stuff like
-         * this; even better, use POSIX capabilities (see capabilities(7))
+		 * this; even better, use POSIX capabilities (see capabilities(7))
 		 */
 		if (!capable(CAP_SYS_ADMIN))
 			return -EPERM;
@@ -308,7 +308,7 @@ static int ioctl_miscdrv(struct inode *ino, struct file *filp, unsigned int cmd,
 		if (!wake_up_process(priv->kthrd_work))
 			pr_warn("worker kthread already running when awoken?\n");
 
-		/* 
+		/*
 		 * Now, our kernel thread is doing the 'work'; it will either be done,
 		 * or it will miss it's deadline and fail.
 		 * Attempting to lookup the payload or do anything more here would be a
