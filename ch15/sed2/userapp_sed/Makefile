@@ -34,7 +34,7 @@ ALL :=  prod prod_2part
 # Of course, if you have >1 C program to build, you must add it manually.
 # Also, it's recommended to keep one Makefile per program in separate directories.
 ###
-FNAME_C = userapp_sed1
+FNAME_C = userapp_sed2
 ALL_NM :=  ${FNAME_C} ${FNAME_C}_dbg ${FNAME_C}_dbg_asan ${FNAME_C}_dbg_ub ${FNAME_C}_gcov
 
 CC=${CROSS_COMPILE}gcc

@@ -16,7 +16,7 @@
  * In this 'driver', we have setup an interesting (though extremely trivial and
  * simplistic) message encrypt/decrypt facility. The idea is this: a user mode
  * app (it's in ../userapp_sed), opens this misc character driver's device file
- * (it's /dev/sed2_drv) and issues an ioctl(2) upon it. The ioctl() call passes
+ * (/dev/sed2_drv) and issues an ioctl(2) upon it. The ioctl() call passes
  * a data structure that encapsulates the data being passed, it's length, the
  * operation (or "transform") to perform upon it, and a timed_out field (to
  * figure out if it failed due to missing it's deadline).
@@ -24,29 +24,43 @@
  *  encrypt : XF_ENCRYPT
  *  decrypt : XF_DECRYPT
  *
- * Associated with the operation is a deadline; it's defined as 1 millisecond.
+ * Associated with the operation is a deadline; it's defined as 10 milliseconds.
  * If the op takes longer, a kernel timer we've setup will expire; it will set
  * the context structure's timed_out member to 1 signifying failure. We have
- * the ability for the user mode app to receive all the details and interpret
- * them.
+ * the ability for the user mode app to receive details and interpret them.
  *
  * *** DIFFERENCE from sed1 ***
- * a) All the 'work' of encryption/decryption is now performed within a kernel
+ * 1) There's just one global 'shared memory' buffer; this is within our context
+ * structure (called 'kdata->shmem')
+ * 2) The 'work' of encryption/decryption is now performed within a kernel
  * thread (that this driver spawns). We keep the kernel thread asleep; only
  * when 'work' arises, does the driver wake up the kthread and have it 'consume'
  * (execute) the work. 
- * b) Of course, we now run the kernel timer within the kthread's context and
+ * 3) Of course, we now run the kernel timer within the kthread's context and
  * show if it expires prematurely (indicating that the deadline wasn't met).
- * c) A quick test reveals that eliminating the several pr_debug() printk's
+ * 4) A quick test reveals that eliminating the several pr_debug() printk's
  * within the 'critical section' goes a long way towards reducing the time taken
- * to complete the 'work'! Hence, we keep the DEBUG macro undefined in the
- * Makefile.
- ****
+ * to complete the 'work'! (You can always change the Makefile's EXTRA_CFLAGS var
+ * to -UDEBUG to eliminate this overhead!).
+ * Hence, we keep the deadline longer (10 ms).
+ * ***
+ *
  * So, in a nutshell, the whole idea here is to primarily demo using a custom
  * kernel thread, along with a kernel timer to timeout an operation.
  * (FYI, though we certainly could, we don't use the dev_<foo>() printk's as
  * would usually be appropriate in a driver, we simply stick with the regular
  * pr_<foo>() routines).
+ *
+ * Summary:
+ *                  User-space app
+ *                  /   |     |   \
+ *          |-------    |     |    -------|
+ *op:    encrypt    retrieve  decrypt    destroy
+ *      <------------ sed2 driver -------------->
+ *by:   [kthread]    [ioctl]  [kthread]   [ioctl]
+ *           ^           ^        ^          ^
+ *           v           v        v          v
+ *        {------- shared memory region -------}
  *
  * For details, pl refer the book, Ch 15.
  */
@@ -79,7 +93,7 @@
 #include "../../../convenient.h"
 
 #define DRVNAME			"sed2_drv"
-#define TIMER_EXPIRE_MS		1
+#define TIMER_EXPIRE_MS		10 // 1
 #define KTHREAD_NAME	"worker"
 
 MODULE_DESCRIPTION
@@ -97,14 +111,17 @@ MODULE_PARM_DESC(make_it_fail,
 /*
  * The driver 'context' (or private) data structure;
  * all relevant 'state info' reg the driver is here.
+ * The @msg_state, @work_done members help as a (poor) synchronization
+ * mechanism in the absence of locking.
  */
 struct stMyCtx {
 	struct device *dev;
+	atomic_t msg_state;	// state of msg: encypted or decrypted
 	atomic_t work_done;
 	atomic_t timed_out;
 	struct timer_list timr;
 	struct task_struct *kthrd_work;
-	struct sed_ds *kd, *kdret;
+	struct sed_ds *kdata; //*kd, *kdret;
 	ktime_t t1, t2;		// a s64 qty
 };
 static struct stMyCtx *gpriv;
@@ -119,7 +136,7 @@ static void timesup(struct timer_list *timer)
 }
 
 #define WORK_IS_ENCRYPT		 1
-#define WORK_IS_DECRYPT		 2
+#define WORK_IS_DECRYPT		2
 #define CRYPT_OFFSET		0x3F  // 63
 
 /*
@@ -130,27 +147,27 @@ static void timesup(struct timer_list *timer)
  * So, here in the encrypt routine, we perform the first part, the (a ^ x)
  *
  * @work  : one of WORK_IS_ENCRYPT or WORK_IS_DECRYPT
- * @kd    : cleartext content
- * @kdret : will be set to the en|de-crypted content
+ * @kd    : structure containing the payload
  */
-static void encrypt_decrypt_payload(int work, struct sed_ds *kd, struct sed_ds *kdret)
+static void encrypt_decrypt_payload(int work, struct sed_ds *kd)
 {
 	int i;
 
+print_hex_dump_bytes("kdata->shmem: ", DUMP_PREFIX_OFFSET, kd->shmem, kd->len);
+
 	// Perform the actual processing on the payload
-	memcpy(kdret, kd, sizeof(struct sed_ds));
+	//memcpy(kdret, kd, sizeof(struct sed_ds));
 	if (work == WORK_IS_ENCRYPT) {
 		for (i = 0; i < kd->len; i++) {
-			kdret->data[i] ^= CRYPT_OFFSET;
-			kdret->data[i] += CRYPT_OFFSET;
+			kd->shmem[i] ^= CRYPT_OFFSET;
+			kd->shmem[i] += CRYPT_OFFSET;
 		}
 	} else if (work == WORK_IS_DECRYPT) {
 		for (i = 0; i < kd->len; i++) {
-			kdret->data[i] -= CRYPT_OFFSET;
-			kdret->data[i] ^= CRYPT_OFFSET;
+			kd->shmem[i] -= CRYPT_OFFSET;
+			kd->shmem[i] ^= CRYPT_OFFSET;
 		}
 	}
-	kdret->len = kd->len;
 }
 
 /*
@@ -173,26 +190,28 @@ static int worker_kthread(void *arg)
 		PRINT_CTX();
 
 		atomic_set(&priv->work_done, 0);
-		switch (priv->kd->data_xform) {
+		switch (priv->kdata->data_xform) {
 		case XF_NONE:
 			pr_debug("data transform type: XF_NONE\n");
 			// nothing to do
 			break;
 		case XF_ENCRYPT:
 			pr_debug("data transform type: XF_ENCRYPT\n");
-			encrypt_decrypt_payload(WORK_IS_ENCRYPT, priv->kd, priv->kdret);
+			encrypt_decrypt_payload(WORK_IS_ENCRYPT, priv->kdata);
+			atomic_set(&priv->msg_state, XF_ENCRYPT);
 			break;
 		case XF_DECRYPT:
 			pr_debug("data transform type: XF_DECRYPT\n");
-			encrypt_decrypt_payload(WORK_IS_DECRYPT, priv->kd, priv->kdret);
+			encrypt_decrypt_payload(WORK_IS_DECRYPT, priv->kdata);
+			atomic_set(&priv->msg_state, XF_DECRYPT);
 			break;
 		default:
-			pr_warn("unknown transform passed (%d)\n", priv->kd->data_xform);
+			pr_warn("unknown transform passed (%d)\n", priv->kdata->data_xform);
 		}
 		atomic_set(&priv->work_done, 1);
 
 		if (make_it_fail == 1)
-			msleep(TIMER_EXPIRE_MS + 1);
+			msleep(TIMER_EXPIRE_MS + 10);
 		/*--------------- Critical section ends ----------------------------*/
 
 		priv->t2 = ktime_get_real_ns();
@@ -207,6 +226,7 @@ static int worker_kthread(void *arg)
 		    task_pid_nr(current));
 		set_current_state (TASK_INTERRUPTIBLE);
 		schedule();	// yield the processor, go to sleep...
+
 		/* Aaaaaand we're back! Here, it's typically due to either the ioctl()
 		 * method awakening us (via the wake_up_process()) whenever some
 		 * work arises, or, the kthread_stop() from the cleanup code path
@@ -217,6 +237,16 @@ static int worker_kthread(void *arg)
 
 	return 0;
 }
+
+/* 
+ * Is our kthread performing any ongoing work right now? poll...
+ * Not ideal (but we'll live with it); ideally, use a lock (we cover locking in
+ * this book's last two chapters)
+ */
+#define POLL_ON_WORK_DONE(sleep_ms) do { \
+		while (atomic_read(&priv->work_done) == 0) \
+			msleep_interruptible(sleep_ms);  \
+} while (0)
 
 /*
  * The ioctl method for this demo driver; note how we take into
@@ -239,8 +269,6 @@ static int ioctl_miscdrv(struct inode *ino, struct file *filp, unsigned int cmd,
 {
 	struct stMyCtx *priv = gpriv;
 
-	//pr_debug("In ioctl method, cmd=%d\n", _IOC_NR(cmd));
-
 	/* Verify stuff: is the ioctl's for us? etc.. */
 	if (_IOC_TYPE(cmd) != IOCTL_LLKD_SED_MAGIC) {
 		pr_warn("ioctl fail; magic # mismatch\n");
@@ -251,71 +279,81 @@ static int ioctl_miscdrv(struct inode *ino, struct file *filp, unsigned int cmd,
 		return -ENOTTY;
 	}
 
-/*
-	if (atomic_read(&priv->work_done) == 1) {
-		memset(priv->kd, 0, sizeof(struct sed_ds));
-		memset(priv->kdret, 0, sizeof(struct sed_ds));
-	} */
-
 	switch (cmd) {
-	case IOCTL_LLKD_SED_IOC_ENCRYPT_MSG:
+	case IOCTL_LLKD_SED_IOC_ENCRYPT_MSG: /* kthread: encrypts the msg passed in */
 		pr_debug("In ioctl 'encrypt' cmd option; arg=0x%lx\n", arg);
-#if 0	// only allow root? here, it's just to demo that you can do stuff like this...
+#if 0	/* only allow root? here, it's just to demo that you can do stuff like
+         * this; even better, use POSIX capabilities (see capabilities(7))
+		 */
 		if (!capable(CAP_SYS_ADMIN))
 			return -EPERM;
 #endif
-		if (copy_from_user(priv->kd, (struct sed_ds *)arg, sizeof(struct sed_ds))) {
+		if (atomic_read(&priv->msg_state) == XF_ENCRYPT) {
+			pr_notice("encrypt op: message is currently encrypted; aborting op...\n");
+			return -EBADRQC; /* 'Invalid request code' */
+		}
+		if (copy_from_user(priv->kdata, (struct sed_ds *)arg, sizeof(struct sed_ds))) {
 			pr_warn("copy_from_user() failed\n");
 			return -EFAULT;
 		}
-		pr_debug("xform=%d, len=%d\n", priv->kd->data_xform, priv->kd->len);
-		print_hex_dump_bytes("payload: ", DUMP_PREFIX_OFFSET, priv->kd->data, priv->kd->len);
+		pr_debug("xform=%d, len=%d\n", priv->kdata->data_xform, priv->kdata->len);
+		if (priv->kdata->len == 0) {
+			pr_warn("no data passed (len is 0)\n");
+			return -EINVAL;
+		}
+		print_hex_dump_bytes("payload: ", DUMP_PREFIX_OFFSET, priv->kdata->shmem, priv->kdata->len);
 
+		POLL_ON_WORK_DONE(1);
 		/* Wake up our kernel thread and have it encrypt the message ! */
 		if (!wake_up_process(priv->kthrd_work))
 			pr_warn("worker kthread already running when awoken?\n");
 
-		/* By now, it's either done, or it missed the deadline and failed */
-
-//	QPDS;
-		print_hex_dump_bytes("prcsd payload: ", DUMP_PREFIX_OFFSET, priv->kdret->data, priv->kdret->len);
-		// send to user space via mmap() !
-
-#if 0
-		if (atomic_read(&priv->timed_out) == 1) {
-			atomic_set(&priv->kdret->timed_out, 1);
-			pr_debug("** timed out **\n");
-		}
-		print_hex_dump_bytes("ret payload: ", DUMP_PREFIX_OFFSET, priv->kdret->data,
-				     priv->kdret->len);
-
-		// write back processed payload to the user space process
-		ret = -EFAULT;
-		if (copy_to_user((struct sed_ds *)arg, (struct sed_ds *)kdret, sizeof(struct sed_ds))) {
-			pr_warn("copy_to_user() failed\n");
-			goto out_cftu;
-		}
-#endif
+		/* 
+		 * Now, our kernel thread is doing the 'work'; it will either be done,
+		 * or it will miss it's deadline and fail.
+		 * Attempting to lookup the payload or do anything more here would be a
+		 * mistake, a race! Why? We're currently running in the ioctl() process
+		 * context; the kernel thread runs in it's own process context! (If we
+		 * must look it up, then we really require a (mutex) lock; we shall
+		 * discuss locking in detail in the book's last two chapters.
+		 */
 		break;
-	case IOCTL_LLKD_SED_IOC_DECRYPT_MSG:
-		QP;
+	case IOCTL_LLKD_SED_IOC_DECRYPT_MSG: /* kthread: decrypts the encrypted msg */
+		pr_debug("In ioctl 'decrypt' cmd option\n");
+		if (atomic_read(&priv->msg_state) == XF_DECRYPT) {
+			pr_notice("decrypt op: message is currently decrypted; aborting op...\n");
+			return -EBADRQC; /* 'Invalid request code' */
+		}
+		priv->kdata->data_xform = XF_DECRYPT;
+
+		POLL_ON_WORK_DONE(1);
+		/* Wake up our kernel thread and have it encrypt the message ! */
+		if (!wake_up_process(priv->kthrd_work))
+			pr_warn("worker kthread already running when awoken?\n");
+
+		break;
+	case IOCTL_LLKD_SED_IOC_RETRIEVE_MSG: /* ioctl: retrieves the encrypted msg */
+		pr_debug("In ioctl 'retrieve' cmd option; arg=0x%lx\n", arg);
 		if (atomic_read(&priv->timed_out) == 1) {
 			pr_debug("the encrypt op had timed out! retruning -ETIMEDOUT\n");
 			return -ETIMEDOUT;
 		}
-		memset(priv->kd, 0, sizeof(struct sed_ds));
-		memset(priv->kdret, 0, sizeof(struct sed_ds));
+		if (copy_to_user((struct sed_ds *)arg, (struct sed_ds *)priv->kdata, sizeof(struct sed_ds))) {
+			pr_warn("copy_to_user() failed\n");
+			return -EFAULT;
+		}
+		break;
+	case IOCTL_LLKD_SED_IOC_DESTROY_MSG: /* ioctl: destroys the msg */
+		pr_debug("In ioctl 'destroy' cmd option\n");
+		memset(priv->kdata, 0, sizeof(struct sed_ds));
+		atomic_set(&priv->msg_state, 0);
+		atomic_set(&priv->work_done, 1);
+		atomic_set(&priv->timed_out, 0);
+		priv->t1 = priv->t2 = 0;
 		break;
 	default:
 		return -ENOTTY;
 	}
-	return 0;
-}
-
-int mmap_miscdrv(struct file *filp, struct vm_area_struct *vma)
-{
-	PRINT_CTX();		// displays process (or atomic) context info
-
 	return 0;
 }
 
@@ -360,7 +398,6 @@ static const struct file_operations llkd_misc_fops = {
 #else
 	.ioctl = ioctl_miscdrv,	// 'old' way
 #endif
-	.mmap = mmap_miscdrv,	// new here! to get the stuff to user space
 	.read = read_miscdrv,
 	.write = write_miscdrv,
 	.llseek = no_llseek,	// dummy, we don't support lseek(2)
@@ -408,13 +445,10 @@ static int __init sed2_drv_init(void)
 	if (!priv)
 		return -ENOMEM;
 	priv->dev = llkd_miscdev.this_device;
-	atomic_set(&priv->work_done, 0);
+	atomic_set(&priv->work_done, 1);
 
-	gpriv->kd = devm_kzalloc(dev, sizeof(struct sed_ds), GFP_KERNEL);
-	if (!gpriv->kd)
-		return -ENOMEM;
-	gpriv->kdret = devm_kzalloc(dev, sizeof(struct sed_ds), GFP_KERNEL);
-	if (!gpriv->kdret)
+	gpriv->kdata = devm_kzalloc(dev, sizeof(struct sed_ds), GFP_KERNEL);
+	if (!gpriv->kdata)
 		return -ENOMEM;
 
 	/*
