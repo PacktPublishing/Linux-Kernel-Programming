@@ -51,16 +51,21 @@
  * would usually be appropriate in a driver, we simply stick with the regular
  * pr_<foo>() routines).
  *
- * Summary:
- *                  User-space app
- *                  /   |     |   \
- *          |-------    |     |    -------|
- *op:    encrypt    retrieve  decrypt    destroy
- *      <------------ sed2 driver -------------->
- *by:   [kthread]    [ioctl]  [kthread]   [ioctl]
- *           ^           ^        ^          ^
- *           v           v        v          v
- *        {------- shared memory region -------}
+ * Summary (high level design for this sed2 mini project):
+ *
+ *               User-space application
+ *               /     |        |     \
+ *       |-------      |        |      -------|
+ *op:   encrypt      retrieve  decrypt     destroy
+ *                    [ioctl]              [ioctl]
+ *
+ *  <---------------- sed2 driver ---------------->
+ *
+ *by:  [kthread]     [ioctl]   [kthread]     [ioctl]
+ *         ^            ^          ^            ^
+ *         |            |          |            |
+ *         v            v          v            v
+ *       {--------- shared memory region ---------}
  *
  * For details, pl refer the book, Ch 15.
  */
@@ -288,7 +293,7 @@ static int ioctl_miscdrv(struct inode *ino, struct file *filp, unsigned int cmd,
 		if (!capable(CAP_SYS_ADMIN))
 			return -EPERM;
 #endif
-		if (atomic_read(&priv->msg_state) == XF_ENCRYPT) {
+		if (atomic_read(&priv->msg_state) == XF_ENCRYPT) {  // already encrypted?
 			pr_notice("encrypt op: message is currently encrypted; aborting op...\n");
 			return -EBADRQC; /* 'Invalid request code' */
 		}
@@ -320,7 +325,7 @@ static int ioctl_miscdrv(struct inode *ino, struct file *filp, unsigned int cmd,
 		break;
 	case IOCTL_LLKD_SED_IOC_DECRYPT_MSG: /* kthread: decrypts the encrypted msg */
 		pr_debug("In ioctl 'decrypt' cmd option\n");
-		if (atomic_read(&priv->msg_state) == XF_DECRYPT) {
+		if (atomic_read(&priv->msg_state) == XF_DECRYPT) {   // already decrypted?
 			pr_notice("decrypt op: message is currently decrypted; aborting op...\n");
 			return -EBADRQC; /* 'Invalid request code' */
 		}
