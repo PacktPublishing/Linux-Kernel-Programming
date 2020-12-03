@@ -43,6 +43,7 @@ static struct st_ctx {
 	int data;
 } ctx;
 static unsigned long exp_ms = 420;
+static u64 t1, t2;
 
 /*
  * ding() - our timer's callback function!
@@ -57,9 +58,11 @@ static void ding(struct timer_list *timer)
 	/* until countdown done, fire it again! */
 	if (priv->data)
 		mod_timer(&priv->tmr, jiffies + msecs_to_jiffies(exp_ms));
+
 	/* Now 'schedule' our work queue function to run */
 	if (!schedule_work(&priv->work))
 		pr_notice("our work's already on the kernel-global workqueue!\n");
+	t1 = ktime_get_real_ns();
 }
 
 /*
@@ -69,8 +72,10 @@ static void work_func(struct work_struct *work)
 {
 	struct st_ctx *priv = container_of(work, struct st_ctx, work);
 
+	t2 = ktime_get_real_ns();
 	pr_info("In our workq function: data=%d\n", priv->data);
 	PRINT_CTX();
+	SHOW_DELTA(t2, t1);
 }
 
 static int __init workq_simple_init(void)
@@ -86,7 +91,7 @@ static int __init workq_simple_init(void)
 	timer_setup(&ctx.tmr, ding, 0);
 
 	pr_info("Work queue initialized, timer set to expire in %ld ms\n", exp_ms);
-	add_timer(&ctx.tmr);	/* Arm it; lets get going! */
+	add_timer(&ctx.tmr); /* Arm it; lets get going! */
 
 	return 0;		/* success */
 }
