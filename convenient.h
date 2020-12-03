@@ -244,7 +244,11 @@ static inline void beep(int what)
 void delay_sec(long);
 /*------------ delay_sec --------------------------------------------------
  * Delays execution for @val seconds.
- * If @val is -1, we sleep forever!
+ * The fact is, it's unnecessary (just a demo): the kernel already has the
+ * ssleep() inline function (a simple wrapper over the msleep()).
+ *
+ * Parameters:
+ * @val : number of seconds to sleep for; if -1, sleep forever
  * MUST be called from process context.
  * (We deliberately do not inline this function; this way, we can see it's
  * entry within a kernel stack call trace).
@@ -260,6 +264,27 @@ void delay_sec(long val)
 			schedule_timeout(val * HZ);
 	}
 }
+#endif   /* #ifdef __KERNEL__ */
+
+#ifdef __KERNEL__
+/*
+ * SHOW_DELTA() macro
+ * Show the difference between the timestamps passed
+ * Parameters:
+ *  @later, @earlier : nanosecond-accurate timestamps
+ */
+#include <linux/jiffies.h>
+#include <linux/ktime.h>
+#define SHOW_DELTA(later, earlier)  do {    \
+    if (time_after((unsigned long)later, (unsigned long)earlier)) { \
+        pr_info("delta: %lld ns (= %lld us = %lld ms)\n",   \
+            ktime_sub(later, earlier), \
+            ktime_sub(later, earlier)/1000, \
+            ktime_sub(later, earlier)/1000000 \
+        ); \
+    } else  \
+        pr_warn("SHOW_DELTA(): *invalid* earlier > later?\n");  \
+} while (0)
 #endif   /* #ifdef __KERNEL__ */
 
 #endif   /* #ifndef __LLKD_CONVENIENT_H__ */

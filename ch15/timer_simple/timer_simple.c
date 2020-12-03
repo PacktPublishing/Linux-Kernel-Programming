@@ -60,6 +60,8 @@ static void ding(struct timer_list *timer)
 static int __init timer_simple_init(void)
 {
 	ctx.data = INITIAL_VALUE;
+
+	/* Initialize our kernel timer */
 	ctx.tmr.expires = jiffies + msecs_to_jiffies(exp_ms);
 	ctx.tmr.flags = 0;
 	timer_setup(&ctx.tmr, ding, 0);
