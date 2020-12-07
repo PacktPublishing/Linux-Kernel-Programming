@@ -11,12 +11,16 @@
  * From: Ch 15 : Timers, kernel threads and more
  ****************************************************************
  * Brief Description:
- * A demo of a simple work queue in action. This module is built upon our
- * earlier ch15/timer_simple LKM. Here, we demo making use of the container_of()
- * macro to be able to access data from within our work queue callback function
- * - a pretty typical thing. Also, we setup the timer to keep expiring until our
- * 'data' variable hits zero; in addition this time, we use this - the kernel
- * timeout - as an opportunity to 'schedule' our work queue function to run...
+ * A demo of a simple workqueue in action. We use the default kernel-global
+ * workqueue; we enqueue a work item onto it (via INIT_WORK()) and 'schedule'
+ * it to execute via the workqueue kthreads (using the schedule_work() API).
+ * We cleanup (in the exit method) via the cancel_work_sync() API.
+ * This module is built upon our earlier ch15/timer_simple LKM. Here, we also
+ * demo making use of the container_of() macro to be able to access data from
+ * within our work queue callback function - a pretty typical thing. Also, we
+ * setup the timer to keep expiring until our 'data' variable hits zero; in
+ * addition this time, we use this - the kernel timeout - as an opportunity to
+ * 'schedule' our work queue function to run...
  *
  * For details, please refer the book, Ch 15.
  */
@@ -33,7 +37,7 @@
 #define INITIAL_VALUE	3
 
 MODULE_AUTHOR("Kaiwan N Billimoria");
-MODULE_DESCRIPTION("a LKM to demo a simple work queue");
+MODULE_DESCRIPTION("a LKM to demo a simple workqueue");
 MODULE_LICENSE("Dual MIT/GPL");	// or whatever
 MODULE_VERSION("0.1");
 
@@ -59,14 +63,14 @@ static void ding(struct timer_list *timer)
 	if (priv->data)
 		mod_timer(&priv->tmr, jiffies + msecs_to_jiffies(exp_ms));
 
-	/* Now 'schedule' our work queue function to run */
+	/* Now 'schedule' our workqueue function to run */
 	if (!schedule_work(&priv->work))
 		pr_notice("our work's already on the kernel-global workqueue!\n");
 	t1 = ktime_get_real_ns();
 }
 
 /*
- * work_func() - our work queue callback function!
+ * work_func() - our workqueue callback function!
  */
 static void work_func(struct work_struct *work)
 {
@@ -82,7 +86,7 @@ static int __init workq_simple_init(void)
 {
 	ctx.data = INITIAL_VALUE;
 
-	/* Initialize our work queue */
+	/* Initialize our workqueue */
 	INIT_WORK(&ctx.work, work_func);
 
 	/* Initialize our kernel timer */

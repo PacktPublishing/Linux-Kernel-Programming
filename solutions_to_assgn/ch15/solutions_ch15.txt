@@ -25,7 +25,6 @@ static irqreturn_t chip_hardisr(int irq, void *data)
     tasklet_schedule(...);
     return IRQ_HANDLED;
 }
-
 my_chip_probe(...)
 {
     // ...
@@ -43,4 +42,4 @@ b) copy_to_user(...); <- cannot xfer data to & from user space in an atomic
    data structure (a kfifo perhaps) and transfer to the user process at a
    later safe time in process context (perhaps via a driver syscall method,
    a kthread or a workqueue)
-
+   Ref: 'Sample kfifo byte stream implementation' : https://elixir.bootlin.com/linux/latest/source/samples/kfifo/bytestream-example.c

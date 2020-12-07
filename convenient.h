@@ -272,6 +272,7 @@ void delay_sec(long val)
  * Show the difference between the timestamps passed
  * Parameters:
  *  @later, @earlier : nanosecond-accurate timestamps
+ * Expect that @later > @earlier
  */
 #include <linux/jiffies.h>
 #include <linux/ktime.h>
