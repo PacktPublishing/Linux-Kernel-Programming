@@ -55,7 +55,7 @@ static int ga, gb = 1;		/* ignore for now ... */
 
 /*
  * The driver 'context' (or private) data structure;
- * all relevant 'state info' reg the driver is here.
+ * all relevant 'state info' regarding the driver is here.
  */
 struct drv_ctx {
 	struct device *dev;
@@ -76,6 +76,8 @@ static struct drv_ctx *ctx;
  * The POSIX standard requires open() to return the file descriptor in success;
  * note, though, that this is done within the kernel VFS (when we return). So,
  * all we do here is return 0 indicating success.
+ * (The nonseekable_open(), in conjunction with the fop's llseek pointer set to
+ * no_llseek, tells the kernel that our device is not seek-able).
  */
 static int open_miscdrv_rdwr(struct inode *inode, struct file *filp)
 {
@@ -106,7 +108,7 @@ static ssize_t read_miscdrv_rdwr(struct file *filp, char __user *ubuf,
 	struct device *dev = ctx->dev;
 
 	PRINT_CTX();
-	dev_info(dev, "%s wants to read (upto) %zd bytes\n", current->comm, count);
+	dev_info(dev, "%s wants to read (upto) %zu bytes\n", current->comm, count);
 
 	ret = -EINVAL;
 	if (count < MAXBYTES) {
@@ -164,11 +166,11 @@ static ssize_t write_miscdrv_rdwr(struct file *filp, const char __user *ubuf,
 
 	PRINT_CTX();
 	if (unlikely(count > MAXBYTES)) {	/* paranoia */
-		dev_warn(dev, "count %zd exceeds max # of bytes allowed, "
+		dev_warn(dev, "count %zu exceeds max # of bytes allowed, "
 			"aborting write\n", count);
 		goto out_nomem;
 	}
-	dev_info(dev, "%s wants to write %zd bytes\n", current->comm, count);
+	dev_info(dev, "%s wants to write %zu bytes\n", current->comm, count);
 
 	ret = -ENOMEM;
 	kbuf = kvmalloc(count, GFP_KERNEL);
@@ -179,7 +181,7 @@ static ssize_t write_miscdrv_rdwr(struct file *filp, const char __user *ubuf,
 	/* Copy in the user supplied buffer 'ubuf' - the data content to write -
 	 * via the copy_from_user() macro.
 	 * (FYI, the copy_from_user() macro is the *right* way to copy data from
-	 * kernel-space to userspace; the parameters are:
+	 * userspace to kernel-space; the parameters are:
 	 *  'to-buffer', 'from-buffer', count
 	 *  Returns 0 on success, i.e., non-zero return implies an I/O fault).
 	 */
@@ -201,10 +203,10 @@ static ssize_t write_miscdrv_rdwr(struct file *filp, const char __user *ubuf,
 			     ctx, sizeof(struct drv_ctx));
 #endif
 	// Update stats
-	ctx->rx += count;	// our 'receive' is wrt this driver
+	ctx->rx += count;	// our 'receive' is wrt userspace
 
 	ret = count;
-	dev_info(dev, " %zd bytes written, returning... (stats: tx=%d, rx=%d)\n",
+	dev_info(dev, " %zu bytes written, returning... (stats: tx=%d, rx=%d)\n",
 		count, ctx->tx, ctx->rx);
  out_cfu:
 	kvfree(kbuf);
@@ -264,7 +266,6 @@ static int __init miscdrv_rdwr_init(void)
 		pr_notice("%s: misc device registration failed, aborting\n", OURMODNAME);
 		return ret;
 	}
-
 	pr_info("LLKD misc driver (major # 10) registered, minor# = %d,"
 		" dev node is /dev/llkd_miscdrv_rdwr\n", llkd_miscdev.minor);
 

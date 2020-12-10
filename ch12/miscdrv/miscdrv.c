@@ -40,6 +40,8 @@ MODULE_VERSION("0.1");
  * The POSIX standard requires open() to return the file descriptor on success;
  * note, though, that this is done within the kernel VFS (when we return). So,
  * all we do here is return 0 indicating success.
+ * (The nonseekable_open(), in conjunction with the fop's llseek pointer set to
+ * no_llseek, tells the kernel that our device is not seek-able).
  */
 static int open_miscdrv(struct inode *inode, struct file *filp)
 {
@@ -106,7 +108,7 @@ static struct miscdevice llkd_miscdev = {
 	.name = "llkd_miscdrv",	/* when misc_register() is invoked, the kernel
 				 * will auto-create device file as /dev/llkd_miscdrv ;
 				 * also populated within /sys/class/misc/ and /sys/devices/virtual/misc/ */
-	.mode = 0666,		/* ... dev node perms set as specified here */
+	.mode = 0666,				/* ... dev node perms set as specified here */
 	.fops = &llkd_misc_fops,	/* connect to this driver's 'functionality' */
 };
 

@@ -72,7 +72,7 @@ clean:
 	make -C $(KDIR) M=$(PWD) clean
 	rm -f rdwr_test *~
 
-# special case: target to build our user mode test app
+#--- special case: target to build our user mode test app
 rdwr_test: rdwr_test.c
 	${CROSS_COMPILE}gcc rdwr_test.c -o rdwr_test -Os -Wall
 
