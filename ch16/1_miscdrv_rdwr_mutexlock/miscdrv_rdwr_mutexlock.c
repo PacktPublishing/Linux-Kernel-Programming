@@ -83,8 +83,7 @@ static int open_miscdrv_rdwr(struct inode *inode, struct file *filp)
 	PRINT_CTX();		// displays process (or intr) context info
 
 	mutex_lock(&lock1);
-	ga++;
-	gb--;
+	ga++; gb--;
 	mutex_unlock(&lock1);
 
 	dev_info(dev, " filename: \"%s\"\n"
@@ -235,12 +234,12 @@ static int close_miscdrv_rdwr(struct inode *inode, struct file *filp)
 	PRINT_CTX();		// displays process (or intr) context info
 
 	mutex_lock(&lock1);
-	ga--;
-	gb++;
+	ga--; gb++;
 	mutex_unlock(&lock1);
 
 	dev_info(dev, "filename: \"%s\"\n ga = %d, gb = %d\n",
 		 filp->f_path.dentry->d_iname, ga, gb);
+
 	return 0;
 }
 
@@ -262,6 +261,7 @@ static struct miscdevice llkd_miscdev = {
 	.minor = MISC_DYNAMIC_MINOR,	// kernel dynamically assigns a free minor#
 	.name = "llkd_miscdrv_rdwr_mutexlock",
 	// populated within /sys/class/misc/ and /sys/devices/virtual/misc/
+	.mode = 0666,       /* ... dev node perms set as specified here */
 	.fops = &llkd_misc_fops,	// connect to 'functionality'
 };
 
