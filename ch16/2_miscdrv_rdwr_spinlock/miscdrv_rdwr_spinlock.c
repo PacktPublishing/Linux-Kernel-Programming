@@ -26,7 +26,7 @@
 #include <linux/miscdevice.h>
 #include <linux/slab.h>         // k[m|z]alloc(), k[z]free(), ...
 #include <linux/mm.h>           // kvmalloc()
-#include <linux/fs.h>		// the fops structure
+#include <linux/fs.h>			// the fops structure
 
 // copy_[to|from]_user()
 #include <linux/version.h>
@@ -247,7 +247,7 @@ static ssize_t write_miscdrv_rdwr(struct file *filp, const char __user *ubuf,
 		/* We're still holding the spinlock! */
 		set_current_state(TASK_INTERRUPTIBLE);
 		schedule_timeout(1*HZ);  /* ... and this is a blocking call!
-			Congratulations! you've just engineered a bug */
+							* Congratulations! you've just engineered a bug */
 	}
 
 	spin_unlock(&ctx->spinlock);
@@ -313,7 +313,7 @@ static int __init miscdrv_init_spinlock(void)
 		return ret;
 	}
 	pr_info("LLKD misc driver (major # 10) registered, minor# = %d,"
-		" dev node is /dev/llkd_miscdrv_rdwr\n", llkd_miscdev.minor);
+		" dev node is %s\n", llkd_miscdev.minor, llkd_miscdev.name);
 
 	/*
      * A 'managed' kzalloc(): use the 'devres' API devm_kzalloc() for mem
