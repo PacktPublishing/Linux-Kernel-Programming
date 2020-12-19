@@ -1,0 +1,15 @@
+These are sample kernel configs that you can try:
+
+sample_kconfig_llkd_dbg.config  : for a 'debug' / dev kernel
+sample_kconfig_llkd_prod.config : for a 'production' kernel
+
+These have been generated for 5.4.0 Linux kernel on an x86_64 Ubuntu 20.04 LTS
+system.
+
+TIP:
+You can run these (especially the 'production' one) against Alexander Popov's
+interesting and useful security project kconfig-hardened-check.
+
+git clone https://github.com/a13xp0p0v/kconfig-hardened-check
+
+See the README.md and use it!
