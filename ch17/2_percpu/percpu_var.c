@@ -214,7 +214,7 @@ static int __init init_percpu_var(void)
 
 	/* Dynamically allocate the percpu structures */
 	ret = -ENOMEM;
-	pcp_ctx = __alloc_percpu(sizeof(struct drv_ctx), sizeof(void *));
+	pcp_ctx = (struct drv_ctx __percpu *) alloc_percpu(sizeof(struct drv_ctx));
 	if (!pcp_ctx) {
 		pr_info("__alloc_percpu() failed, aborting...\n");
 		goto out1;
