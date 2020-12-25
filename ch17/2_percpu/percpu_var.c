@@ -51,7 +51,7 @@ static struct task_struct *arr_tsk[MAX_KTHRDS];
 /* This percpu integer 'pcpa' is statically allocated and initialized to 0 */
 DEFINE_PER_CPU(int, pcpa);
 
-/* This percpu structure will be dynamically allocated via __alloc_percpu() */
+/* This percpu structure will be dynamically allocated via the alloc_percpu() */
 static struct drv_ctx {
 	int tx, rx; /* here, as a demo, we just use these two members,
 	               ignoring the rest */
@@ -214,9 +214,9 @@ static int __init init_percpu_var(void)
 
 	/* Dynamically allocate the percpu structures */
 	ret = -ENOMEM;
-	pcp_ctx = (struct drv_ctx __percpu *) alloc_percpu(sizeof(struct drv_ctx));
+	pcp_ctx = (struct drv_ctx __percpu *) alloc_percpu(struct drv_ctx);
 	if (!pcp_ctx) {
-		pr_info("__alloc_percpu() failed, aborting...\n");
+		pr_info("alloc_percpu() failed, aborting...\n");
 		goto out1;
 	}
 

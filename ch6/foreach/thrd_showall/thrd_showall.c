@@ -31,7 +31,7 @@
 
 MODULE_AUTHOR("Kaiwan N Billimoria");
 MODULE_DESCRIPTION("LLKD book:ch6/foreach/thrd_showall:"
-	   " demo to display all threads by iterating over the task list");
+" demo to display all threads by iterating over the task list");
 MODULE_LICENSE("Dual MIT/GPL");
 MODULE_VERSION("0.1");
 
@@ -90,11 +90,10 @@ static int showthrds(void)
 		snprintf(buf, BUFMAX-1, "%s%s  0x%016lx", buf, tmp, (unsigned long)t->stack);
 
 		if (!g->mm) {	// kernel thread
-		/* One might question why we don't use the get_task_comm() to
-		 * obtain the task's name here; the short reason: it causes a
-		 * deadlock! We shall explore this (and how to avoid it) in
-		 * some detail in the chapter on Synchronization. For now, we
-		 * just do it the simple way ...
+		/* One might question why we don't use the get_task_comm() to obtain
+		 * the task's name here; the short reason: it causes a deadlock! We
+		 * shall explore this (and how to avoid it) in some detail in Ch 17 -
+		 * Kernel Synchronization Part 2. For now, we just do it the simple way
 		 */
 			snprintf(tmp, TMPMAX-1, " [%16s]", t->comm);
 		} else {
