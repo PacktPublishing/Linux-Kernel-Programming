@@ -23,7 +23,7 @@
 #include <linux/limits.h>
 
 #define MYMODNAME   "min_sysinfo"
-MODULE_AUTHOR("<insert your name here>");
+MODULE_AUTHOR("Kaiwan N Billimoria");
 MODULE_DESCRIPTION("LLKD book:ch5/min_sysinfo: print some minimal system info");
 MODULE_LICENSE("Dual MIT/GPL");
 MODULE_VERSION("0.1");

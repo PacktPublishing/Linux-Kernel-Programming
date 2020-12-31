@@ -2,11 +2,11 @@
 # query_process_oom.sh
 # ***************************************************************
 # This program is part of the source code released for the book
-#  "Linux Kernel Development Cookbook"
+#  "Learn Linux Kernel Development"
 #  (c) Author: Kaiwan N Billimoria
 #  Publisher:  Packt
 #  GitHub repository:
-#  https://github.com/PacktPublishing/Linux-Kernel-Development-Cookbook
+#  https://github.com/PacktPublishing/Learn-Linux-Kernel-Development
 # ****************************************************************
 # Brief Description:
 #

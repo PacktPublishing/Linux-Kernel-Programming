@@ -88,7 +88,10 @@ static int kthread_simple_init(void)
 		pr_err("kthread creation failed (%d)\n", ret);
 		return ret;
 	}
-	get_task_struct(gkthrd_ts); // inc refcnt, marking the task struct as in use
+	get_task_struct(gkthrd_ts); /* increment the kthread task structure's
+				      * reference count, marking it as being
+				      * in use
+				      */
 
 	pr_info("Initialized, kernel thread task ptr is 0x%pK (actual=0x%llx)\n"
 	"See the new kernel thread 'llkd/%s' with ps (and kill it with SIGINT or SIGQUIT)\n",
@@ -99,7 +102,11 @@ static int kthread_simple_init(void)
 
 static void kthread_simple_exit(void)
 {
-	kthread_stop(gkthrd_ts); /* waits for our kthread to terminate */
+	kthread_stop(gkthrd_ts);
+			/* waits for our kthread to terminate; it also
+			 * internally invokes the put_task_struct() to
+			 * decrement task's reference count
+			 */
 	pr_info("kthread stopped, and LKM removed.\n");
 }
 

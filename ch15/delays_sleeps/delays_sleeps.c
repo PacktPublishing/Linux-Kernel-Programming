@@ -44,12 +44,12 @@ MODULE_VERSION("0.1");
 	t2 = ktime_get_real_ns();					\
 	pr_info(code_str "-> actual: %11llu ns = %7llu us = %4llu ms\n", \
 		(t2-t1), (t2-t1)/1000, (t2-t1)/1000000);\
-} while(0)
+} while (0)
 
 static int __init delays_sleeps_init(void)
 {
 	pr_info("%s: inserted\n", OURMODNAME);
-	
+
 	/* Atomic busy-loops, no sleep! */
 	pr_info("\n1. *delay() functions (atomic, in a delay loop):\n");
 	DILLY_DALLY("ndelay() for         10 ns", ndelay(10));
