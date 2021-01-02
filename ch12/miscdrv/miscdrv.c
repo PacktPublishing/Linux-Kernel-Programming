@@ -24,6 +24,7 @@
 #include <linux/module.h>
 #include <linux/miscdevice.h>
 #include <linux/fs.h>		/* the fops, file data structures */
+#include <linux/slab.h>
 #include "../../convenient.h"
 
 #define OURMODNAME   "miscdrv"
@@ -45,11 +46,16 @@ MODULE_VERSION("0.1");
  */
 static int open_miscdrv(struct inode *inode, struct file *filp)
 {
+	char *buf = kzalloc(PATH_MAX, GFP_KERNEL);
+
+	if (unlikely(!buf))
+		return -ENOMEM;
 	PRINT_CTX();		// displays process (or atomic) context info
 
 	pr_info(" opening \"%s\" now; wrt open file: f_flags = 0x%x\n",
-		filp->f_path.dentry->d_iname, filp->f_flags);
+		file_path(filp, buf, PATH_MAX), filp->f_flags);
 
+	kfree(buf);
 	return nonseekable_open(inode, filp);
 }
 
@@ -91,7 +97,13 @@ static ssize_t write_miscdrv(struct file *filp, const char __user *ubuf,
  */
 static int close_miscdrv(struct inode *inode, struct file *filp)
 {
-	pr_info("closing \"%s\"\n", filp->f_path.dentry->d_iname);
+	char *buf = kzalloc(PATH_MAX, GFP_KERNEL);
+
+	if (unlikely(!buf))
+		return -ENOMEM;
+	pr_info("closing \"%s\"\n", file_path(filp, buf, PATH_MAX));
+	kfree(buf);
+
 	return 0;
 }
 

@@ -82,12 +82,17 @@ static struct drv_ctx *ctx;
 static int open_miscdrv_rdwr(struct inode *inode, struct file *filp)
 {
 	struct device *dev = ctx->dev;
+	char *buf = kzalloc(PATH_MAX, GFP_KERNEL);
+
+	if (unlikely(!buf))
+		return -ENOMEM;
 
 	PRINT_CTX();	// displays process (or atomic) context info
 	ga++;
 	gb--;
 	dev_info(dev, " opening \"%s\" now; wrt open file: f_flags = 0x%x\n",
-		filp->f_path.dentry->d_iname, filp->f_flags);
+		file_path(filp, buf, PATH_MAX), filp->f_flags);
+	kfree(buf);
 
 	return nonseekable_open(inode, filp);
 }
@@ -223,11 +228,16 @@ static ssize_t write_miscdrv_rdwr(struct file *filp, const char __user *ubuf,
 static int close_miscdrv_rdwr(struct inode *inode, struct file *filp)
 {
 	struct device *dev = ctx->dev;
+	char *buf = kzalloc(PATH_MAX, GFP_KERNEL);
+
+	if (unlikely(!buf))
+		return -ENOMEM;
 
 	PRINT_CTX();		// displays process (or intr) context info
 	ga--;
 	gb++;
-	dev_info(dev, " filename: \"%s\"\n", filp->f_path.dentry->d_iname);
+	dev_info(dev, " filename: \"%s\"\n", file_path(filp, buf, PATH_MAX));
+	kfree(buf);
 
 	return 0;
 }

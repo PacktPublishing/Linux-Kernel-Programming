@@ -96,12 +96,17 @@ static struct drv_ctx *ctx;
 static int open_miscdrv_rdwr(struct inode *inode, struct file *filp)
 {
 	struct device *dev = ctx->dev;
+	char *buf = kzalloc(PATH_MAX, GFP_KERNEL);
+
+	if (unlikely(!buf))
+		return -ENOMEM;
 
 	PRINT_CTX();	// displays process (or atomic) context info
 	ga++;
 	gb--;
 	dev_info(dev, " opening \"%s\" now; wrt open file: f_flags = 0x%x\n",
-		filp->f_path.dentry->d_iname, filp->f_flags);
+		file_path(filp, buf, PATH_MAX), filp->f_flags);
+	kfree(buf);
 
 	return nonseekable_open(inode, filp);
 }
@@ -284,10 +289,15 @@ out_nomem:
 static int close_miscdrv_rdwr(struct inode *inode, struct file *filp)
 {
 	struct device *dev = ctx->dev;
+	char *buf = kzalloc(PATH_MAX, GFP_KERNEL);
+
+	if (unlikely(!buf))
+		return -ENOMEM;
 
 	PRINT_CTX(); // displays process (or intr) context info
 	ga--; gb++;
-	dev_info(dev, " filename: \"%s\"\n", filp->f_path.dentry->d_iname);
+	dev_info(dev, " filename: \"%s\"\n", file_path(filp, buf, PATH_MAX));
+	kfree(buf);
 
 	return 0;
 }
@@ -308,9 +318,10 @@ static const struct file_operations llkd_misc_fops = {
 
 static struct miscdevice llkd_miscdev = {
 	.minor = MISC_DYNAMIC_MINOR, // kernel dynamically assigns a free minor#
-	.name = "bad_miscdrv", //_rdwr",
-	    // populated within /sys/class/misc/ and /sys/devices/virtual/misc/
-	.mode = 0666,		/* ... dev node perms set as specified here */
+	.name = "bad_miscdrv",		/* when misc_register() is invoked, the kernel
+		 * will auto-create device file as /dev/llkd_miscdrv_rdwr;
+		 *  also populated within /sys/class/misc/ and /sys/devices/virtual/misc/ */
+	.mode = 0666,				/* ... dev node perms set as specified here */
 	.fops = &llkd_misc_fops,	/* connect to this driver's 'functionality' */
 };
 
