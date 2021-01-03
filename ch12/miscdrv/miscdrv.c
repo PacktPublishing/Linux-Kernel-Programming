@@ -131,14 +131,14 @@ static int __init miscdrv_init(void)
 
 	ret = misc_register(&llkd_miscdev);
 	if (ret != 0) {
-		pr_notice("%s: misc device registration failed, aborting\n", OURMODNAME);
+		pr_notice("misc device registration failed, aborting\n");
 		return ret;
 	}
 
 	/* Retrieve the device pointer for this device */
 	dev = llkd_miscdev.this_device;
-	pr_info("%s: LLKD misc driver (major # 10) registered, minor# = %d,"
-		" dev node is /dev/llkd_miscdrv\n", OURMODNAME, llkd_miscdev.minor);
+	pr_info("LLKD misc driver (major # 10) registered, minor# = %d,"
+		" dev node is /dev/llkd_miscdrv\n", llkd_miscdev.minor);
 
 	dev_info(dev, "sample dev_info(): minor# = %d\n", llkd_miscdev.minor);
 
@@ -148,7 +148,7 @@ static int __init miscdrv_init(void)
 static void __exit miscdrv_exit(void)
 {
 	misc_deregister(&llkd_miscdev);
-	pr_info("%s: LLKD misc driver deregistered, bye\n", OURMODNAME);
+	pr_info("LLKD misc driver deregistered, bye\n");
 }
 
 module_init(miscdrv_init);
