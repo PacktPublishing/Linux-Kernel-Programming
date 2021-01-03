@@ -53,16 +53,22 @@ MODULE_VERSION("0.1");
  * The driver 'context' (or private) data structure;
  * all relevant 'state info' reg the driver is here.
  */
-typedef struct MyCtx {
+struct stMyCtx {
 	struct device *dev;
 	unsigned int data_xform;
-} stMyCtx, *pstMyCtx;
+};
 
 /*----------- 'misc' methods -------------*/
 static int open_miscdrv(struct inode *inode, struct file *filp)
 {
+	char *buf = kzalloc(PATH_MAX, GFP_KERNEL);
+
+	if (unlikely(!buf))
+		return -ENOMEM;
+
 	PRINT_CTX();		// displays process (or atomic) context info
-	pr_info("opening \"%s\" now\n", filp->f_path.dentry->d_iname);
+	pr_info("opening \"%s\" now\n", file_path(filp, buf, PATH_MAX));
+	kfree(buf);
 
 	return nonseekable_open(inode, filp);
 }
@@ -82,7 +88,14 @@ static ssize_t write_miscdrv(struct file *filp, const char __user *ubuf,
 
 static int close_miscdrv(struct inode *inode, struct file *filp)
 {
-	pr_info("closing \"%s\"\n", filp->f_path.dentry->d_iname);
+	char *buf = kzalloc(PATH_MAX, GFP_KERNEL);
+
+	if (unlikely(!buf))
+		return -ENOMEM;
+
+	pr_info("closing \"%s\" now\n", file_path(filp, buf, PATH_MAX));
+	kfree(buf);
+
 	return 0;
 }
 
@@ -90,9 +103,9 @@ static int close_miscdrv(struct inode *inode, struct file *filp)
 static int platdev_probe(struct platform_device *pdev)
 {
 	struct device *dev = &pdev->dev;
-	pstMyCtx priv = dev_get_platdata(&pdev->dev);
+	struct stMyCtx *priv = dev_get_platdata(&pdev->dev);
 	/* could have done the above directly with:
-	 *  pstMyCtx priv = pdev->dev.platform_data;
+	 *  struct stMyCtx *priv = pdev->dev.platform_data;
 	 * .. but using the kernel helper is recommended
 	 */
 
@@ -103,7 +116,7 @@ static int platdev_probe(struct platform_device *pdev)
 
 static int platdev_remove(struct platform_device *pdev)
 {
-	pstMyCtx priv = dev_get_platdata(&pdev->dev);
+	struct stMyCtx *priv = dev_get_platdata(&pdev->dev);
 	struct device *dev = &pdev->dev;
 
 	dev_dbg(dev, "platform driver:remove method invoked\n data_xform=%d\n",
@@ -149,7 +162,7 @@ static struct miscdevice llkd_miscdev = {
 
 /* Define our pseudo platform device */
 static struct platform_device plat0 = {
-#if 1				/* Make 1 to test using different names in the platform device and driver;
+#if 1			/* Make 1 to test using different names in the platform device and driver;
 				 * We find that the driver core then can't bind them, and the probe method
 				 * is never invoked...
 				 */
@@ -194,9 +207,9 @@ static int __init misc_plat_init(void)
 {
 	int ret = 0;
 	struct device *dev;
-	pstMyCtx priv = NULL;
+	struct stMyCtx *priv = NULL;
 
-	pr_info("%s: Initializing platform demo driver now...\n", DRVNAME);
+	pr_info("Initializing platform demo driver now...\n");
 
 	//--- Register with misc kernel framework
 	ret = misc_register(&llkd_miscdev);
@@ -209,7 +222,7 @@ static int __init misc_plat_init(void)
 	dev_info(dev, "LLKD misc driver (major # 10) registered, minor# = %d,"
 		 " dev node is %s\n", llkd_miscdev.minor, DRVNAME);
 
-	priv = devm_kzalloc(dev, sizeof(stMyCtx), GFP_KERNEL);
+	priv = devm_kzalloc(dev, sizeof(struct stMyCtx), GFP_KERNEL);
 	if (!priv)
 		return -ENOMEM;
 	priv->dev = llkd_miscdev.this_device;
@@ -220,13 +233,13 @@ static int __init misc_plat_init(void)
 	ret = platform_add_devices(platdemo_platform_devices,
 				   ARRAY_SIZE(platdemo_platform_devices));
 	if (ret) {
-		pr_alert("%s: platform_add_devices failed!\n", DRVNAME);
+		pr_alert("platform_add_devices failed!\n");
 		goto out_fail_pad;
 	}
 
 	ret = platform_driver_register(&platdrv);
 	if (ret) {
-		pr_alert("%s: platform_driver_register failed!\n", DRVNAME);
+		pr_alert("platform_driver_register failed!\n");
 		goto out_fail_pdr;
 	}
 	/* Successful platform_driver_register() will cause the registered 'probe'
@@ -244,7 +257,7 @@ static int __init misc_plat_init(void)
 static void __exit misc_plat_exit(void)
 {
 	struct device *dev = &plat0.dev;
-	pstMyCtx priv = plat0.dev.platform_data;
+	struct stMyCtx *priv = plat0.dev.platform_data;
 
 	dev_dbg(dev, "fyi, data_xform=%d; unloading\n", priv->data_xform);
 	platform_driver_unregister(&platdrv);
