@@ -1,5 +1,18 @@
 /*
- * ioctl_llkd_kdrv.c
+ * user_kernel_comm/ioctl_intf/kerneldrv_ioctl.c
+ **************************************************************************
+ * This program is part of the source code released for the book
+ *  "Learn Linux Kernel Development"
+ *  (c) Author: Kaiwan N Billimoria
+ *  Publisher:  Packt
+ *  GitHub repository:
+ *  https://github.com/PacktPublishing/Learn-Linux-Kernel-Development
+ *
+ * From: Ch : User-Kernel communication pathways
+ **************************************************************************
+ * Brief Description:
+ *
+ * For details, please refer the book.
  *
  * A kernel module that demonstrates simple usage of the ioctl driver method
  * to interface with a userspace 'C' application (the ioctl_user_test.c).
@@ -7,6 +20,8 @@
  * the ioctl(2) system call to interface with the device from/to a usermode
  * 'C' application.
  */
+#define pr_fmt(fmt) "%s:%s(): " fmt, KBUILD_MODNAME, __func__
+
 #include <linux/module.h>
 #include <linux/kernel.h>
 #include <linux/init.h>
@@ -15,7 +30,7 @@
 
 //--- copy_[to|from]_user()
 #include <linux/version.h>
-#if LINUX_VERSION_CODE > KERNEL_VERSION(4,11,0)
+#if LINUX_VERSION_CODE > KERNEL_VERSION(4, 11, 0)
 #include <linux/uaccess.h>
 #else
 #include <asm/uaccess.h>
@@ -27,19 +42,19 @@
 #define OURMODNAME   "ioctl_llkd_kdrv"
 MODULE_AUTHOR("Kaiwan N Billimoria");
 MODULE_DESCRIPTION(
-	"LLKD book:ch13/ioctl_intf: simple demo for using the ioctl interface");
+"LLKD book:user_kernel_comm/ioctl_intf: simple demo for using the ioctl interface");
 MODULE_LICENSE("Dual MIT/GPL");
 MODULE_VERSION("0.1");
 
 static int ioctl_intf_major,
 	power = 1; /* 'powered on' by default */
 
-/* 
+/*
  * The key method - the ioctl - for our demo driver; note how we take into
  * account the fact that the ioctl's signtaure changed from 2.6.36 (as the
  * BKL was finally removed).
  */
-#if LINUX_VERSION_CODE >= KERNEL_VERSION(2,6,36)
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(2, 6, 36)
 static long ioctl_intf_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
 #else
 static int ioctl_intf_ioctl(struct inode *ino, struct file *filp, unsigned int cmd,
@@ -48,7 +63,7 @@ static int ioctl_intf_ioctl(struct inode *ino, struct file *filp, unsigned int c
 {
 	int retval = 0;
 
-	MSG("In ioctl method, cmd=%d\n", _IOC_NR(cmd));
+	pr_debug("In ioctl method, cmd=%d\n", _IOC_NR(cmd));
 
 	/* Verify stuff: is the ioctl's for us? etc.. */
 	if (_IOC_TYPE(cmd) != IOCTL_LLKD_MAGIC) {
@@ -62,12 +77,12 @@ static int ioctl_intf_ioctl(struct inode *ino, struct file *filp, unsigned int c
 
 	switch (cmd) {
 	case IOCTL_LLKD_IOCRESET:
-		MSG("In ioctl cmd option: IOCTL_LLKD_IOCRESET\n");
+		pr_debug("In ioctl cmd option: IOCTL_LLKD_IOCRESET\n");
 		/* ... Insert the code here to write to a control register to reset the
 		 * device ... */
 		break;
 	case IOCTL_LLKD_IOCQPOWER:	/* Get: arg is pointer to result */
-		MSG("In ioctl cmd option: IOCTL_LLKD_IOCQPOWER\n"
+		pr_debug("In ioctl cmd option: IOCTL_LLKD_IOCQPOWER\n"
 			"arg=0x%x (drv) power=%d\n", (unsigned int)arg, power);
 		if (!capable(CAP_SYS_ADMIN))
 			return -EPERM;
@@ -84,7 +99,7 @@ static int ioctl_intf_ioctl(struct inode *ino, struct file *filp, unsigned int c
 		/* ... Insert the code here to write a control register to set the
 		 * power state of the device ...
 		 */
-		MSG("In ioctl cmd option: IOCTL_LLKD_IOCSPOWER\n"
+		pr_debug("In ioctl cmd option: IOCTL_LLKD_IOCSPOWER\n"
 			"power=%d now.\n", power);
 		break;
 	default:
@@ -93,7 +108,7 @@ static int ioctl_intf_ioctl(struct inode *ino, struct file *filp, unsigned int c
 	return retval;
 }
 
-static struct file_operations ioctl_intf_fops = {
+static const struct file_operations ioctl_intf_fops = {
 	.llseek = no_llseek,
 #if LINUX_VERSION_CODE >= KERNEL_VERSION(2, 6, 36)
 	.unlocked_ioctl = ioctl_intf_ioctl,	// use the 'unlocked' version
@@ -104,7 +119,7 @@ static struct file_operations ioctl_intf_fops = {
 
 static int ioctl_intf_open(struct inode *inode, struct file *filp)
 {
-	MSG("Device node with minor # %d being used\n", iminor(inode));
+	pr_debug("Device node with minor # %d being used\n", iminor(inode));
 
 	switch (iminor(inode)) {
 	case 0:
@@ -128,7 +143,7 @@ static int __init ioctl_llkd_kdrv_init(void)
 {
 	int result;
 
-	MSG("ioctl_intf_major=%d\n", ioctl_intf_major);
+	pr_debug("ioctl_intf_major=%d\n", ioctl_intf_major);
 
 	/*
 	 * Register the major, and accept a dynamic number.
@@ -136,23 +151,22 @@ static int __init ioctl_llkd_kdrv_init(void)
 	 */
 	result = register_chrdev(ioctl_intf_major, OURMODNAME, &ioctl_intf_open_fops);
 	if (result < 0) {
-		pr_info("register_chrdev() failed trying to get ioctl_intf_major=%d\n",
-		    ioctl_intf_major);
+		pr_info("register_chrdev() failed trying to get ioctl_intf_major=%d\n", ioctl_intf_major);
 		return result;
 	}
 
 	if (ioctl_intf_major == 0)
 		ioctl_intf_major = result;	/* dynamic */
-	MSG("registered:: ioctl_intf_major=%d\n", ioctl_intf_major);
+	pr_debug("registered:: ioctl_intf_major=%d\n", ioctl_intf_major);
 
-	pr_info("%s initialized\n", OURMODNAME);
+	pr_info("initialized\n");
 	return 0;		/* success */
 }
 
 static void ioctl_llkd_kdrv_cleanup(void)
 {
 	unregister_chrdev(ioctl_intf_major, OURMODNAME);
-	pr_info("%s removed\n", OURMODNAME);
+	pr_info("removed\n");
 }
 
 module_init(ioctl_llkd_kdrv_init);

@@ -1,14 +1,14 @@
 /*
- * ch13/procfs_simple_intf/procfs_simple_intf.c
+ * user_kernel_comm/procfs_simple_intf/procfs_simple_intf.c
  ***************************************************************
  * This program is part of the source code released for the book
- *  "Linux Kernel Development Cookbook"
+ *  "Learn Linux Kernel Development"
  *  (c) Author: Kaiwan N Billimoria
  *  Publisher:  Packt
  *  GitHub repository:
  *  https://github.com/PacktPublishing/Learn-Linux-Kernel-Development
  *
- * From: Ch 13 : User-Kernel communication pathways
+ * From: Ch - User-Kernel communication pathways
  ****************************************************************
  * Brief Description:
  * Simple kernel module to demo interfacing with userspace via procfs.
@@ -51,8 +51,10 @@
  *  (for fun, we treat this value 'config1' as also representing the
  *   driver debug_level)
  *
- * For details, please refer the book, Ch 13.
+ * For details, please refer the book.
  */
+#define pr_fmt(fmt) "%s:%s(): " fmt, KBUILD_MODNAME, __func__
+
 #include <linux/init.h>
 #include <linux/module.h>
 #include <linux/kernel.h>
@@ -71,7 +73,7 @@
 #endif
 
 MODULE_AUTHOR("Kaiwan N Billimoria");
-MODULE_DESCRIPTION("LLKD book:ch13/procfs_simple_intf: simple procfs interfacing demo");
+MODULE_DESCRIPTION("LLKD book:user_kernel_comm/procfs_simple_intf: simple procfs interfacing demo");
 MODULE_LICENSE("Dual MIT/GPL");
 MODULE_VERSION("0.1");
 
@@ -84,16 +86,6 @@ MODULE_VERSION("0.1");
 #define	PROC_FILE3_PERMS	0440
 #define	PROC_FILE4		"llkdproc_config1"
 #define	PROC_FILE4_PERMS	0644
-
-//--- our MSG() macro
-#ifdef DEBUG
-#define MSG(string, args...)  do {                   \
-	pr_info("%s:%s():%d: " string,                   \
-			OURMODNAME, __func__, __LINE__, ##args); \
-} while (0)
-#else
-#define MSG(string, args...)
-#endif
 
 /* We use a mutex lock here; details in Ch 16 and Ch 17 */
 DEFINE_MUTEX(mtx);
@@ -145,7 +137,7 @@ static ssize_t myproc_write_config1(struct file *filp, const char __user *ubuf,
 		goto out;
 	}
 	buf[count - 1] = '\0';
-	MSG("user sent: buf = %s\n", buf);
+	pr_debug("user sent: buf = %s\n", buf);
 	ret = kstrtoul(buf, 0, &configval);
 	if (ret)
 		goto out;
@@ -203,7 +195,7 @@ static const struct file_operations fops_show_drvctx = {
 	.release = single_release,
 };
 
-static struct drv_ctx * alloc_init_drvctx(void)
+static struct drv_ctx *alloc_init_drvctx(void)
 {
 	struct drv_ctx *drvctx = NULL;
 
@@ -217,7 +209,7 @@ static struct drv_ctx * alloc_init_drvctx(void)
 	drvctx->power = 1;
 	strncpy(drvctx->oursecret, "AhA xxx", 8);
 
-	MSG("allocated and init the driver context structure\n");
+	pr_debug("allocated and init the driver context structure\n");
 	return drvctx;
 }
 
@@ -255,14 +247,13 @@ static ssize_t myproc_write_debug_level(
 		goto out;
 	}
 	buf[count - 1] = '\0';
-	MSG("user sent: buf = %s\n", buf);
+	pr_debug("user sent: buf = %s\n", buf);
 	ret = kstrtoint(buf, 0, &debug_level); /* update it! */
 	if (ret)
 		goto out;
 	if (debug_level < DEBUG_LEVEL_MIN || debug_level > DEBUG_LEVEL_MAX) {
-		pr_info("%s: trying to set invalid value for debug_level\n"
-			" [allowed range: %d-%d]\n",
-			OURMODNAME, DEBUG_LEVEL_MIN, DEBUG_LEVEL_MAX);
+		pr_info("trying to set invalid value for debug_level\n"
+			" [allowed range: %d-%d]\n", DEBUG_LEVEL_MIN, DEBUG_LEVEL_MAX);
 		debug_level = DEBUG_LEVEL_DEFAULT;
 		ret = -EFAULT;
 		goto out;
@@ -311,19 +302,19 @@ static int __init procfs_simple_intf_init(void)
 {
 	int stat = 0;
 
-	if(unlikely(!IS_ENABLED(CONFIG_PROC_FS))) {
-		pr_warn("%s: procfs unsupported! Aborting ...\n", OURMODNAME);
+	if (unlikely(!IS_ENABLED(CONFIG_PROC_FS))) {
+		pr_warn("procfs unsupported! Aborting ...\n");
 		return -EINVAL;
 	}
 
 	/* 0. Create our parent dir under /proc called OURMODNAME */
 	gprocdir = proc_mkdir(OURMODNAME, NULL);
 	if (!gprocdir) {
-		pr_warn("%s: proc_mkdir failed, aborting...\n", OURMODNAME);
+		pr_warn("proc_mkdir failed, aborting...\n");
 		stat = -ENOMEM;
 		goto out_fail_1;
 	}
-	MSG("proc dir (/proc/%s) created\n", OURMODNAME);
+	pr_debug("proc dir (/proc/%s) created\n", OURMODNAME);
 
 	/* 1. Create the PROC_FILE1 proc entry under the parent dir OURMODNAME;
 	 * this will serve as the 'dynamically view/modify debug_level'
@@ -334,11 +325,11 @@ static int __init procfs_simple_intf_init(void)
 	 */
 	if (!proc_create(PROC_FILE1, PROC_FILE1_PERMS, gprocdir,
 			&fops_rdwr_dbg_level)) {
-		pr_warn("%s: proc_create [1] failed, aborting...\n", OURMODNAME);
+		pr_warn("proc_create [1] failed, aborting...\n");
 		stat = -ENOMEM;
 		goto out_fail_1;
 	}
-	MSG("proc file 1 (/proc/%s/%s) created\n", OURMODNAME, PROC_FILE1);
+	pr_debug("proc file 1 (/proc/%s/%s) created\n", OURMODNAME, PROC_FILE1);
 
 	/* 2. Create the PROC_FILE2 proc entry under the parent dir OURMODNAME;
 	 * this will serve as the 'show PAGE_OFFSET' (pseudo) file;
@@ -352,11 +343,11 @@ static int __init procfs_simple_intf_init(void)
 	 */
 	if (!proc_create_single_data(PROC_FILE2, PROC_FILE2_PERMS,
 					gprocdir, proc_show_pgoff, 0)) {
-		pr_warn("%s: proc_create [2] failed, aborting...\n", OURMODNAME);
+		pr_warn("proc_create [2] failed, aborting...\n");
 		stat = -ENOMEM;
 		goto out_fail_2;
 	}
-	MSG("proc file 2 (/proc/%s/%s) created\n", OURMODNAME, PROC_FILE2);
+	pr_debug("proc file 2 (/proc/%s/%s) created\n", OURMODNAME, PROC_FILE2);
 
 	/* 3. Firstly, allocate and initialize our 'driver context' data structure.
 	 * Then create the PROC_FILE3 proc entry under the parent dir OURMODNAME;
@@ -366,30 +357,30 @@ static int __init procfs_simple_intf_init(void)
 	 */
 	gdrvctx = alloc_init_drvctx();
 	if (IS_ERR(gdrvctx)) {
-		pr_warn("%s: drv ctx alloc failed, aborting...\n", OURMODNAME);
+		pr_warn("drv ctx alloc failed, aborting...\n");
 		stat = PTR_ERR(gdrvctx);
 		goto out_fail_2;
 	}
 	if (!proc_create(PROC_FILE3, PROC_FILE3_PERMS, gprocdir,
 			&fops_show_drvctx)) {
-		pr_warn("%s: proc_create [3] failed, aborting...\n", OURMODNAME);
+		pr_warn("proc_create [3] failed, aborting...\n");
 		stat = -ENOMEM;
 		goto out_fail_3;
 	}
-	MSG("proc file 3 (/proc/%s/%s) created\n", OURMODNAME, PROC_FILE3);
+	pr_debug("proc file 3 (/proc/%s/%s) created\n", OURMODNAME, PROC_FILE3);
 
 	/* 4. Create the PROC_FILE4 proc entry under the parent dir OURMODNAME;
 	 * this will serve as the 'read/write drv_ctx->config1' (pseudo) file.
 	 * API: proc_create()
 	 */
 	if (!proc_create(PROC_FILE4, PROC_FILE4_PERMS, gprocdir, &fops_rdwr_config1)) {
-		pr_warn("%s: proc_create [4] failed, aborting...\n", OURMODNAME);
+		pr_warn("proc_create [4] failed, aborting...\n");
 		stat = -ENOMEM;
 		goto out_fail_3;
 	}
-	MSG("proc file 4 (/proc/%s/%s) created\n", OURMODNAME, PROC_FILE4);
+	pr_debug("proc file 4 (/proc/%s/%s) created\n", OURMODNAME, PROC_FILE4);
 
-	pr_info("%s initialized\n", OURMODNAME);
+	pr_info("initialized\n");
 	return 0;	/* success */
 
  out_fail_3:
@@ -405,7 +396,7 @@ static void __exit procfs_simple_intf_cleanup(void)
 	gdrvctx->power = 0;
 	remove_proc_subtree(OURMODNAME, NULL);
 	kzfree(gdrvctx);
-	pr_info("%s removed\n", OURMODNAME);
+	pr_info("removed\n");
 }
 
 module_init(procfs_simple_intf_init);

@@ -1,5 +1,5 @@
 /*
- * ch13/debugfs_simple_intf/debugfs_simple_intf.c
+ * user_kernel_comm/debugfs_simple_intf/debugfs_simple_intf.c
  **************************************************************************
  * This program is part of the source code released for the book
  *  "Learn Linux Kernel Development"
@@ -8,12 +8,14 @@
  *  GitHub repository:
  *  https://github.com/PacktPublishing/Learn-Linux-Kernel-Development
  *
- * From: Ch 13 : User-Kernel communication pathways
+ * From: Ch - User-Kernel communication pathways
  **************************************************************************
  * Brief Description:
  *
- * For details, please refer the book, Ch 13.
+ * For details, please refer the book.
  */
+#define pr_fmt(fmt) "%s:%s(): " fmt, KBUILD_MODNAME, __func__
+
 #include <linux/init.h>
 #include <linux/module.h>
 #include <linux/kernel.h>
@@ -21,7 +23,7 @@
 #include <linux/debugfs.h>
 #include <linux/slab.h>
 #include <linux/version.h>
-#if LINUX_VERSION_CODE >= KERNEL_VERSION(4,11,0)
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(4, 11, 0)
 #include <linux/uaccess.h>
 #include <linux/sched/signal.h>
 #else
@@ -41,9 +43,9 @@ MODULE_VERSION("0.1");
 static int cause_an_oops;
 module_param(cause_an_oops, int, 0644);
 MODULE_PARM_DESC(cause_an_oops,
-  "Setting this to 1 can cause a kernel bug, an Oops; if 1, we do NOT perform"
-  " required cleanup! so, after removal, any op on the debugfs files will cause"
-  " an Oops! (default is 0, no bug)");
+"Setting this to 1 can cause a kernel bug, an Oops; if 1, we do NOT perform"
+" required cleanup! so, after removal, any op on the debugfs files will cause"
+" an Oops! (default is 0, no bug)");
 
 static struct dentry *gparent;
 
@@ -114,8 +116,7 @@ static struct drv_ctx *alloc_init_drvctx(void)
 	drvctx->power = 1;
 	strncpy(drvctx->oursecret, "AhA yyy", 8);
 
-	pr_info("%s: allocated and init the driver context structure\n",
-		 OURMODNAME);
+	pr_info("allocated and init the driver context structure\n");
 	return drvctx;
 }
 
@@ -125,7 +126,7 @@ static int debugfs_simple_intf_init(void)
 	struct dentry *file1, *file2;
 
 	if (!IS_ENABLED(CONFIG_DEBUG_FS)) {
-		pr_warn("%s: debugfs unsupported! Aborting ...\n", OURMODNAME);
+		pr_warn("debugfs unsupported! Aborting ...\n");
 		return -EINVAL;
 	}
 
@@ -133,8 +134,7 @@ static int debugfs_simple_intf_init(void)
 	 * module name */
 	gparent = debugfs_create_dir(OURMODNAME, NULL);
 	if (!gparent) {
-		pr_info("%s: debugfs_create_dir failed, aborting...\n",
-			OURMODNAME);
+		pr_info("debugfs_create_dir failed, aborting...\n");
 		stat = PTR_ERR(gparent);
 		goto out_fail_1;
 	}
@@ -147,7 +147,7 @@ static int debugfs_simple_intf_init(void)
 	 */
 	gdrvctx = alloc_init_drvctx();
 	if (IS_ERR(gdrvctx)) {
-		pr_info("%s: drv ctx alloc failed, aborting...\n", OURMODNAME);
+		pr_info("drv ctx alloc failed, aborting...\n");
 		stat = PTR_ERR(gdrvctx);
 		goto out_fail_2;
 	}
@@ -161,13 +161,12 @@ static int debugfs_simple_intf_init(void)
 	    debugfs_create_file(DBGFS_FILE1, 0440, gparent, (void *)gdrvctx,
 				&dbgfs_drvctx_fops);
 	if (!file1) {
-		pr_info("%s: debugfs_create_file failed, aborting...\n",
-			OURMODNAME);
+		pr_info("debugfs_create_file failed, aborting...\n");
 		stat = PTR_ERR(file1);
 		goto out_fail_3;
 	}
-	pr_debug("%s: debugfs file 1 <debugfs_mountpt>/%s/%s created\n",
-		 OURMODNAME, OURMODNAME, DBGFS_FILE1);
+	pr_debug("debugfs file 1 <debugfs_mountpt>/%s/%s created\n",
+		 OURMODNAME, DBGFS_FILE1);
 
 	/* 3. Create the debugfs file for the debug_level global; we use the
 	 * helper routine to make it simple! There is a downside: we have no
@@ -176,16 +175,14 @@ static int debugfs_simple_intf_init(void)
 #define DBGFS_FILE2	"llkd_dbgfs_debug_level"
 	file2 = debugfs_create_u32(DBGFS_FILE2, 0644, gparent, &debug_level);
 	if (!file2) {
-		pr_info("%s: debugfs_create_u32 failed, aborting...\n",
-			OURMODNAME);
+		pr_info("debugfs_create_u32 failed, aborting...\n");
 		stat = PTR_ERR(file2);
 		goto out_fail_3;
 	}
-	pr_debug("%s: debugfs file 2 <debugfs_mountpt>/%s/%s created\n",
-		 OURMODNAME, OURMODNAME, DBGFS_FILE2);
+	pr_debug("debugfs file 2 <debugfs_mountpt>/%s/%s created\n", OURMODNAME, DBGFS_FILE2);
 
-	pr_info("%s initialized (fyi, our 'cause an Oops' setting is currently %s)\n",
-		OURMODNAME, cause_an_oops==1?"On":"Off");
+	pr_info("initialized (fyi, our 'cause an Oops' setting is currently %s)\n",
+		cause_an_oops == 1 ? "On" : "Off");
 	return 0;
 
  out_fail_3:
@@ -201,7 +198,7 @@ static void debugfs_simple_intf_cleanup(void)
 	kfree(gdrvctx);
 	if (!cause_an_oops)
 		debugfs_remove_recursive(gparent);
-	pr_info("%s removed\n", OURMODNAME);
+	pr_info("removed\n");
 }
 
 module_init(debugfs_simple_intf_init);

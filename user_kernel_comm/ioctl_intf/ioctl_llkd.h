@@ -1,5 +1,16 @@
 /* 
- * ioctl_llkd.h
+ * user_kernel_comm/ioctl_intf/ioctl_llkd.h
+ **************************************************************************
+ * This program is part of the source code released for the book
+ *  "Learn Linux Kernel Development"
+ *  (c) Author: Kaiwan N Billimoria
+ *  Publisher:  Packt
+ *  GitHub repository:
+ *  https://github.com/PacktPublishing/Learn-Linux-Kernel-Development
+ *
+ * From: Ch : User-Kernel communication pathways
+ **************************************************************************
+ * Brief Description:
  *
  * Common header for both the ioctl_kdrv.c kernel module and the userspace
  * C app ioctl_user_test.c
