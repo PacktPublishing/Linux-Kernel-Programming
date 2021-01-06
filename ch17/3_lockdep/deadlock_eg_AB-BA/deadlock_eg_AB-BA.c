@@ -139,7 +139,7 @@ static int thrd_work(void *arg)
 			 * lock ordering 'rule'; first (attempt to) take lockB, then lockA */
 			pr_info(" iteration #%d on cpu #%ld\n", i, thrd);
 
-			if (lock_ooo == 1) {		// violate the rule, naughty boy!
+			if (lock_ooo == 1) {		// violate the rule, naughty !
 				pr_info(" Thread #%ld: locking: we do: lockB --> lockA\n",thrd);
 				spin_lock(&lockB);
 				DELAY_LOOP('B', 2);
@@ -147,7 +147,7 @@ static int thrd_work(void *arg)
 				DELAY_LOOP('A', 3);
 				spin_unlock(&lockA);
 				spin_unlock(&lockB);
-			} else if (lock_ooo == 0) {		// follow the rule, good boy!
+			} else if (lock_ooo == 0) {		// follow the rule, good !
 				pr_info(" Thread #%ld: locking: we do: lockA --> lockB\n",thrd);
 				spin_lock(&lockA);
 				DELAY_LOOP('B', 2);
