@@ -53,7 +53,7 @@ static int simple_kthread(void *arg)
 	while(!kthread_should_stop()) {
 		pr_info("FYI, I, kernel thread PID %d, am going to sleep now...\n",
 		    current->pid);
-		set_current_state (TASK_INTERRUPTIBLE);
+		set_current_state(TASK_INTERRUPTIBLE);
 		schedule();	// yield the processor, go to sleep...
 		/* Aaaaaand we're back! Here, it's typically due to either the
 		 * SIGINT or SIGQUIT signal hitting us, or due to the rmmod (or shutdown)
