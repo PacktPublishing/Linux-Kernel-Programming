@@ -2,11 +2,11 @@
  * solutions_to_assgn/ch5/libtest/mylib.c
  ***************************************************************
  * This program is part of the source code released for the book
- *  "Linux Kernel Development Cookbook"
+ *  "Learn Linux Kernel Development"
  *  (c) Author: Kaiwan N Billimoria
  *  Publisher:  Packt
  *  GitHub repository:
- *  https://github.com/PacktPublishing/Linux-Kernel-Development-Cookbook
+ *  https://github.com/PacktPublishing/Learn-Linux-Kernel-Development
  *
  * From: Ch 5: Writing your First Kernel Module- LKMs Part 2
  ****************************************************************
@@ -19,6 +19,8 @@
  * 
  * This is the mylib.c - the 'library' - code.
  */
+#define pr_fmt(fmt) "%s:%s(): " fmt, KBUILD_MODNAME, __func__
+
 #include <linux/init.h>
 #include <linux/module.h>
 #include <linux/kernel.h>
@@ -51,8 +53,7 @@ int prodint(int a, int b)
 	if ((a > 0 && (b > INT_MAX/a || b < INT_MIN/a)) ||
  	    (a < -1 && (b > INT_MIN/a || b < INT_MAX/a))  ||
 	    (a == -1 && b == INT_MIN)) {
-		pr_warn("%s:%s(): signed integer multiplication overflow detected!\n",
-			__FILE__, __func__);
+		pr_warn("signed integer multiplication overflow detected!\n");
 		return -1;
 	}
 	return (a*b);
