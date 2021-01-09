@@ -20,6 +20,8 @@
  *
  * For details, please refer the book, Ch 5.
  */
+#define pr_fmt(fmt) "%s:%s(): " fmt, KBUILD_MODNAME, __func__
+
 #include <linux/init.h>
 #include <linux/module.h>
 #include <linux/kernel.h>
@@ -99,7 +101,7 @@ u64 get_skey(int p)
 #else				// 64-bit
 	u64 secret = 0x123abc567def;
 #endif
-	pr_info("%s: %s:%s():%d: I've been called\n", MODNAME, __FILE__, __func__, __LINE__);
+	pr_info("%s:%d: I've been called\n", __FILE__, __LINE__);
 	if (p == THE_ONE)
 		return secret;
 	return 0;
@@ -108,13 +110,13 @@ EXPORT_SYMBOL(get_skey);
 
 static int __init core_lkm_init(void)
 {
-	pr_info("%s: inserted\n", MODNAME);
-	return 0;
+	pr_info("inserted\n");
+	return 0;	/* success */
 }
 
 static void __exit core_lkm_exit(void)
 {
-	pr_info("%s: bids you adieu\n", MODNAME);
+	pr_info("bids you adieu\n");
 }
 
 module_init(core_lkm_init);
