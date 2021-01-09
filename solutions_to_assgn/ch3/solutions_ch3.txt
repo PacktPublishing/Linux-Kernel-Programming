@@ -24,7 +24,7 @@ A. We assume :
 
   One way to achieve this:
 
-TMPD=$(mktemp -d)     <-- create a temp dir and hold it's location in a variable
+TMPD=$(mktemp -d)     # create a temp dir and hold it's location in a variable
 cp /boot/initrd.img-5.4.0-llkd01 ${TMPD}
 unmkinitramfs -v /boot/initrd.img-5.4.0-llkd01 ${TMPD}
 
