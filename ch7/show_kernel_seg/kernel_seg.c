@@ -36,6 +36,7 @@
 #include <linux/vmalloc.h>
 #include <linux/version.h>
 #include <asm/pgtable.h>
+#include <asm/fixmap.h>
 #include "../../klib_llkd.h"
 #include "../../convenient.h"
 
@@ -147,6 +148,7 @@ static void show_kernelseg_info(void)
 	pr_info(ELLPS
 		"|fixmap region:      "
 		" 0x" FMTSPC " - 0x" FMTSPC " | [" FMTSPC_DEC " MB]  |\n",
+#if 0
 #ifdef CONFIG_ARM
 		/* RELOOK: We seem to have an issue on ARM; the compile fails with:
 		 *  "./include/asm-generic/fixmap.h:29:38: error: invalid storage
@@ -155,14 +157,15 @@ static void show_kernelseg_info(void)
 		 * required macros from the arch/arm/include/asm/fixmap.h header
 		 * manually here ###
 		 */
-#define FIXADDR_START   0xffc00000UL
-#define FIXADDR_END     0xfff00000UL
+//#define FIXADDR_START   0xffc00000UL
+//#define FIXADDR_END     0xfff00000UL
 		SHOW_DELTA_M((TYPECST) FIXADDR_START, (TYPECST) FIXADDR_END));
 #else
 #include <asm/fixmap.h>
+#endif
+#endif
 		// seems to work fine on x86
 		SHOW_DELTA_M((TYPECST) FIXADDR_START, (TYPECST) FIXADDR_START + FIXADDR_SIZE));
-#endif
 
 	/* kernel module region
 	 * For the modules region, it's high in the kernel segment on typical 64-bit
