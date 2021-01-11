@@ -47,7 +47,7 @@ static inline void show_ctx(char *nm)
 			" current (ptr to our process context's task_struct) :\n"
 			"               0x%pK (0x%16lx)\n"
 			" stack start : 0x%pK (0x%016lx)\n", nm,
-			/* better to use the helper methods provided */
+			/* always better to use the helper methods provided */
 			task_pid_nr(current), task_tgid_nr(current),
 			/* ... rather than the 'usual' direct lookups:
 			 * current->pid, current->tgid,

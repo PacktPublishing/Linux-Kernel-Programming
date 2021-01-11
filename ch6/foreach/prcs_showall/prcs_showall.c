@@ -33,9 +33,9 @@
 
 #define OURMODNAME	"prcs_showall"
 
-MODULE_AUTHOR("<insert your name here>");
-MODULE_DESCRIPTION("LLKD book:ch4/foreach/prcs_showall: "
-		   "Show all processes by iterating over the task list");
+MODULE_AUTHOR("Kaiwan N Billimoria");
+MODULE_DESCRIPTION("LLKD book:ch6/foreach/prcs_showall: "
+"Show all processes by iterating over the task list");
 MODULE_LICENSE("Dual MIT/GPL");
 MODULE_VERSION("0.1");
 
@@ -45,7 +45,7 @@ static int show_prcs_in_tasklist(void)
 #define MAXLEN   128
 	char tmp[MAXLEN];
 	int numread = 0, n = 0, total = 0;
-	char hdr[] = "     Name       | TGID  |  PID  | RUID  | EUID";
+	char hdr[] = "     Name       |  TGID  |   PID  |  RUID |  EUID";
 
 	pr_info("%s\n", &hdr[0]);
 	for_each_process(p) {

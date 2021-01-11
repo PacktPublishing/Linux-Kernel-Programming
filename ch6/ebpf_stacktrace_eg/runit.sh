@@ -1,5 +1,21 @@
 #!/bin/bash
-
+# ch6/ebpf_stacktrace_eg/runit.sh
+# ***************************************************************
+# * This program is part of the source code released for the book
+# *  "Learn Linux Kernel Development"
+# *  (c) Author: Kaiwan N Billimoria
+# *  Publisher:  Packt
+# *  GitHub repository:
+# *  https://github.com/PacktPublishing/Learn-Linux-Kernel-Development
+# *
+# * From: Ch 6 : Kernel and Memory Management Internals Essentials
+# ****************************************************************
+# * Brief Description:
+# * Script to demo using the stackcount-bpfcc BCC tool to trace both kernel
+# * and user-mode stacks of our Hello, world process for the write(s)
+# *
+# * For details, please refer the book, Ch 6.
+# ****************************************************************
 [ ! -f ./helloworld_dbg ] && {
   echo "Pl build the helloworld_dbg program first... (with 'make')"
   exit 1
@@ -7,9 +23,10 @@
 
 pkill helloworld_dbg 2>/dev/null
 ./helloworld_dbg >/dev/null &
-PID=$(ps -e|grep "helloworld_dbg" |tail -n1|awk '{print $1}')
+PID=$(pgrep helloworld_dbg)
+#PID=$(ps -e|grep "helloworld_dbg" |tail -n1|awk '{print $1}')
 [ -z "${PID}" ] && {
-  echo "Oops, could not get PID of helloworld_dbg, aborting..."
+  echo "Oops, could not get PID of the helloworld_dbg process, aborting..."
   exit 1
 }
 
