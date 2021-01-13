@@ -32,19 +32,20 @@ MODULE_VERSION("0.1");
  * show_sizeof()
  * Simply displays the sizeof data types on the platform.
  */
-/* Portability: set the printk formatting appropriately for 32 and 64-bit */
+/* Portability: set the printk formatting appropriately for 32 and 64-bit 
 #if (BITS_PER_LONG == 32)
 #define FMT   "%2u"
 #else
 #define FMT   "%2ld"
 #endif
+*/
 void show_sizeof(void)
 {
 	pr_info("sizeof: (bytes)\n"
-		"  char = " FMT "   short int = " FMT "           int = " FMT
-		"\n" "  long = " FMT "   long long = " FMT "        void * = "
-		FMT "\n" " float = " FMT "      double = " FMT
-		"   long double = " FMT "\n", sizeof(char), sizeof(short int),
+		"  char = %2zu   short int = %2zu              int = %2zu\n"
+		"  long = %2zu   long long = %2zu           void * = %2zu\n"
+		" float = %2zu      double = %2zu      long double = %2zu\n",
+		sizeof(char), sizeof(short int),
 		sizeof(int), sizeof(long), sizeof(long long), sizeof(void *),
 		sizeof(float), sizeof(double), sizeof(long double));
 }
