@@ -60,10 +60,10 @@ static int bsa_alloc(void)
 		pr_warn("%s: __get_free_page() failed!\n", OURMODNAME);
 		/* As per convention, we emit a printk above saying that the
 		 * allocation failed. In practice it isn't required; the kernel
-		 * will definitely emit warning printk's if a memory alloc
-		 * request ever fails! Thus, we do this only once (here); from
-		 * now on we don't print any error message on a memory
-		 * allocation request failing.
+		 * will definitely emit many warning printk's if a memory alloc
+		 * request ever fails! Thus, we do this only once (here; could also
+         * use the WARN_ONCE()); from now on we don't pedantically print any
+		 * error message on a memory allocation request failing.
 		 */
 		goto out1;
 	}
@@ -87,7 +87,8 @@ static int bsa_alloc(void)
 	 * Show the virt, phy addr and PFN (page frame numbers).
 	 * This function is in our 'library' code here: ../../klib_llkd.c
 	 * This way, we can see if the pages allocated are really physically
-	 * contiguous.
+	 * contiguous. Signature:
+	 *  void show_phy_pages(const void *kaddr, size_t len, bool contiguity_check);
 	 */
 	show_phy_pages(gptr2, numpg2alloc * PAGE_SIZE, 1);
 
