@@ -21,6 +21,7 @@
 #include <linux/init.h>
 #include <linux/kernel.h>
 #include <linux/module.h>
+#include <asm/io.h>		/* virt_to_phys(), phys_to_virt(), ... */
 
 /* Portability */
 #if(BITS_PER_LONG == 32)
