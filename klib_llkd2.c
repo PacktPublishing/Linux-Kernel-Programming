@@ -108,6 +108,7 @@ void show_phy_pages(const void *kaddr, size_t len, bool contiguity_check)
 			__func__, vaddr);
 		return;
 	}
+	/* worry not, for ARM the __virt_to_phys() performs a validity check */
 #endif
 
 	pr_info("%s(): start kaddr " FMTSPC ", len %zu, contiguity_check is %s\n",
@@ -121,12 +122,15 @@ void show_phy_pages(const void *kaddr, size_t len, bool contiguity_check)
 		pa = virt_to_phys(va2);
 		//pr_info("%05d %08lx %px", i, va2, pa);
 		//mb();
+/*
 #ifdef CONFIG_X86
 		pfn = PHYS_PFN(pa);
 #elif CONFIG_ARM
 		pfn = pa/PAGE_SIZE;
 #endif
-		pr_info("%05d %px %px\n", i, va2, pa);
+*/
+		pfn = PHYS_PFN(pa);
+		pr_info("%05d   " FMTSPC "     %px    %ld\n", i, va2, pa, pfn);
 		//pr_info("%05d %px %px (%ld)\n", i, va2, pa, pfn);
 		//pr_info("      va2 = %px pa = %px (%ld)\n", va2, pa, pfn);
 
