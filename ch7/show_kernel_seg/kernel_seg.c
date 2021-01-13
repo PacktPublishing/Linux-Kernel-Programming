@@ -71,16 +71,16 @@ static void show_userspace_info(void)
 	pr_info("+------------ Above is kernel-seg; below, user VAS  ----------+\n"
 		ELLPS
 		"|Process environment "
-		" %px - %px     | [ %4zd bytes]     |\n"
+		" %px - %px     | [ %4zd bytes]\n"
 		"|          arguments "
-		" %px - %px     | [ %4zd bytes]     |\n"
-		"|        stack start  %px                        |\n"
+		" %px - %px     | [ %4zd bytes]\n"
+		"|        stack start  %px\n"
 		"|       heap segment "
-		" %px - %px     | [ %4zd KB]        |\n"
+		" %px - %px     | [ %4zd KB]\n"
 		"|static data segment "
-		" %px - %px     | [ %4zd bytes]     |\n"
+		" %px - %px     | [ %4zd bytes]\n"
 		"|       text segment "
-		" %px - %px     | [ %4zd KB]        |\n"
+		" %px - %px     | [ %4zd KB]\n"
 		ELLPS
 		"+-------------------------------------------------------------+\n",
 		SHOW_DELTA_b(current->mm->env_start, current->mm->env_end),
@@ -129,7 +129,7 @@ static void show_kernelseg_info(void)
 	/* On ARM, the definition of VECTORS_BASE turns up only in kernels >= 4.11 */
 #if LINUX_VERSION_CODE > KERNEL_VERSION(4, 11, 0)
 	pr_info("|vector table:       "
-		" %px - %px | [%4ld KB]         |\n",
+		" %px - %px | [%4ld KB]\n",
 		SHOW_DELTA_K(VECTORS_BASE, VECTORS_BASE + PAGE_SIZE));
 #endif
 #endif
@@ -137,7 +137,7 @@ static void show_kernelseg_info(void)
 	/* kernel fixmap region */
 	pr_info(ELLPS
 		"|fixmap region:      "
-		" %px - %px     | [%4ld MB]         |\n",
+		" %px - %px     | [%4ld MB]\n",
 #ifdef CONFIG_ARM
 		SHOW_DELTA_M(FIXADDR_START, FIXADDR_END));
 #else
@@ -152,24 +152,24 @@ static void show_kernelseg_info(void)
 	 */
 #if (BITS_PER_LONG == 64)
 	pr_info("|module region:      "
-		" %px - %px     | [%ld MB]       |\n",
+		" %px - %px     | [%ld MB]\n",
 		SHOW_DELTA_M(MODULES_VADDR, MODULES_END));
 #endif
 
 #ifdef CONFIG_KASAN		// KASAN region: Kernel Address SANitizer
 	pr_info("|KASAN shadow:       "
-		" %px - %px     | [%2ld GB]  |\n",
+		" %px - %px     | [%2ld GB]\n",
 		SHOW_DELTA_G(KASAN_SHADOW_START, KASAN_SHADOW_END));
 #endif
 
 	/* vmalloc region */
 	pr_info("|vmalloc region:     "
-		" %px - %px     | [%4ld MB = %2ld GB] |\n",
+		" %px - %px     | [%4ld MB = %2ld GB]\n",
 		SHOW_DELTA_MG(VMALLOC_START, VMALLOC_END));
 
 	/* lowmem region */
 	pr_info("|lowmem region:      "
-		" %px - %px     | [%4ld MB = %2ld GB] |\n"
+		" %px - %px     | [%4ld MB = %2ld GB]\n"
 #if (BITS_PER_LONG == 32)
 		"|           (above:PAGE_OFFSET - highmem)                     |\n",
 #else
@@ -180,7 +180,7 @@ static void show_kernelseg_info(void)
 	/* (possible) highmem region;  may be present on some 32-bit systems */
 #ifdef CONFIG_HIGHMEM
 	pr_info("|HIGHMEM region:     "
-		" %px - %px | [%4ld MB]  |\n",
+		" %px - %px | [%4ld MB]\n",
 		SHOW_DELTA_M(PKMAP_BASE, (PKMAP_BASE) + (LAST_PKMAP * PAGE_SIZE)));
 #endif
 
@@ -196,7 +196,7 @@ static void show_kernelseg_info(void)
 
 #if (BITS_PER_LONG == 32)	/* modules region: see the comment above reg this */
 	pr_info("|module region:      "
-		" %px - %px | [%4ld MB]         |\n",
+		" %px - %px | [%4ld MB]\n",
 		SHOW_DELTA_M(MODULES_VADDR, MODULES_END));
 #endif
 	pr_info(ELLPS);
