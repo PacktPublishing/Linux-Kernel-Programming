@@ -78,20 +78,20 @@ static void show_userspace_info(void)
 	pr_info("+------------ Above is kernel-seg; below, user VAS  ----------+\n"
 		ELLPS
 		"|Process environment "
-		" %px - %px | [ %4zd bytes]     |\n"
+		" %px - %px     | [ %4zd bytes]     |\n"
 		//" 0x" FMTSPC " - 0x" FMTSPC " | [" FMTSPC_DEC " bytes]\n"
 		"|          arguments "
-		" %px - %px | [ %4zd bytes]     |\n"
+		" %px - %px     | [ %4zd bytes]     |\n"
 		//" 0x" FMTSPC " - 0x" FMTSPC " | [" FMTSPC_DEC " bytes]\n"
 		"|        stack start  %px                                |\n"
 		"|       heap segment "
-		" %px - %px | [ %4zd KB]        |\n"
+		" %px - %px     | [ %4zd KB]        |\n"
 		//" 0x" FMTSPC " - 0x" FMTSPC " | [" FMTSPC_DEC " bytes]\n"
 		"|static data segment "
-		" %px - %px | [ %4zd bytes]     |\n"
+		" %px - %px     | [ %4zd bytes]     |\n"
 		//" 0x" FMTSPC " - 0x" FMTSPC " | [" FMTSPC_DEC " bytes]\n"
 		"|       text segment "
-		" %px - %px | [ %4zd KB]        |\n"
+		" %px - %px     | [ %4zd KB]        |\n"
 		//" 0x" FMTSPC " - 0x" FMTSPC " | [" FMTSPC_DEC " bytes]\n"
 		ELLPS
 		"+-------------------------------------------------------------+\n",
@@ -150,9 +150,9 @@ static void show_kernelseg_info(void)
 	/* kernel fixmap region */
 	pr_info(ELLPS
 		"|fixmap region:      "
-		" %px - %px | [%4ld MB]         |\n",
+		" %px - %px     | [%4ld MB]         |\n",
 		//" 0x" FMTSPC " - 0x" FMTSPC " | [" FMTSPC_DEC " MB]  |\n",
-#if 0
+#if 1
 #ifdef CONFIG_ARM
 		/* RELOOK: We seem to have an issue on ARM; the compile fails with:
 		 *  "./include/asm-generic/fixmap.h:29:38: error: invalid storage
@@ -165,11 +165,12 @@ static void show_kernelseg_info(void)
 //#define FIXADDR_END     0xfff00000UL
 		SHOW_DELTA_M(FIXADDR_START, FIXADDR_END));
 #else
-#include <asm/fixmap.h>
+//#include <asm/fixmap.h>
+		SHOW_DELTA_M(FIXADDR_START, (FIXADDR_TOP - FIXADDR_START)));
 #endif
 #endif
 		// seems to work fine on x86
-		SHOW_DELTA_M(FIXADDR_START, (FIXADDR_END - FIXADDR_START)));
+		//SHOW_DELTA_M(FIXADDR_START, (FIXADDR_END - FIXADDR_START)));
 		//SHOW_DELTA_M(FIXADDR_START, FIXADDR_START + FIXADDR_SIZE));
 
 	/* kernel module region
@@ -180,31 +181,31 @@ static void show_kernelseg_info(void)
 	 */
 #if (BITS_PER_LONG == 64)
 	pr_info("|module region:      "
-		" %px - %px | [%ld MB]       |\n",
+		" %px - %px     | [%ld MB]       |\n",
 		//" 0x" FMTSPC " - 0x" FMTSPC " | [" FMTSPC_DEC " MB]  |\n",
 		SHOW_DELTA_M(MODULES_VADDR, MODULES_END));
 #endif
 
 #ifdef CONFIG_KASAN		// KASAN region: Kernel Address SANitizer
 	pr_info("|KASAN shadow:       "
-		" %px - %px | [%2ld GB]  |\n",
+		" %px - %px     | [%2ld GB]  |\n",
 		//" 0x" FMTSPC " - 0x" FMTSPC " | [" FMTSPC_DEC " GB]\n",
 		SHOW_DELTA_G(KASAN_SHADOW_START, KASAN_SHADOW_END));
 #endif
 
 	/* vmalloc region */
 	pr_info("|vmalloc region:     "
-		" %px - %px | [%4ld MB = %2ld GB] |\n",
+		" %px - %px     | [%4ld MB = %2ld GB] |\n",
 		//" 0x" FMTSPC " - 0x" FMTSPC " | [" FMTSPC_DEC " MB = " FMTSPC_DEC " GB]\n",
 		SHOW_DELTA_MG(VMALLOC_START, VMALLOC_END));
 
 	/* lowmem region */
 	pr_info("|lowmem region:      "
-		" %px - %px | [%4ld MB = %2ld GB] |\n"
+		" %px - %px     | [%4ld MB = %2ld GB] |\n"
 #if (BITS_PER_LONG == 32)
 		"|           (above:PAGE_OFFSET - highmem)                     |\n",
 #else
-		"|                  (above:PAGE_OFFSET    -      highmem)      |\n",
+		"|                (above:PAGE_OFFSET    -      highmem)        |\n",
 #endif
 		SHOW_DELTA_MG((unsigned long)PAGE_OFFSET, (unsigned long)high_memory));
 		//SHOW_DELTA_MG((unsigned long long)PAGE_OFFSET, (unsigned long)high_memory));
