@@ -35,7 +35,7 @@
 
 #define OURMODNAME    "lowlevel_mem"
 
-MODULE_DESCRIPTION("Ch 8: Demo kernel module to exercise essential page allocator APIs");
+MODULE_DESCRIPTION("ch8: demo kernel module to exercise essential page allocator APIs");
 MODULE_AUTHOR("Kaiwan N Billimoria");
 MODULE_LICENSE("Dual MIT/GPL");
 
@@ -67,7 +67,7 @@ static int bsa_alloc(void)
 		 */
 		goto out1;
 	}
-	pr_info("%s: 1. __get_free_page() alloc'ed 1 page from the BSA @ 0x%pK (" FMTSPC ")\n",
+	pr_info("%s: 1. __get_free_page() alloc'ed 1 page from the BSA @ %pK (%px)\n",
 		OURMODNAME, gptr1, gptr1);
 
 	/* 2. Allocate 2^bsa_alloc_order pages with the __get_free_pages() API */
@@ -78,7 +78,7 @@ static int bsa_alloc(void)
 		goto out2;
 	}
 	pr_info("%s: 2. __get_free_pages() alloc'ed 2^%d = %lld page(s) = %lld bytes\n"
-		" from the BSA @ 0x%pK (" FMTSPC ")\n",
+		" from the BSA @ %pK (%px)\n",
 		OURMODNAME, bsa_alloc_order, powerof(2, bsa_alloc_order),
 		numpg2alloc * PAGE_SIZE, gptr2, gptr2);
 	pr_info(" (PAGE_SIZE = %ld bytes)\n", PAGE_SIZE);
@@ -96,7 +96,7 @@ static int bsa_alloc(void)
 	gptr3 = (void *)get_zeroed_page(GFP_KERNEL);
 	if (!gptr3)
 		goto out3;
-	pr_info("%s: 3. get_zeroed_page() alloc'ed 1 page from the BSA @ 0x%pK (" FMTSPC ")\n",
+	pr_info("%s: 3. get_zeroed_page() alloc'ed 1 page from the BSA @ %pK (%px)\n",
 		OURMODNAME, gptr3, gptr3);
 
 	/* 4. Allocate one page with the alloc_page() API.
@@ -110,8 +110,8 @@ static int bsa_alloc(void)
 	if (!pg_ptr1)
 		goto out4;
 	gptr4 = page_address(pg_ptr1);
-	pr_info("%s: 4. alloc_page() alloc'ed 1 page from the BSA @ 0x%pK (" FMTSPC ")\n"
-		" (struct page addr=0x%pK (" FMTSPC "))\n",
+	pr_info("%s: 4. alloc_page() alloc'ed 1 page from the BSA @ %pK (%px)\n"
+		" (struct page addr=%pK (%px))\n",
 		OURMODNAME, (void *)gptr4, (void *)gptr4, pg_ptr1, pg_ptr1);
 
 	/* 5. Allocate and init 2^5 = 32 pages with the alloc_pages() API.
@@ -120,7 +120,7 @@ static int bsa_alloc(void)
 	gptr5 = page_address(alloc_pages(GFP_KERNEL, 5));
 	if (!gptr5)
 		goto out5;
-	pr_info("%s: 5. alloc_pages() alloc'ed %lld pages from the BSA @ 0x%pK (" FMTSPC ")\n",
+	pr_info("%s: 5. alloc_pages() alloc'ed %lld pages from the BSA @ %pK (%px)\n",
 		OURMODNAME, powerof(2, 5), (void *)gptr5, (void *)gptr5);
 
 	return 0;

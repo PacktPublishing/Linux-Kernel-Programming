@@ -110,7 +110,7 @@ void show_phy_pages(const void *kaddr, size_t len, bool contiguity_check)
 	}
 #endif
 
-	pr_info("%s(): start kaddr " FMTSPC ", len %zu, contiguity_check is %s\n",
+	pr_info("%s(): start kaddr %px, len %zu, contiguity_check is %s\n",
 		       __func__, vaddr, len, contiguity_check?"on":"off");
 	pr_info("%s", hdr);
 	if (len % PAGE_SIZE)
@@ -134,7 +134,7 @@ void show_phy_pages(const void *kaddr, size_t len, bool contiguity_check)
 		 * using the 0x%[ll]x format specifier instead of the %pK as we
 		 * should for security */
 		/* if(!(i%100)) */
-		pr_info("%05d  " FMTSPC "   0x%x   %ld\n",
+		pr_info("%05d  %px   %x   %ld\n",
 			i, vaddr+(i*PAGE_SIZE), pa, pfn);
 		if (!!contiguity_check)
 			prev_pfn = pfn;
@@ -166,12 +166,6 @@ u64 powerof(int base, int exponent)
  * show_sizeof()
  * Simply displays the sizeof data types on the platform.
  */
-/* Portability: set the printk formatting appropriately for 32 and 64-bit */
-#if(BITS_PER_LONG == 32)
-	#define FMT   "%2u"
-#else
-	#define FMT   "%2ld"
-#endif
 void show_sizeof(void)
 {
 #ifndef __KERNEL__
@@ -180,10 +174,10 @@ void show_sizeof(void)
 	pr_info(
 #endif
 		"sizeof: (bytes)\n"
-		"  char = " FMT "   short int = " FMT "           int = " FMT "\n"
-		"  long = " FMT "   long long = " FMT "        void * = " FMT "\n"
-		" float = " FMT "      double = " FMT "   long double = " FMT "\n",
-			sizeof(char), sizeof(short int), sizeof(int),
-			sizeof(long), sizeof(long long), sizeof(void *),
-			sizeof(float), sizeof(double), sizeof(long double));
+		"  char = %2zu   short int = %2zu           int = %2zu\n"
+		"  long = %2zu   long long = %2zu        void * = %2zu\n"
+		" float = %2zu      double = %2zu   long double = %2zu\n",
+		sizeof(char), sizeof(short int), sizeof(int),
+		sizeof(long), sizeof(long long), sizeof(void *),
+		sizeof(float), sizeof(double), sizeof(long double));
 }

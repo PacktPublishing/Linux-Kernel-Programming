@@ -52,13 +52,6 @@ static int show_uservas;
 module_param(show_uservas, int, 0660);
 MODULE_PARM_DESC(show_uservas, "Show some user space VAS details; 0 = no (default), 1 = show");
 
-/*
-#if (BITS_PER_LONG == 32)
-#define FMTSPC_DEC	"%7d"
-#elif(BITS_PER_LONG == 64)
-#define FMTSPC_DEC	"%9ld"
-#endif
-*/
 #define ELLPS "|                           [ . . . ]                         |\n"
 
 extern void llkd_minsysinfo(void);	// it's in our klib_llkd 'library'
@@ -79,20 +72,15 @@ static void show_userspace_info(void)
 		ELLPS
 		"|Process environment "
 		" %px - %px     | [ %4zd bytes]     |\n"
-		//" 0x" FMTSPC " - 0x" FMTSPC " | [" FMTSPC_DEC " bytes]\n"
 		"|          arguments "
 		" %px - %px     | [ %4zd bytes]     |\n"
-		//" 0x" FMTSPC " - 0x" FMTSPC " | [" FMTSPC_DEC " bytes]\n"
-		"|        stack start  %px                                |\n"
+		"|        stack start  %px                        |\n"
 		"|       heap segment "
 		" %px - %px     | [ %4zd KB]        |\n"
-		//" 0x" FMTSPC " - 0x" FMTSPC " | [" FMTSPC_DEC " bytes]\n"
 		"|static data segment "
 		" %px - %px     | [ %4zd bytes]     |\n"
-		//" 0x" FMTSPC " - 0x" FMTSPC " | [" FMTSPC_DEC " bytes]\n"
 		"|       text segment "
 		" %px - %px     | [ %4zd KB]        |\n"
-		//" 0x" FMTSPC " - 0x" FMTSPC " | [" FMTSPC_DEC " bytes]\n"
 		ELLPS
 		"+-------------------------------------------------------------+\n",
 		SHOW_DELTA_b(current->mm->env_start, current->mm->env_end),
@@ -142,7 +130,6 @@ static void show_kernelseg_info(void)
 #if LINUX_VERSION_CODE > KERNEL_VERSION(4, 11, 0)
 	pr_info("|vector table:       "
 		" %px - %px | [%4ld KB]         |\n",
-		//" 0x" FMTSPC " - 0x" FMTSPC " | [" FMTSPC_DEC " KB]  |\n",
 		SHOW_DELTA_K(VECTORS_BASE, VECTORS_BASE + PAGE_SIZE));
 #endif
 #endif
@@ -151,27 +138,11 @@ static void show_kernelseg_info(void)
 	pr_info(ELLPS
 		"|fixmap region:      "
 		" %px - %px     | [%4ld MB]         |\n",
-		//" 0x" FMTSPC " - 0x" FMTSPC " | [" FMTSPC_DEC " MB]  |\n",
-#if 1
 #ifdef CONFIG_ARM
-		/* RELOOK: We seem to have an issue on ARM; the compile fails with:
-		 *  "./include/asm-generic/fixmap.h:29:38: error: invalid storage
-		 *   class for function ‘fix_to_virt’"
-		 * ### So, okay, as a *really silly* workaround am simply copying in the
-		 * required macros from the arch/arm/include/asm/fixmap.h header
-		 * manually here ###
-		 */
-//#define FIXADDR_START   0xffc00000UL
-//#define FIXADDR_END     0xfff00000UL
 		SHOW_DELTA_M(FIXADDR_START, FIXADDR_END));
 #else
-//#include <asm/fixmap.h>
 		SHOW_DELTA_M(FIXADDR_START, (FIXADDR_TOP - FIXADDR_START)));
 #endif
-#endif
-		// seems to work fine on x86
-		//SHOW_DELTA_M(FIXADDR_START, (FIXADDR_END - FIXADDR_START)));
-		//SHOW_DELTA_M(FIXADDR_START, FIXADDR_START + FIXADDR_SIZE));
 
 	/* kernel module region
 	 * For the modules region, it's high in the kernel segment on typical 64-bit
@@ -182,21 +153,18 @@ static void show_kernelseg_info(void)
 #if (BITS_PER_LONG == 64)
 	pr_info("|module region:      "
 		" %px - %px     | [%ld MB]       |\n",
-		//" 0x" FMTSPC " - 0x" FMTSPC " | [" FMTSPC_DEC " MB]  |\n",
 		SHOW_DELTA_M(MODULES_VADDR, MODULES_END));
 #endif
 
 #ifdef CONFIG_KASAN		// KASAN region: Kernel Address SANitizer
 	pr_info("|KASAN shadow:       "
 		" %px - %px     | [%2ld GB]  |\n",
-		//" 0x" FMTSPC " - 0x" FMTSPC " | [" FMTSPC_DEC " GB]\n",
 		SHOW_DELTA_G(KASAN_SHADOW_START, KASAN_SHADOW_END));
 #endif
 
 	/* vmalloc region */
 	pr_info("|vmalloc region:     "
 		" %px - %px     | [%4ld MB = %2ld GB] |\n",
-		//" 0x" FMTSPC " - 0x" FMTSPC " | [" FMTSPC_DEC " MB = " FMTSPC_DEC " GB]\n",
 		SHOW_DELTA_MG(VMALLOC_START, VMALLOC_END));
 
 	/* lowmem region */
@@ -208,13 +176,11 @@ static void show_kernelseg_info(void)
 		"|                (above:PAGE_OFFSET    -      highmem)        |\n",
 #endif
 		SHOW_DELTA_MG((unsigned long)PAGE_OFFSET, (unsigned long)high_memory));
-		//SHOW_DELTA_MG((unsigned long long)PAGE_OFFSET, (unsigned long)high_memory));
 
 	/* (possible) highmem region;  may be present on some 32-bit systems */
 #ifdef CONFIG_HIGHMEM
 	pr_info("|HIGHMEM region:     "
 		" %px - %px | [%4ld MB]  |\n",
-		//" 0x" FMTSPC " - 0x" FMTSPC " | [" FMTSPC_DEC " MB]\n",
 		SHOW_DELTA_M(PKMAP_BASE, (PKMAP_BASE) + (LAST_PKMAP * PAGE_SIZE)));
 #endif
 
@@ -231,7 +197,6 @@ static void show_kernelseg_info(void)
 #if (BITS_PER_LONG == 32)	/* modules region: see the comment above reg this */
 	pr_info("|module region:      "
 		" %px - %px | [%4ld MB]         |\n",
-		//" 0x" FMTSPC " - 0x" FMTSPC " | [" FMTSPC_DEC " MB]  |\n",
 		SHOW_DELTA_M(MODULES_VADDR, MODULES_END));
 #endif
 	pr_info(ELLPS);
