@@ -152,6 +152,8 @@ tarxz-pkg:
 	tar caf ../${PKG_NAME}.tar.xz *
 	ls -l ../${PKG_NAME}.tar.xz
 	@echo '=== package created: ../$(PKG_NAME).tar.xz ==='
+	@echo 'Tip: when extracting, to extract into a dir of the same name as the tar file,'
+	@echo ' do: tar -xvf ${PKG_NAME}.tar.xz --one-top-level'
 
 help:
 	@echo '=== Makefile Help : additional targets available ==='
@@ -188,4 +190,6 @@ help:
 	@echo
 	@echo '--- misc targets ---'
 	@echo 'tarxz-pkg  : tar and compress the LKM source files as a tar.xz into the dir above; allows one to transfer and build the module on another system'
+	@echo ' Tip: when extracting, to extract into a dir of the same name as the tar file,'
+	@echo '  do: tar -xvf ${PKG_NAME}.tar.xz --one-top-level'
 	@echo 'help       : this help target'
