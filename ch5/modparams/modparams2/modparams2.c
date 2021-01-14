@@ -22,7 +22,7 @@
 #include <linux/kernel.h>
 
 #define OUR_MODNAME    "modparams2"
-MODULE_AUTHOR("<insert your name here>");
+MODULE_AUTHOR("Kaiwan N Billimoria");
 MODULE_DESCRIPTION("LLKD book:ch5/modparams/modparams2: module parameters");
 MODULE_LICENSE("Dual MIT/GPL");
 MODULE_VERSION("0.1");

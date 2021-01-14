@@ -19,7 +19,7 @@
 #include <linux/kernel.h>
 
 #define OUR_MODNAME    "modparams1"
-MODULE_AUTHOR("<insert your name here>");
+MODULE_AUTHOR("Kaiwan N Billimoria");
 MODULE_DESCRIPTION("LLKD book:ch5/modparams/modparams1: module parameters demo LKM #1");
 MODULE_LICENSE("Dual MIT/GPL");
 MODULE_VERSION("0.1");
@@ -28,7 +28,7 @@ MODULE_VERSION("0.1");
 static int mp_debug_level;
 module_param(mp_debug_level, int, 0660);
 MODULE_PARM_DESC(mp_debug_level,
-		 "Debug level [0-2]; 0 => no debug messages, 2 => high verbosity");
+"Debug level [0-2]; 0 => no debug messages, 2 => high verbosity");
 
 static char *mp_strparam = "My string param";
 module_param(mp_strparam, charp, 0660);
