@@ -54,6 +54,11 @@ static int bsa_alloc(void)
 	u64 numpg2alloc = 0;
 	const struct page *pg_ptr1;
 
+	/* 0. Show the identity mapping: physical RAM page frames to kernel virtual
+	 *    addresses, from PAGE_OFFSET for 5 pages
+	 */
+	show_phy_pages((void *)PAGE_OFFSET, 5 * PAGE_SIZE, 1);
+
 	/* 1. Allocate one page with the __get_free_page() API */
 	gptr1 = (void *)__get_free_page(GFP_KERNEL);
 	if (!gptr1) {
