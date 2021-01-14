@@ -31,7 +31,7 @@ MODULE_DESCRIPTION
 MODULE_LICENSE("Dual MIT/GPL");
 MODULE_VERSION("0.1");
 
-#define MAXTIMES    5 	/* the higher you make this, the more the chance of the
+#define MAXTIMES    3 	/* the higher you make this, the more the chance of the
 						 * alloc failing, as we only free in the cleanup code path...
 						 */
 void show_phy_pages(const void *kaddr, size_t len, bool contiguity_check);
