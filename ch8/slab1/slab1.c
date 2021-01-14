@@ -38,26 +38,26 @@ static int __init slab1_init(void)
 	/* 1. Allocate slab memory for 1 KB using the kmalloc() */
 	gkptr = kmalloc(1024, GFP_KERNEL);
 	if (!gkptr) {
-		pr_warn("%s: kmalloc failed!\n", OURMODNAME);
+		WARN_ONCE(1, "%s: kmalloc() failed!\n", OURMODNAME);
 		/* As mentioned earlier, there is really no need to print an
 		 * error msg when a memory alloc fails; the situation
 		 * "shouldn't" typically occur, and if it does, the kernel will
-		 * emit a chain of messages in any case. Here, we do so as it's
-		 * a 'learning' program..
+		 * emit a chain of messages in any case. Here, we use the WARN_ONCE()
+		 * macro pedantically, and as this is a 'learning' program..
 		 */
 		goto out_fail1;
 	}
+	pr_info("kmalloc() succeeds, ret value = %pK (actual is %px)\n", gkptr, gkptr);
 	print_hex_dump_bytes("gkptr before memset: ", DUMP_PREFIX_OFFSET, gkptr, 32);
 	memset(gkptr, 'm', 1024);
 	print_hex_dump_bytes(" gkptr after memset: ", DUMP_PREFIX_OFFSET, gkptr, 32);
 
 	/* 2. Allocate memory for and initialize our 'context' structure */
 	ctx = kzalloc(sizeof(struct myctx), GFP_KERNEL);
-	if (!ctx) {
-		pr_warn("%s: kzalloc failed!\n", OURMODNAME);
+	if (!ctx)
 		goto out_fail2;
-	}
-	pr_info("%s: context struct alloc'ed and initialized\n", OURMODNAME);
+	pr_info("%s: context struct alloc'ed and initialized (ret = %pK (actual=%px))\n",
+		OURMODNAME, ctx, ctx);
 	print_hex_dump_bytes("ctx: ", DUMP_PREFIX_OFFSET, ctx, 32);
 
 	return 0;		/* success */
