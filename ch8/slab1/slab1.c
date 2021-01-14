@@ -47,7 +47,8 @@ static int __init slab1_init(void)
 		 */
 		goto out_fail1;
 	}
-	pr_info("kmalloc() succeeds, ret value = %pK (actual is %px)\n", gkptr, gkptr);
+	pr_info("kmalloc() succeeds, (actual KVA) ret value = %px\n", gkptr);
+	/* We use the %px format specifier here to show the actual KVA; in production, Don't! */
 	print_hex_dump_bytes("gkptr before memset: ", DUMP_PREFIX_OFFSET, gkptr, 32);
 	memset(gkptr, 'm', 1024);
 	print_hex_dump_bytes(" gkptr after memset: ", DUMP_PREFIX_OFFSET, gkptr, 32);
@@ -56,8 +57,8 @@ static int __init slab1_init(void)
 	ctx = kzalloc(sizeof(struct myctx), GFP_KERNEL);
 	if (!ctx)
 		goto out_fail2;
-	pr_info("%s: context struct alloc'ed and initialized (ret = %pK (actual=%px))\n",
-		OURMODNAME, ctx, ctx);
+	pr_info("%s: context struct alloc'ed and initialized (actual KVA ret = %px)\n",
+		OURMODNAME, ctx);
 	print_hex_dump_bytes("ctx: ", DUMP_PREFIX_OFFSET, ctx, 32);
 
 	return 0;		/* success */
