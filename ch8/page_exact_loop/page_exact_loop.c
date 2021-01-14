@@ -31,6 +31,7 @@ MODULE_DESCRIPTION
 MODULE_LICENSE("Dual MIT/GPL");
 MODULE_VERSION("0.1");
 
+/*
 #if (BITS_PER_LONG == 32)
 #define FMTSPC "0x%08x"
 #define TYPECST unsigned int
@@ -38,14 +39,18 @@ MODULE_VERSION("0.1");
 #define FMTSPC "0x%016lx"
 #define TYPECST unsigned long
 #endif
-
-#define MAXTIMES    25	/* the higher you make this, the more the chance of the
+*/
+#define MAXTIMES    5 	/* the higher you make this, the more the chance of the
 						 * alloc failing, as we only free in the cleanup code path...
 						 */
 void show_phy_pages(const void *kaddr, size_t len, bool contiguity_check);
 
 static void *gptr[MAXTIMES];
-static size_t gsz = 4 * 1024 * 1024;
+/* Lets ask for a little over 32 KB; the 'regular' PA/BSA APIs will end up giving
+ * us 64 KB; the alloc_pages_exact() will optimize it
+ */
+static size_t gsz = 32*1024 + 5120; //9 * 1024;
+//static size_t gsz = 4 * 1024 * 1024;
 	/* 4 MB; the largest possible alloc w/ a
 	 * single call to the page allocator is 4 MB (assuming MAX_ORDER of 11 and
 	 * page size of 4096)
@@ -68,7 +73,7 @@ static int __init page_exact_loop_init(void)
 			return -ENOMEM;
 		}
 		pr_info("%s:%d: alloc_pages_exact() alloc'ed %zu bytes memory (%zu pages)"
-			" from the BSA @ 0x%pK (actual=" FMTSPC ")\n",
+			" from the BSA @ %pK (actual=%px)\n",
 			OURMODNAME, i, gsz, gsz / PAGE_SIZE, gptr[i], gptr[i]);
 		// lets 'poison' it..
 		memset(gptr[i], 'x', gsz);
