@@ -94,7 +94,7 @@ void show_phy_pages(const void *kaddr, size_t len, bool contiguity_check)
 {
 	void *vaddr = kaddr;
 #if(BITS_PER_LONG == 64)
-	const char *hdr = "-pg#-  --------va--------   ----pa----   -PFN--\n";
+	const char *hdr = "-pg#-  -------va-------   --------pa--------   --PFN--\n";
 #else             // 32-bit
 	const char *hdr = "-pg#-  ----va----     ----pa----      --PFN--\n";
 #endif
