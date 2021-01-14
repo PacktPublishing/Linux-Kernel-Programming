@@ -46,10 +46,7 @@ endif
 PWD             := $(shell pwd)
 obj-m           += page_exact_loop_lkm.o
 page_exact_loop_lkm-objs := page_exact_loop.o ../../klib_llkd.o
-EXTRA_CFLAGS    += -DDEBUG -Wformat=0
- # we use the -Wformat=0 above to subdue the warning on the printk %llx format
- # specifier (in our klib_llkd.c code) as we _want_ to show the actual address
- # and not a hashed value; don't do this in production
+EXTRA_CFLAGS    += -DDEBUG
 
 all:
 	@echo
