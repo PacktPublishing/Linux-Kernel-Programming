@@ -108,6 +108,9 @@ void show_phy_pages(const void *kaddr, size_t len, bool contiguity_check)
 			__func__, vaddr);
 		return;
 	}
+	/* Worry not, the ARM implementation of virt_to_phys() performs an internal
+	 * validity check
+	 */
 #endif
 
 	pr_info("%s(): start kaddr %px, len %zu, contiguity_check is %s\n",

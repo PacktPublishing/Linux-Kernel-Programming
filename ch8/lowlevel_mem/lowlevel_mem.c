@@ -59,6 +59,13 @@ static int bsa_alloc(void)
 	 */
 	pr_info("%s: 0. Show identity mapping: RAM page frames : kernel virtual pages :: 1:1\n",
 		OURMODNAME);
+	/* SEE THIS!
+	 * Show the virt, phy addr and PFN (page frame numbers).
+	 * This function is in our 'library' code here: ../../klib_llkd.c
+	 * This way, we can see if the pages allocated are really physically
+	 * contiguous. Signature:
+	 *  void show_phy_pages(const void *kaddr, size_t len, bool contiguity_check);
+	 */
 	show_phy_pages((void *)PAGE_OFFSET, 5 * PAGE_SIZE, 1);
 
 	/* 1. Allocate one page with the __get_free_page() API */
@@ -89,14 +96,6 @@ static int bsa_alloc(void)
 		OURMODNAME, bsa_alloc_order, powerof(2, bsa_alloc_order),
 		numpg2alloc * PAGE_SIZE, gptr2, gptr2);
 	pr_info(" (PAGE_SIZE = %ld bytes)\n", PAGE_SIZE);
-
-	/* SEE THIS!
-	 * Show the virt, phy addr and PFN (page frame numbers).
-	 * This function is in our 'library' code here: ../../klib_llkd.c
-	 * This way, we can see if the pages allocated are really physically
-	 * contiguous. Signature:
-	 *  void show_phy_pages(const void *kaddr, size_t len, bool contiguity_check);
-	 */
 	show_phy_pages(gptr2, numpg2alloc * PAGE_SIZE, 1);
 
 	/* 3. Allocate and init one page with the get_zeroed_page() API */
