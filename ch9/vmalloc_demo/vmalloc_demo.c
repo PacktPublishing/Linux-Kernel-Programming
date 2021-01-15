@@ -15,8 +15,11 @@
  *
  * For details, please refer the book, Ch 9.
  */
+#define pr_fmt(fmt) "%s:%s(): " fmt, KBUILD_MODNAME, __func__
+
 #include <linux/init.h>
 #include <linux/module.h>
+#include <linux/kernel.h>
 #include <linux/mm.h>
 #include <linux/slab.h>
 #include <linux/vmalloc.h>
@@ -27,17 +30,6 @@ MODULE_AUTHOR("Kaiwan N Billimoria");
 MODULE_DESCRIPTION("LLKD book:ch9/vmalloc_demo/: simple vmalloc() and friends demo lkm");
 MODULE_LICENSE("Dual MIT/GPL");
 MODULE_VERSION("0.1");
-
-/* Portability for 32 and 64-bit systems */
-#if (BITS_PER_LONG == 32)
-#define FMTSPC		"0x%08x"
-#define FMTSPC_DEC	"%7d"
-#define TYPECST		unsigned int
-#elif(BITS_PER_LONG == 64)
-#define FMTSPC		"0x%016lx"
-#define FMTSPC_DEC	"%9ld"
-#define TYPECST	    unsigned long
-#endif
 
 static int kvnum = 5 * 1024 * 1024;	// 5 MB
 module_param(kvnum, int, 0644);
@@ -56,21 +48,21 @@ static int vmalloc_try(void)
 		/* The pr_warn() below isn't really required; being pedantic here,
 		 * we keep it.. ditto for the remaining cases below...
 		 */
-		pr_warn("%s: vmalloc failed\n", OURMODNAME);
+		pr_warn("vmalloc failed\n");
 		goto err_out1;
 	}
-	pr_info("1. vmalloc():   vptr_rndm = 0x%pK (actual=" FMTSPC ")\n",
-		vptr_rndm, (TYPECST) vptr_rndm);
+	pr_info("1. vmalloc():   vptr_rndm = 0x%pK (actual=0x%px)\n",
+		vptr_rndm, vptr_rndm);
 	print_hex_dump_bytes(" content: ", DUMP_PREFIX_NONE, vptr_rndm, DISP_BYTES);
 
 	/* 2. vzalloc(); mem contents are set to zeroes */
 	vptr_init = vzalloc(10000);
 	if (!vptr_init) {
-		pr_warn("%s: vzalloc failed\n", OURMODNAME);
+		pr_warn("vzalloc failed\n");
 		goto err_out2;
 	}
-	pr_info("2. vzalloc():   vptr_init = 0x%pK (actual=" FMTSPC ")\n",
-		vptr_init, (TYPECST) vptr_init);
+	pr_info("2. vzalloc():   vptr_init = 0x%pK (actual=0x%px)\n",
+		vptr_init, vptr_init);
 	print_hex_dump_bytes(" content: ", DUMP_PREFIX_NONE, vptr_init, DISP_BYTES);
 
 	/* 3. kvmalloc(): allocate 'kvnum' bytes with the kvmalloc(); if kvnum is
@@ -79,35 +71,34 @@ static int vmalloc_try(void)
 	 */
 	kv = kvmalloc(kvnum, GFP_KERNEL);
 	if (!kv) {
-		pr_warn("%s: kvmalloc failed\n", OURMODNAME);
+		pr_warn("kvmalloc failed\n");
 		goto err_out3;
 	}
-	pr_info("3. kvmalloc() :        kv = 0x%pK (actual=" FMTSPC ")\n"
-		"    (for %d bytes)\n", kv, (TYPECST) kv, kvnum);
+	pr_info("3. kvmalloc() :        kv = 0x%pK (actual=0x%px)\n"
+			"    (for %d bytes)\n", kv, kv, kvnum);
 	print_hex_dump_bytes(" content: ", DUMP_PREFIX_NONE, kv, KVN_MIN_BYTES);
 
 	/* 4. kcalloc(): allocate an array of 1000 64-bit quantities and zero
 	 * out the memory */
 	kvarr = kcalloc(1000, sizeof(u64), GFP_KERNEL);
 	if (!kvarr) {
-		pr_warn("%s: kcalloc failed\n", OURMODNAME);
+		pr_warn("kcalloc failed\n");
 		goto err_out4;
 	}
-	pr_info("4. kcalloc() :      kvarr = 0x%pK (actual=" FMTSPC ")\n",
-		kvarr, (TYPECST) kvarr);
+	pr_info("4. kcalloc() :      kvarr = 0x%pK (actual=0x%px)\n", kvarr, kvarr);
 	print_hex_dump_bytes(" content: ", DUMP_PREFIX_NONE, kvarr, DISP_BYTES);
 
 	/* 5. __vmalloc(): allocate some 42 pages and set protections to RO */
 #undef WR2ROMEM_BUG
-	/* #define WR2ROMEM_BUG *//* 'Normal' usage: keep this commented out, else
+	/* #define WR2ROMEM_BUG */
+	/* 'Normal' usage: keep this commented out, else
 	 * we will crash! Read the book, Ch 9, for details  :-) */
 	vrx = __vmalloc(42 * PAGE_SIZE, GFP_KERNEL, PAGE_KERNEL_RO);
 	if (!vrx) {
-		pr_warn("%s: __vmalloc failed\n", OURMODNAME);
+		pr_warn("__vmalloc failed\n");
 		goto err_out5;
 	}
-	pr_info("5. __vmalloc():       vrx = 0x%pKi (actual=" FMTSPC ")\n",
-		vrx, (TYPECST) vrx);
+	pr_info("5. __vmalloc():       vrx = 0x%pK (actual=0x%px)\n", vrx, vrx);
 
 	/* Try reading the memory, should be fine */
 	print_hex_dump_bytes(" content: ", DUMP_PREFIX_NONE, vrx, DISP_BYTES);
@@ -132,11 +123,11 @@ static int vmalloc_try(void)
 static int __init vmalloc_demo_init(void)
 {
 	if (kvnum < KVN_MIN_BYTES) {
-		pr_info("%s: kvnum must be >= %d bytes (curr it's %d bytes)\n",
-			OURMODNAME, KVN_MIN_BYTES, kvnum);
+		pr_info("kvnum must be >= %d bytes (curr it's %d bytes)\n", KVN_MIN_BYTES, kvnum);
 		return -EINVAL;
 	}
-	pr_info("%s: inserted\n", OURMODNAME);
+	pr_info("inserted\n");
+
 	return vmalloc_try();
 }
 
@@ -147,7 +138,7 @@ static void __exit vmalloc_demo_exit(void)
 	kvfree(kv);
 	vfree(vptr_init);
 	vfree(vptr_rndm);
-	pr_info("%s: removed\n", OURMODNAME);
+	pr_info("removed\n");
 }
 
 module_init(vmalloc_demo_init);
