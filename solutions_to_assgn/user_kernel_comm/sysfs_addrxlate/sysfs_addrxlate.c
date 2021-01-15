@@ -1,5 +1,5 @@
 /*
- * solutions_to_assgn/ch13/sysfs_addrxlate/sysfs_addrxlate.c
+ * solutions_to_assgn/user_kernel_comm/sysfs_addrxlate/sysfs_addrxlate.c
  ***************************************************************
  * This program is part of the source code released for the book
  *  "Learn Linux Kernel Development"
@@ -11,7 +11,7 @@
  * From: Ch 13 : User-Kernel communication pathways
  ****************************************************************
  * Brief Description:
- * This is an assignment from the chapter:
+ * This is an assignment from the chapter "User-Kernel communication pathways".
  *
  * sysfs_addrxlate: sysfs assignment #2 (a bit more advanced):
  * Address translation: exploiting the knowledge gained from this chapter and
@@ -41,7 +41,7 @@
 
 MODULE_AUTHOR("Kaiwan N Billimoria");
 MODULE_DESCRIPTION
-    ("LLKD book:solutions_to_assgn/ch12/sysfs_addrxlate: simple sysfs interfacing to translate linear addr");
+("LLKD book:solutions_to_assgn/user_kernel_comm/sysfs_addrxlate: simple sysfs interfacing to translate linear addr");
 /*
  * We *require* the module to be released under GPL license (as well) to please
  * several core driver routines (like sysfs_create_group,
@@ -55,27 +55,7 @@ MODULE_VERSION("0.1");
 #define SYSFS_FILE1	addrxlate_kva2pa
 #define SYSFS_FILE2	addrxlate_pa2kva
 
-//--- our MSG() macro
-#ifdef DEBUG
-#define MSG(string, args...)  do {                       \
-	pr_info("%s:%s():%d: " string,                   \
-		OURMODNAME, __func__, __LINE__, ##args); \
-} while (0)
-#else
-#define MSG(string, args...)
-#endif
-
-#if(BITS_PER_LONG == 32)
-	#define FMTSPC		"%08x"
-	#define TYPECST		unsigned long
-	typedef u32 addr_t;
-#elif(BITS_PER_LONG == 64)
-	#define FMTSPC		"%016llx"
-	#define TYPECST	    	unsigned long long
-	typedef u64 addr_t;
-#endif
-
-/* We use a mutex lock; details in Ch 15 and Ch 16 */
+/* We use a mutex lock; details in Ch 16 and Ch 17 */
 static DEFINE_MUTEX(mtx1);
 static DEFINE_MUTEX(mtx2);
 static struct platform_device *sysfs_demo_platdev;	/* Device structure */
@@ -98,7 +78,8 @@ struct device_attribute {
 #define MANUALLY
 #define ADDR_MAXLEN	20
 static phys_addr_t gxlated_addr_kva2pa;
-static addr_t gxlated_addr_pa2kva;
+static size_t gxlated_addr_pa2kva;
+//static addr_t gxlated_addr_pa2kva;
 
 /*------------------ sysfs file 2 (RW) -------------------------------------*/
 
@@ -110,8 +91,8 @@ static ssize_t addrxlate_pa2kva_show(struct device *dev,
 
 	if (mutex_lock_interruptible(&mtx2))
 		return -ERESTARTSYS;
-	MSG("In the 'show' method\n");
-	n = snprintf(buf, ADDR_MAXLEN, "0x" FMTSPC "\n", gxlated_addr_pa2kva);
+	pr_debug("In the 'show' method\n");
+	n = snprintf(buf, ADDR_MAXLEN, "0x%px\n", (void *)gxlated_addr_pa2kva);
 	mutex_unlock(&mtx2);
 
 	return n;
@@ -153,23 +134,18 @@ static ssize_t addrxlate_pa2kva_store(struct device *dev,
 	 * WARNING! the below validity checks are very simplistic; YMMV!
 	 */
 	if (pa > PAGE_OFFSET) {
-		pr_info("%s(): invalid physical address (0x" FMTSPC ")?\n", __func__, pa);
+		pr_info("%s(): invalid physical address (0x%pa)?\n", __func__, &pa);
 		return -EFAULT;
 	}
 
 	/* All okay (fingers crossed), perform the address translation! */
-	gxlated_addr_pa2kva = (TYPECST)phys_to_virt(pa);
-	pr_debug(" pa 0x" FMTSPC " = kva 0x" FMTSPC "\n", pa, gxlated_addr_pa2kva);
+	gxlated_addr_pa2kva = (size_t)phys_to_virt(pa);
+	pr_debug(" pa 0x%pa = KVA 0x%px\n", &pa, (void *)gxlated_addr_pa2kva);
 
 #ifdef MANUALLY
 	/* 'Manually' perform the address translation */
-	pr_info("%s: manually:  pa 0x" FMTSPC " = kva 0x" FMTSPC "\n",
-		OURMODNAME, pa,
-#if(BITS_PER_LONG == 32)
-		(unsigned int)(pa + PAGE_OFFSET));
-#else
-		(pa + PAGE_OFFSET));
-#endif
+	pr_info("%s: manually:  pa 0x%pa = KVA 0x%px\n",
+		OURMODNAME, &pa, (void *)(pa + PAGE_OFFSET));
 #endif
 	ret = count;
  out:
@@ -189,8 +165,8 @@ static ssize_t addrxlate_kva2pa_show(struct device *dev,
 
 	if (mutex_lock_interruptible(&mtx1))
 		return -ERESTARTSYS;
-	MSG("In the 'show' method\n");
-	n = snprintf(buf, ADDR_MAXLEN, "0x" FMTSPC "\n", gxlated_addr_kva2pa);
+	pr_debug("In the 'show' method\n");
+	n = snprintf(buf, ADDR_MAXLEN, "0x%px\n", (void *)gxlated_addr_kva2pa);
 	//n = snprintf(buf, ADDR_MAXLEN, "0x%llx\n", gxlated_addr_kva2pa);
 	mutex_unlock(&mtx1);
 
@@ -204,8 +180,8 @@ static ssize_t addrxlate_kva2pa_store(struct device *dev,
 {
 	int ret = (int)count, valid = 1;
 	char s_addr[ADDR_MAXLEN];
-	addr_t kva = 0x0;
-	//unsigned long long kva = 0x0;
+	//size_t kva = 0x0;
+	unsigned long long kva = 0x0;
 
 	if (mutex_lock_interruptible(&mtx1))
 		return -ERESTARTSYS;
@@ -244,26 +220,21 @@ static ssize_t addrxlate_kva2pa_store(struct device *dev,
 		valid = 0;
 #endif
 	if (!valid) {
-		pr_info("%s(): invalid virtual address (0x" FMTSPC "),"
+		pr_info("%s(): invalid virtual address (0x%px),"
 		" must be a valid linear addr within the kernel lowmem region\n"
 		" IOW, *only* kernel direct mapped RAM locations are valid\n",
-			__func__, kva);
+			__func__, (void *)kva);
 		return -EFAULT;
 	}
 
 	/* All okay (fingers crossed), perform the address translation! */
 	gxlated_addr_kva2pa = virt_to_phys((volatile void *)kva);
-	pr_debug("kva 0x" FMTSPC " =  pa 0x" FMTSPC "\n", kva, gxlated_addr_kva2pa);
+	pr_debug("KVA 0x%px =  pa 0x%pa\n", (void *)kva, &gxlated_addr_kva2pa);
 
 #ifdef MANUALLY
 	/* 'Manually' perform the address translation */
-	pr_info("%s: manually: kva 0x" FMTSPC " =  pa 0x" FMTSPC "\n",
-		OURMODNAME, kva,
-#if(BITS_PER_LONG == 32)
-		(unsigned int)(kva - PAGE_OFFSET));
-#else
-		(kva - PAGE_OFFSET));
-#endif
+	pr_info("%s: manually: KVA 0x%px =  pa 0x%px\n",
+		OURMODNAME, (void *)kva, (void *)(kva - PAGE_OFFSET));
 #endif
 	ret = count;
  out:
