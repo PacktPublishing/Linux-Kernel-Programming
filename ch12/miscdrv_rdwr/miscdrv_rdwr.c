@@ -33,6 +33,7 @@
 #include <linux/slab.h>		// k[m|z]alloc(), k[z]free(), ...
 #include <linux/mm.h>		// kvmalloc()
 #include <linux/fs.h>		// the fops
+#include <linux/sched.h>	// get_task_comm()
 
 // copy_[to|from]_user()
 #include <linux/version.h>
@@ -111,9 +112,10 @@ static ssize_t read_miscdrv_rdwr(struct file *filp, char __user *ubuf,
 {
 	int ret = count, secret_len = strnlen(ctx->oursecret, MAXBYTES);
 	struct device *dev = ctx->dev;
+	char tasknm[TASK_COMM_LEN];
 
 	PRINT_CTX();
-	dev_info(dev, "%s wants to read (upto) %zu bytes\n", current->comm, count);
+	dev_info(dev, "%s wants to read (upto) %zu bytes\n", get_task_comm(tasknm, current), count);
 
 	ret = -EINVAL;
 	if (count < MAXBYTES) {
@@ -168,6 +170,7 @@ static ssize_t write_miscdrv_rdwr(struct file *filp, const char __user *ubuf,
 	int ret = count;
 	void *kbuf = NULL;
 	struct device *dev = ctx->dev;
+	char tasknm[TASK_COMM_LEN];
 
 	PRINT_CTX();
 	if (unlikely(count > MAXBYTES)) {	/* paranoia */
@@ -175,7 +178,7 @@ static ssize_t write_miscdrv_rdwr(struct file *filp, const char __user *ubuf,
 			"aborting write\n", count);
 		goto out_nomem;
 	}
-	dev_info(dev, "%s wants to write %zu bytes\n", current->comm, count);
+	dev_info(dev, "%s wants to write %zu bytes\n", get_task_comm(tasknm, current), count);
 
 	ret = -ENOMEM;
 	kbuf = kvmalloc(count, GFP_KERNEL);
