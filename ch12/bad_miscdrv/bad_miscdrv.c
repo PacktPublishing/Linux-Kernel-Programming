@@ -319,13 +319,15 @@ static struct miscdevice llkd_miscdev = {
 static int __init bad_miscdrv_init(void)
 {
 	int ret;
+	struct device *dev;
 
 	ret = misc_register(&llkd_miscdev);
 	if (ret) {
 		pr_notice("misc device registration failed, aborting\n");
 		return ret;
 	}
-	pr_info("LLKD 'bad' misc driver (major # 10) registered, minor# = %d\n",
+	dev = llkd_miscdev.this_device;
+	dev_info(dev, "LLKD 'bad' misc driver (major # 10) registered, minor# = %d\n",
 		llkd_miscdev.minor);
 
 	/*
@@ -334,7 +336,7 @@ static int __init bad_miscdrv_init(void)
 	 * freeing the memory automatically upon driver 'detach' or when the driver
 	 * is unloaded from memory
 	 */
-	ctx = devm_kzalloc(llkd_miscdev.this_device, sizeof(struct drv_ctx), GFP_KERNEL);
+	ctx = devm_kzalloc(dev, sizeof(struct drv_ctx), GFP_KERNEL);
 	if (unlikely(!ctx))
 		return -ENOMEM;
 
