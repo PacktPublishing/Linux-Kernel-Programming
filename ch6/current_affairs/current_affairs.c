@@ -26,7 +26,7 @@
 
 MODULE_AUTHOR("Kaiwan N Billimoria");
 MODULE_DESCRIPTION("LLKD book:ch6/current_affairs: display a few members of"
-		   " the current process' task structure");
+" the current process' task structure");
 MODULE_LICENSE("Dual MIT/GPL");
 MODULE_VERSION("0.1");
 
@@ -45,8 +45,8 @@ static inline void show_ctx(char *nm)
 			" EUID        : %6u (%s root)\n"
 			" name        : %s\n"
 			" current (ptr to our process context's task_struct) :\n"
-			"               0x%pK (0x%16lx)\n"
-			" stack start : 0x%pK (0x%016lx)\n", nm,
+			"               0x%pK (0x%px)\n"
+			" stack start : 0x%pK (0x%px)\n", nm,
 			/* always better to use the helper methods provided */
 			task_pid_nr(current), task_tgid_nr(current),
 			/* ... rather than the 'usual' direct lookups:
@@ -55,8 +55,8 @@ static inline void show_ctx(char *nm)
 			uid, euid,
 			(euid == 0 ? "have" : "don't have"),
 			current->comm,
-			current, (unsigned long)current,
-			current->stack, (unsigned long)current->stack);
+			current, current,
+			current->stack, current->stack);
 	} else
 		pr_alert("%s: in interrupt context [Should NOT Happen here!]\n", nm);
 }
