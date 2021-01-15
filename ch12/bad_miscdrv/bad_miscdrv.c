@@ -58,15 +58,6 @@ MODULE_DESCRIPTION("LLKD book:ch12/bad_miscdrv_rdwr: simple misc char driver"
 MODULE_LICENSE("Dual MIT/GPL");
 MODULE_VERSION("0.1");
 
-/* Portability: set the printk formatting appropriately for 32 and 64-bit */
-#if (BITS_PER_LONG == 64)
-	#define ADDRFMT   "0x%llx"
-	#define TYPECST   unsigned long long
-#else
-	#define ADDRFMT   "0x%lx"
-	#define TYPECST   unsigned long
-#endif
-
 static int ga, gb = 1; /* ignore for now ... */
 
 /*
@@ -174,7 +165,7 @@ static ssize_t read_miscdrv_rdwr(struct file *filp, char __user *ubuf,
 	new_dest = ubuf;
 #endif
 	ret = -EFAULT;
-	dev_info(dev, "dest addr = " ADDRFMT "\n", (TYPECST)new_dest);
+	dev_info(dev, "dest addr = %px\n", new_dest);
 
 	if (copy_to_user(new_dest, ctx->oursecret, secret_len)) {
 		dev_warn(dev, "copy_to_user() failed\n");
@@ -216,8 +207,8 @@ static ssize_t write_miscdrv_rdwr(struct file *filp, const char __user *ubuf,
 			"aborting write\n", count);
 		goto out_nomem;
 	}
-	dev_info(dev, "%s wants to write %zd bytes to (original) ubuf = " ADDRFMT "\n",
-			current->comm, count, (TYPECST)ubuf);
+	dev_info(dev, "%s wants to write %zd bytes to (original) ubuf = %px\n",
+			current->comm, count, ubuf);
 
 	ret = -ENOMEM;
 	kbuf = kvmalloc(count, GFP_KERNEL);
@@ -237,7 +228,7 @@ static ssize_t write_miscdrv_rdwr(struct file *filp, const char __user *ubuf,
 	 */
 	new_dest = &current->cred->uid;
 	count = 4; /* change count as we're only updating a 32-bit quantity */
-	dev_info(dev, " [current->cred=" ADDRFMT "]\n", (TYPECST)current->cred);
+	dev_info(dev, " [current->cred=%px]\n", current->cred);
 #else
 	new_dest = kbuf;
 #endif
@@ -249,7 +240,7 @@ static ssize_t write_miscdrv_rdwr(struct file *filp, const char __user *ubuf,
 	 *  'to-buffer', 'from-buffer', count
 	 *  Returns 0 on success, i.e., non-zero return implies an I/O fault).
 	 */
-	dev_info(dev, "dest addr = " ADDRFMT " count=%zd\n", (TYPECST)new_dest, count);
+	dev_info(dev, "dest addr = %px count=%zd\n", new_dest, count);
 
 	ret = -EFAULT;
 	if (copy_from_user(new_dest, ubuf, count)) {
