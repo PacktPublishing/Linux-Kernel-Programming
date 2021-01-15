@@ -64,7 +64,7 @@ static int open_miscdrv(struct inode *inode, struct file *filp)
  * The driver's read 'method'; it has effectively 'taken over' the read syscall
  * functionality! Here, we simply print out some info.
  * The POSIX standard requires that the read() and write() system calls return
- * the number of bytes read or written on success, 0 on EOF and -1 (-ve errno)
+ * the number of bytes read or written on success, 0 on EOF (for read) and -1 (-ve errno)
  * on failure; we simply return 'count', pretending that we 'always succeed'.
  */
 static ssize_t read_miscdrv(struct file *filp, char __user *ubuf, size_t count, loff_t *off)
@@ -78,7 +78,7 @@ static ssize_t read_miscdrv(struct file *filp, char __user *ubuf, size_t count, 
  * The driver's write 'method'; it has effectively 'taken over' the write syscall
  * functionality! Here, we simply print out some info.
  * The POSIX standard requires that the read() and write() system calls return
- * the number of bytes read or written on success, 0 on EOF and -1 (-ve errno)
+ * the number of bytes read or written on success, 0 on EOF (for read) and -1 (-ve errno)
  * on failure; we simply return 'count', pretending that we 'always succeed'.
  */
 static ssize_t write_miscdrv(struct file *filp, const char __user *ubuf,
@@ -138,7 +138,7 @@ static int __init miscdrv_init(void)
 	/* Retrieve the device pointer for this device */
 	dev = llkd_miscdev.this_device;
 	pr_info("LLKD misc driver (major # 10) registered, minor# = %d,"
-		" dev node is /dev/llkd_miscdrv\n", llkd_miscdev.minor);
+		" dev node is /dev/%s\n", llkd_miscdev.minor, llkd_miscdev.name);
 
 	dev_info(dev, "sample dev_info(): minor# = %d\n", llkd_miscdev.minor);
 

@@ -273,14 +273,18 @@ static struct miscdevice llkd_miscdev = {
 static int __init miscdrv_rdwr_init(void)
 {
 	int ret = 0;
+	struct device *dev;
 
 	ret = misc_register(&llkd_miscdev);
 	if (ret) {
 		pr_notice("%s: misc device registration failed, aborting\n", OURMODNAME);
 		return ret;
 	}
+	/* Retrieve the device pointer for this device */
+	dev = llkd_miscdev.this_device;
+
 	pr_info("LLKD misc driver (major # 10) registered, minor# = %d,"
-		" dev node is /dev/llkd_miscdrv_rdwr\n", llkd_miscdev.minor);
+		" dev node is /dev/%s\n", llkd_miscdev.minor, llkd_miscdev.name);
 
 	/*
 	 * A 'managed' kzalloc(): use the 'devres' API devm_kzalloc() for mem
@@ -288,12 +292,11 @@ static int __init miscdrv_rdwr_init(void)
 	 * freeing the memory automatically upon driver 'detach' or when the driver
 	 * is unloaded from memory
 	 */
-	ctx = devm_kzalloc(llkd_miscdev.this_device, sizeof(struct drv_ctx), GFP_KERNEL);
+	ctx = devm_kzalloc(dev, sizeof(struct drv_ctx), GFP_KERNEL);
 	if (unlikely(!ctx))
 		return -ENOMEM;
 
-	/* Retrieve the device pointer for this device */
-	ctx->dev = llkd_miscdev.this_device;
+	ctx->dev = dev;
 	/* Initialize the "secret" value :-) */
 	strlcpy(ctx->oursecret, "initmsg", 8);
 	dev_dbg(ctx->dev, "A sample print via the dev_dbg(): driver initialized\n");
