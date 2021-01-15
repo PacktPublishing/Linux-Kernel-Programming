@@ -45,9 +45,8 @@ static inline void disp_idle_thread(void)
 	struct task_struct *t = &init_task;
 
 	/* We know that the swapper is a kernel thread */
-	pr_info("%8d %8d   0x%016lx  0x%016lx [%16s]\n",
-		t->pid, t->pid, (unsigned long)t,
-		(unsigned long)t->stack, t->comm);
+	pr_info("%8d %8d   0x%px  0x%px [%16s]\n",
+		t->pid, t->pid, t, t->stack, t->comm);
 }
 
 static int showthrds(void)
@@ -78,7 +77,7 @@ static int showthrds(void)
 		snprintf(buf, BUFMAX-1, "%8d %8d ", g->tgid, t->pid);
 
 		/* task_struct addr and kernel-mode stack addr */
-		snprintf(tmp, TMPMAX-1, "  0x%016lx", (unsigned long)t);
+		snprintf(tmp, TMPMAX-1, "  0x%px", t);
 		/*
 		 * To concatenate the temp string to our buffer, we could go with the
 		 * strncat() here; flawfinder, though, points out this is potentially
@@ -87,7 +86,7 @@ static int showthrds(void)
 		 * called in an atomic context, which isn't ok (due to the
 		 * might_sleep() within it's code)...
 		 */
-		snprintf(buf, BUFMAX-1, "%s%s  0x%016lx", buf, tmp, (unsigned long)t->stack);
+		snprintf(buf, BUFMAX-1, "%s%s  0x%px", buf, tmp, t->stack);
 
 		if (!g->mm) {	// kernel thread
 		/* One might question why we don't use the get_task_comm() to obtain
