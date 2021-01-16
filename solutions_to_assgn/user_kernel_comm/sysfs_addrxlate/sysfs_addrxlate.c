@@ -23,6 +23,8 @@
  * address (pa); then reading from the same file should cause the pa to be
  * displayed. Vice-versa with the addrxlate_pa2kva sysfs file.
  */
+#define pr_fmt(fmt) "%s:%s(): " fmt, KBUILD_MODNAME, __func__
+
 #include <linux/init.h>
 #include <linux/module.h>
 #include <linux/kernel.h>
@@ -113,21 +115,21 @@ static ssize_t addrxlate_pa2kva_store(struct device *dev,
 
 	memset(s_addr, 0, ADDR_MAXLEN);
 	strncpy(s_addr, buf, ADDR_MAXLEN);
-	s_addr[strlen(s_addr) - 1] = '\0';	// rm trailing newline char
+	s_addr[strnlen(s_addr, ADDR_MAXLEN) - 1] = '\0';	// rm trailing newline char
 	if (count == 0 || count > ADDR_MAXLEN) {
 		ret = -EINVAL;
 		goto out;
 	}
-
+	ret = kstrtoul(s_addr, 0, (long unsigned int *)&pa);
+/*
 #if(BITS_PER_LONG == 32)
 	ret = kstrtoul(s_addr, 0, (long unsigned int *)&pa);
 #else
 	ret = kstrtoull(s_addr, 0, &pa);
-#endif
+#endif */
 	if (ret < 0) {
 		mutex_unlock(&mtx2);
-		pr_warn("%s:%s:%d: kstrtoull failed!\n",
-			OURMODNAME, __func__, __LINE__);
+		pr_warn("kstrtoul failed!\n");
 		return ret;
 	}
 
@@ -136,7 +138,7 @@ static ssize_t addrxlate_pa2kva_store(struct device *dev,
 	 */
 	if (pa > PAGE_OFFSET) {
 		mutex_unlock(&mtx1);
-		pr_info("%s(): invalid physical address (0x%pa)?\n", __func__, &pa);
+		pr_info("invalid physical address (0x%pa)?\n",&pa);
 		return -EFAULT;
 	}
 
@@ -146,8 +148,8 @@ static ssize_t addrxlate_pa2kva_store(struct device *dev,
 
 #ifdef MANUALLY
 	/* 'Manually' perform the address translation */
-	pr_info("%s: manually:  pa 0x%pa = KVA 0x%px\n",
-		OURMODNAME, &pa, (void *)(pa + PAGE_OFFSET));
+	pr_info("manually:  pa 0x%pa = KVA 0x%px\n",
+		&pa, (void *)(pa + PAGE_OFFSET));
 #endif
 	ret = count;
  out:
@@ -190,21 +192,23 @@ static ssize_t addrxlate_kva2pa_store(struct device *dev,
 
 	memset(s_addr, 0, ADDR_MAXLEN);
 	strncpy(s_addr, buf, ADDR_MAXLEN);
-	s_addr[strlen(s_addr) - 1] = '\0';	// rm trailing newline char
+	//pr_info("s_addr = %s, count=%ld\n", s_addr, count);
+	s_addr[strnlen(s_addr, ADDR_MAXLEN) - 1] = '\0';	// rm trailing newline char
 	if (count == 0 || count > ADDR_MAXLEN) {
+		pr_info("invalid addr length (count=%ld)\n", count);
 		ret = -EINVAL;
 		goto out;
 	}
-
+	ret = kstrtoul(s_addr, 0, (long unsigned int *)&kva);
+/*
 #if(BITS_PER_LONG == 32)
 	ret = kstrtoul(s_addr, 0, (long unsigned int *)&kva);
 #else
 	ret = kstrtoull(s_addr, 0, &kva);
-#endif
+#endif */
 	if (ret < 0) {
 		mutex_unlock(&mtx1);
-		pr_warn("%s:%s:%d: kstrtoull failed!\n",
-			OURMODNAME, __func__, __LINE__);
+		pr_warn("kstrtoul failed!\n");
 		return ret;
 	}
 
@@ -223,10 +227,10 @@ static ssize_t addrxlate_kva2pa_store(struct device *dev,
 #endif
 	if (!valid) {
 		mutex_unlock(&mtx1);
-		pr_info("%s(): invalid virtual address (0x%px),"
+		pr_info("invalid virtual address (0x%px),"
 		" must be a valid linear addr within the kernel lowmem region\n"
 		" IOW, *only* kernel direct mapped RAM locations are valid\n",
-			__func__, (void *)kva);
+			(void *)kva);
 		return -EFAULT;
 	}
 
@@ -272,7 +276,7 @@ static int __init sysfs_addrxlate_init(void)
 	int stat = 0;
 
 	if (!IS_ENABLED(CONFIG_SYSFS)) {
-		pr_warn("%s: sysfs unsupported! Aborting ...\n", OURMODNAME);
+		pr_warn("sysfs unsupported! Aborting ...\n");
 		return -EINVAL;
 	}
 
@@ -285,9 +289,7 @@ static int __init sysfs_addrxlate_init(void)
 	    platform_device_register_simple(PLAT_NAME, -1, NULL, 0);
 	if (IS_ERR(sysfs_demo_platdev)) {
 		stat = PTR_ERR(sysfs_demo_platdev);
-		pr_info
-		    ("%s: error (%d) registering our platform device, aborting\n",
-		     OURMODNAME, stat);
+		pr_info("error (%d) registering our platform device, aborting\n", stat);
 		goto out1;
 	}
 
@@ -300,9 +302,7 @@ static int __init sysfs_addrxlate_init(void)
 	stat =
 	    device_create_file(&sysfs_demo_platdev->dev, &dev_attr_SYSFS_FILE1);
 	if (stat) {
-		pr_info
-		    ("%s: device_create_file [1] failed (%d), aborting now\n",
-		     OURMODNAME, stat);
+		pr_info ("device_create_file [1] failed (%d), aborting now\n", stat);
 		goto out2;
 	}
 	pr_info("sysfs file [1] (/sys/devices/platform/%s/%s) created\n",
@@ -312,15 +312,13 @@ static int __init sysfs_addrxlate_init(void)
 	stat =
 	    device_create_file(&sysfs_demo_platdev->dev, &dev_attr_SYSFS_FILE2);
 	if (stat) {
-		pr_info
-		    ("%s: device_create_file [2] failed (%d), aborting now\n",
-		     OURMODNAME, stat);
+		pr_info ("device_create_file [2] failed (%d), aborting now\n", stat);
 		goto out3;
 	}
 	pr_info("sysfs file [2] (/sys/devices/platform/%s/%s) created\n",
 	    PLAT_NAME, __stringify(SYSFS_FILE2));
 
-	pr_info("%s initialized\n", OURMODNAME);
+	pr_info("initialized\n");
 	return 0;		/* success */
 
  out3:
@@ -338,7 +336,7 @@ static void __exit sysfs_addrxlate_cleanup(void)
 	device_remove_file(&sysfs_demo_platdev->dev, &dev_attr_SYSFS_FILE1);
 	/* Unregister the (dummy) platform device */
 	platform_device_unregister(sysfs_demo_platdev);
-	pr_info("%s removed\n", OURMODNAME);
+	pr_info("removed\n");
 }
 
 module_init(sysfs_addrxlate_init);

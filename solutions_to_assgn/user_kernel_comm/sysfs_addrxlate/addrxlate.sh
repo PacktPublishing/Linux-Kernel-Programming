@@ -70,7 +70,7 @@ echo "[+] Translating kva --> pa
 echo $1 > /sys/devices/platform/llkd_sysfs_addrxlate/addrxlate_kva2pa
 #sudo sh -c "echo $1 > /sys/devices/platform/llkd_sysfs_addrxlate/addrxlate_kva2pa"
 # Read the result and display
-cat /sys/devices/platform/llkd_sysfs_addrxlate/addrxlate_kva2pa
+cat /sys/devices/platform/llkd_sysfs_addrxlate/addrxlate_kva2pa ; echo
 }
 
 # pa2kva()
@@ -87,7 +87,7 @@ echo "[+] Translating pa --> kva
 echo $1 > /sys/devices/platform/llkd_sysfs_addrxlate/addrxlate_pa2kva
 #sudo sh -c "echo $1 > /sys/devices/platform/llkd_sysfs_addrxlate/addrxlate_pa2kva"
 # Read the result and display
-cat /sys/devices/platform/llkd_sysfs_addrxlate/addrxlate_pa2kva
+cat /sys/devices/platform/llkd_sysfs_addrxlate/addrxlate_pa2kva ; echo
 }
 
 ### 'main' here
