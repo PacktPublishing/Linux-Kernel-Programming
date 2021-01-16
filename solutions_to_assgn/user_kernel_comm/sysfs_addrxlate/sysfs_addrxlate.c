@@ -78,6 +78,7 @@ struct device_attribute {
 #define MANUALLY
 #define ADDR_MAXLEN	20
 static phys_addr_t gxlated_addr_kva2pa;
+//static unsigned long gxlated_addr_pa2kva;
 static size_t gxlated_addr_pa2kva;
 //static addr_t gxlated_addr_pa2kva;
 
@@ -134,6 +135,7 @@ static ssize_t addrxlate_pa2kva_store(struct device *dev,
 	 * WARNING! the below validity checks are very simplistic; YMMV!
 	 */
 	if (pa > PAGE_OFFSET) {
+		mutex_unlock(&mtx1);
 		pr_info("%s(): invalid physical address (0x%pa)?\n", __func__, &pa);
 		return -EFAULT;
 	}
@@ -180,8 +182,8 @@ static ssize_t addrxlate_kva2pa_store(struct device *dev,
 {
 	int ret = (int)count, valid = 1;
 	char s_addr[ADDR_MAXLEN];
-	//size_t kva = 0x0;
-	unsigned long long kva = 0x0;
+	size_t kva = 0x0;
+	//unsigned long kva = 0x0;
 
 	if (mutex_lock_interruptible(&mtx1))
 		return -ERESTARTSYS;
@@ -216,10 +218,11 @@ static ssize_t addrxlate_kva2pa_store(struct device *dev,
 		valid = 0;
 #else
 	// WARNING! the below validity checks are very simplistic; YMMV!
-	if ((kva < PAGE_OFFSET) || (kva > (addr_t)high_memory))
+	if ((kva < PAGE_OFFSET) || (kva > (size_t)high_memory))
 		valid = 0;
 #endif
 	if (!valid) {
+		mutex_unlock(&mtx1);
 		pr_info("%s(): invalid virtual address (0x%px),"
 		" must be a valid linear addr within the kernel lowmem region\n"
 		" IOW, *only* kernel direct mapped RAM locations are valid\n",
