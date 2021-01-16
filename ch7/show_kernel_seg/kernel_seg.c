@@ -141,7 +141,7 @@ static void show_kernelseg_info(void)
 #ifdef CONFIG_ARM
 		SHOW_DELTA_M(FIXADDR_START, FIXADDR_END));
 #else
-		SHOW_DELTA_M(FIXADDR_START, (FIXADDR_TOP - FIXADDR_START)));
+		SHOW_DELTA_M(FIXADDR_START, (FIXADDR_START+FIXADDR_SIZE)));
 #endif
 
 	/* kernel module region
