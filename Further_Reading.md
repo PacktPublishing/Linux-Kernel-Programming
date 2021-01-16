@@ -114,6 +114,7 @@ For the reader's convenience, below are chapter-wise links to the *Further Readi
 - [Debugging by printing, eLinux](https://elinux.org/Debugging_by_printing)
 - Blog article: ["MAKEFILES TUTORIAL", Liran B.H.](http://devarea.com/makefiles-tutorial/)
 - Blog article: [A Standalone Linux Kernel Module, Levinzon, Medium, May 2020](https://medium.com/@eitan.levinzon/a-standalone-linux-kernel-module-df54283d4803)
+- [BusyBox: The Swiss Army Knife of Embedded Linux](https://www.busybox.net/)
 
 
 

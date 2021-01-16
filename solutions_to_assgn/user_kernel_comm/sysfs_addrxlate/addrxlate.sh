@@ -22,15 +22,16 @@ usage()
  Option: -k
   Translate the provided kernel virtual address (kva) (2nd parameter) to physical addr
 
-  NOTE! The kva passed as parameter MUST be a valid kernel virtual addr;
-  it must lie within the kernel 'lowmem' segment, i.e., between PAGE_OFFSET
+  NOTE! The kva passed as parameter MUST be a valid kernel logical addr;
+  it MUST lie within the kernel 'lowmem' segment, i.e., between PAGE_OFFSET
   and high_memory
   Eg. on a 32-bit system with a 3:1 VM split:
     ${name} -k 0xc000a000      <-- specify addr in hex pl
 
  Option: -p
   Translate the provided physical address (2nd parameter) to it's corresponding
-  kernel virtual address (kva)
+  kernel logical address (kva);
+  MUST be a valid physical address
   Eg. on a 32-bit system with a 3:1 VM split:
     ${name} -p 0xa000      <-- specify addr in hex pl"
 }

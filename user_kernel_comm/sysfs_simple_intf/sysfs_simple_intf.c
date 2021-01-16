@@ -175,7 +175,7 @@ static ssize_t llkdsysfs_debug_level_store(struct device *dev,
 		return -ERESTARTSYS;
 
 	prev_dbglevel = debug_level;
-	pr_debug("In the 'store' method:\ncount=%zu, buf=0x%p count=%zu\n"
+	pr_debug("In the 'store' method:\ncount=%zu, buf=0x%px count=%zu\n"
 	    "Buffer contents: \"%.*s\"\n", count, buf, count, (int)count, buf);
 	if (count == 0 || count > 12) {
 		ret = -EINVAL;
