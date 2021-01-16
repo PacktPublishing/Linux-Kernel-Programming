@@ -16,6 +16,8 @@
  *
  * For details, please refer the book, Ch 9.
  */
+#define pr_fmt(fmt) "%s:%s(): " fmt, KBUILD_MODNAME, __func__
+
 #include <linux/init.h>
 #include <linux/kernel.h>
 #include <linux/module.h>
@@ -36,7 +38,7 @@ MODULE_DESCRIPTION("LLKD book:ch9/slab_custom: simple demo of creating a custom 
 MODULE_LICENSE("Dual MIT/GPL");
 MODULE_VERSION("0.1");
 
-/* Our 'demo' structure; one that we imagine is often allocated and freed;
+/* Our 'demo' structure; one that (we imagine) is often allocated and freed;
  * hence, we create a custom slab cache to hold pre-allocated 'instances'
  * of it... It's size: 328 bytes.
  */
@@ -59,11 +61,11 @@ static void use_our_cache(void)
 
 	obj = kmem_cache_alloc(gctx_cachep, GFP_KERNEL);
 	if (!obj) {		/* pedantic warning printk below... */
-		pr_warn("%s:%s():kmem_cache_alloc() failed\n", OURMODNAME, __func__);
+		pr_warn("kmem_cache_alloc() failed\n");
 	}
 
-	pr_info("Our cache object (@ %pK, actual=%llx) size is %u bytes; ksize=%zu\n",
-		obj, (unsigned long long)obj, kmem_cache_size(gctx_cachep), ksize(obj));
+	pr_info("Our cache object (@ %pK, actual=%px) size is %u bytes; actual ksize=%zu\n",
+		obj, obj, kmem_cache_size(gctx_cachep), ksize(obj));
 	print_hex_dump_bytes("obj: ", DUMP_PREFIX_OFFSET, obj, sizeof(struct myctx));
 
 	/* free it */
@@ -79,8 +81,11 @@ static void our_ctor(void *new)
 	struct myctx *ctx = new;
 	struct task_struct *p = current;
 
-	pr_info("%s:%s(): in ctor: just alloced mem object is @ 0x%llx\n",	/* %pK in production */
-		OURMODNAME, __func__, (unsigned long long)ctx);
+	/* TIP: to see how exactly we got here, insert this call:
+     *  dump_stack();
+     * (read it bottom-up ignoring call frames that begin with '?')
+	 */
+	pr_info("in ctor: just alloced mem object is @ 0x%px\n", ctx);	/* %pK in production */
 	memset(ctx, 0, sizeof(struct myctx));
 
 	/* As a demo, we init the 'config' field of our structure to some
@@ -98,9 +103,9 @@ static int create_our_cache(void)
 	if (use_ctor == 1)
 		ctor_fn = our_ctor;
 
-	pr_info("%s: sizeof our ctx structure is %zu bytes\n"
+	pr_info("sizeof our ctx structure is %zu bytes\n"
 		" using custom constructor routine? %s\n",
-		OURMODNAME, sizeof(struct myctx), use_ctor == 1 ? "yes" : "no");
+		sizeof(struct myctx), use_ctor == 1 ? "yes" : "no");
 
 	/* Create a new slab cache:
 	 * kmem_cache_create(const char *name, unsigned int size, unsigned int align,
@@ -115,7 +120,7 @@ static int create_our_cache(void)
 		 * message as the kernel will definitely emit warning printk's
 		 * We do so here pedantically...
 		 */
-		pr_warn("%s:%s():kmem_cache_create() failed\n", OURMODNAME, __func__);
+		pr_warn("kmem_cache_create() failed\n");
 		if (IS_ERR(gctx_cachep))
 			ret = PTR_ERR(gctx_cachep);
 	}
@@ -125,7 +130,7 @@ static int create_our_cache(void)
 
 static int __init slab_custom_init(void)
 {
-	pr_info("%s: inserted\n", OURMODNAME);
+	pr_info("inserted\n");
 	create_our_cache();
 	use_our_cache();
 	return 0;		/* success */
@@ -134,7 +139,7 @@ static int __init slab_custom_init(void)
 static void __exit slab_custom_exit(void)
 {
 	kmem_cache_destroy(gctx_cachep);
-	pr_info("%s: custom cache destroyed; removed\n", OURMODNAME);
+	pr_info("custom cache destroyed; removed\n");
 }
 
 module_init(slab_custom_init);
