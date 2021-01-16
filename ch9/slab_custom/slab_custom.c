@@ -111,10 +111,13 @@ static int create_our_cache(void)
 	 * kmem_cache_create(const char *name, unsigned int size, unsigned int align,
 	 slab_flags_t flags, void (*ctor)(void *));
 	 */
-	gctx_cachep = kmem_cache_create(OURCACHENAME, sizeof(struct myctx),
-					sizeof(long),
-					SLAB_POISON | SLAB_RED_ZONE | SLAB_HWCACHE_ALIGN,
-					ctor_fn);
+	gctx_cachep = kmem_cache_create(OURCACHENAME,	// name of our cache
+					sizeof(struct myctx), // (min) size of each object
+					sizeof(long),		  // alignment
+					SLAB_POISON |   /* use slab poison values (explained soon) */
+					SLAB_RED_ZONE | /* good for catching buffer under|over-flow bugs */
+					SLAB_HWCACHE_ALIGN, /* good for performance */
+					ctor_fn);	// ctor: here, on by default
 	if (!gctx_cachep) {
 		/* When a mem alloc fails we'll usually not require a warning
 		 * message as the kernel will definitely emit warning printk's
