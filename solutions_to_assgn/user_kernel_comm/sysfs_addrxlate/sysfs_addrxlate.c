@@ -32,6 +32,7 @@
 #include <linux/platform_device.h>
 #include <linux/mutex.h>
 #include <linux/mm.h>	    // for high_memory
+#include <asm/io.h>			// virt_to_phys() / phys_to_virt()
 
 // copy_[to|from]_user()
 #include <linux/version.h>
@@ -81,8 +82,7 @@ struct device_attribute {
 #define ADDR_MAXLEN	20
 static phys_addr_t gxlated_addr_kva2pa;
 //static unsigned long gxlated_addr_pa2kva;
-static size_t gxlated_addr_pa2kva;
-//static addr_t gxlated_addr_pa2kva;
+static size_t gxlated_addr_pa2kva; // ISSUE on x86_64 ??
 
 /*------------------ sysfs file 2 (RW) -------------------------------------*/
 
@@ -120,13 +120,12 @@ static ssize_t addrxlate_pa2kva_store(struct device *dev,
 		ret = -EINVAL;
 		goto out;
 	}
-	ret = kstrtoul(s_addr, 0, (long unsigned int *)&pa);
-/*
+	//ret = kstrtoul(s_addr, 0, (long unsigned int *)&pa);
 #if(BITS_PER_LONG == 32)
 	ret = kstrtoul(s_addr, 0, (long unsigned int *)&pa);
 #else
 	ret = kstrtoull(s_addr, 0, &pa);
-#endif */
+#endif
 	if (ret < 0) {
 		mutex_unlock(&mtx2);
 		pr_warn("kstrtoul failed!\n");
@@ -199,13 +198,12 @@ static ssize_t addrxlate_kva2pa_store(struct device *dev,
 		ret = -EINVAL;
 		goto out;
 	}
-	ret = kstrtoul(s_addr, 0, (long unsigned int *)&kva);
-/*
+	//ret = kstrtoul(s_addr, 0, (long unsigned int *)&kva);
 #if(BITS_PER_LONG == 32)
 	ret = kstrtoul(s_addr, 0, (long unsigned int *)&kva);
 #else
 	ret = kstrtoull(s_addr, 0, &kva);
-#endif */
+#endif
 	if (ret < 0) {
 		mutex_unlock(&mtx1);
 		pr_warn("kstrtoul failed!\n");
