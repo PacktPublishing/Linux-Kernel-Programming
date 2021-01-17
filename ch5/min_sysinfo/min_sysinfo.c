@@ -105,24 +105,18 @@ void llkd_sysinfo2(void)
 	     "U32_MAX = %20u = 0x%16x, S32_MAX = %20d = 0x%16x, S32_MIN = %20d = 0x%16x\n"
 	     "U64_MAX = %20llu = 0x%16llx, S64_MAX = %20lld = 0x%16llx, S64_MIN = %20lld = 0x%16llx\n"
 	     /* PHYS_ADDR_MAX is a mask of all address bits set to 1 (32 or 64
-	      * depending on the processor; However, it doesn't seem to compile on
-	      * distro kernels, but does work on mainline 5.4. Thus here, we simply
-	      * leave it commented out due to this uncertainty.
-	      */
-	      #if defined (CONFIG_X86)
-	      "PHYS_ADDR_MAX = %llu = 0x%llx\n"
-	      #endif
-	      // */
+	      * depending on the processor
+		  */
+#if (BITS_PER_LONG == 32)
+	      "PHYS_ADDR_MAX = %u = 0x%px\n"
+#else
+	      "PHYS_ADDR_MAX = %llu = 0x%px\n"
+#endif
 	     , U8_MAX, U8_MAX, S8_MAX, S8_MAX, S8_MIN, S8_MIN,
 	     U16_MAX, U16_MAX, S16_MAX, S16_MAX, S16_MIN, S16_MIN,
 	     U32_MAX, U32_MAX, S32_MAX, S32_MAX, S32_MIN, S32_MIN,
 	     U64_MAX, U64_MAX, S64_MAX, S64_MAX, S64_MIN, S64_MIN
-/* */
-#if defined (CONFIG_X86)
-	     , PHYS_ADDR_MAX, PHYS_ADDR_MAX
-#endif
-/* */
-	    );
+	     , PHYS_ADDR_MAX, (void *)PHYS_ADDR_MAX);
 }
 EXPORT_SYMBOL(llkd_sysinfo2);
 
