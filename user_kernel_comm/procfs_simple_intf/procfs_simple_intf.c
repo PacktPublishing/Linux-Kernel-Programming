@@ -217,7 +217,7 @@ static struct drv_ctx *alloc_init_drvctx(void)
 /* Our proc file 2: displays the system PAGE_OFFSET value */
 static int proc_show_pgoff(struct seq_file *seq, void *v)
 {
-	seq_printf(seq, "%s:PAGE_OFFSET:0x%lx\n", OURMODNAME, PAGE_OFFSET);
+	seq_printf(seq, "%s:PAGE_OFFSET:0x%px\n", OURMODNAME, PAGE_OFFSET);
 	return 0;
 }
 

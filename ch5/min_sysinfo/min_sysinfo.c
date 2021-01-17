@@ -48,7 +48,7 @@ void show_sizeof(void)
  * David Wheeler's flawfinder(1) tool to detect possible vulnerabilities;
  * so, we change the strlen, and replace the strncat with strlcat.
  */
-static void llkd_sysinfo2(void)
+void llkd_sysinfo2(void)
 {
 #define MSGLEN   128
 	char msg[MSGLEN];
@@ -108,25 +108,25 @@ static void llkd_sysinfo2(void)
 	      * depending on the processor; However, it doesn't seem to compile on
 	      * distro kernels, but does work on mainline 5.4. Thus here, we simply
 	      * leave it commented out due to this uncertainty.
-	      *
+	      */
 	      #if defined (CONFIG_X86)
 	      "PHYS_ADDR_MAX = %llu = 0x%llx\n"
 	      #endif
-	      */
+	      // */
 	     , U8_MAX, U8_MAX, S8_MAX, S8_MAX, S8_MIN, S8_MIN,
 	     U16_MAX, U16_MAX, S16_MAX, S16_MAX, S16_MIN, S16_MIN,
 	     U32_MAX, U32_MAX, S32_MAX, S32_MAX, S32_MIN, S32_MIN,
 	     U64_MAX, U64_MAX, S64_MAX, S64_MAX, S64_MIN, S64_MIN
-/*
+/* */
 #if defined (CONFIG_X86)
 	     , PHYS_ADDR_MAX, PHYS_ADDR_MAX
 #endif
-*/
+/* */
 	    );
 }
 EXPORT_SYMBOL(llkd_sysinfo2);
 
-static void llkd_sysinfo(void)
+void llkd_sysinfo(void)
 {
 	char msg[128];
 

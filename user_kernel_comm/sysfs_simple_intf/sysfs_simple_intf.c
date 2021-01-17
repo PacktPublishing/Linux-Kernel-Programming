@@ -132,8 +132,8 @@ static ssize_t llkdsysfs_pgoff_show(struct device *dev,
 
 	if (mutex_lock_interruptible(&mtx))
 		return -ERESTARTSYS;
-	pr_debug("In the 'show' method: PAGE_OFFSET=0x%lx\n", PAGE_OFFSET);
-	n = snprintf(buf, 25, "0x%lx", PAGE_OFFSET);
+	pr_debug("In the 'show' method: PAGE_OFFSET=0x%px\n", (void *)PAGE_OFFSET);
+	n = snprintf(buf, 25, "0x%px", (void *)PAGE_OFFSET);
 	mutex_unlock(&mtx);
 	return n;
 }

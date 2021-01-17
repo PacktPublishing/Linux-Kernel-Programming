@@ -104,8 +104,7 @@ void show_phy_pages(const void *kaddr, size_t len, bool contiguity_check)
 
 #ifdef CONFIG_X86
 	if (!virt_addr_valid(vaddr)) {
-		pr_info("%s(): invalid virtual address (0x%llx)\n",
-			__func__, vaddr);
+		pr_info("%s(): invalid virtual address (0x%px)\n", __func__, vaddr);
 		return;
 	}
 	/* Worry not, the ARM implementation of virt_to_phys() performs an internal
