@@ -65,9 +65,9 @@ static int showthrds_buggy(void)
 		snprintf(buf, BUFMAX-1, "%6d %6d ", g->tgid, t->pid);
 
 		/* task_struct addr and kernel-mode stack addr */
-		snprintf(tmp, TMPMAX-1, "  0x%016lx", (unsigned long)t);
+		snprintf(tmp, TMPMAX-1, "  0x%px", t);
 		strncat(buf, tmp, TMPMAX);
-		snprintf(tmp, TMPMAX-1, "  0x%016lx", (unsigned long)t->stack);
+		snprintf(tmp, TMPMAX-1, "  0x%px", t->stack);
 		strncat(buf, tmp, TMPMAX);
 
 		get_task_comm(tasknm, t);

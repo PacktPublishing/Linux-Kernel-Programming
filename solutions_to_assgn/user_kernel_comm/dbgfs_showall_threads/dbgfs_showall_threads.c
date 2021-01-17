@@ -101,9 +101,8 @@ static ssize_t showall_threads(struct file *filp, char __user *ubuf,
 #endif
 	/*--- All output in CSV format ---*/
 	/* We know that the swapper is a kernel thread */
-	snprintf(data, TMPMAX, "%d,%d,0x%016lx,0x%016lx,[%s]\n",
-		 t->pid, t->pid, (unsigned long)t,
-		 (unsigned long)t->stack, t->comm);
+	snprintf(data, TMPMAX, "%d,%d,0x%px,0x%px,[%s]\n",
+		 t->pid, t->pid, t, t->stack, t->comm);
 
 	do_each_thread(g, t) {	/* 'g' : process ptr; 't': thread ptr */
 		task_lock(t);
@@ -113,9 +112,9 @@ static ssize_t showall_threads(struct file *filp, char __user *ubuf,
 		strncat(data, tmp, TMPMAX);
 
 		/* task_struct addr and kernel-mode stack addr */
-		snprintf(tmp, TMPMAX - 1, ",0x%016lx", (unsigned long)t);
+		snprintf(tmp, TMPMAX - 1, ",0x%px", t);
 		strncat(data, tmp, TMPMAX);
-		snprintf(tmp, TMPMAX - 1, ",0x%016lx", (unsigned long)t->stack);
+		snprintf(tmp, TMPMAX - 1, ",0x%px", t->stack);
 		strncat(data, tmp, TMPMAX);
 
 		if (!g->mm)	// kernel thread

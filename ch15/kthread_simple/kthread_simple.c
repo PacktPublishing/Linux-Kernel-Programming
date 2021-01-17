@@ -93,9 +93,9 @@ static int kthread_simple_init(void)
 				      * in use
 				      */
 
-	pr_info("Initialized, kernel thread task ptr is 0x%pK (actual=0x%llx)\n"
+	pr_info("Initialized, kernel thread task ptr is 0x%pK (actual=0x%px)\n"
 	"See the new kernel thread 'llkd/%s' with ps (and kill it with SIGINT or SIGQUIT)\n",
-		gkthrd_ts, (unsigned long long)gkthrd_ts, KTHREAD_NAME);
+		gkthrd_ts, gkthrd_ts, KTHREAD_NAME);
 
 	return 0;		// success
 }
