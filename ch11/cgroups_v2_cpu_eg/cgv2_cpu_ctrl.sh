@@ -2,7 +2,7 @@
 # ch11/cgroups_v2_cpu_eg/cgv2_cpu_ctrl.sh
 # ***************************************************************
 # This program is part of the source code released for the book
-#  "Linux Kernel Development Cookbook"
+#  "Learn Linux Kernel Development"
 #  (c) Author: Kaiwan N Billimoria
 #  Publisher:  Packt
 #  GitHub repository:
@@ -98,7 +98,7 @@ fi
 # In effect, all processes collectively in the sub-control group will be allowed
 # to run for $MAX out of a period of $PERIOD; with MAX=200,000 and PERIOD=1,000,000
 # we're effectively allowing all processes there to run for 0.2s out of a period of
-# 1 second!
+# 1 second, i.e., utilizing 20% CPU bandwidth!
 # The unit of $MAX and $PERIOD is microseconds.
 local pct_cpu=$(bc <<< "scale=3; (${MAX}/${PERIOD})*100.0")
 echo "
@@ -120,6 +120,10 @@ echo "${MAX} ${PERIOD}" > ${CGV2_MNT}/${TDIR}/cpu.max || {
    echo "$0: need root."                                          
    exit 1                                                         
 }
+which bc >/dev/null || {
+  echo "${name}: the 'bc' utility is  missing; pl install and retry"
+  exit 1
+}
 
 MIN_BANDWIDTH_US=1000
 PERIOD=1000000
@@ -130,30 +134,12 @@ PERIOD=1000000
  group we create will be allowed to utilize the CPU; it's relative to the period,
  which is the value ${PERIOD};
  So, f.e., passing the value 300,000 (out of 1,000,000) implies a max CPU utiltization
- of 0.3 seconds out of 1 second.
+ of 0.3 seconds out of 1 second (i.e., 30% utilization).
  The valid range for the \$MAX value is [${MIN_BANDWIDTH_US}-${PERIOD}]."
  exit 1
 }
 MAX=$1
 if [ ${MAX} -lt ${MIN_BANDWIDTH_US} -o ${MAX} -gt ${PERIOD} ] ; then
-# ***************************************************************
-# This program is part of the source code released for the book
-#  "Linux Kernel Development Cookbook"
-#  (c) Author: Kaiwan N Billimoria
-#  Publisher:  Packt
-#  GitHub repository:
-#  https://github.com/PacktPublishing/Learn-Linux-Kernel-Development
-# ****************************************************************
-# Brief Description:
-#
-# Query the scheduling attributes (policy and RT (static) priority) of 
-# all threads currently alive on the system. Just a simple wrapper around
-# chrt(1).
-# Tips: 
-# - One can always pipe this output to grep for FIFO / RR tasks..
-# - the tuna(8) program performs this and much more! check it out...
-#
-# For details, pl refer to the book Ch 10.
   echo "Your value for MAX (${MAX}) is invalid; must be in the range [${MIN_BANDWIDTH_US}-${PERIOD}]"
   exit 1
 fi
@@ -165,7 +151,7 @@ hasn't been passed...
 "
 
 [ -f /proc/config.gz ] && {
-  zcat /proc/config.gz |grep -i cgroup || {
+  zcat /proc/config.gz |grep -q -i cgroup || {
     echo "$0: Cgroup support not builtin to kernel?? Aborting..."
     exit 1
   }
@@ -178,10 +164,6 @@ mount |grep -q cgroup2 || {
 export CGV2_MNT=$(mount |grep cgroup2 |awk '{print $3}')
 [ -z "${CGV2_MNT}" ] && {
   echo "cgroup2 filesystem not acquired, aborting..."
-  exit 1
-}
-which bc >/dev/null || {
-  echo "${name}: the 'bc' utility is  missing; pl install and retry"
   exit 1
 }
 

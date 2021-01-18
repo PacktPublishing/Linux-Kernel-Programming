@@ -2,7 +2,7 @@
 # ch11/cgroups_v2_cpu_eg/simp.sh
 # ***************************************************************
 # This program is part of the source code released for the book
-#  "Linux Kernel Development Cookbook"
+#  "Learn Linux Kernel Development"
 #  (c) Author: Kaiwan N Billimoria
 #  Publisher:  Packt
 #  GitHub repository:
@@ -31,7 +31,7 @@ max=9999
 
 delay_loop()
 {
-SEQ_MAX1=100
+SEQ_MAX1=10
 SEQ_MAX2=200
 for x in $(seq 1 ${SEQ_MAX1}); do
   for y in $(seq 1 ${SEQ_MAX2}); do
@@ -46,4 +46,4 @@ do
   echo -n "$i "
   i=$((i+1))   
   delay_loop
-done        
+done
