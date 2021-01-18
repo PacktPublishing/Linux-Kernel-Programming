@@ -108,8 +108,8 @@ static long set_cpuaffinity(unsigned int cpu)
 	cpumask_clear(&mask);
 	cpumask_set_cpu(cpu, &mask); // 1st param is the CPU number, not bitmask
 	/* !HACK! sched_setaffinity() is NOT exported, we can't call it
-     * sched_setaffinity(0, &mask);  // 0 => on self 
-	 * so we invoke it via func pointer */
+         * sched_setaffinity(0, &mask);  // 0 => on self 
+	 * so we invoke it via it's function pointer */
 	ret = (*ptr_sched_setaffinity)(0, &mask);  // 0 => on self
 
 	return ret;

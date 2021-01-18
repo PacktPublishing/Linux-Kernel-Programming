@@ -2,7 +2,8 @@
 # latency_test.sh
 # Originally sourced from OSADL: 
 #  https://www.osadl.org/uploads/media/mklatencyplot.bash
-# Lightly modified for our purposes..
+# Lightly modified for our purposes.. this script is to be run via it's
+# wrapper script runtest.
 #----------------------------------------------------------------------
 # This program is part of the source code released for the book
 #  "Learn Linux Kernel Development"
