@@ -49,7 +49,7 @@ We also provide a PDF file that has color images of the screenshots/diagrams use
 ### Related products
 * Mastering Linux Device Driver Development [[Packt]](https://www.packtpub.com/product/Mastering-Linux-Device-Driver-Development/9781789342048) [[Amazon]](https://www.amazon.com/Mastering-Linux-Device-Driver-Development/dp/178934204X)
 
-* [Hands-On System Programming with Linux](https://www.packtpub.com/in/networking-and-servers/hands-system-programming-linux?utm_source=github&utm_medium=repository&utm_campaign=9781788998475) [[Amazon]](https://www.amazon.com/Hands-System-Programming-Linux-programming-ebook/dp/B079RKKKJ7/ref=sr_1_1?dchild=1&keywords=Hands-On+System+Programming+with+Linux&qid=1614057025&s=books&sr=1-1)
+* Hands-On System Programming with Linux [[Packt]](https://www.packtpub.com/in/networking-and-servers/hands-system-programming-linux?utm_source=github&utm_medium=repository&utm_campaign=9781788998475) [[Amazon]](https://www.amazon.com/Hands-System-Programming-Linux-programming-ebook/dp/B079RKKKJ7/ref=sr_1_1?dchild=1&keywords=Hands-On+System+Programming+with+Linux&qid=1614057025&s=books&sr=1-1)
 
 ## Get to Know the Author
 **Kaiwan N Billimoria**
