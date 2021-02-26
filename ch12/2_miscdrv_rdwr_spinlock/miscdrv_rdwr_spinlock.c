@@ -1,14 +1,14 @@
 /*
- * ch16/2_miscdrv_rdwr_spinlock/miscdrv_rdwr_spinlock.c
+ * ch12/2_miscdrv_rdwr_spinlock/miscdrv_rdwr_spinlock.c
  ***************************************************************
  * This program is part of the source code released for the book
- *  "Linux Kernel Development Cookbook"
+ *  "Linux Kernel Programming"
  *  (c) Author: Kaiwan N Billimoria
  *  Publisher:  Packt
  *  GitHub repository:
- *  https://github.com/PacktPublishing/Linux-Kernel-Development-Cookbook
+ *  https://github.com/PacktPublishing/Linux-Kernel-Programming
  *
- * From: Ch 16 : Kernel Synchronization - Part 1
+ * From: Ch 12 : Kernel Synchronization - Part 1
  ****************************************************************
  * Brief Description:
  * This driver is built upon our previous ch16/1_miscdrv_rdwr_mutexlock/
@@ -17,7 +17,7 @@
  * the case everywhere in the driver though; we keep the mutex as well for some
  * portions of the driver).
  *
- * For details, please refer the book, Ch 16.
+ * For details, please refer the book, Ch 12.
  */
 #define pr_fmt(fmt) "%s:%s(): " fmt, KBUILD_MODNAME, __func__
 
@@ -231,7 +231,7 @@ static ssize_t write_miscdrv_rdwr(struct file *filp, const char __user *ubuf,
 	 * new 'secret' into our driver 'context' structure, and unlock.
 	 */
 	spin_lock(&ctx->spinlock);
-	strlcpy(ctx->oursecret, kbuf, (count > MAXBYTES ? MAXBYTES : count));
+	strscpy(ctx->oursecret, kbuf, (count > MAXBYTES ? MAXBYTES : count));
 #if 0
 	print_hex_dump_bytes("ctx ", DUMP_PREFIX_OFFSET,
 				ctx, sizeof(struct drv_ctx));
@@ -331,8 +331,8 @@ static int __init miscdrv_init_spinlock(void)
 	/* Retrieve the device pointer for this device */
 	ctx->dev = llkd_miscdev.this_device;
 
-	strlcpy(ctx->oursecret, "initmsg", 8);
-		/* Why don't we protect the above strlcpy() with the mutex / spinlock?
+	strscpy(ctx->oursecret, "initmsg", 8);
+		/* Why don't we protect the above strscpy() with the mutex / spinlock?
 		 * It's working on shared writable data, yes?
 		 * No; this is the init code; it's guaranteed to run in exactly
 		 * one context (typically the insmod(8) process), thus there is
