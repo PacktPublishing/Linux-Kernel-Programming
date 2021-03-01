@@ -22,13 +22,80 @@ For the reader's convenience, below are chapter-wise links to the *Further Readi
 ## Chapter 1, Kernel Development Workspace Setup - Further Reading
 
 
+To aid you in delving further into the subject matter of this chapter with useful
+materials, we provide a list of online references and links (and at times, books) in this,
+the Further reading section, at end of every chapter.
+
+Besides the ones that follow immediately, *please be sure to refer to a "special" section
+below entitled Online and book resources in general* : **miscellaneous but useful**! These
+links and books are considered to be useful throughout your journey through this
+book and after.
+<br>
+
+Resources on setting up a Linux guest using VirtualBox on a Windows host:
+
+- A very clearly written tutorial entitled [Install Linux Inside Windows
+Using VirtualBox, Abhishek Prakash (It's FOSS!, August 2019)](https://
+itsfoss.com/install-linux-in-virtualbox/)
+
+- An alternate, similarly excellent resource: [Install Ubuntu on Oracle
+VirtualBox](https://brb.nci.nih.gov/seqtools/installUbuntu.html)
+
+- [How to Install VirtualBox Guest Additions in Ubuntu](https://www.tecmint.com/install-virtualbox-guest-additions-in-ubuntu/)
+- Related – [Easy Ways to Check If Your Processor Supports Virtualization](https://www.technorms.com/8208/check-if-processorsupports-virtualization)
+
 - ['Share Folders between Host and Guest OS in VirtualBox', S Butler, April 2020](https://helpdeskgeek.com/virtualization/virtualbox-share-folder-host-guest/)
 - [Emulating Raspberry Pi on Linux](http://embedonix.com/articles/linux/emulating-raspberry-pi-on-linux/)
 
+Good resources on toolchains:
+
+- [Cross-compilation toolchains for Linux, Bootlin](https://toolchains.bootlin.com/)
+Very user-friendly – simply select and download the toolchain of choice.
+
+- [Toolchains on eLinux](https://elinux.org/Toolchains)
+
+- A wiki page (from the SEALS project I maintain, see the following) with instructions on downloading and installing the latest ARM Linaro toolchain (a popular one) is available [here](https://github.com/kaiwan/seals/wiki/HOWTO-Install-required-packages-on-the-Host-for-SEALS)
+
+
+Some useful tooling, drivers, and so on, created exclusively by me:
+
+- Scripts, tools, utils, code : [usefulsnips](https://github.com/kaiwan/usefulsnips)
+- [SEALS](https://github.com/kaiwan/seals) : Simple Embedded Arm Linux System
+- [device-memory-readwrite](https://github.com/kaiwan/device-memory-readwrite) : Read/write pretty much any memory location (RAM or hardware IO memory) on a device or PC
+
+Emulating a Raspberry Pi:
+    - [Emulating a Raspberry Pi on Linux](http://embedonix.com/articles/linux/emulating-raspberry-pi-on-linux/)
+
 - [qemu-rpi-kernel, GitHub](https://github.com/dhruvvyas90/qemu-rpi-kernel/wiki)
-- Code browsers
+
+Code browsers
     - [Ctags Tutorial](https://courses.cs.washington.edu/courses/cse451/10au/tutorials/tutorial_ctags.html)
     - [The Vim/Cscope tutorial](http://cscope.sourceforge.net/cscope_vim_tutorial.html)
+
+
+**Online and book resources in general : miscellaneous but useful!****
+
+- [The Linux kernel documentation](https://www.kernel.org/doc/html/latest/#the-linux-kernel-documentation)
+- Very useful! [LWN (Linux weekly news) Kernel index](https://lwn.net/Kernel/Index/)
+
+A few excellent books that come to mind (specific books on the Linux kernel and writing Linux device drivers are mentioned in the appropriate chapter's Further reading section):
+
+- The Mythical Man Month, Frederick P Brooks
+- The Art of Unix Programming, Eric S Raymond (AW)
+- Programming Pearls, Jon Bentley
+- The Practice of Programming, Brian Kernighan and Rob Pike
+- The Pragmatic Programmer: From Journeyman to Master, Hunt and Thomas
+- The Joy of Linux, Hall and Proffitt
+- Hands-On System Programming with Linux, Kaiwan N Billimoria
+- Unix Network Programming, W. Richard Stevens
+- Unix Systems Programming: Communication, Concurrency and Threads, Robbins and Robbins
+- [Secure Programming for Linux and Unix HOWTO, David Wheeler](https://www.tldp.org/HOWTO/pdf/Secure-Programs-HOWTO.pdf)
+
+- In general an excellent in-depth technical article: [SO YOU WANT TO BUILD AN EMBEDDED LINUX SYSTEM?, Jay Carlson, Oct 2020](https://jaycarlson.net/embedded-linux/) ; it covers an introduction to the whys
+and why-nots of using Linux on an embedded system, hardware and software design workflow, as well as a pretty detailed rundown on 10 CPUs/boards that run embedded Linux (with benchmarks)
+- Julia Evans' blog and zines:
+    - [Blog](https://jvns.ca/)
+    - [Zines](https://wizardzines.com/)
 
 
 
