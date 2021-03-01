@@ -1,1 +1,0 @@
-../sed2/sed_common.h
