@@ -6,7 +6,7 @@
 #  (c) Author: Kaiwan N Billimoria
 #  Publisher:  Packt
 #  GitHub repository:
-#  https://github.com/PacktPublishing/Learn-Linux-Kernel-Development
+#  https://github.com/PacktPublishing/Linux-Kernel-Programming
 # ****************************************************************
 # Brief Description:
 #

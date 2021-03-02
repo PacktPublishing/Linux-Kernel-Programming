@@ -2,11 +2,11 @@
 # ch11/cgroups_v2_cpu_eg/cgv2_cpu_ctrl.sh
 # ***************************************************************
 # This program is part of the source code released for the book
-#  "Learn Linux Kernel Development"
+#  "Linux Kernel Programming"
 #  (c) Author: Kaiwan N Billimoria
 #  Publisher:  Packt
 #  GitHub repository:
-#  https://github.com/PacktPublishing/Learn-Linux-Kernel-Development
+#  https://github.com/PacktPublishing/Linux-Kernel-Programming
 # ****************************************************************
 # Brief Description:
 # A quick test case for cgroups v2 CPU controller.

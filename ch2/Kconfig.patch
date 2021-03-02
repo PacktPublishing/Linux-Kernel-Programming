@@ -9,7 +9,7 @@
 +       default n
 +       help
 +          This option is merely a dummy 'test'; it's simply to have readers of our book
-+          - 'Learn Linux Kernel Development', Kaiwan NB, Packt - try out the creation of
++          - 'Linux Kernel Programming', Kaiwan NB, Packt - try out the creation of
 +          a few menu items within the kernel config.
 +
 +          Try setting this option to 'Y' (true), save and exit, and see the effect this

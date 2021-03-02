@@ -1,5 +1,5 @@
 # Makefile
-# For 'Learn Linux Kernel Development', Kaiwan N Billimoria, Packt
+# For 'Linux Kernel Programming', Kaiwan N Billimoria, Packt
 #  ch9/oom_killer_try
 # userspace app.
 ALL := oom_killer_try

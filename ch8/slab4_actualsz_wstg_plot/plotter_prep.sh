@@ -1,6 +1,6 @@
 #!/bin/bash
 # plotter_prep.sh
-# Book: Learn Linux Kernel Development, Kaiwan N Billimoria, Packt.
+# Book: Linux Kernel Programming, Kaiwan N Billimoria, Packt.
 # Part of the ch8/slab4_actualsz_wstg_plot code.
 #
 # Script to help prepare the data file from kernel log.
