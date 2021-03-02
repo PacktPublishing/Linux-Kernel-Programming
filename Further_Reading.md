@@ -32,7 +32,7 @@ links and books are considered to be useful throughout your journey through this
 book and after.
 <br>
 
-**Online and book resources in general : miscellaneous but very useful !**
+**===== Online and book resources in general : miscellaneous but very useful ! =====**
 
 - [The Linux kernel documentation](https://www.kernel.org/doc/html/latest/#the-linux-kernel-documentation)
 - Very useful! [LWN (Linux weekly news) Kernel index](https://lwn.net/Kernel/Index/)
@@ -156,6 +156,7 @@ Code browsers
 - Interesting: [Meet the contributor of the 1-millionth commit: Ricardo Neri, Swapnil Bharatiya, Sept 2020](https://www.linux.com/featured/meetthe-one-millionth-committer-to-linux-ricardo-neri/)
 
 <br>
+
 ## Chapter 3, Building the Linux Kernel From Source - Further Reading
 
 - Initramfs (initrd):
@@ -188,6 +189,7 @@ Code browsers
 
 
 <br>
+
 ## Chapter 4, Writing your first Kernel Module-LKMs Part 1 - Further Reading
 
 - [Official Kernel Documentation : kernel parameters](https://www.kernel.org/doc/html/latest/admin-guide/kernel-parameters.html)
@@ -206,6 +208,7 @@ Code browsers
 
 
 <br>
+
 ## Chapter 5, Writing your first Kernel Module-LKMs Part 2 - Further Reading
 
 - Blog article: [WORKING ON THE CONSOLE WITH THE RASPBERRY PI, kaiwanTECH](https://kaiwantech.wordpress.com/2018/12/16/working-on-the-console-with-the-raspberry-pi/)
@@ -255,6 +258,7 @@ Code browsers
 - [The Eudyptula Challenge](http://eudyptula-challenge.org/): "The Eudyptula Challenge was a series of programming exercises for the Linux kernel, that started from a very basic "Hello world" kernel module, moving on up in complexity to getting patches accepted into the main Linux kernel source tree." It's really cool but NOT active as of this writing though.
 
 <br>
+
 ## Chapter 6, Kernel Internals Essentials - Processes and Threads - Further Reading
 - Book: [Hands-On System Programming with Linux", Kaiwan N Billimoria, Packt](https://www.packtpub.com/networking-and-servers/hands-system-programming-linux). Prerequisites to this chapter (essential reading, really):
 	- Ch 1 : Linux System Architecture
@@ -283,6 +287,7 @@ Code browsers
 
 
 <br>
+
 ## Chapter 7, Memory Management Internals Essentials - Further Reading
 - Books on Linux kernel memory management internals:
 	- ['Professional Linux Kernel Architecture', Mauerer, Wrox Press](https://www.amazon.in/Professional-Linux-Kernel-Architecture-Programmer/dp/0470343435/ref=sr_1_1?ie=UTF8&qid=1547525512&sr=8-1&keywords=Professional%20Linux%20Kernel%20Architecture%27)
@@ -305,6 +310,7 @@ Software Developer’s Manual. Volume 3 (3A, 3B & 3C): System Programming Guide]
 - ['Virtual Memory and Linux', PDF, Matt Porter, Alan Ott](https://elinux.org/images/b/b0/Introduction_to_Memory_Management_in_Linux.pdf)
 
 <br>
+
 ## Chapter 8, Kernel Memory Allocation for Module Authors, Part 1 - Further Reading
 
 - Book: ['Hands-On System Programming with Linux', Kaiwan N Billimoria, Packt](https://www.packtpub.com/networking-and-servers/hands-system-programming-linux). Prerequisites to this chapter (essential reading, really):
@@ -325,7 +331,9 @@ Software Developer’s Manual. Volume 3 (3A, 3B & 3C): System Programming Guide]
 - ["GNUPLOT 4.2 - A Brief Manual and Tutorial", Duke University](https://people.duke.edu/~hpgavin/gnuplot.html)
 - ['Object-oriented design patterns in the kernel, part 1', Neil Brown, LWN, June 2011](https://lwn.net/Articles/444910/)
 
+
 <br>
+
 ## Chapter 9, Kernel Memory Allocation for Module Authors, Part 2 - Further Reading
 
 - [LWN kernel index on memory management](https://lwn.net/Kernel/Index/#Memory_management)
@@ -361,6 +369,7 @@ Articles/668126/)
 
 
 <br>
+
 ## Chapter 10, The CPU Scheduler, Part 1 - Further Reading
 
 - Detailed PDF: ['A complete guide to Linux process scheduling', Nikita Ishkov, Feb 2015](https://trepo.tuni.fi/bitstream/handle/10024/96864/GRADU-1428493916.pdf)
@@ -380,6 +389,7 @@ Articles/668126/)
 
 
 <br>
+
 ## Chapter 11, The CPU Scheduler, Part 2 - Further Reading
 
 
@@ -424,6 +434,7 @@ The RTL Collaborative Project](https://wiki.linuxfoundation.org/realtime/rtl/sta
 
 
 <br>
+
 ## Chapter 12, Kernel Synchronization, Part 1 - Further Reading
 
 - An excellent read: ['What every systems programmer should know about concurrency', M Kline, May 2018](https://assets.bitbashing.io/papers/concurrency-primer.pdf)
@@ -450,6 +461,7 @@ The RTL Collaborative Project](https://wiki.linuxfoundation.org/realtime/rtl/sta
 
 
 <br>
+
 ## Chapter 13, Kernel Synchronization, Part 2 - Further Reading
 
 - Deeper details on the LKMM: [Explanation of the Linux-Kernel Memory Model](https://github.com/aparri/memory-model/ blob/master/Documentation/explanation. txt)
