@@ -1,5 +1,5 @@
 /*
- * ch17/2_percpu/percpu_var.c
+ * ch13/2_percpu/percpu_var.c
  ***************************************************************
  * This program is part of the source code released for the book
  *  "Linux Kernel Programming"
@@ -8,11 +8,11 @@
  *  GitHub repository:
  *  https://github.com/PacktPublishing/Linux-Kernel-Programming
  *
- * From: Ch 17 : Kernel Synchronization Part 2
+ * From: Ch 13 : Kernel Synchronization, Part 2
  ****************************************************************
  * Brief Description:
  *
- * For details, please refer the book, Ch 17.
+ * For details, please refer the book, Ch 13.
  */
 #define pr_fmt(fmt) "%s:%s(): " fmt, KBUILD_MODNAME, __func__
 
@@ -31,7 +31,7 @@
 #define OURMODNAME   "percpu_var"
 
 MODULE_AUTHOR("Kaiwan N Billimoria");
-MODULE_DESCRIPTION("LLKD book:ch17/2_percpu: demo of using percpu variables");
+MODULE_DESCRIPTION("LKP book:ch13/2_percpu: demo of using percpu variables");
 MODULE_LICENSE("Dual MIT/GPL");
 MODULE_VERSION("0.1");
 

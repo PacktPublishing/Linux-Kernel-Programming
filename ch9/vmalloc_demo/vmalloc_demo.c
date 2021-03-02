@@ -27,7 +27,7 @@
 #define OURMODNAME   "vmalloc_demo"
 
 MODULE_AUTHOR("Kaiwan N Billimoria");
-MODULE_DESCRIPTION("LLKD book:ch9/vmalloc_demo/: simple vmalloc() and friends demo lkm");
+MODULE_DESCRIPTION("LKP book:ch9/vmalloc_demo/: simple vmalloc() and friends demo lkm");
 MODULE_LICENSE("Dual MIT/GPL");
 MODULE_VERSION("0.1");
 

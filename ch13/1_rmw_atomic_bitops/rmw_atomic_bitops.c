@@ -8,13 +8,13 @@
  *  GitHub repository:
  *  https://github.com/PacktPublishing/Linux-Kernel-Programming
  *
- * From: Ch 17 : Kernel synchronization Part 2
+ * From: Ch 13 : Kernel synchronization, Part 2
  ****************************************************************
  * Brief Description:
  * A quick demo showing the usage of the RMW (Read Modify Write) atomic bitwise
  * APIs. Here, there's no device, so we simply use these APIs on a RAM variable!
  *
- * For details, please refer the book, Ch 17.
+ * For details, please refer the book, Ch 13.
  */
 //#define pr_fmt(fmt) "%s:%s(): " fmt, KBUILD_MODNAME, __func__
 
@@ -29,7 +29,7 @@
 
 MODULE_AUTHOR("Kaiwan N Billimoria");
 MODULE_DESCRIPTION(
-"LLKD book:ch17/2_rmw_atomic_bitops: quick demo of the RMW atomic bitwise operators");
+"LKP book:ch13/2_rmw_atomic_bitops: quick demo of the RMW atomic bitwise operators");
 MODULE_LICENSE("Dual MIT/GPL");
 MODULE_VERSION("0.1");
 

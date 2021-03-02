@@ -29,7 +29,7 @@
 #define OURMODNAME   "libtest"
 
 MODULE_AUTHOR("<insert your name here>");
-MODULE_DESCRIPTION("LLKD book assignment : ch5/libtest");
+MODULE_DESCRIPTION("LKP book assignment : ch5/libtest");
 MODULE_LICENSE("Dual MIT/GPL");
 MODULE_VERSION("0.1");
 

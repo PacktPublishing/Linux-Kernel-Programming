@@ -25,7 +25,7 @@
 #define OURMODNAME   "current_affairs"
 
 MODULE_AUTHOR("Kaiwan N Billimoria");
-MODULE_DESCRIPTION("LLKD book:ch6/current_affairs: display a few members of"
+MODULE_DESCRIPTION("LKP book:ch6/current_affairs: display a few members of"
 " the current process' task structure");
 MODULE_LICENSE("Dual MIT/GPL");
 MODULE_VERSION("0.1");

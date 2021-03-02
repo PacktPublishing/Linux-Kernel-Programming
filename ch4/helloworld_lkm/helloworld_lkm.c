@@ -22,7 +22,7 @@
 #include <linux/module.h>
 
 MODULE_AUTHOR("<insert your name here>");
-MODULE_DESCRIPTION("LLKD book:ch4/helloworld_lkm: hello, world, our first LKM");
+MODULE_DESCRIPTION("LKP book:ch4/helloworld_lkm: hello, world, our first LKM");
 MODULE_LICENSE("Dual MIT/GPL");
 MODULE_VERSION("0.1");
 

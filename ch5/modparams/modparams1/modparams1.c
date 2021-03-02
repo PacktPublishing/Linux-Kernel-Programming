@@ -20,7 +20,7 @@
 
 #define OUR_MODNAME    "modparams1"
 MODULE_AUTHOR("Kaiwan N Billimoria");
-MODULE_DESCRIPTION("LLKD book:ch5/modparams/modparams1: module parameters demo LKM #1");
+MODULE_DESCRIPTION("LKP book:ch5/modparams/modparams1: module parameters demo LKM #1");
 MODULE_LICENSE("Dual MIT/GPL");
 MODULE_VERSION("0.1");
 

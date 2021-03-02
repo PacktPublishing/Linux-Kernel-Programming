@@ -16,5 +16,5 @@ dmesg > /tmp/plotdata
 cut -c16- /tmp/plotdata | grep -v -i "^[a-z]" > 2plotdata.txt
 rm -f /tmp/plotdata
 echo "Done, data file for gnuplot is 2plotdata.txt
-(follow the steps in the LLKD book, Ch 8, to plot the graph)."
+(follow the steps in the LKP book, Ch 8, to plot the graph)."
 ls -l 2plotdata.txt

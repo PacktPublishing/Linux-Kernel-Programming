@@ -43,7 +43,7 @@
 #define OURMODNAME   "show_kernel_seg"
 
 MODULE_AUTHOR("Kaiwan N Billimoria");
-MODULE_DESCRIPTION("LLKD book:ch7/kernel_seg: display some kernel segment details");
+MODULE_DESCRIPTION("LKP book:ch7/kernel_seg: display some kernel segment details");
 MODULE_LICENSE("Dual MIT/GPL");
 MODULE_VERSION("0.1");
 

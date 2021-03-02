@@ -21,7 +21,7 @@
 #define OURMODNAME   "slab3_maxsize"
 
 MODULE_AUTHOR("Kaiwan N Billimoria");
-MODULE_DESCRIPTION("LLKD book:ch8/slab3_maxsize: test max alloc limit from k[m|z]alloc()");
+MODULE_DESCRIPTION("LKP book:ch8/slab3_maxsize: test max alloc limit from k[m|z]alloc()");
 MODULE_LICENSE("Dual MIT/GPL");
 MODULE_VERSION("0.1");
 

@@ -15,8 +15,8 @@
  *
  * For details, please refer the book.
  */
-#ifndef __KLIB_LLKD_H__
-#define __KLIB_LLKD_H__
+#ifndef __KLIB_LKP_H__
+#define __KLIB_LKP_H__
 
 #include <linux/init.h>
 #include <linux/kernel.h>

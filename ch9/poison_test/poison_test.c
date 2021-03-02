@@ -36,7 +36,7 @@ MODULE_PARM_DESC(use_ctor, "if set to 1, our custom ctor routine"
 " will initialize slabmem; when 0, no custom constructor will run");
 
 MODULE_AUTHOR("Kaiwan N Billimoria");
-MODULE_DESCRIPTION("LLKD book:ch9/poison_test: simple demo of creating a custom slab cache");
+MODULE_DESCRIPTION("LKP book:ch9/poison_test: simple demo of creating a custom slab cache");
 MODULE_LICENSE("Dual MIT/GPL");
 MODULE_VERSION("0.1");
 

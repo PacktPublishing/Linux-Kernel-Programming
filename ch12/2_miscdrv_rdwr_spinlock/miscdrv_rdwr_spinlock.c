@@ -11,7 +11,7 @@
  * From: Ch 12 : Kernel Synchronization - Part 1
  ****************************************************************
  * Brief Description:
- * This driver is built upon our previous ch16/1_miscdrv_rdwr_mutexlock/
+ * This driver is built upon our previous ch12/1_miscdrv_rdwr_mutexlock/
  * misc driver.
  * The key difference: we use spinlocks in place of the mutex locks (this isn't
  * the case everywhere in the driver though; we keep the mutex as well for some
@@ -44,7 +44,7 @@
 
 MODULE_AUTHOR("Kaiwan N Billimoria");
 MODULE_DESCRIPTION(
-"LLKD book:ch16/2_miscdrv_rdwr_spinlock: simple misc char driver rewritten with spinlocks");
+"LKP book:ch12/2_miscdrv_rdwr_spinlock: simple misc char driver rewritten with spinlocks");
 MODULE_LICENSE("Dual MIT/GPL");
 MODULE_VERSION("0.1");
 
@@ -288,10 +288,13 @@ static const struct file_operations llkd_misc_fops = {
 	.write = write_miscdrv_rdwr,
 	.llseek = no_llseek,    // dummy, we don't support lseek(2)
 	.release = close_miscdrv_rdwr,
-	/* As you learn more reg device drivers, you'll realize that the
-	 * ioctl() would be a very useful method here. As an exercise,
-	 * implement an ioctl method; when issued with the 'GETSTATS' 'command',
-	 * it should return the statistics (tx, rx, errors) to the calling app
+	/* As you learn more reg device drivers (refer this book's companion guide
+	 * 'Linux Kernel Programming (Part 2): Writing character device drivers: Learn
+	 * to work with user-kernel interfaces, handle peripheral I/O & hardware
+	 * interrupts '), you'll realize that the ioctl() would be a very useful method
+	 * here. As an exercise, implement an ioctl method; when issued with the
+	 * 'GETSTATS' 'command', it should return the statistics (tx, rx, errors) to
+	 * the calling app.
 	 */
 };
 

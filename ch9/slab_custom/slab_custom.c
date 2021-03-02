@@ -34,7 +34,7 @@ MODULE_PARM_DESC(use_ctor, "if set to 1 (default), our custom ctor routine"
 " will initialize slabmem; when 0, no custom constructor will run");
 
 MODULE_AUTHOR("Kaiwan N Billimoria");
-MODULE_DESCRIPTION("LLKD book:ch9/slab_custom: simple demo of creating a custom slab cache");
+MODULE_DESCRIPTION("LKP book:ch9/slab_custom: simple demo of creating a custom slab cache");
 MODULE_LICENSE("Dual MIT/GPL");
 MODULE_VERSION("0.1");
 

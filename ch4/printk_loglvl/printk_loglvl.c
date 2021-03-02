@@ -23,7 +23,7 @@
 #include <linux/kernel.h>
 
 MODULE_AUTHOR("<insert your name here>");
-MODULE_DESCRIPTION("LLKD book:ch4/printk_loglvl: print at each kernel log level");
+MODULE_DESCRIPTION("LKP book:ch4/printk_loglvl: print at each kernel log level");
 MODULE_LICENSE("Dual MIT/GPL");
 MODULE_VERSION("0.1");
 

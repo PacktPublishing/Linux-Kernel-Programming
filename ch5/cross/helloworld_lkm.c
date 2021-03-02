@@ -26,7 +26,7 @@
 #include <linux/kernel.h>
 
 MODULE_AUTHOR("Kaiwan N Billimoria");
-MODULE_DESCRIPTION("LLKD book:ch5/cross: hello, world, our first Raspberry Pi LKM");
+MODULE_DESCRIPTION("LKP book:ch5/cross: hello, world, our first Raspberry Pi LKM");
 MODULE_LICENSE("Dual MIT/GPL");
 MODULE_VERSION("0.1");
 

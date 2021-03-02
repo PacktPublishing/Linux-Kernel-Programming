@@ -27,7 +27,7 @@
 
 MODULE_AUTHOR("Kaiwan N Billimoria");
 MODULE_DESCRIPTION
-("LLKD ch8/page_exact_loop: demo using the superior [alloc|free]_pages_exact() APIs");
+("LKP ch8/page_exact_loop: demo using the superior [alloc|free]_pages_exact() APIs");
 MODULE_LICENSE("Dual MIT/GPL");
 MODULE_VERSION("0.1");
 

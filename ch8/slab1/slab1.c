@@ -21,7 +21,7 @@
 #define OURMODNAME   "slab1"
 
 MODULE_AUTHOR("Kaiwan N Billimoria");
-MODULE_DESCRIPTION("LLKD book:ch8/slab1: k[m|z]alloc, kfree, basic demo");
+MODULE_DESCRIPTION("LKP book:ch8/slab1: k[m|z]alloc, kfree, basic demo");
 MODULE_LICENSE("Dual MIT/GPL");
 MODULE_VERSION("0.1");
 

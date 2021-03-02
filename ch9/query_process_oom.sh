@@ -14,7 +14,7 @@
 # Just a simple wrapper around choom(1).
 # Tip: One can always arrange to sort the output by OOM score; f.e.:
 #  /query_task_oom.sh |sed '1d' |sort -k3n
-# Details: refer to the LLKD book, Ch 9
+# Details: refer to the LKP book, Ch 9
 i=1
 printf "  PID                      Name         OOM Score\n"
 

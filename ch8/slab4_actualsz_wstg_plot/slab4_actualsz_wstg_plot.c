@@ -25,7 +25,7 @@
 
 MODULE_AUTHOR("Kaiwan N Billimoria");
 MODULE_DESCRIPTION
-("LLKD book:ch8/slab4_actualsz_wstg_plot: test slab alloc with the ksize(), minimal ver");
+("LKP book:ch8/slab4_actualsz_wstg_plot: test slab alloc with the ksize(), minimal ver");
 MODULE_LICENSE("Dual MIT/GPL");
 MODULE_VERSION("0.1");
 

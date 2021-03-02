@@ -1,5 +1,5 @@
 /*
- * ch17/3_lockdep/buggy_thrdshow_eg/thrd_showall_buggy.c
+ * ch13/3_lockdep/buggy_thrdshow_eg/thrd_showall_buggy.c
  ***************************************************************
  * This program is part of the source code released for the book
  *  "Linux Kernel Programming"
@@ -8,7 +8,7 @@
  *  GitHub repository:
  *  https://github.com/PacktPublishing/Linux-Kernel-Programming
  *
- * From: Ch 17 : Kernel Synchronization Part 2
+ * From: Ch 13 : Kernel Synchronization, Part 2
  ****************************************************************
  * Brief Description:
  * This kernel module is based upon our earlier kernel module from Ch 6:
@@ -22,7 +22,7 @@
  * Of course, we assume this is run on a kernel that has lockdep enabled
  * (CONFIG_PROVE_LOCKING).
  *
- * For details, please refer the book, Ch 17.
+ * For details, please refer the book, Ch 13.
  */
 #include <linux/kernel.h>
 #include <linux/module.h>
@@ -35,7 +35,7 @@
 #define OURMODNAME   "thrd_showall_buggy"
 
 MODULE_AUTHOR("Kaiwan N Billimoria");
-MODULE_DESCRIPTION("LLKD book: ch17/3_lockdep/buggy_thrdshow_eg:"
+MODULE_DESCRIPTION("LKP book: ch13/3_lockdep/buggy_thrdshow_eg:"
 " BUGGY demo to display all threads by iterating over the task list");
 MODULE_LICENSE("Dual MIT/GPL");
 MODULE_VERSION("0.1");

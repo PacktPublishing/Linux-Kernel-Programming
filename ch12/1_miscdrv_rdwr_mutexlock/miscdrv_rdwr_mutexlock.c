@@ -1,5 +1,5 @@
 /*
- * ch16/1_miscdrv_rdwr_mutexlock/miscdrv_rdwr_mutexlock.c
+ * ch12/1_miscdrv_rdwr_mutexlock/miscdrv_rdwr_mutexlock.c
  ***************************************************************
  * This program is part of the source code released for the book
  *  "Linux Kernel Programming"
@@ -8,7 +8,7 @@
  *  GitHub repository:
  *  https://github.com/PacktPublishing/Linux-Kernel-Programming
  *
- * From: Ch 16 : Kernel Synchronization - Part 1
+ * From: Ch 12 : Kernel Synchronization - Part 1
  ****************************************************************
  * Brief Description:
  * This driver is built upon our previous ch12/miscdrv_rdwr/ misc driver.
@@ -19,7 +19,7 @@
  * The functionality (the get and set of the 'secret') remains identical to the
  * original implementation.
  *
- * For details, please refer the book, Ch 16.
+ * For details, please refer the book, Ch 12.
  */
 #define pr_fmt(fmt) "%s:%s(): " fmt, KBUILD_MODNAME, __func__
 
@@ -45,7 +45,7 @@
 
 MODULE_AUTHOR("Kaiwan N Billimoria");
 MODULE_DESCRIPTION
-("LLKD book:ch16/1_miscdrv_rdwr_mutexlock: simple misc char driver rewritten with mutex locking");
+("LKP book:ch12/1_miscdrv_rdwr_mutexlock: simple misc char driver rewritten with mutex locking");
 MODULE_LICENSE("Dual MIT/GPL");
 MODULE_VERSION("0.1");
 
@@ -250,10 +250,13 @@ static const struct file_operations llkd_misc_fops = {
 	.write = write_miscdrv_rdwr,
 	.llseek = no_llseek,	// dummy, we don't support lseek(2)
 	.release = close_miscdrv_rdwr,
-	/* As you learn more reg device drivers, you'll realize that the
-	 * ioctl() would be a very useful method here. As an exercise,
-	 * implement an ioctl method; when issued with the 'GETSTATS' 'command',
-	 * it should return the statistics (tx, rx, errors) to the calling app
+	/* As you learn more reg device drivers (refer this book's companion guide
+	 * 'Linux Kernel Programming (Part 2): Writing character device drivers: Learn
+	 * to work with user-kernel interfaces, handle peripheral I/O & hardware
+	 * interrupts '), you'll realize that the ioctl() would be a very useful method
+	 * here. As an exercise, implement an ioctl method; when issued with the
+	 * 'GETSTATS' 'command', it should return the statistics (tx, rx, errors) to
+	 * the calling app.
 	 */
 };
 

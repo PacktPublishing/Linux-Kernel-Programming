@@ -2,7 +2,7 @@
 # query_task_sched.sh
 # ***************************************************************
 # This program is part of the source code released for the book
-#  "Linux Kernel Development Cookbook"
+#  "Linux Kernel Programming"
 #  (c) Author: Kaiwan N Billimoria
 #  Publisher:  Packt
 #  GitHub repository:

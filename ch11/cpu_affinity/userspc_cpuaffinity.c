@@ -6,7 +6,7 @@
  *  (c) Author: Kaiwan N Billimoria
  *  Publisher:  Packt
  *  GitHub repository:
- *  https://github.com/PacktPublishing/LEarn-Linux-Kernel-Development
+ *  https://github.com/PacktPublishing/Linux-Kernel-Programming
  *
  * From: Ch 11 : CPU Scheduling, Part 2
  ****************************************************************
