@@ -8,9 +8,10 @@ Here, we present, in a chapter-wise format, additional online as well as book re
 
 For your convenience, below are chapter-wise links to the *Further Reading* notes:
 
- - [Ch 1, Kernel workspace setup](https://github.com/PacktPublishing/Linux-Kernel-Development-Cookbook/blob/master/Further_Reading.md#chapter-1-kernel-workspace-setup--further-reading)
- - [Ch 2, Building the Kernel From Source](https://github.com/PacktPublishing/Linux-Kernel-Development-Cookbook/blob/master/Further_Reading.md#chapter-1-building-the-linux-kernel-from-source--further-reading) 
- - [Ch 4. Writing your first Kernel Module - the LKM Framework](https://github.com/PacktPublishing/Linux-Kernel-Development-Cookbook/blob/master/Further_Reading.md#chapter-2-writing-your-first-kernel-module-the-lkm-framework-further-reading)
+ - [Ch 1, Kernel workspace setup](https://github.com/PacktPublishing/Linux-Kernel-Programming/blob/master/Further_Reading.md#chapter-1-kernel-development-workspace-setup---further-reading)
+ - [Ch 2, Building the Kernel From Source](https://github.com/PacktPublishing/Linux-Kernel-Programming/blob/master/Further_Reading.md#chapter-2-and-ch-3-building-the-linux-kernel-from-source---further-reading)
+ - [Ch 3, ]()
+ - [Ch 4, Writing your first Kernel Module - the LKM Framework](https://github.com/PacktPublishing/Linux-Kernel-Development-Cookbook/blob/master/Further_Reading.md#chapter-2-writing-your-first-kernel-module-the-lkm-framework-further-reading)
  - Ch 3
  - Ch 4. Kernel Memory Allocation for Module Authors
  - Ch 5
@@ -20,18 +21,54 @@ For your convenience, below are chapter-wise links to the *Further Reading* note
 
 <br>
 
-## Chapter 1, Kernel Development Workspace Setup - Further Reading
-
 
 To aid you in delving further into the subject matter of this chapter with useful
 materials, we provide a list of online references and links (and at times, books) in this,
 the Further reading section, at end of every chapter.
 
-Besides the ones that follow immediately, *please be sure to refer to a "special" section
+Besides the *Further Reading* resource specified chapter-wise, *please be sure to refer to a "special" section
 below entitled **Online and book resources in general : miscellaneous but useful**! These
 links and books are considered to be useful throughout your journey through this
 book and after.
 <br>
+
+**Online and book resources in general : miscellaneous but very useful !**
+
+- [The Linux kernel documentation](https://www.kernel.org/doc/html/latest/#the-linux-kernel-documentation)
+- Very useful! [LWN (Linux weekly news) Kernel index](https://lwn.net/Kernel/Index/)
+- Deprecated things: DON'T use 'em! Just say No; [Deprecated Interfaces, Language Features, Attributes, and Conventions](https://www.kernel.org/doc/html/latest/process/deprecated.html#deprecated-interfaces-language-features-attributes-and-conventions)
+
+A few excellent books that come to mind (specific books on the Linux kernel and writing Linux device drivers are mentioned in the appropriate chapter's *Further reading* section):
+
+- The Mythical Man Month, Frederick P Brooks
+- The Art of Unix Programming, Eric S Raymond (AW)
+- Programming Pearls, Jon Bentley
+- The Practice of Programming, Brian Kernighan and Rob Pike
+- The Pragmatic Programmer: From Journeyman to Master, Hunt and Thomas
+- The Joy of Linux, Hall and Proffitt
+- Hands-On System Programming with Linux, Kaiwan N Billimoria
+- Unix Network Programming, W. Richard Stevens
+- Unix Systems Programming: Communication, Concurrency and Threads, Robbins and Robbins
+- [Secure Programming for Linux and Unix HOWTO, David Wheeler](https://www.tldp.org/HOWTO/pdf/Secure-Programs-HOWTO.pdf)
+
+- In general an excellent in-depth technical article: [SO YOU WANT TO BUILD AN EMBEDDED LINUX SYSTEM?, Jay Carlson, Oct 2020](https://jaycarlson.net/embedded-linux/) ; it covers an introduction to the whys
+and why-nots of using Linux on an embedded system, hardware and software design workflow, as well as a pretty detailed rundown on 10 CPUs/boards that run embedded Linux (with benchmarks)
+- Julia Evans' blog and zines:
+    - ['You can be a kernel hacker!', Julia Evans](https://jvns.ca/blog/2014/09/18/you-can-be-a-kernel-hacker/)
+    - [Blog](https://jvns.ca/)
+    - [Zines](https://wizardzines.com/)
+
+- [Lowlevel programming University, gurugio](https://github.com/gurugio/lowlevelprogramming-university)
+
+- *Tip (reprodcued from Chapter 5)*:  
+"Is there a really practical hands-on tip, an almost guaranteed way to become a kernel hacker? Of course, keep reading this book! Ha ha, yes, besides, do partake in the [simply awesome Eudyptula Challenge](http://www.eudyptula-challenge.org/). Hang on, it's - very unfortuantely, and as of this writing - closed down.
+Fear not, [here's a site with all the challenges](https://github.com/agelastic/eudyptula) posted (and the solutions, don't cheat!); do check it out and try the challenges."
+
+
+
+<br>
+
+## Chapter 1, Kernel Development Workspace Setup - Further Reading
 
 Resources on setting up a Linux guest using VirtualBox on a Windows host:
 
@@ -74,34 +111,8 @@ Code browsers
     - [The Vim/Cscope tutorial](http://cscope.sourceforge.net/cscope_vim_tutorial.html)
 
 <br>
-***Online and book resources in general : miscellaneous but very useful!***
 
-- [The Linux kernel documentation](https://www.kernel.org/doc/html/latest/#the-linux-kernel-documentation)
-- Very useful! [LWN (Linux weekly news) Kernel index](https://lwn.net/Kernel/Index/)
-- Deprecated things: DON'T use 'em! Just say No; [Deprecated Interfaces, Language Features, Attributes, and Conventions](https://www.kernel.org/doc/html/latest/process/deprecated.html#deprecated-interfaces-language-features-attributes-and-conventions)
-
-A few excellent books that come to mind (specific books on the Linux kernel and writing Linux device drivers are mentioned in the appropriate chapter's Further reading section):
-
-- The Mythical Man Month, Frederick P Brooks
-- The Art of Unix Programming, Eric S Raymond (AW)
-- Programming Pearls, Jon Bentley
-- The Practice of Programming, Brian Kernighan and Rob Pike
-- The Pragmatic Programmer: From Journeyman to Master, Hunt and Thomas
-- The Joy of Linux, Hall and Proffitt
-- Hands-On System Programming with Linux, Kaiwan N Billimoria
-- Unix Network Programming, W. Richard Stevens
-- Unix Systems Programming: Communication, Concurrency and Threads, Robbins and Robbins
-- [Secure Programming for Linux and Unix HOWTO, David Wheeler](https://www.tldp.org/HOWTO/pdf/Secure-Programs-HOWTO.pdf)
-
-- In general an excellent in-depth technical article: [SO YOU WANT TO BUILD AN EMBEDDED LINUX SYSTEM?, Jay Carlson, Oct 2020](https://jaycarlson.net/embedded-linux/) ; it covers an introduction to the whys
-and why-nots of using Linux on an embedded system, hardware and software design workflow, as well as a pretty detailed rundown on 10 CPUs/boards that run embedded Linux (with benchmarks)
-- Julia Evans' blog and zines:
-    - [Blog](https://jvns.ca/)
-    - [Zines](https://wizardzines.com/)
-<br>
-
-
-## Chapter 2 and Ch 3, Building the Linux Kernel From Source - Further Reading
+## Chapter 2, Building the Linux Kernel From Source - Further Reading
 
 - **[Official Kernel Documentation](https://www.kernel.org/doc/html/latest/index.html)** : the modern Linux kernel documentation is very well written and presented here
 	- ["2. How the development process works"](https://www.kernel.org/doc/html/latest/process/2.Process.html#how-the-development-process-works)
@@ -144,7 +155,8 @@ and why-nots of using Linux on an embedded system, hardware and software design 
 - Article: [How to compile a Linux kernel in the 21st century, S Kenlon, Aug 2019](https://opensource.com/article/19/8/linux-kernel-21stcentury)
 - Interesting: [Meet the contributor of the 1-millionth commit: Ricardo Neri, Swapnil Bharatiya, Sept 2020](https://www.linux.com/featured/meetthe-one-millionth-committer-to-linux-ricardo-neri/)
 
-**Ch 3:**
+<br>
+## Chapter 3, Building the Linux Kernel From Source - Further Reading
 
 - Initramfs (initrd):
     - [Opening and modifying the initrd](http://www.alexonlinux.com/opening-and-modifying-the-initrd)
@@ -175,7 +187,7 @@ and why-nots of using Linux on an embedded system, hardware and software design 
 - New Linux kernel: ['Linux 5.6 Is Looking Like It Will Be Spectacular With A Long List Of Features', Phoronix, 26Jan2020](https://www.phoronix.com/scan.php?page=news_item&px=Linux-5.6-Spectacular)
 
 
-
+<br>
 ## Chapter 4, Writing your first Kernel Module-LKMs Part 1 - Further Reading
 
 - [Official Kernel Documentation : kernel parameters](https://www.kernel.org/doc/html/latest/admin-guide/kernel-parameters.html)
@@ -193,7 +205,7 @@ and why-nots of using Linux on an embedded system, hardware and software design 
 - [BusyBox: The Swiss Army Knife of Embedded Linux](https://www.busybox.net/)
 
 
-
+<br>
 ## Chapter 5, Writing your first Kernel Module-LKMs Part 2 - Further Reading
 
 - Blog article: [WORKING ON THE CONSOLE WITH THE RASPBERRY PI, kaiwanTECH](https://kaiwantech.wordpress.com/2018/12/16/working-on-the-console-with-the-raspberry-pi/)
@@ -242,7 +254,7 @@ and why-nots of using Linux on an embedded system, hardware and software design 
 
 - [The Eudyptula Challenge](http://eudyptula-challenge.org/): "The Eudyptula Challenge was a series of programming exercises for the Linux kernel, that started from a very basic "Hello world" kernel module, moving on up in complexity to getting patches accepted into the main Linux kernel source tree." It's really cool but NOT active as of this writing though.
 
-
+<br>
 ## Chapter 6, Kernel Internals Essentials - Processes and Threads - Further Reading
 - Book: [Hands-On System Programming with Linux", Kaiwan N Billimoria, Packt](https://www.packtpub.com/networking-and-servers/hands-system-programming-linux). Prerequisites to this chapter (essential reading, really):
 	- Ch 1 : Linux System Architecture
@@ -270,6 +282,7 @@ and why-nots of using Linux on an embedded system, hardware and software design 
     - [Running an eBPF program may require lifting the kernel lockdown, Gehrcke, September 2019](https://gehrcke.de/2019/09/running-an-ebpf-program-may-require-liftingthe-kernel-lockdown/)
 
 
+<br>
 ## Chapter 7, Memory Management Internals Essentials - Further Reading
 - Books on Linux kernel memory management internals:
 	- ['Professional Linux Kernel Architecture', Mauerer, Wrox Press](https://www.amazon.in/Professional-Linux-Kernel-Architecture-Programmer/dp/0470343435/ref=sr_1_1?ie=UTF8&qid=1547525512&sr=8-1&keywords=Professional%20Linux%20Kernel%20Architecture%27)
@@ -291,8 +304,8 @@ Software Developer’s Manual. Volume 3 (3A, 3B & 3C): System Programming Guide]
 	- [KSM (Kernel Samepage Merging)](https://www.kernel.org/doc/html/latest/admin-guide/mm/ksm.html)
 - ['Virtual Memory and Linux', PDF, Matt Porter, Alan Ott](https://elinux.org/images/b/b0/Introduction_to_Memory_Management_in_Linux.pdf)
 
-
-## Ch 8 and Ch 9, Kernel Memory Allocation for Module Authors - Further Reading
+<br>
+## Chapter 8, Kernel Memory Allocation for Module Authors, Part 1 - Further Reading
 
 - Book: ['Hands-On System Programming with Linux', Kaiwan N Billimoria, Packt](https://www.packtpub.com/networking-and-servers/hands-system-programming-linux). Prerequisites to this chapter (essential reading, really):
 	- Ch 1 : Linux System Architecture
@@ -312,7 +325,8 @@ Software Developer’s Manual. Volume 3 (3A, 3B & 3C): System Programming Guide]
 - ["GNUPLOT 4.2 - A Brief Manual and Tutorial", Duke University](https://people.duke.edu/~hpgavin/gnuplot.html)
 - ['Object-oriented design patterns in the kernel, part 1', Neil Brown, LWN, June 2011](https://lwn.net/Articles/444910/)
 
-**Ch 9:**
+<br>
+## Chapter 9, Kernel Memory Allocation for Module Authors, Part 2 - Further Reading
 
 - [LWN kernel index on memory management](https://lwn.net/Kernel/Index/#Memory_management)
 
@@ -332,17 +346,42 @@ Software Developer’s Manual. Volume 3 (3A, 3B & 3C): System Programming Guide]
     - ['A deep dive into CMA', LWN, Mar 2012](https://lwn.net/Articles/486301/)
     - A quite simple and interesting example of a “DMA test application” device driver is from Xilinx (for it's Zynq PL330 DMA controller); [wiki page here](http://www.wiki.xilinx.com/Zynq+Linux+pl330+DMA)
     - [Q&A on SO: Linux DMA: Using the DMAengine for scatter-gather transactions, May 2016](http://stackoverflow.com/questions/37119332/linux-dma-using-the-dmaengine-for-scatter-gather-transactions)
-    
-- VM Overcommit
+
+
+- OOM and VM Overcommit
+    - [Toward more predictable and reliable out-of-memory handling, LWN, Jon Corbet, December 2015](https://lwn.net/
+Articles/668126/)
     - [Quora: What are the disadvantages of disabling memory overcommit in Linux?](https://www.quora.com/What-are-the-disadvantages-of-disabling-memory-overcommit-in-Linux)
-    - [Linux kernel documentation](https://www.kernel.org/doc/Documentation/vm/overcommit-accounting)
+    - [Relevant Linux kernel documentation](https://www.kernel.org/doc/Documentation/vm/overcommit-accounting)
     - Blog article: ['Virtual memory settings in Linux - The Problem with Overcommit'](http://engineering.pivotal.io/post/virtual_memory_settings_in_linux_-_the_problem_with_overcommit/)
     - RHEL specific but useful: ['Interpreting /proc/meminfo and free output for Red Hat Enterprise Linux 5, 6 and 7'](https://access.redhat.com/solutions/406773)
+    - [Blog article: Surviving the Linux OOM Killer, October 2018](https://dev.to/rrampage/surviving-the-linux-oomkiller-2ki9)
 
-## Ch 10 and Ch 11 : The CPU Scheduler - Further Reading
+- [StackOverflow: How to mmap a Linux kernel buffer to userspace?](https://stackoverflow.com/a/10770582/779269)
+
+
+<br>
+## Chapter 10, The CPU Scheduler, Part 1 - Further Reading
 
 - Detailed PDF: ['A complete guide to Linux process scheduling', Nikita Ishkov, Feb 2015](https://trepo.tuni.fi/bitstream/handle/10024/96864/GRADU-1428493916.pdf)
 - An excellent detailed code-level article on how very particularly the context switching code path switch_to() has evolved on the x86[_64] arch: ['Evolution of the x86 context switch in Linux', Maizure, Sept 2018](https://www.maizure.org/projects/evolution_x86_context_switch_linux/)
+
+- perf:
+   - [Linux perf examples, Brendan Gregg](http://www.brendangregg.com/perf.html)
+   - [The perf wiki page](https://perf.wiki.kernel.org/index.php/Main_ Page)
+   - [perf tutorial](https://perf.wiki.kernel.org/index.php/)
+   - Tutorial: [Playing around with perf](https://www.bernardi.cloud/2012/08/07/playing-around-with-perf/)
+   - [Memory Access Patterns Are Important](https://mechanical-sympathy.blogspot.com/2012/08/memoryaccess-patterns- are-important.html)
+
+- [Tuning the Task Scheduler, SuSe documentation](https://documentation.suse.com/sles/12-SP4/html/SLES-all/cha-tuning-taskscheduler.html)
+- [A real-world, useful case: Reducing latency spikes by tuning the CPU scheduler, T Gabriec, June 2016, Scylla]( https://www.scylladb.com/2016/06/10/read-latency-and-scylla-jmx-process/)
+- [Linux kernel preemption and the latency-throughput tradeoff, Dec 2019](https://www.codeblueprint.co.uk/2019/12/23/linuxpreemption-latency-throughput.html)
+- An excellent detailed code-level article on how, specifically, the context switching switch_to() code path has evolved on the x86[_64] arch: [Evolution of the x86 context switch in Linux, Maizure, September 2018](https://www.maizure.org/projects/evolution_x86_context_switch_linux/)
+
+
+<br>
+## Chapter 11, The CPU Scheduler, Part 2 - Further Reading
+
 
 - Ftrace
     - ['ftrace: trace your kernel functions!', Julia Evans, Mar 2017](https://jvns.ca/blog/2017/03/19/getting-started-with-ftrace/)
@@ -363,7 +402,7 @@ Software Developer’s Manual. Volume 3 (3A, 3B & 3C): System Programming Guide]
 -     - [VDC Survey on real-time response : The Embedded Muse, 341, 03 Jan 2018, Jack Ganssle](http://www.ganssle.com/tem/tem341.html#article3)
 -     - Blog article: ['Algorithm time complexity and big O notation'](https://medium.com/@StueyGK/algorithm-time-complexity-and-big-o-notation-51502e612b4d)
 -     - Book: *Automate This: How Algorithms Came to Rule Our World, Christopher Steiner*
--     - Older wiki site on *preempt_rt*; it's in the process of being migrated to the new documentation for RTL; it still has very useful HOWTO guides, articles, etc: ['Real-Time Linux Wiki'](https://rt.wiki.kernel.org/index.php/Main_Page) 
+-     - Older wiki site on *preempt_rt*; it's in the process of being migrated to the new documentation for RTL; it still has very useful HOWTO guides, articles, etc: ['Real-Time Linux Wiki'](https://rt.wiki.kernel.org/index.php/Main_Page)
 -     - [RTL – Real-Time Linux, using Linux as an RTOS:
 The RTL Collaborative Project](https://wiki.linuxfoundation.org/realtime/rtl/start)
 -   - [RTL Real-Time documentation](https://wiki.linuxfoundation.org/realtime/documentation/start)
@@ -374,88 +413,80 @@ The RTL Collaborative Project](https://wiki.linuxfoundation.org/realtime/rtl/sta
 -   - Detailed slides on cyclictest, good for understanding latency and it's measurement: ['Using and Understanding the Real-Time Cyclictest Benchmark', Rowand, Oct 2013](https://events.static.linuxfound.org/sites/events/files/slides/cyclictest.pdf)
 -   - ['Intro to Real-Time Linux for Embedded Developers', an interview with Steven Rostedt](https://www.linuxfoundation.org/blog/2013/03/intro-to-real-time-linux-for-embedded-developers/)
 
+- [e]BPF tools for measuring scheduler / runqueue latencies (plus other stuff):
+    - [Very useful summary diagram of Linux [e]BPF tracing tools, Brendan Gregg](http://www.brendangregg.com/BPF/bcc_tracing_tools_early2019.png)
+    - [Linux Extended BPF (eBPF) Tracing Tools, Brendan Gregg](http://www.brendangregg.com/ebpf.html)
+    - [BPF Compiler Collection (BPFCC) on GitHub](https://github.com/iovisor/bcc)
 
 - The still amazing and very relevant book on software engineering: *'The Mythical Man Month: Essays on Software Engineering'*, Frederick P Brooks, 1975, 1995
     - [On Amazon (Anniversary Edition)](https://www.amazon.com/Mythical-Man-Month-Anniversary-Software-Engineering-ebook/dp/B00B8USS14/ref=sr_1_1?crid=3R2CNHTX5LYIC&keywords=mythical+man+month&qid=1562226712&s=digital-text&sprefix=mythical+%2Cdigital-text%2C376&sr=1-1)
     - [Quotes](https://en.wikiquote.org/wiki/Fred_Brooks)
 
 
+<br>
+## Chapter 12, Kernel Synchronization, Part 1 - Further Reading
 
+- An excellent read: ['What every systems programmer should know about concurrency', M Kline, May 2018](https://assets.bitbashing.io/papers/concurrency-primer.pdf)
 
-## Ch 11 : Writing a simple Misc Character Device Driver - Further Reading
+- Chip Overclock blog: [Peeking under the Hood, Sloan, May 2012](https://coverclock.blogspot.com/2012/05/peeking-under-hood.html)
+- [Measuring context switching and memory overheads for Linux threads, Eli Bendersky, Sept 2018](https://eli.thegreenplace.net/2018/measuringcontext-switching-and-memory-overheads-for-linux-threads/)
+- Compiler Explorer website, Matt Godbolt; very useful: [See the live disassembly of your code on a large choice of compilers and compiler flags](https://godbolt.org/)
 
-- Linux Device Drivers
-    - Books:
-        - ['Essential Linux Device Drivers', Sreekrishnan Venkateswaran, Pearson](https://www.amazon.in/Essential-Drivers-Prentice-Software-Development/dp/0132396556/ref=tmm_hrd_swatch_0?_encoding=UTF8&qid=&sr=); simply excellent!
-        - ['Linux Driver Development for Embedded Processors - Second Edition: Learn to develop embedded Linux drivers with kernel 4.9 LTS', Alberto Liberal de los Rios](https://www.amazon.in/Linux-Driver-Development-Embedded-Processors-ebook/dp/B07L512BHG/ref=sr_1_6?crid=3RLFFZQXGAMF4&keywords=linux+driver+development+embedded&qid=1555486342&s=books&sprefix=linux+driver+%2Cstripbooks%2C270&sr=1-6-catcorr); very good, very recent (as of this writing)
-        - ['Linux Device Drivers Development', John Madieu, Packt, Oct 2017](https://www.amazon.in/Linux-Device-Drivers-Development-Madieu/dp/1785280007/ref=sr_1_2?keywords=linux+device+driver&qid=1555486515&s=books&sr=1-2); recent (4.13 kernel)
-        -  ['Linux Device Drivers', Rubini, Hartmann, Corbet, 3rd Ed](https://www.amazon.in/Linux-Device-Drivers-Kernel-Hardware/dp/8173668493/ref=sr_1_1?keywords=linux+device+driver&qid=1555486515&s=books&sr=1-1); venerable (but) old - the famous LDD3 book
-    -  *The kernel driver API manual*; this is one of the PDF documents generated by doing '`make pdfdocs`' within a recent Linux kernel source tree
-    -  Practical tutorials:
-        - ['Device Drivers, Part 8: Accessing x86-Specific I/O-Mapped Hardware', Anil K Pugalia, OpenSourceForU, July 2011](https://opensourceforu.com/2011/07/accessing-x86-specific-io-mapped-hardware-in-linux/)
-
-
-
-## Ch 12 : User-Kernel Communication Pathways - Further Reading
-
-- Using the sysfs interface
-    - several answers to : ["How to create a simple sysfs class attribute in Linux kernel v3.2", StackOverflow](https://stackoverflow.com/questions/16245100/how-to-create-a-simple-sysfs-class-attribute-in-linux-kernel-v3-2)
-    - tutorial, the 'parrot driver': 
-        - ["Writing a Linux device driver module for kernels 2.6 or later with udev", Pete's blog, Aug 2011](https://pete.akeo.ie/2011/08/writing-linux-device-driver-for-kernels.html)
-        - [GitHub repo](https://github.com/pbatard/parrot/blob/master/parrot_driver.c)
-    - tutorial: ["Creating a simple sysfs module in linux kernel", Penesive, Jul 2015](http://pradheepshrinivasan.github.io/2015/07/02/Creating-an-simple-sysfs/)
-- Network programming with Sockets (userspace, with 'C' on Linux)
-    - ['Beej's Guide to Network Programming'](https://beej.us/guide/bgnet/)
-    - ['Socket programming in C on Linux – The Ultimate Guide for Beginners', Silver Moon, Apr 2019](https://www.binarytides.com/socket-programming-c-linux-tutorial/)
-- Netlink sockets
-    - [RFC: Linux Netlink as an IP Services Protocol](https://www.ietf.org/rfc/rfc3549.txt)
-    - ['Netlink: A Communication Mechanism in Linux', OpensourceForU, Yadav, Aug 2015](https://opensourceforu.com/2015/08/netlink-a-communication-mechanism-in-linux/)
-    - [Wikipedia page](https://en.wikipedia.org/wiki/Netlink)
-    - ['Kernel Korner - Why and How to Use Netlink Socket', LJ, Jan 2005](https://www.linuxjournal.com/article/7356)
-
-
-
-## Ch 15 and Ch 16 : Kernel Synchronization Primitives and How to Use Them - Further Reading
-
-- ['What every systems programmer should know about concurrency', M Kline, May 2018](https://assets.bitbashing.io/papers/concurrency-primer.pdf)
 - This presentation covers deadlock scenarios: ['Lockdep: how to read it's cryptic output', Steve Rostedt, Linux Plumbers Conf 2011](https://blog.linuxplumbersconf.org/2011/ocw/sessions/153)
 
 -  ['Mutexes and Semaphores Demystified', Micheal Barr, May 2016](https://barrgroup.com/Embedded-Systems/How-To/RTOS-Mutex-Semaphore)
+
+
 - The Mars Pathfinder mission and Priority Inversion
 	- ['What really happened on Mars ?' Glenn Reeves](https://cs.unc.edu/~anderson/teach/comp790/papers/mars_pathfinder_long_version.html)
 	- A must-read (PDF): [*What the Media Couldn't Tell You About Mars Pathfinder*](http://people.cs.ksu.edu/~hatcliff/842/Docs/Course-Overview/pathfinder-robotmag.pdf)
 	- Detailed paper (PDF): [*Mars Pathfinder: Priority Inversion Problem*, R.M. Pathan](http://www.cse.chalmers.se/edu/year/2015/course/EDA222/Documents/Misc/Report_MarsPathFinder.pdf)
 	- More recently (May 2015), with respect to the NASA Curiosity Rover: [*13 engineering truths proved by NASA's Curiosity Rover*, EDN](https://www.edn.com/electronics-blogs/now-hear-this/4439386/13-engineering-truths-proved-by-NASA-s-CuriosityRover?mc=NL_EDN_EDT_EDN_funfriday_20150508&cid=NL_EDN_EDT_EDN_funfriday_20150508&elq=75871e4437784010b51f12e4c3be00a2&elqCampaignId=22919&elqaid=25798&elqat=1&elqTrackId=8e848e14bf3e41b58e660c804b335b07)
+
  - OSFY magazine: ['How to Avoid Priority Inversion and Enable Priority Inheritance in Linux Kernel Programming', Thangaraju & Warade, Apr 2019](https://opensourceforu.com/2019/04/how-to-avoid-priority-inversion-and-enable-priority-inheritance-in-linux-kernel-programming/)
  - Spinlock internal implementation
     - ['Peeking Under the Hood', John Sloan, Chip Overclock blog, May 2012](https://coverclock.blogspot.com/2012/05/peeking-under-hood.html)
     - ['spin_lock implementation in ARM linux', linuxforthenew blog, Apr 2013](http://linuxforthenew.blogspot.com/2013/04/spinlock-implementation-in-arm-linux.html)
+
+
+<br>
+## Chapter 13, Kernel Synchronization, Part 2 - Further Reading
+
+- Deeper details on the LKMM: [Explanation of the Linux-Kernel Memory Model](https://github.com/aparri/memory-model/ blob/master/Documentation/explanation. txt)
+- Reference Counting API: [kernsec: a summary](https://kernsec.org/wiki/index.php/Kernel_ Protections/refcount_ t)
+
+- An extremely detailed take on concurrency topics, both hardware and software-wise: [Is Parallel Programming Hard, And, If So, What Can You Do About It?, Paul E.McKenney, December 2019](https://mirrors.edge.kernel.org/pub/linux/kernel/people/paulmck/perfbook/perfbook.2019.12.22a.pdf)
+
 - False Sharing
     - ['Avoiding and Identifying False Sharing Among Threads', Intel, Nov 2011](https://software.intel.com/en-us/articles/avoiding-and-identifying-false-sharing-among-threads)
     - Blog article: ['Understanding False Sharing', Mar 2017](https://parallelcomputing2017.wordpress.com/2017/03/17/understanding-false-sharing/)
-- PDF: ['Memory Barriers: a Hardware View for Software Hackers', 
-Paul E. McKenney, IBM LTC, June 2010](http://www.rdrop.com/~paulmck/scalability/paper/whymb.2010.06.07c.pdf)
 
- - Lockless or Lock-Free programming
-    - PDF: ['What every systems programmer should know about concurrency', Matt Kline, May 2018](https://assets.bitbashing.io/papers/concurrency-primer.pdf)
-    - Lock-Free programming concepts 
-        - ['Fear and Loathing in Lock-Free Programming', T Neely, Medium](https://medium.com/@tylerneely/fear-and-loathing-in-lock-free-programming-7158b1cdd50c) : an excellent 'Lock-free 101' article
-        - Good article series: ['Introduction to Lock-free Algorithms'](http://www.1024cores.net/home/lock-free-algorithms/introduction)
+
+- Per-CPU variables:
+    - Blog article: [A brief introduction to per-cpu variables, Chen, May 2014](http://thinkiii.blogspot.com/2014/05/a-briefintroduction-to-per-cpu.html)
+    - [How are percpu pointers implemented in the Linux kernel?, Stack Overflow, June 2013](https://stackoverflow.com/questions/16978959/how-are-percpu-pointersimplemented-in-the-linux-kernel)
+
+
+- Lock-free (or lockless) programming:
+    - [What every systems programmer should know about concurrency, Matt Kline, May 2018](https://assets.bitbashing.io/papers/concurrency-primer.pdf)
+    - An excellent "lock-free 101" article: [Fear and Loathing in Lock-Free Programming, T. Neely, Medium](https://medium.com/@tylerneely/fear-and-loathing-in-lock-freeprogramming-7158b1cdd50c)
+    - Good article series: ['Introduction to Lock-free Algorithms'](http://www.1024cores.net/home/lock-free-algorithms/introduction)
         - Presentation: ['Lock-Free Programming', Geoff Langdale](https://www.cs.cmu.edu/~410-s05/lectures/L31_LockFree.pdf)
         - Blog article: ['Some notes on lock-free and wait-free algorithms'](http://www.rossbencina.com/code/lockfree?q=~rossb/code/lockfree/)
         - ['CppCon 2014: Herb Sutter "Lock-Free Programming (or, Juggling Razor Blades), Part I', Herb Sutter, YouTube video](https://www.youtube.com/watch?v=c1gO9aB9nbs)
 
-    - Percpu
-        - Blog: ['A brief introduction to per-cpu variables', Chen, May 2014](http://thinkiii.blogspot.com/2014/05/a-brief-introduction-to-per-cpu.html)
-        - ['How are percpu pointers implemented in the Linux kernel?', StackOverflow, June 2013](https://stackoverflow.com/questions/16978959/how-are-percpu-pointers-implemented-in-the-linux-kernel)
 
-    - RCU in the Linux kernel
-        - The excellent and extensive kernel community documentation: [RCU](https://www.kernel.org/doc/Documentation/RCU/00-INDEX)
-        - ['RCU Usage In the Linux Kernel: One Decade Later', McKenny et al (PDF), circa 2013](http://www2.rdrop.com/~paulmck/techreports/RCUUsage.2013.02.24a.pdf)
-        - A 3 series article to learn RCU: ['What is RCU, Fundamentally?', LWN, Paul McKenney, Dec 2007, Part 1 of 3 ](https://lwn.net/Articles/262464/)
-        - ['Make any algorithm lock-free with this one crazy trick', May 2016](https://www.the-paper-trail.org/post/2016-05-25-make-any-algorithm-lock-free-with-this-one-crazy-trick/)
-    - ['The lockless page cache', LWN, Jon Corbet, July 2008](https://lwn.net/Articles/291826/) (an interesting article)
-    - Lockdep
+- kdump and crash:
+    - Kernel documentation for kdump: [The kexec-based Crash Dumping Solution](https://www.kernel.org/doc/ocumentation/kdump/kdump.txt)
+    - [Oops! Debugging Kernel Panics, Linux Journal, August 2019](https://www.linuxjournal.com/content/oopsdebugging-kernel-panics-0)
+    - Excellent resource for learning and using the crash app: [White paper: Red Hat Crash Utility, David Anderson](https://crash-utility.github.io/crash_ whitepaper.html)
+    - [Analyzing Linux kernel crash dumps with crash - The one tutorial that has it all, Dedoimedo, June 2010]( http://www.dedoimedo.com/computers/crash-analyze.html)
+
+
+- PDF: ['Memory Barriers: a Hardware View for Software Hackers',
+Paul E. McKenney, IBM LTC, June 2010](http://www.rdrop.com/~paulmck/scalability/paper/whymb.2010.06.07c.pdf)
+
+- Lockdep
         - ['Runtime locking correctness validator', kernel documentation](https://www.kernel.org/doc/Documentation/locking/lockdep-design.txt)
         - ['The kernel lock validator', LWN, J Corbet, May 2006](https://lwn.net/Articles/185666/)
         - ['Lockdep: how to read it's cryptic output', Steve Rostedt, Linux Plumbers Conf 2011](https://blog.linuxplumbersconf.org/2011/ocw/sessions/153)
@@ -463,18 +494,16 @@ Paul E. McKenney, IBM LTC, June 2010](http://www.rdrop.com/~paulmck/scalability/
         - (until it gets merged :-) : ['[PATCH 16/28] locking/lockdep: Add explanation to lock usage rules in lockdep design doc', Yuyang Du](https://lkml.org/lkml/2019/4/24/333), Apr 2019
 
 
+- RCU in the Linux kernel
+        - The excellent and extensive kernel community documentation: [RCU](https://www.kernel.org/doc/Documentation/RCU/00-INDEX)
+        - ['RCU Usage In the Linux Kernel: One Decade Later', McKenny et al (PDF), circa 2013](http://www2.rdrop.com/~paulmck/techreports/RCUUsage.2013.02.24a.pdf)
+        - A 3 series article to learn RCU: ['What is RCU, Fundamentally?', LWN, Paul McKenney, Dec 2007, Part 1 of 3 ](https://lwn.net/Articles/262464/)
+        - ['Make any algorithm lock-free with this one crazy trick', May 2016](https://www.the-paper-trail.org/post/2016-05-25-make-any-algorithm-lock-free-with-this-one-crazy-trick/)
+    - ['The lockless page cache', LWN, Jon Corbet, July 2008](https://lwn.net/Articles/291826/) (an interesting article)
+
+
+
 [\[Top\]](https://github.com/PacktPublishing/Linux-Kernel-Development-Cookbook/blob/master/Further_Reading.md#further-reading)
-
-
-## Miscellaneous (not specific to a chapter or topic) - Further Reading ##
-
-- ['You can be a kernel hacker!', Julia Evans blog](https://jvns.ca/blog/2014/09/18/you-can-be-a-kernel-hacker/)
-- [LWN Linux Kernel Index](https://lwn.net/Kernel/Index/) ; all kernel-related articles correctly indexed, right from 2004! Very valuable resource
-- Tip (reprodcued from Ch 5):  
-"Is there a really practical hands-on tip, an almost guaranteed way to become a kernel hacker? Of course, keep reading this book! Ha ha, yes, besides, do partake in the [simply awesome Eudyptula Challenge](http://www.eudyptula-challenge.org/). Hang on, it's - very unfortuantely, and as of this writing - closed down.
-Fear not, [here's a site with all the challenges](https://github.com/agelastic/eudyptula) (and solutions, don't cheat!) posted; do check it out and ry the challenges."
-- [Lowlevel programming University, gurugio](https://github.com/gurugio/lowlevelprogramming-university)
-- 
 
 
 [End of Doc]
