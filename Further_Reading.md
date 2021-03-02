@@ -8,19 +8,27 @@ Here, we present, in a chapter-wise format, additional online as well as book re
 
 For your convenience, below are chapter-wise links to the *Further Reading* notes:
 
- - [Ch 1, Kernel workspace setup](https://github.com/PacktPublishing/Linux-Kernel-Programming/blob/master/Further_Reading.md#chapter-1-kernel-development-workspace-setup---further-reading)
- - [Ch 2, Building the Kernel From Source](https://github.com/PacktPublishing/Linux-Kernel-Programming/blob/master/Further_Reading.md#chapter-2-and-ch-3-building-the-linux-kernel-from-source---further-reading)
- - [Ch 3, ]()
- - [Ch 4, Writing your first Kernel Module - the LKM Framework](https://github.com/PacktPublishing/Linux-Kernel-Development-Cookbook/blob/master/Further_Reading.md#chapter-2-writing-your-first-kernel-module-the-lkm-framework-further-reading)
- - Ch 3
- - Ch 4. Kernel Memory Allocation for Module Authors
- - Ch 5
+- [Online and book resources in general : miscellaneous but very useful !]()
 
-- Don't forget: The companion book *'Linux Kernel Programming (Part 2): Writing character device drivers: Learn to work with user-kernel interfaces, handle peripheral I/O & hardware interrupts'* is available as well!
-    - It's [opensource GitHub repo is here](https://github.com/PacktPublishing/Linux-Kernel-Programming-Part-2)
+ - [Chapter 1, Kernel workspace setup](https://github.com/PacktPublishing/Linux-Kernel-Programming/blob/master/Further_Reading.md#chapter-1-kernel-development-workspace-setup---further-reading)
+ - [Chapter 2, Building the Kernel From Source, Part 1](https://github.com/PacktPublishing/Linux-Kernel-Programming/blob/master/Further_Reading.md#chapter-2-building-the-linux-kernel-from-source---further-reading)
+ - [Chapter 3, Building the 5.0 Linux kernel from Source, Part 2](https://github.com/PacktPublishing/Linux-Kernel-Programming/blob/master/Further_Reading.md#chapter-3-building-the-linux-kernel-from-source---further-reading)
+ - [Chapter 4, Writing your first Kernel Module - the LKM Framework, Part 1](https://github.com/PacktPublishing/Linux-Kernel-Programming/blob/master/Further_Reading.md#chapter-4-writing-your-first-kernel-module-lkms-part-1---further-reading)
+ - [Chapter 5, Writing your first Kernel Module - the LKM Framework, Part 2](https://github.com/PacktPublishing/Linux-Kernel-Programming/blob/master/Further_Reading.md#chapter-5-writing-your-first-kernel-module-lkms-part-2---further-reading)
+ - [Chapter 6, Kernel Internals Essentials - Processes and Threads](https://github.com/PacktPublishing/Linux-Kernel-Programming/blob/master/Further_Reading.md#chapter-6-kernel-internals-essentials---processes-and-threads---further-reading)
+ - [Chapter 7, Memory Management Internals Essentials](https://github.com/PacktPublishing/Linux-Kernel-Programming/blob/master/Further_Reading.md#chapter-7-memory-management-internals-essentials---further-reading)
+ - [Chapter 8, Kernel Memory Allocation for Module Authors, Part 1](https://github.com/PacktPublishing/Linux-Kernel-Programming/blob/master/Further_Reading.md#chapter-8-kernel-memory-allocation-for-module-authors-part-1---further-reading)
+ - [Chapter 9, Kernel Memory Allocation for Module Authors, Part 2](https://github.com/PacktPublishing/Linux-Kernel-Programming/blob/master/Further_Reading.md#chapter-9-kernel-memory-allocation-for-module-authors-part-2---further-reading)
+ - [Chapter 10, The CPU Scheduler, Part 1](https://github.com/PacktPublishing/Linux-Kernel-Programming/blob/master/Further_Reading.md#chapter-10-the-cpu-scheduler-part-1---further-reading)
+ - [Chapter 11, The CPU Scheduler, Part 2](https://github.com/PacktPublishing/Linux-Kernel-Programming/blob/master/Further_Reading.md#chapter-11-the-cpu-scheduler-part-2---further-reading)
+ - [Chapter 12, Kernel Synchronization, Part 1](https://github.com/PacktPublishing/Linux-Kernel-Programming/blob/master/Further_Reading.md#chapter-12-kernel-synchronization-part-1---further-reading)
+ - [Chapter 13, Kernel Synchronization, Part 2](https://github.com/PacktPublishing/Linux-Kernel-Programming/blob/master/Further_Reading.md#chapter-13-kernel-synchronization-part-2---further-reading)
+
+
+Don't forget: The companion book *'Linux Kernel Programming (Part 2): Writing character device drivers: Learn to work with user-kernel interfaces, handle peripheral I/O & hardware interrupts'* is available as well!
+    - It's [opensource GitHub repo is here.](https://github.com/PacktPublishing/Linux-Kernel-Programming-Part-2)
 
 <br>
-
 
 To aid you in delving further into the subject matter of this chapter with useful
 materials, we provide a list of online references and links (and at times, books) in this,
@@ -32,7 +40,7 @@ links and books are considered to be useful throughout your journey through this
 book and after.
 <br>
 
-**===== Online and book resources in general : miscellaneous but very useful ! =====**
+##===== Online and book resources in general : miscellaneous but very useful ! =====
 
 - [The Linux kernel documentation](https://www.kernel.org/doc/html/latest/#the-linux-kernel-documentation)
 - Very useful! [LWN (Linux weekly news) Kernel index](https://lwn.net/Kernel/Index/)
