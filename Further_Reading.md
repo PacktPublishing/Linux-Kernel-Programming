@@ -524,7 +524,7 @@ Paul E. McKenney, IBM LTC, June 2010](http://www.rdrop.com/~paulmck/scalability/
 
 
 
-[\[Top\]](https://github.com/PacktPublishing/Linux-Kernel-Development-Cookbook/blob/master/Further_Reading.md#further-reading)
+[\[Top\]](https://github.com/PacktPublishing/Linux-Kernel-Programming/blob/master/Further_Reading.md#further-reading)
 
 
-[End of Doc]
+[End Doc]
