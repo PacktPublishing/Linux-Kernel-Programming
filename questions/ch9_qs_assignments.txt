@@ -1,0 +1,97 @@
+As we conclude, here is a list of questions for you to test your knowledge
+regarding this chapter's material. You will find answers to selected
+questions here:
+https://github.com/PacktPublishing/Linux-Kernel-Programming/tree/master/solutions_to_assgn
+
+Chapter 9 : Questions and/or Assignments
+
+1. A very useful feature: when creating a custom slab cache with the
+kmem_cache_create() API, you can arrange for an allocated object
+instance to __________ via a _______.
+  a. be auto-freed; destructor function passed as an argument
+  b. get re-cached on being freed; flags parameter passed to it
+  c. be initialized; constructor function passed as an argument
+  d. get its process context to go to sleep; flags parameter passed to it
+
+2. Spot the bug(s) in the following pseudocode! 
+     
+/* called in process context ... */
+void *foo(void)
+{
+	void *v;
+	struct mys *p = kmalloc(GFP_KERNEL, sizeof(struct mys));
+	if (!p)
+		return -ENOMEM;
+
+	// ... do some work ...
+	v = vmalloc(LARGE_AMT);
+	if (!v)
+		return -ENOMEM;
+	// all ok, do more work ...
+	// ...
+	// work done
+	return p;
+}
+     
+Bug(s): ________
+  a. A memory leak: the memory pointed to by p isn’t freed when
+     the vmalloc() API fails, plus it is out of scope: cannot return the
+     automatic/local variable to the caller.
+  b. A memory leak: the memory pointed to by p isn’t freed when
+     the vmalloc() API fails.
+  c. Cannot use GFP_KERNEL in a process context plus a memory leak:
+     the memory pointed to by p isn’t freed when the vmalloc() API fails.
+  d. Cannot use vmalloc() in a process context plus a memory leak:
+     the memory pointed to by p isn’t freed when the vmalloc() API fails
+     
+3. If the processor's silicon memory unit is passed an address it cannot
+translate, it invokes the OS's registered _______.
+  a. party animals
+  b. slab cache
+  c. OOM killer
+  d. page fault handler
+
+4. Imagine that the following user space malloc() (made by a thread X) has
+succeeded and that ptr is non-null: 
+
+	ptr = malloc(getpagesize()*10); ... 
+
+From the kernel perspective though, there is no guarantee that the memory is
+physically allocated right away – this is called demand paging. Physical
+memory allocation will only happen on a page-by-page basis when thread X
+______ any address within the page, thus causing a ______.
+  a. accesses (for r/w/x); segmentation fault
+  b. writes; page fault
+  c. accesses (for rd/wr/exec); page fault
+  d. reads; page fault
+
+5. Assignment : slab_custom_mult
+Write a kernel module that creates multiple custom slab caches
+(slab_custom_mult). Fix the total number of custom caches as, say, 100. Set
+the name of the caches as our_slab-n; where n is an integer from 0 to 99.
+
+The size of the object in each cache also varies; start with a fixed size, say,
+300 bytes, and keep incrementing the size by a multiplier factor (say, 300
+bytes). So, it looks like this:
+
+Slab cache Name              Size
+our_slab-0                    300
+our_slab-2                    600
+our_slab-3                    900
+[...]
+our_slab-98                 29700
+our_slab-99                 30000
+
+Also, why not make the multiplier size a module parameter, called xfactor.
+After it's loaded, look up the kernel log and use vmstat(8) (or other
+utilities) to see all your custom slab caches!
+
+Do sudo vmstat -m |grep "^our_slab" to see how much memory is actually
+allocated to each object in each custom slab cache (it's the fourth column,
+as you earlier learned).
+
+6. show_all_oom:
+Write a script (or C program, it's up to you) to display the current OOM
+score of all the processes alive on the system.
+(Tip: https://dev.to/rrampage/surviving-the-linux-oom-killer-2ki9)
+

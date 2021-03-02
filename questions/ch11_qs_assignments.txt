@@ -1,0 +1,56 @@
+As we conclude, here is a list of questions for you to test your knowledge
+regarding this chapter's material. You will find answers to selected
+questions here:
+https://github.com/PacktPublishing/Linux-Kernel-Programming/tree/master/solutions_to_assgn
+
+Chapter 11 : Questions and/or Assignments
+
+1. A Linux CLI utility to query/set process or thread scheduling policy and
+priorities is ____; a CLI utility to query/set a process’s CPU affinity mask
+is ___.
+  a. psprio, cpumask
+  b. chrt, taskset
+  c. psl, maskcpu
+  d. Any of the above work
+
+2. Consider a Linux system with 8 CPU cores (numbered from 0 to 7); on it, a
+process’s CPU affinity mask shows up as 0xed; this implies that the process
+is not allowed to execute on CPU cores _____.
+  a. 0, 3, and 5
+  b. 0,2,3,5,6, and 7
+  c. 1 and 4
+  d. 1,2,3,5,6, and 7
+
+3. On modern Linux systems, resource bandwidth allocation is properly done
+by leveraging the kernel feature called _____.
+  a. c-groups (CPU groups)
+  b. Nice values
+  c. CPU resource limits
+  d. cgroups (control groups)
+
+4. This feature (from Q 3) has a pseudo filesystem typically mounted at ______.
+  a. /cgr/fs
+  b. /sys/fs
+  c. /proc/cgroup_cpu
+  d. /sys/fs/cgroup
+
+5. Vanilla or standard Linux is an OS that is ____.
+  a. good on occasion
+  b. only general-purpose (GPOS; no form of real time)
+  c. hard real time (RTOS)
+  d. general-purpose and can easily take on soft real-time workloads
+
+6. By applying a patch, Linux can be run as a hard real-time OS (an RTOS):
+True/False: ___ ; if true, this effort is now called _______ and is a Linux
+Foundation project.
+  a. True, Preempt-RT
+  b. True, RTL (Real-Time Linux)
+  c. False, <it’s not possible>
+  d. True, HardLinux
+
+7. Build the realtime Linux (RTL) kernel (as explained in the section
+'Converting mainline Linux into an RTOS'); boot from it and test using:
+  a. the cyclictest app
+  b. some of the [e]BPF frontends (as explained in the section 'Measuring
+     scheduler latency via modern BPF tools').
+

@@ -1,0 +1,29 @@
+As we conclude, here is a list of questions for you to test your knowledge
+regarding this chapter's material. You will find answers to selected
+questions here:
+https://github.com/PacktPublishing/Linux-Kernel-Programming/tree/master/solutions_to_assgn
+
+Chapter 3 : Questions and/or Assignments
+
+1. If you haven't already done so, follow this chapter's directions (and the
+previous chapter as required) to build the kernel from source on your guest
+Linux VM, installing the kernel modules and setting up the initramfs (or
+initrd) image and GRUB bootloader to boot into it as well. Do verify that
+it actually works!
+
+2. Make a copy and extract the content of your x86_64 initramfs image to a
+temporary directory and check out its content (using the tree(1) utility,
+perhaps).
+
+3. On your Ubuntu guest VM, using the GRUB menu, boot into your new kernel
+in single-user mode (and then change the root password).
+
+4. (A bit advanced, for when you're feeling adventurous!) Refer ahead
+to Chapter 5, Writing Your First Kernel Module – LKMs Part 2, in
+the Configuring a debug kernel section. It details the kernel config options to
+be minimally set up for a very useful thing indeed – a debug kernel!
+
+Running your code on a debug kernel can help you uncover hard-to-spot
+bugs and issues. Your job here is to configure another kernel with these
+debug options, then build and run it.
+

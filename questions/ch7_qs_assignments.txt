@@ -1,0 +1,33 @@
+As we conclude, here is a list of questions for you to test your knowledge
+regarding this chapter's material. You will find answers to selected
+questions here:
+https://github.com/PacktPublishing/Linux-Kernel-Programming/tree/master/solutions_to_assgn
+
+Chapter 7 : Questions and/or Assignments
+
+For added value, we have also provided, in the solutions_to_assignments
+directory of this book's GitHub repo, three (well-stitched!) screenshots
+of the procmap utility's complete output when running procmap on a process
+on an x86_64 Ubuntu box with 16 GB RAM, a Raspberry Pi 3B+ running a 64-bit
+kernel, as well as on a BeagleBone Black board with 512 MB RAM; be sure to
+have a look!
+
+1. View the user VAS of the init or systemd process on your Linux box:
+  a. First, via its proc entries (maps for one line per mapping and
+     smaps for detailed info for each mapping or segment).
+  b. Use one or more frontend utilities to perform the same lookup.
+  In both cases, study and interpret the output.
+  
+2. Use the smem(1) utility to figure out which process (or processes) is/are
+the memory hogger(s) on your system (tip: read the documentation on the smem
+utility's home page).
+
+3. Run the ch7/show_kernel_seg kernel module on your x86_64 system
+(also enable showing the user space details via the module parameter
+provided); study the output and understand the memory map it displays.
+
+4. Clone and run the more powerful procmap utility
+(https://github.com/kaiwan/procmap) on your x86_64 system; study the
+output and understand the complete memory map it effectively displays.
+Bonus points for running it on other Linux systems as well.
+

@@ -1,0 +1,22 @@
+As we conclude, here is a list of questions for you to test your knowledge
+regarding this chapter's material. You will find answers to selected
+questions here:
+https://github.com/PacktPublishing/Linux-Kernel-Programming/tree/master/solutions_to_assgn
+
+Chapter 13 : Questions and/or Assignments
+
+1. miscdrv_rdwr_refcount
+Modify our earlier ch12/2_miscdrv_rdwr_spinlock/miscdrv_rdwr_spinlock.c
+driver code. It has the integers ga and gb, which, when being read or
+written, are protected via a spinlock.
+Now, make them refcount_t variables and use the appropriate refcount_t APIs
+when working on them. Test by deliberately making a refcount variable go out
+of the allowed range, [0..INT_MAX].
+
+2. If you haven't already, configure and build a "debug" kernel (ensure you
+have the Lock Debugging config options enabled, as we explained in
+the 'Configuring a debug kernel for lock debugging' section of this chapter.)
+
+Now, boot from it and try out a buggy kernel module (that has locking/deadlock
+bugs); lockdep should catch and report this.
+

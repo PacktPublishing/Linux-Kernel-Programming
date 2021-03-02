@@ -1,0 +1,22 @@
+As we conclude, here is a list of questions for you to test your knowledge
+regarding this chapter's material. You will find answers to selected
+questions here:
+https://github.com/PacktPublishing/Linux-Kernel-Programming/tree/master/solutions_to_assgn
+
+Chapter 2 : Questions and/or Assignments
+
+1. (If you haven't already done so) follow this chapter's directions to do the
+following:
+   a. Download the v5.4 Linux kernel source tree.
+   b. Extract it.
+   c. Configure the kernel (begin by using the localmodconfig approach, 
+      then tweak as required).
+   d. Show the "delta" – the differences between the old (or original) and the
+      new kernel config file (tip: use the diffconfig script to do so).
+
+2. On the kernel code base, build support for both the ctags and cscope
+code browsing tools; use them in an interactive fashion
+(tip: using make help reveals the relevant targets for ctags/cscope.)
+
+3. A bit more ambitious: clone Linus Torvalds's Git tree and configure it.
+

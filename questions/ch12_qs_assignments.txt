@@ -1,0 +1,23 @@
+As we conclude, here is a list of questions for you to test your knowledge
+regarding this chapter's material. You will find answers to selected
+questions here:
+https://github.com/PacktPublishing/Linux-Kernel-Programming/tree/master/solutions_to_assgn
+
+Chapter 12 : Questions and/or Assignments
+
+1. miscdrv_rdwr_mutextrylock: 
+   
+   Modify the book's
+     ch12/1_miscdrv_rdwr_mutexlock/miscdrv_rdwr_mutexlock.c
+   device driver so that it uses the *trylock* variant of the mutex lock in
+   the driver's write() method. If the lock is not acquired, perform some
+   "work" – a hex dump of the driver "context" structure, perhaps ("busy-loop"
+   over this).
+   
+2. (If you haven't already done so) Prepare a "debug" kernel (go back to
+   Chapter 5, Writing Your First Kernel Module – LKMs Part 2, the
+   'Configuring a "debug" kernel' section) and, as explained in the
+    'Testing on a 5.4 "debug" kernel' section, run our
+       ch12/2_miscdrv_rdwr_spinlock buggy driver test case on it (by setting
+       the module parameter 'buggy' to 1).
+

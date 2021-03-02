@@ -1,0 +1,97 @@
+As we conclude, here is a list of questions for you to test your knowledge
+regarding this chapter's material. You will find answers to selected
+questions here:
+https://github.com/PacktPublishing/Linux-Kernel-Programming/tree/master/solutions_to_assgn
+
+Chapter 10 : Questions and/or Assignments
+
+1. The KSE on Linux is ________; this implies that the application developer
+can specify and control the scheduling policy and priority of each _______
+in an application!
+  a. a thread, thread
+  b. a process, process
+  c. a process group, process group
+  d. a user's processes, user
+
+2. The Linux kernel supports __ (or more) scheduling policies; it is/they are
+__________ and the default is always _____.
+  a. 1; SCHED_NORMAL; SCHED_NORMAL
+  b. 3; SCHED_FIFO, SCHED_RR, and SCHED_OTHER (or SCHED_NORMAL); SCHED_OTHER
+  c. 2; SCHED_FIFO and SCHED_RR; SCHED_FIFO
+  d. None of the above
+
+3. SCHED_FIFO and SCHED_RR are considered to be ________ policies, with
+_______ being the aggressive one.
+  a. hard real-time; SCHED_RR
+  b. hard real-time; SCHED_FIFO
+  c. soft real-time; SCHED_FIFO
+  d. soft real-time; SCHED_RR
+
+4. The (soft) real-time priority range supported by mainline Linux is _____,
+with __ being the highest priority (with regard to user space).
+  a. 0 to 99; 99
+  b. 1 to 4; 4
+  c. -20 to +20; 20
+  d. 1 to 99; 99
+
+5. A soft real-time task will run until ________.
+  a. a higher-priority real-time task becomes runnable
+  b. it is stopped or dies
+  c. it gets blocked (sleeps) on a blocking call
+  d. any of the preceding options occur
+  
+6. Modern Linux kernels use a "modular" scheduler where every process or
+thread will belong to exactly one scheduling _____. This implies that you
+can replace the default scheduling policies within the OS with your own
+kernel module for scheduling purposes (true or false?)
+  a. class; True
+  b. runqueue; True
+  c. runqueue; False
+  d. class; False
+
+7. The CFS implementation has an important member within the kernel called
+vruntime; it represents the ________. Its units are ____.
+  a. weighted cumulative amount of the time spent on the CPU by the task in
+     this scheduling cycle; nanoseconds
+  b. variable individual runtime spent on the CPU; milliseconds
+  c. per-cycle amount of time spent on the CPU by the task; milliseconds
+  d. total runtime accumulated by all tasks in the runqueue; seconds
+
+8. On a modern Linux system with four CPU cores, there will be ___
+runqueue(s) for SMP scalability. How many waitqueues can it have?
+  a. 1; 4
+  b. 4; Any number
+  c. 4; 1
+  d. any number of; Any number
+
+9. Consider a modern Linux system with one CPU core: user space process A,
+whose only code is while(1);. Thus, when it runs, no other process will
+ever get the CPU (true or false?) Why?
+  a. True; Linux is a fair-share OS but the process is running while(1);.
+  b. False; Linux is a user-mode preemptive OS. It will preempt A, allowing
+     other tasks to run.
+
+10. Consider a modern Linux system with one CPU core: a kernel thread K
+whose only code is while(1);. Thus, when it runs, no other process will
+ever get the CPU (true or false?) Why?
+  a. False; >= 2.6 Linux can be configured to be kernel-preemptible. If
+     so, it will preempt K, allowing other tasks to run.
+  b. True; the kernel can never be preempted.
+
+11. Find the bug(s) in the the following pseudo-code snippet:
+
+if (!in_task()) { /* in interrupt ctx now */
+	do_task_x();
+	if (<no-data-available>) {
+		schedule(); /* no data; block until it arrives */
+		if (<data-now-available>)
+			// ... do work ...
+
+  a. The "golden rule" is violated! You cannot call schedule()
+     directly or indirectly in the process context.
+  b. in_task(): No such function or macro exists.
+  c. The "golden rule" is violated! You cannot call schedule()
+     directly or indirectly in any kind of atomic or interrupt context.
+     You cannot schedule in an atomic context!
+  d. There's no bug; it's fine.
+

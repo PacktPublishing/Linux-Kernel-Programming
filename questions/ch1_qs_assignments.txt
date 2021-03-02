@@ -1,0 +1,37 @@
+As we conclude, here is a list of questions for you to test your knowledge
+regarding this chapter's material. You will find answers to selected
+questions here:
+https://github.com/PacktPublishing/Linux-Kernel-Programming/tree/master/solutions_to_assgn
+
+Chapter 1 : Questions and/or Assignments
+
+1. VM is a common abbreviation used in virtualization technology for a
+"guest" system. What does it stand for?
+  a) Virtual Monkey
+  b) Virtual Mac
+  c) Virtual Machine
+  d) Very very Maddening
+
+2. On Linux, can you name a directory *,hey,whatacoolname,huh? (yes or
+no)?
+
+INFO:
+Hang on before you try it out! Why, you may ask? In general,
+should you not do so. (Okay, try it out now, but on a VM, and be
+careful!)
+
+3. Let's say we are running on an x86-64 host system running Linux and have
+a 32-bit ARM "target" board (perhaps a Raspberry Pi 3). The job of a cross
+compiler is to do what?
+  a) Compile code that's on the target system into an x86-64 binary
+     executable that can run on the host system.
+  b) Compile code that's on the host system into an ARM-32 binary
+     executable that can run on the target system.
+  c) Perform an entertaining console game on the target.
+  d) None of the above.
+
+4. With respect to the Linux man pages, answer the following questions:
+  a) True or false: They are divided into nine sections.
+  b) Which section represents system call APIs?
+  c) Which section represents kernel APIs? How up to date is it?
+

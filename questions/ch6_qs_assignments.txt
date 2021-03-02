@@ -1,0 +1,34 @@
+As we conclude, here is a list of questions for you to test your knowledge
+regarding this chapter's material. You will find answers to selected
+questions here:
+https://github.com/PacktPublishing/Linux-Kernel-Programming/tree/master/solutions_to_assgn
+
+Chapter 6 : Questions and/or Assignments
+
+1. Consider the following system scenario: there are a total of 125 processes,
+and 164 threads alive, of which 79 are kernel threads. Given this snapshot:
+  1. How many task structures will there be in the kernel memory?
+  2. How many user space stacks will there be in the user memory?
+  3. How many kernel-mode stacks will there be in the kernel
+memory?
+
+2. Looking up user-mode VAS details: take a user-mode C application (even just
+a Hello, world program would suffice; if it's such a simple app, insert a
+pause(2) system call so that it remains alive); build it, run it and peek into
+its user VAS using the following means:
+  1. The 'raw' view, via /proc/PID/maps
+  2. Via the pmap(1) utility; try out various option switches
+     including -X and -XX
+  3. Via the procmap utility (https://github.com/kaiwan/procmap) (this utility
+is pretty powerful; by default, it will show you both the kernel and user
+space process VASes; you can ignore the kernel VAS for now, as coverage of
+that is a key part of the next chapter!).
+
+3. taskdtl: 
+Write a kernel module (named taskdtl) that, given a PID as a parameter
+(validate it!), prints as many details as possible regarding the given
+task.
+Tip: Take a look at this screenshot 
+https://github.com/kaiwan/L2_kernel_trg/blob/master/taskdtl/taskdtl.png
+showing some sample output; try and imitate it.
+

@@ -1,0 +1,69 @@
+As we conclude, here is a list of questions for you to test your knowledge
+regarding this chapter's material. You will find answers to selected
+questions here:
+https://github.com/PacktPublishing/Linux-Kernel-Programming/tree/master/solutions_to_assgn
+
+Chapter 8 : Questions and/or Assignments
+
+1. Does a call to malloc() in user space immediately translate to a call to
+kmalloc() within the kernel?
+
+2. Kernel memory is not swappable (can't be written to the swap area): ___.
+User space memory is always swappable (by default): ___. For user space,
+this can be changed via the _______ system call(s).
+  a. True, False, mprotect()
+  b. False, True, mprotect()
+  c. True, True, mlock()/mlockall()
+  d. False, False, brk()
+
+3. List the two primary allocator systems within the Linux kernel. Of these,
+which one is the actual allocation engine?
+
+4. When allocating memory via the page allocator APIs, the size of the
+allocated memory is always __________, with the minimal size being __.
+  a. a power of 2 bytes, 1 byte
+  b. a power of 2 KB, 1 KB
+  c. a power of 2 pages, 1 page
+  d. a power of 2 MB, 1 MB
+
+5. Consider ptr = __get_free_pages(GFP_ATOMIC | __GFP_ZERO,
+0);. If successful, ptr now points to a memory region of size __ byte(s).
+The content of the just-allocated memory region will be ___.
+  a. 1, zeroed out (null)
+  b. 4,096, zeroed out (null)
+  c. 1,024, random
+  d. 10,240, random
+
+6. The kmalloc() and kzalloc() slab APIs are meant for the common use
+case where ___________.
+  a. the amount of memory to be allocated is less than a page
+  b. the amount of memory to be allocated is between 384 KB and 1 MB
+  c. the amount of memory to be allocated is more than a page
+  d. interrupt handlers require RAM
+
+7. A "golden rule": you cannot invoke the __________ function directly or
+indirectly in any form in any kind of atomic (or interrupt) context. If you're
+performing a memory allocation in such cases, you must do so with the
+_______.
+  a. kmalloc(), GFP_ATOMIC flag
+  b. schedule(), GFP_KERNEL flag
+  c. schedule(), GFP_ATOMIC flag
+  d. kzalloc(), angels and demons prayer :)
+
+8. slab_ptr_array: Write a kernel module that, within its init code,
+allocates slab memory with the kmalloc() API to an array of five pointers;
+that is, each pointer gets 1 KB of slab memory, like this:
+
++-------+-------+-------+-------+-------+
+|0  .   |1  .   |2  .   |3  .   |4  .   |
++---|---+---|---+---|---+---|---+---|---+
+    v       v       v       v       v
+  +---+   +---+   +---+   +---+   +---+
+  |mem|   |mem|   |mem|   |mem|   |mem| <-- 1 KB each
+  +---+   +---+   +---+   +---+   +---+
+
+Then, initialize the buffers to as, bs, cs, ds, and es, respectively. In the
+cleanup code, free up the memory. Tip: take care to handle the error case
+where a memory allocation fails. Don't forget to free the allocations already
+successfully performed!
+

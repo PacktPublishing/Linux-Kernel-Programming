@@ -1,0 +1,40 @@
+As we conclude, here is a list of questions for you to test your knowledge
+regarding this chapter's material. You will find answers to selected
+questions here:
+https://github.com/PacktPublishing/Linux-Kernel-Programming/tree/master/solutions_to_assgn
+
+Chapter 4 : Questions and/or Assignments
+
+1. Does the Linux kernel follow the monolithic or microkernel architecture?
+
+2. Name a few of the subsystems within the kernel.
+
+3. Would you architect a device driver as a separate kernel module or build it
+into the kernel itself, and why?
+
+4. Can a kernel module be used to create a new CPU scheduler on Linux?
+
+5. (a) Spot the error in the following line of code:
+       printk(KERN_CRIT, "Goodbye, world, am burning up...\n");
+   (b) What's the fix?
+
+6. How does the kernel build system know the location of the kernel headers?
+
+7. (a) Spot the errors in the following lines of code:
+static int __init wow_an_lkm_init(void *msg)
+{
+	pr_inform("Am intializing...[%d]\n");
+}
+   (b) What're the fixes?
+
+8. Why don't insmod or rmmod work unless we run with root privileges?
+
+9. Is there an alternate way to use the insmod or rmmod kernel modules (that
+is, without root)?
+
+10. Running in the Linux graphical environment, we don't see the output
+of printk but can see the output of printf; how come? Where has the
+printk output gone?
+
+11. How can we guarantee seeing printk output on the console device?
+

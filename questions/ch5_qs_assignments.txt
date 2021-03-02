@@ -1,0 +1,14 @@
+As we conclude, here is a list of questions for you to test your knowledge
+regarding this chapter's material. You will find answers to selected
+questions here:
+https://github.com/PacktPublishing/Linux-Kernel-Programming/tree/master/solutions_to_assgn
+
+Chapter 5 : Questions and/or Assignments
+
+Assignment 5.1: libtest
+Write a kernel module called mycaller.c. It must invoke a library routine
+called product that lives within another C file (mylib.c), whose signature
+is:
+	int product(int a, int b); 
+and will return the value (a*b).
+
