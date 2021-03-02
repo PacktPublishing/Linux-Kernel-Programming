@@ -40,7 +40,7 @@ links and books are considered to be useful throughout your journey through this
 book and after.
 <br>
 
-##===== Online and book resources in general : miscellaneous but very useful ! =====
+## Generic online and book resources : miscellaneous, very useful
 
 - [The Linux kernel documentation](https://www.kernel.org/doc/html/latest/#the-linux-kernel-documentation)
 - Very useful! [LWN (Linux weekly news) Kernel index](https://lwn.net/Kernel/Index/)
