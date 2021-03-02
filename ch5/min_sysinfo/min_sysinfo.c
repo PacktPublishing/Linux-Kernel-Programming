@@ -2,11 +2,11 @@
  * ch5/min_sysinfo/min_sysinfo.c
  ***************************************************************
  * This program is part of the source code released for the book
- *  "Learn Linux Kernel Development"
+ *  "Linux Kernel Programming"
  *  (c) Author: Kaiwan N Billimoria
  *  Publisher:  Packt
  *  GitHub repository:
- *  https://github.com/PacktPublishing/Learn-Linux-Kernel-Development
+ *  https://github.com/PacktPublishing/Linux-Kernel-Programming
  *
  * From: Ch 5: Writing your First Kernel Module - LKMs Part 2
  ****************************************************************

@@ -2,11 +2,11 @@
  * solutions_to_assgn/ch9/slab_custom_mult/slab_custom_mult.c
  ***************************************************************
  * This program is part of the source code released for the book
- *  "Linux Kernel Development Cookbook"
+ *  "Linux Kernel Programming"
  *  (c) Author: Kaiwan N Billimoria
  *  Publisher:  Packt
  *  GitHub repository:
- *  https://github.com/PacktPublishing/Linux-Kernel-Development-Cookbook
+ *  https://github.com/PacktPublishing/Linux-Kernel-Programming
  *
  * From: Ch 9 : Kernel Memory Allocation for Module Authors Part 2
  ****************************************************************

@@ -2,11 +2,11 @@
  * solutions_to_assgn/ch8/slab_ptr_array/slab_ptr_array.c
  ***************************************************************
  * This program is part of the source code released for the book
- *  "Linux Kernel Development Cookbook"
+ *  "Linux Kernel Programming"
  *  (c) Author: Kaiwan N Billimoria
  *  Publisher:  Packt
  *  GitHub repository:
- *  https://github.com/PacktPublishing/Linux-Kernel-Development-Cookbook
+ *  https://github.com/PacktPublishing/Linux-Kernel-Programming
  *
  * From: Ch 8 : Kernel Memory Allocation for Module Authors Part 1
  ****************************************************************
@@ -53,6 +53,7 @@ static int __init slab_ptr_array_init(void)
 	while (i < SLAB_MAXLOOP) {
 		gkptr[i] = kmalloc(1024, GFP_KERNEL);
 		if (!gkptr[i]) {
+			// pedantic warning, unnecessary in production code
 			pr_warn("%s: kmalloc iter %d failed!\n", OURMODNAME, i);
 			/* Careful! take care to free the prev allocated mem, if any,
 			 * thus avoiding possible memory leakage !

@@ -2,11 +2,11 @@
  * 2_rmw_atomic_bitops/rmw_atomic_bitops.c
  ***************************************************************
  * This program is part of the source code released for the book
- *  "Linux Kernel Development Cookbook"
+ *  "Linux Kernel Programming"
  *  (c) Author: Kaiwan N Billimoria
  *  Publisher:  Packt
  *  GitHub repository:
- *  https://github.com/PacktPublishing/Linux-Kernel-Development-Cookbook
+ *  https://github.com/PacktPublishing/Linux-Kernel-Programming
  *
  * From: Ch 17 : Kernel synchronization Part 2
  ****************************************************************

@@ -2,11 +2,11 @@
  * ch16/1_miscdrv_rdwr_mutexlock/miscdrv_rdwr_mutexlock.c
  ***************************************************************
  * This program is part of the source code released for the book
- *  "Linux Kernel Development Cookbook"
+ *  "Linux Kernel Programming"
  *  (c) Author: Kaiwan N Billimoria
  *  Publisher:  Packt
  *  GitHub repository:
- *  https://github.com/PacktPublishing/Linux-Kernel-Development-Cookbook
+ *  https://github.com/PacktPublishing/Linux-Kernel-Programming
  *
  * From: Ch 16 : Kernel Synchronization - Part 1
  ****************************************************************

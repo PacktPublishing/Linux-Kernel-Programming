@@ -1,12 +1,12 @@
 # Further Reading
-*For the book "Learn Linux Kernel Development", Kaiwan N Billimoria, Packt (2019).*
+*For the book "Linux Kernel Programming", Kaiwan N Billimoria, Packt (Mar 2021).*
 
-*Book GitHub repo*: https://github.com/PacktPublishing/Learn-Linux-Kernel-Development
+*Book GitHub repo*: https://github.com/PacktPublishing/Linux-Kernel-Programming
 
-Here, we present, in a chapter-wise format, additional online as well as book references. We feel that these will help, you, the reader, in digging deeper into topics, or gaining additional views/information, or both. We definitely recommend you browse through the provided references. Also, you will find that some resources are repeated across chapters; we leave it this way so that the reader can gain all required resources in one place (and chapter-wise).
+Here, we present, in a chapter-wise format, additional online as well as book references. We feel that these will help you, the reader, in digging deeper into topics, or gaining additional views/information, or both. We definitely recommend you browse through the provided references. Also, you will find that some resources are repeated across chapters; we leave it this way so that you can gain all required resources in one place (and chapter-wise).
 (Obviously, these reference articles/blogs/etc are provided "as-is"; we cannot vouch for their correctness or validity).
 
-For the reader's convenience, below are chapter-wise links to the *Further Reading* notes:
+For your convenience, below are chapter-wise links to the *Further Reading* notes:
 
  - [Ch 1, Kernel workspace setup](https://github.com/PacktPublishing/Linux-Kernel-Development-Cookbook/blob/master/Further_Reading.md#chapter-1-kernel-workspace-setup--further-reading)
  - [Ch 2, Building the Kernel From Source](https://github.com/PacktPublishing/Linux-Kernel-Development-Cookbook/blob/master/Further_Reading.md#chapter-1-building-the-linux-kernel-from-source--further-reading) 
@@ -15,9 +15,10 @@ For the reader's convenience, below are chapter-wise links to the *Further Readi
  - Ch 4. Kernel Memory Allocation for Module Authors
  - Ch 5
 
-- *Online Chapters*
-	 - [A: File IO Essentials](https://github.com/PacktPublishing/Hands-on-System-Programming-with-Linux/blob/master/Further_reading.md#a-file-io-essentials--further-reading)
+- Don't forget: The companion book *'Linux Kernel Programming (Part 2): Writing character device drivers: Learn to work with user-kernel interfaces, handle peripheral I/O & hardware interrupts'* is available as well!
+    - It's [opensource GitHub repo is here](https://github.com/PacktPublishing/Linux-Kernel-Programming-Part-2)
 
+<br>
 
 ## Chapter 1, Kernel Development Workspace Setup - Further Reading
 
@@ -27,7 +28,7 @@ materials, we provide a list of online references and links (and at times, books
 the Further reading section, at end of every chapter.
 
 Besides the ones that follow immediately, *please be sure to refer to a "special" section
-below entitled Online and book resources in general* : **miscellaneous but useful**! These
+below entitled **Online and book resources in general : miscellaneous but useful**! These
 links and books are considered to be useful throughout your journey through this
 book and after.
 <br>
@@ -72,11 +73,12 @@ Code browsers
     - [Ctags Tutorial](https://courses.cs.washington.edu/courses/cse451/10au/tutorials/tutorial_ctags.html)
     - [The Vim/Cscope tutorial](http://cscope.sourceforge.net/cscope_vim_tutorial.html)
 
-
-**Online and book resources in general : miscellaneous but useful!****
+<br>
+***Online and book resources in general : miscellaneous but very useful!***
 
 - [The Linux kernel documentation](https://www.kernel.org/doc/html/latest/#the-linux-kernel-documentation)
 - Very useful! [LWN (Linux weekly news) Kernel index](https://lwn.net/Kernel/Index/)
+- Deprecated things: DON'T use 'em! Just say No; [Deprecated Interfaces, Language Features, Attributes, and Conventions](https://www.kernel.org/doc/html/latest/process/deprecated.html#deprecated-interfaces-language-features-attributes-and-conventions)
 
 A few excellent books that come to mind (specific books on the Linux kernel and writing Linux device drivers are mentioned in the appropriate chapter's Further reading section):
 
@@ -96,7 +98,7 @@ and why-nots of using Linux on an embedded system, hardware and software design 
 - Julia Evans' blog and zines:
     - [Blog](https://jvns.ca/)
     - [Zines](https://wizardzines.com/)
-
+<br>
 
 
 ## Chapter 2 and Ch 3, Building the Linux Kernel From Source - Further Reading
@@ -118,8 +120,9 @@ and why-nots of using Linux on an embedded system, hardware and software design 
     - [... and many more](https://www.google.com/search?q=learning+to+use+git)
 
 - [Linux Kernel Release Model, Greg Kroah-Hartman, Feb 2018](http://kroah.com/log/blog/2018/02/05/linux-kernel-release-model/)
-- ["LTSI	Project	update - Long Term Support Initiative"](https://events.linuxfoundation.org/wp-content/uploads/2017/11/Using-Linux-for-Long-Term-Community-Status-and-the-Way-We-Go-OSS-Tsugikazu-Shibata.pdf) - slide deck, Open Source Summit Japan, June 2018
-- Linux kernel upstream development
+- [Civil Infrastructure Platform Announces New Super Long Term Support Kernel that Advances Automation, Machine Learning and Artificial Intelligence, LF, Feb 2019](https://www.linuxfoundation.org/press-release/2019/02/civil-infrastructure-platform-announces-new-super-long-termsupport-kernel-that-advances-automation-machine-learning-andartificial-intelligence/)
+- [LTSI Project update - Long Term Support Initiative – slide deck, Open Source Summit Japan, June 2018](https://events19.linuxfoundation.org/wpcontent/uploads/2017/11/Using-Linux-for-Long-Term-Community-Status-and-the-Way-We-Go-OSS-Tsugikazu-Shibata.pdf)
+
     - [Working with the kernel development community](https://www.kernel.org/doc/html/latest/process/index.html#working-with-the-kernel-development-community)
     - Blog artcile: ['Kernel Patch Submission tutorial', Saurabh Singh Sengar](https://saurabhsengarblog.wordpress.com/2015/11/26/kernel-patch-submission-tutorial/)
     - [Working with linux-next](https://www.kernel.org/doc/man-pages/linux-next.html)
@@ -138,7 +141,10 @@ and why-nots of using Linux on an embedded system, hardware and software design 
 
 - [Configuring the kernel](https://www.kernel.org/doc/html/latest/admin-guide/README.html#configuring-the-kernel)
 - Detailed article: [Exploring the Linux kernel: The secrets of Kconfig/kbuild](https://opensource.com/article/18/10/kbuild-and-kconfig)
+- Article: [How to compile a Linux kernel in the 21st century, S Kenlon, Aug 2019](https://opensource.com/article/19/8/linux-kernel-21stcentury)
+- Interesting: [Meet the contributor of the 1-millionth commit: Ricardo Neri, Swapnil Bharatiya, Sept 2020](https://www.linux.com/featured/meetthe-one-millionth-committer-to-linux-ricardo-neri/)
 
+**Ch 3:**
 
 - Initramfs (initrd):
     - [Opening and modifying the initrd](http://www.alexonlinux.com/opening-and-modifying-the-initrd)
@@ -152,13 +158,16 @@ and why-nots of using Linux on an embedded system, hardware and software design 
 
 
 - [GRUB: How do I change the default boot kernel](https://askubuntu.com/questions/216398/set-older-kernel-as-default-grub-entry)
+- [How to Boot into Single User Mode in CentOS/RHEL 7, Kili, Tecmint, August 2017](https://www.tecmint. com/bootinto-single-user-mode-in-centos-7/)
 - Article: [Linux Kernel Cross Compilation](https://gts3.org/2017/cross-kernel.html)
 - [SEALS - Simple Embedded ARM Linux System - project](https://github.com/kaiwan/seals)
 	- - [Wiki pages](https://github.com/kaiwan/seals/wiki)
 - Building the (usual 32-bit) kernel for the Raspberry Pi device
     - [Raspberry Pi kernel build: official doc](https://www.raspberrypi.org/documentation/linux/kernel/building.md)
     - Building a **64-bit** kernel for the Raspberry Pi
+
         - blog article: ['BUILD A 64-BIT KERNEL FOR YOUR RASPBERRY PI 3', Dec 2016](https://devsidestory.com/build-a-64-bit-kernel-for-your-raspberry-pi-3/)
+  
         - blog article: ['Tutorial: How (and why!) to set up a 64-bit kernel, 32-bit Raspbian host OS, 64-bit nspawn Debian guest OS RPi3 system', Jan 2019](https://www.raspberrypi.org/forums/viewtopic.php?f=56&t=232415&sid=146ea82cef8d235c1eaf64a12a8c3427)
         - On GitHub: ['Bootable RPi3 image with 64-bit kernel, 32-bit Raspbian Stretch host OS, 64-bit Debian Buster guest OS in nspawn container', Sakaki, Apr 2019](https://github.com/sakaki-/raspbian-nspawn-64)
         - Interesting, an [Ubuntu 18.04 server on Aarch64 Raspberry Pi](https://wiki.ubuntu.com/ARM/RaspberryPi); simplest way to get a 64-bit Raspberry Pi kernel and rootfs in a single image which can be burned onto the SD card
@@ -233,20 +242,36 @@ and why-nots of using Linux on an embedded system, hardware and software design 
 
 - [The Eudyptula Challenge](http://eudyptula-challenge.org/): "The Eudyptula Challenge was a series of programming exercises for the Linux kernel, that started from a very basic "Hello world" kernel module, moving on up in complexity to getting patches accepted into the main Linux kernel source tree." It's really cool but NOT active as of this writing though.
 
+
 ## Chapter 6, Kernel Internals Essentials - Processes and Threads - Further Reading
 - Book: [Hands-On System Programming with Linux", Kaiwan N Billimoria, Packt](https://www.packtpub.com/networking-and-servers/hands-system-programming-linux). Prerequisites to this chapter (essential reading, really):
 	- Ch 1 : Linux System Architecture
 	- Ch 2 : Virtual Memory
--   CPU ABI (Application Binary Interface) documentation, blog article : 'APPLICATION BINARY INTERFACE (ABI) DOCS AND THEIR MEANING' :  [https://kaiwantech.wordpress.com/2018/05/07/application-binary-interface-abi-docs-and-their-meaning/](https://kaiwantech.wordpress.com/2018/05/07/application-binary-interface-abi-docs-and-their-meaning/)
+- CPU ABI, a blog article : [APPLICATION BINARY INTERFACE (ABI) DOCS AND THEIR MEANING](https://kaiwantech.wordpress.com/2018/05/07/application-binary-interface-abi-docs-and-their-meaning/)
 
-- Blog article: ['Some Tricks used by the Linux kernel'](https://geeksww.com/tutorials/operating_systems/linux/tips_and_tricks/some_tricks_used_by_the_linux_kernel.php)
+- [LWN kernel index on kernel stacks](https://lwn.net/Kernel/Index/#Kernel_ stack)
+
+- Blog article: [Some Tricks used by the Linux kernel](https://geeksww.com/tutorials/operating_systems/linux/tips_and_tricks/some_tricks_used_by_the_linux_kernel.php)
 - [un]likely() macros:
 	- [likely()/unlikely() macros in the Linux kernel - how do they work? What's their benefit?](https://stackoverflow.com/questions/109710/likely-unlikely-macros-in-the-linux-kernel-how-do-they-work-whats-their)
 	- [Why do we use __builtin_expect when a straightforward way is to use if-else](https://stackoverflow.com/questions/7346929/why-do-we-use-builtin-expect-when-a-straightforward-way-is-to-use-if-else)
 
+- [e]BPF – The modern approach to system/app tracing and performance analysis:
+    - [Linux Extended BPF (eBPF) Tracing Tools, Brendan Gregg](http://www.brendangregg.com/ebpf.html)
+    - [Learn eBPF Tracing: Tutorial and Examples (B Gregg)](http://www.brendangregg.com/blog/2019-01-01/learnebpf-tracing.html)
+    - [How eBPF Turns Linux into a Programmable Kernel, Jackson, October 2020](https://thenewstack.io/how-ebpf-turnslinux-into-a-programmable-kernel/)
+    - (Kernel-level) [A thorough introduction to eBPF, Matt Fleming, LWN, December 2017](https://lwn.net/Articles/740157/)
+    - [How io_uring and eBPF Will Revolutionize Programming in Linux, Glauber Costa, April 2020](https://thenewstack.io/how-io_uring-and-ebpf-will-revolutionizeprogramming-in-linux/)
+    - [BPF Performance Tools, by Brendan Gregg – official repo](https://github.com/brendangregg/bpf-perf-toolsbook)
+
+- Kernel lockdown:
+    - [Linux Kernel Finally Gets Its Lockdown, J Wallen, October 2019](https://thenewstack.io/linux-kernel-finallygets-its-lockdown/)
+    - [Lockdown as a security module, Jonathan Corbet, LWN, June 2019](https://lwn.net/Articles/791863/)
+    - [Running an eBPF program may require lifting the kernel lockdown, Gehrcke, September 2019](https://gehrcke.de/2019/09/running-an-ebpf-program-may-require-liftingthe-kernel-lockdown/)
+
 
 ## Chapter 7, Memory Management Internals Essentials - Further Reading
-- Books: Linux kernel memory management Internals
+- Books on Linux kernel memory management internals:
 	- ['Professional Linux Kernel Architecture', Mauerer, Wrox Press](https://www.amazon.in/Professional-Linux-Kernel-Architecture-Programmer/dp/0470343435/ref=sr_1_1?ie=UTF8&qid=1547525512&sr=8-1&keywords=Professional%20Linux%20Kernel%20Architecture%27)
 	- ['Understanding the Linux Virtual Memory Manager', Mel Gorman (Bruce Perens Open Source)](https://www.amazon.in/Understanding-Virtual-Memory-Manager-Perens/dp/0131453483/ref=sr_1_1?ie=UTF8&qid=1547529951&sr=8-1&keywords=mel%20gorman)
 
@@ -255,7 +280,7 @@ and why-nots of using Linux on an embedded system, hardware and software design 
 Software Developer’s Manual. Volume 3 (3A, 3B & 3C): System Programming Guide](https://software.intel.com/en-us/download/intel-64-and-ia-32-architectures-sdm-combined-volumes-3a-3b-3c-and-3d-system-programming-guide)
 	- [All Intel 64 and IA-32 architecture and programming environment manuals](https://software.intel.com/en-us/articles/intel-sdm)
 
-- vsyscall, vdso and VVAR
+- On vsyscall, vdso and VVAR
     - ["On vsyscalls and the vDSO"](https://lwn.net/Articles/446528/), LWN, Jon Corbet, June 2011
     - ["Are system calls the only way to interact with the Linux kernel from user land?", StackExchange, Apr 2014](https://unix.stackexchange.com/questions/124928/are-system-calls-the-only-way-to-interact-with-the-linux-kernel-from-user-land)
 
@@ -272,6 +297,7 @@ Software Developer’s Manual. Volume 3 (3A, 3B & 3C): System Programming Guide]
 - Book: ['Hands-On System Programming with Linux', Kaiwan N Billimoria, Packt](https://www.packtpub.com/networking-and-servers/hands-system-programming-linux). Prerequisites to this chapter (essential reading, really):
 	- Ch 1 : Linux System Architecture
 	- Ch 2 : Virtual Memory
+- [Linux kernel documentation on memory management](https://www.kernel.org/doc/html/latest/core-api/index.html#memory-management)
 
 - Information regarding GFP flags internal usage, etc: ['Memory management when failure is not an option', LWN, Mar 2015](https://lwn.net/Articles/635354/)
 
@@ -282,16 +308,23 @@ Software Developer’s Manual. Volume 3 (3A, 3B & 3C): System Programming Guide]
 - Slab layer - performance, etc
     -   ['Toward a more efficient slab allocator', LWN, Jon Corbet, Jan 2015](https://lwn.net/Articles/629152/)
     -   Blog article ['INTERESTING NUMBERS'](https://kaiwantech.wordpress.com/2015/05/01/interesting-numbers/); see the section on *Networking* for some information on how the network subsystem has time critical code paths (and the resource links that follow)
+
 - ["GNUPLOT 4.2 - A Brief Manual and Tutorial", Duke University](https://people.duke.edu/~hpgavin/gnuplot.html)
 - ['Object-oriented design patterns in the kernel, part 1', Neil Brown, LWN, June 2011](https://lwn.net/Articles/444910/)
 
+**Ch 9:**
 
+- [LWN kernel index on memory management](https://lwn.net/Kernel/Index/#Memory_management)
 
 - ['kvmalloc()', Jon Corbet, LWN, Jan 2017](https://lwn.net/Articles/711653/)
 - ['The "too small to fail" memory-allocation rule', Jon Corbet, LWN, Dec 2014](https://lwn.net/Articles/627419/)
 - Blog article: ['linux slab poisoning 101', Mar 2009](http://www.chizang.net/alex/2009/03/11/linux-slab-poisoning-101/)
 - ['The slab and protected-memory allocators', LWN, May 2018](https://lwn.net/Articles/753154/)
 
+- Kernel memory debugging tools and techniques:
+    - [KASAN – Kernel Address Sanitizer](https://www.kernel.org/doc/html/latest/dev-tools/kasan.html)
+    - [Kernel SLUB debug](https://www.kernel.org/doc/Documentation/vm/slub.txt)
+    - [kmemleak](https://www.kernel.org/doc/html/latest/dev-tools/kmemleak.html)
 
 - DMA - Direct Memory Access
     - Books: 'Essential Linux Device Drivers', S Venkateswaran, and 'Linux Device Drivers', Rubini, Corbet & Hartman
@@ -306,7 +339,7 @@ Software Developer’s Manual. Volume 3 (3A, 3B & 3C): System Programming Guide]
     - Blog article: ['Virtual memory settings in Linux - The Problem with Overcommit'](http://engineering.pivotal.io/post/virtual_memory_settings_in_linux_-_the_problem_with_overcommit/)
     - RHEL specific but useful: ['Interpreting /proc/meminfo and free output for Red Hat Enterprise Linux 5, 6 and 7'](https://access.redhat.com/solutions/406773)
 
-## Ch 9 and Ch 10 : The CPU Scheduler - Further Reading
+## Ch 10 and Ch 11 : The CPU Scheduler - Further Reading
 
 - Detailed PDF: ['A complete guide to Linux process scheduling', Nikita Ishkov, Feb 2015](https://trepo.tuni.fi/bitstream/handle/10024/96864/GRADU-1428493916.pdf)
 - An excellent detailed code-level article on how very particularly the context switching code path switch_to() has evolved on the x86[_64] arch: ['Evolution of the x86 context switch in Linux', Maizure, Sept 2018](https://www.maizure.org/projects/evolution_x86_context_switch_linux/)
