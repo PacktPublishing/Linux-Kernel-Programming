@@ -8,7 +8,7 @@ Here, we present, in a chapter-wise format, additional online as well as book re
 
 For your convenience, below are chapter-wise links to the *Further Reading* notes:
 
-- [Online and book resources in general : miscellaneous but very useful !]()
+- [**Generic online and book resources : miscellaneous, very useful**](https://github.com/PacktPublishing/Linux-Kernel-Programming/blob/master/Further_Reading.md#generic-online-and-book-resources--miscellaneous-very-useful)
 
  - [Chapter 1, Kernel workspace setup](https://github.com/PacktPublishing/Linux-Kernel-Programming/blob/master/Further_Reading.md#chapter-1-kernel-development-workspace-setup---further-reading)
  - [Chapter 2, Building the Kernel From Source, Part 1](https://github.com/PacktPublishing/Linux-Kernel-Programming/blob/master/Further_Reading.md#chapter-2-building-the-linux-kernel-from-source---further-reading)
@@ -415,21 +415,22 @@ Articles/668126/)
     - Blog article, examples of using cgroups v1 for CPU and memory bandwidth control: ['Linux Virtualization : Resource throttling using cgroups'](https://www.geeksforgeeks.org/linux-virtualization-resource-throttling-using-cgroups/)
 
 - Hard Real-Time and Linux as an RTOS
--   - ['Inside Real-Time Linux', Feb 2017](https://www.linux.com/news/event/elce/2017/2/inside-real-time-linux)
--     - ['The Road to Real Time Linux', Steven Rostedt, Mar 2017](https://blogs.vmware.com/opensource/2017/03/16/road-real-time-linux/)
--     - [VDC Survey on real-time response : The Embedded Muse, 341, 03 Jan 2018, Jack Ganssle](http://www.ganssle.com/tem/tem341.html#article3)
--     - Blog article: ['Algorithm time complexity and big O notation'](https://medium.com/@StueyGK/algorithm-time-complexity-and-big-o-notation-51502e612b4d)
--     - Book: *Automate This: How Algorithms Came to Rule Our World, Christopher Steiner*
--     - Older wiki site on *preempt_rt*; it's in the process of being migrated to the new documentation for RTL; it still has very useful HOWTO guides, articles, etc: ['Real-Time Linux Wiki'](https://rt.wiki.kernel.org/index.php/Main_Page)
--     - [RTL – Real-Time Linux, using Linux as an RTOS:
-The RTL Collaborative Project](https://wiki.linuxfoundation.org/realtime/rtl/start)
--   - [RTL Real-Time documentation](https://wiki.linuxfoundation.org/realtime/documentation/start)
--   - [HOWTO: RTOS and RT Applications](https://wiki.linuxfoundation.org/realtime/documentation/howto/applications/application_base)
--   - Interesting: "... compares the load results of the Ubuntu 18.04 LTS generic kernel 4.15.0-22-generic, the Ubuntu low-latency kernel 4.15.0-22-lowlatency and an Ubuntu Linux kernel patched to be fully preemptive 4.16.0-rt4-PREEMPT_RT_FULL as well as preemptive with low-latency 4.16.12-rt4+REEMPT_LL" : ['Low latency and real-time kernels for telco and NFV', Ubuntu, Oct 2018](https://ubuntu.com/blog/low-latency-real-time-kernels-telco-nfv)
--   - ['Real-time Linux communications - An evaluation of the Linux communication stack for real-time robotic applications', Sept 2018](https://hackernoon.com/real-time-linux-communications-2faabf31cf5e)
--   - ['The real-time linux kernel: A survey on Preempt_RT', Feb 2019](https://www.researchgate.net/publication/331290349_The_real-time_linux_kernel_A_survey_on_Preempt_RT)
--   - Detailed slides on cyclictest, good for understanding latency and it's measurement: ['Using and Understanding the Real-Time Cyclictest Benchmark', Rowand, Oct 2013](https://events.static.linuxfound.org/sites/events/files/slides/cyclictest.pdf)
--   - ['Intro to Real-Time Linux for Embedded Developers', an interview with Steven Rostedt](https://www.linuxfoundation.org/blog/2013/03/intro-to-real-time-linux-for-embedded-developers/)
+    - ['Inside Real-Time Linux', Feb 2017](https://www.linux.com/news/event/elce/2017/2/inside-real-time-linux)
+    - ['The Road to Real Time Linux', Steven Rostedt, Mar 2017](https://blogs.vmware.com/opensource/2017/03/16/road-real-time-linux/)
+    - [VDC Survey on real-time response : The Embedded Muse, 341, 03 Jan 2018, Jack Ganssle](http://www.ganssle.com/tem/tem341.html#article3)
+    - Blog article: ['Algorithm time complexity and big O notation'](https://medium.com/@StueyGK/algorithm-time-complexity-and-big-o-notation-51502e612b4d)
+    - Book: *Automate This: How Algorithms Came to Rule Our World, Christopher Steiner*
+    - Older wiki site on *preempt_rt*; it's in the process of being migrated to the new documentation for RTL; it still has very useful HOWTO guides, articles, etc: ['Real-Time Linux Wiki'](https://rt.wiki.kernel.org/index.php/Main_Page)
+
+- RTL – Real-Time Linux, using Linux as an RTOS:
+    - [The RTL Collaborative Project](https://wiki.linuxfoundation.org/realtime/rtl/start)
+    - [RTL Real-Time documentation](https://wiki.linuxfoundation.org/realtime/documentation/start)
+    - [HOWTO: RTOS and RT Applications](https://wiki.linuxfoundation.org/realtime/documentation/howto/applications/application_base)
+    - Interesting: "... compares the load results of the Ubuntu 18.04 LTS generic kernel 4.15.0-22-generic, the Ubuntu low-latency kernel 4.15.0-22-lowlatency and an Ubuntu Linux kernel patched to be fully preemptive 4.16.0-rt4-PREEMPT_RT_FULL as well as preemptive with low-latency 4.16.12-rt4+REEMPT_LL" : ['Low latency and real-time kernels for telco and NFV', Ubuntu, Oct 2018](https://ubuntu.com/blog/low-latency-real-time-kernels-telco-nfv)
+    - ['Real-time Linux communications - An evaluation of the Linux communication stack for real-time robotic applications', Sept 2018](https://hackernoon.com/real-time-linux-communications-2faabf31cf5e)
+    - ['The real-time linux kernel: A survey on Preempt_RT', Feb 2019](https://www.researchgate.net/publication/331290349_The_real-time_linux_kernel_A_survey_on_Preempt_RT)
+    - Detailed slides on cyclictest, good for understanding latency and it's measurement: ['Using and Understanding the Real-Time Cyclictest Benchmark', Rowand, Oct 2013](https://events.static.linuxfound.org/sites/events/files/slides/cyclictest.pdf)
+    - ['Intro to Real-Time Linux for Embedded Developers', an interview with Steven Rostedt](https://www.linuxfoundation.org/blog/2013/03/intro-to-real-time-linux-for-embedded-developers/)
 
 - [e]BPF tools for measuring scheduler / runqueue latencies (plus other stuff):
     - [Very useful summary diagram of Linux [e]BPF tracing tools, Brendan Gregg](http://www.brendangregg.com/BPF/bcc_tracing_tools_early2019.png)
