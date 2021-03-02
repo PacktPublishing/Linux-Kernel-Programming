@@ -25,19 +25,14 @@ For your convenience, below are chapter-wise links to the *Further Reading* note
  - [Chapter 13, Kernel Synchronization, Part 2](https://github.com/PacktPublishing/Linux-Kernel-Programming/blob/master/Further_Reading.md#chapter-13-kernel-synchronization-part-2---further-reading)
 
 
-Don't forget: The companion book *'Linux Kernel Programming (Part 2): Writing character device drivers: Learn to work with user-kernel interfaces, handle peripheral I/O & hardware interrupts'* is available as well!
+**Don't forget**: The companion book *'Linux Kernel Programming (Part 2): Writing character device drivers: Learn to work with user-kernel interfaces, handle peripheral I/O & hardware interrupts'* is available as well!
     - It's [opensource GitHub repo is here.](https://github.com/PacktPublishing/Linux-Kernel-Programming-Part-2)
 
 <br>
 
-To aid you in delving further into the subject matter of this chapter with useful
-materials, we provide a list of online references and links (and at times, books) in this,
-the Further reading section, at end of every chapter.
 
-Besides the *Further Reading* resource specified chapter-wise, *please be sure to refer to a "special" section
-below entitled **Online and book resources in general : miscellaneous but useful**! These
-links and books are considered to be useful throughout your journey through this
-book and after.
+Besides the *Further Reading* resource specified chapter-wise, be sure to refer to the "special" section below entitled **Generic online and book resources : miscellaneous, very useful**! These
+links and books are considered to be useful throughout your journey through this book and after.
 <br>
 
 ## Generic online and book resources : miscellaneous, very useful
