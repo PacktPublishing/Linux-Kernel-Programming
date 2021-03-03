@@ -11,7 +11,7 @@
  * From: Ch 6: Kernel Internals Essentials - Processes and Threads
  ****************************************************************
  * Brief Description:
- * A quick 'hello, world' with the caveat that it runs in an infinite
+ * A quick user mode 'hello, world' with the caveat that it runs in an infinite
  * loop! Why? So that we can trace something menaingful with the modern eBPF
  * BCC stackcount-bpfcc tool!
  * 
