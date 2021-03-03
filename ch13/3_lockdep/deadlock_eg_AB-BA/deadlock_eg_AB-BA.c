@@ -194,6 +194,11 @@ static int __init deadlock_eg_AB_BA_init(void)
 	 * to retrieve the function pointer, subsequently calling the function
 	 * via it's pointer (with 'C' what you do is only limited by your
 	 * imagination :).
+	 *
+	 * EDIT + *NOTE*
+	 * The kallsyms_lookup_name() API has been unexported from kernel ver 5.7
+	 * Commit: https://github.com/torvalds/linux/commit/0bd476e6c67190b5eb7b6e105c8db8ff61103281
+	 * Rationale: https://lwn.net/Articles/813350/
 	 */
 	ptr_sched_setaffinity = (void *)kallsyms_lookup_name("sched_setaffinity");
 	if (!ptr_sched_setaffinity) {
