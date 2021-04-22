@@ -4,9 +4,10 @@ Ch 6: Kernel and Memory Management Internals Essentials
 (For your convenience, we have repeated the questions below and have provided
 answers / solutions to some of them).
 ------------------------------------------------------------------------------
-1. Consider the following system scenario: there are a total of 125 processes,
-   and 164 threads alive, of which, 79 are kernel threads. Given this snapshot,
-   how many:
+[Note: question 1 has been slightly edited; Apr '21]
+1. Consider the following system scenario: there are a total of 125 processes
+   alive; internally consisting of 164 threads, of which, 79 are kernel threads.
+   Given this snapshot, how many:
    a) task structures will there be in kernel memory?
    b) userspace stacks will there be in user memory?
    c) kernel-mode stacks will there be in kernel memory?
