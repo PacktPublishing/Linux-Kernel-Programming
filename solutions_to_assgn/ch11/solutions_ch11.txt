@@ -14,7 +14,9 @@ not allowed to execute on CPU cores _______
  3. 1 and 4
  4. 1,2,3,5,6 and 7
 
-A. option 2
+A. option 3
+[EDIT: this answer has been corrected to option 3 from option 2; many thanks to
+Andreas Hecht for pointing this out!]
 
 4. The above feature's has a pseudo filesystem typically mounted at ________
  1. /cgr/fs
