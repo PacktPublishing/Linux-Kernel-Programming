@@ -76,8 +76,7 @@ Fear not, [here's a site with all the challenges](https://github.com/agelastic/e
 Resources on setting up a Linux guest using VirtualBox on a Windows host:
 
 - A very clearly written tutorial entitled [Install Linux Inside Windows
-Using VirtualBox, Abhishek Prakash (It's FOSS!, August 2019)](https://
-itsfoss.com/install-linux-in-virtualbox/)
+Using VirtualBox, Abhishek Prakash (It's FOSS!, August 2019)](https://itsfoss.com/install-linux-in-virtualbox/)
 
 - An alternate, similarly excellent resource: [Install Ubuntu on Oracle
 VirtualBox](https://brb.nci.nih.gov/seqtools/installUbuntu.html)
