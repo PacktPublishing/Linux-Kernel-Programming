@@ -49,5 +49,5 @@ runcmd "make || exit 1"
 }
 
 runcmd "sudo insmod ./$1.ko && lsmod|grep $1"
-runcmd dmesg
+runcmd "sudo dmesg"
 exit 0
