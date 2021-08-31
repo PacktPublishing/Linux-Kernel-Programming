@@ -49,5 +49,7 @@ runcmd "make || exit 1"
 }
 
 runcmd "sudo insmod ./$1.ko && lsmod|grep $1"
-runcmd dmesg
+# Ubuntu 20.10 onward has enabled CONFIG_SECURITY_DMESG_RESTRICT ! That's good for security
+# So we need to 'sudo' dmesg; thanks to @gregbuchholz for pointing this out
+runcmd "sudo dmesg"
 exit 0
