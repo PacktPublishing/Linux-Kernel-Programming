@@ -172,7 +172,7 @@
 	"%03d) %c%s%c:%d   |  "                                                      \
 	"%c%c%c%u   "                                                                \
 	"/* %s() */\n"                                                               \
-	, smp_processor_id(),                                                        \
+	, raw_smp_processor_id(),                                                    \
 	(!current->mm?'[':' '), current->comm, (!current->mm?']':' '), current->pid, \
 	(irqs_disabled()?'d':'.'),                                                   \
 	(need_resched()?'N':'.'),                                                    \
