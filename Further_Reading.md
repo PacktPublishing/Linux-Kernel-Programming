@@ -283,7 +283,7 @@ Code browsers
     - [BPF Performance Tools, by Brendan Gregg – official repo](https://github.com/brendangregg/bpf-perf-toolsbook)
 
 - Kernel lockdown:
-    - [Linux Kernel Finally Gets Its Lockdown, J Wallen, October 2019](https://thenewstack.io/linux-kernel-finallygets-its-lockdown/)
+    - [Linux Kernel Finally Gets Its Lockdown, J Wallen, October 2019](https://thenewstack.io/linux-kernel-finally-gets-its-lockdown/)
     - [Lockdown as a security module, Jonathan Corbet, LWN, June 2019](https://lwn.net/Articles/791863/)
     - [Running an eBPF program may require lifting the kernel lockdown, Gehrcke, September 2019](https://gehrcke.de/2019/09/running-an-ebpf-program-may-require-liftingthe-kernel-lockdown/)
 
