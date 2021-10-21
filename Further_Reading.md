@@ -25,7 +25,7 @@ For your convenience, below are chapter-wise links to the *Further Reading* note
  - [Chapter 13, Kernel Synchronization, Part 2](https://github.com/PacktPublishing/Linux-Kernel-Programming/blob/master/Further_Reading.md#chapter-13-kernel-synchronization-part-2---further-reading)
 
 
-**Don't forget**: The companion book *'Linux Kernel Programming (Part 2): Writing character device drivers: Learn to work with user-kernel interfaces, handle peripheral I/O & hardware interrupts'* is available as well!
+**Don't forget**: The companion book *'Linux Kernel Programming (Part 2): Writing character device drivers: Learn to work with user-kernel interfaces, handle peripheral I/O & hardware interrupts'* is available as well! *(Hey, the ebook is free!)*
     - It's [opensource GitHub repo is here.](https://github.com/PacktPublishing/Linux-Kernel-Programming-Part-2)
 
 <br>
@@ -245,7 +245,7 @@ Code browsers
 	- AskUbuntu: ["What does DKMS do? How do I use it?"](https://askubuntu.com/questions/408605/what-does-dkms-do-how-do-i-use-it)
 	- dkms(8) man page](https://linux.die.net/man/8/dkms)
 
-- Linux Kernel Security
+- [Linux Kernel Security](https://github.com/PacktPublishing/Linux-Kernel-Programming/blob/master/Further_Reading.md#kernel_sec)
 	- The [Kernel Self Protection Project](https://kernsec.org/wiki/index.php/Kernel_Self_Protection_Project)  (KSPP, Kees Cook)
 	- Regular updates on the state of kernel secuirty: [codeblog, by Kees Cook](https://outflux.net/blog/)
 	- Arch Linux wiki: ["Security / Kernel hardening"](https://wiki.archlinux.org/index.php/security#Kernel_hardening)
