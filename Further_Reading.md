@@ -280,10 +280,10 @@ Code browsers
     - [How eBPF Turns Linux into a Programmable Kernel, Jackson, October 2020](https://thenewstack.io/how-ebpf-turnslinux-into-a-programmable-kernel/)
     - (Kernel-level) [A thorough introduction to eBPF, Matt Fleming, LWN, December 2017](https://lwn.net/Articles/740157/)
     - [How io_uring and eBPF Will Revolutionize Programming in Linux, Glauber Costa, April 2020](https://thenewstack.io/how-io_uring-and-ebpf-will-revolutionizeprogramming-in-linux/)
-    - [BPF Performance Tools, by Brendan Gregg – official repo](https://github.com/brendangregg/bpf-perf-toolsbook)
+    - [BPF Performance Tools, by Brendan Gregg – official repo](https://github.com/brendangregg/bpf-perf-tools-book)
 
 - Kernel lockdown:
-    - [Linux Kernel Finally Gets Its Lockdown, J Wallen, October 2019](https://thenewstack.io/linux-kernel-finallygets-its-lockdown/)
+    - [Linux Kernel Finally Gets Its Lockdown, J Wallen, October 2019](https://thenewstack.io/linux-kernel-finally-gets-its-lockdown/)
     - [Lockdown as a security module, Jonathan Corbet, LWN, June 2019](https://lwn.net/Articles/791863/)
     - [Running an eBPF program may require lifting the kernel lockdown, Gehrcke, September 2019](https://gehrcke.de/2019/09/running-an-ebpf-program-may-require-liftingthe-kernel-lockdown/)
 
