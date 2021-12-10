@@ -443,7 +443,7 @@ Articles/668126/)
 - An excellent read: ['What every systems programmer should know about concurrency', M Kline, May 2018](https://assets.bitbashing.io/papers/concurrency-primer.pdf)
 
 - Chip Overclock blog: [Peeking under the Hood, Sloan, May 2012](https://coverclock.blogspot.com/2012/05/peeking-under-hood.html)
-- [Measuring context switching and memory overheads for Linux threads, Eli Bendersky, Sept 2018](https://eli.thegreenplace.net/2018/measuringcontext-switching-and-memory-overheads-for-linux-threads/)
+- [Measuring context switching and memory overheads for Linux threads, Eli Bendersky, Sept 2018](https://eli.thegreenplace.net/2018/measuring-context-switching-and-memory-overheads-for-linux-threads/)
 - Compiler Explorer website, Matt Godbolt; very useful: [See the live disassembly of your code on a large choice of compilers and compiler flags](https://godbolt.org/)
 
 - This presentation covers deadlock scenarios: ['Lockdep: how to read it's cryptic output', Steve Rostedt, Linux Plumbers Conf 2011](https://blog.linuxplumbersconf.org/2011/ocw/sessions/153)
