@@ -19,7 +19,7 @@ instance to __________ via a _______.
 void *foo(void)
 {
 	void *v;
-	struct mys *p = kmalloc(GFP_KERNEL, sizeof(struct mys));
+	struct mys *p = kmalloc(sizeof(struct mys), GFP_KERNEL);
 	if (!p)
 		return -ENOMEM;
 
