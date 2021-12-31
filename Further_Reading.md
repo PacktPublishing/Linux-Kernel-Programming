@@ -484,7 +484,9 @@ Articles/668126/)
 
 - Lock-free (or lockless) programming:
     - [What every systems programmer should know about concurrency, Matt Kline, May 2018](https://assets.bitbashing.io/papers/concurrency-primer.pdf)
-    - An excellent "lock-free 101" article: [Fear and Loathing in Lock-Free Programming, T. Neely, Medium](https://medium.com/@tylerneely/fear-and-loathing-in-lock-freeprogramming-7158b1cdd50c)
+    - Excellent "lock-free 101" articles:
+        - [Fear and Loathing in Lock-Free Programming, T. Neely, Medium](https://medium.com/@tylerneely/fear-and-loathing-in-lock-freeprogramming-7158b1cdd50c)
+        - [An Introduction to Lock-Free Programming, Preshing on Programming blog, June 2012](https://preshing.com/20120612/an-introduction-to-lock-free-programming/)
     - Good article series: ['Introduction to Lock-free Algorithms'](http://www.1024cores.net/home/lock-free-algorithms/introduction)
         - Presentation: ['Lock-Free Programming', Geoff Langdale](https://www.cs.cmu.edu/~410-s05/lectures/L31_LockFree.pdf)
         - Blog article: ['Some notes on lock-free and wait-free algorithms'](http://www.rossbencina.com/code/lockfree?q=~rossb/code/lockfree/)
@@ -497,9 +499,10 @@ Articles/668126/)
     - Excellent resource for learning and using the crash app: [White paper: Red Hat Crash Utility, David Anderson](https://crash-utility.github.io/crash_ whitepaper.html)
     - [Analyzing Linux kernel crash dumps with crash - The one tutorial that has it all, Dedoimedo, June 2010]( http://www.dedoimedo.com/computers/crash-analyze.html)
 
-
-- PDF: ['Memory Barriers: a Hardware View for Software Hackers',
+- Memory barriers:
+    - PDF: ['Memory Barriers: a Hardware View for Software Hackers',
 Paul E. McKenney, IBM LTC, June 2010](http://www.rdrop.com/~paulmck/scalability/paper/whymb.2010.06.07c.pdf)
+    - [Memory Barriers Are Like Source Control Operations, Preshing on Programming blog, July 2012](https://preshing.com/20120710/memory-barriers-are-like-source-control-operations/)
 
 - Lockdep
         - ['Runtime locking correctness validator', kernel documentation](https://www.kernel.org/doc/Documentation/locking/lockdep-design.txt)
@@ -510,10 +513,11 @@ Paul E. McKenney, IBM LTC, June 2010](http://www.rdrop.com/~paulmck/scalability/
 
 
 - RCU in the Linux kernel
-        - The excellent and extensive kernel community documentation: [RCU](https://www.kernel.org/doc/Documentation/RCU/00-INDEX)
-        - ['RCU Usage In the Linux Kernel: One Decade Later', McKenny et al (PDF), circa 2013](http://www2.rdrop.com/~paulmck/techreports/RCUUsage.2013.02.24a.pdf)
-        - A 3 series article to learn RCU: ['What is RCU, Fundamentally?', LWN, Paul McKenney, Dec 2007, Part 1 of 3 ](https://lwn.net/Articles/262464/)
-        - ['Make any algorithm lock-free with this one crazy trick', May 2016](https://www.the-paper-trail.org/post/2016-05-25-make-any-algorithm-lock-free-with-this-one-crazy-trick/)
+    - The excellent and extensive kernel community documentation: [RCU](https://www.kernel.org/doc/Documentation/RCU/00-INDEX)
+    - [My First Kernel Module: A Debugging Nightmare, Ryan Eberhardt. Nov 2020](https://reberhardt.com/blog/2020/11/18/my-first-kernel-module.html); see the section entitled 'RCU: Read, Copy, Update', excellent and clear!
+    - ['RCU Usage In the Linux Kernel: One Decade Later', McKenny et al (PDF), circa 2013](http://www2.rdrop.com/~paulmck/techreports/RCUUsage.2013.02.24a.pdf)
+    - A 3 series article to learn RCU: ['What is RCU, Fundamentally?', LWN, Paul McKenney, Dec 2007, Part 1 of 3 ](https://lwn.net/Articles/262464/)
+    - ['Make any algorithm lock-free with this one crazy trick', May 2016](https://www.the-paper-trail.org/post/2016-05-25-make-any-algorithm-lock-free-with-this-one-crazy-trick/)
     - ['The lockless page cache', LWN, Jon Corbet, July 2008](https://lwn.net/Articles/291826/) (an interesting article)
 
 
