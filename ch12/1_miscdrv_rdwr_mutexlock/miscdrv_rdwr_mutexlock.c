@@ -278,7 +278,7 @@ static int __init miscdrv_init_mutexlock(void)
 		return ret;
 	}
 	pr_info("LLKD misc driver (major # 10) registered, minor# = %d,"
-		" dev node is /dev/llkd_miscdrv_rdwr\n", llkd_miscdev.minor);
+		" dev node is /dev/%s", llkd_miscdev.minor, llkd_miscdev.name);
 
 	/*
 	 * A 'managed' kzalloc(): use the 'devres' API devm_kzalloc() for mem
