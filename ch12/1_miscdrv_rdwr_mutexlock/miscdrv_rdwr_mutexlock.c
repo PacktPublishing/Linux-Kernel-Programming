@@ -314,7 +314,7 @@ static void __exit miscdrv_exit_mutexlock(void)
 	mutex_destroy(&lock1);
 	mutex_destroy(&ctx->lock);
 	misc_deregister(&llkd_miscdev);
-	pr_info("LLKD misc driver deregistered, bye\n");
+	pr_info("LLKD misc driver %s deregistered, bye\n", llkd_miscdev.name);
 }
 
 module_init(miscdrv_init_mutexlock);

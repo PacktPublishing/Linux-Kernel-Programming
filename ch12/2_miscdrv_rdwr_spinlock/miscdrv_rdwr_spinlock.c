@@ -351,7 +351,7 @@ static void __exit miscdrv_exit_spinlock(void)
 {
 	mutex_destroy(&ctx->mutex);
 	misc_deregister(&llkd_miscdev);
-	pr_info("%s: LLKD misc driver deregistered, bye\n", OURMODNAME);
+	pr_info("LLKD misc driver %s deregistered, bye\n", llkd_miscdev.name);
 }
 
 module_init(miscdrv_init_spinlock);
