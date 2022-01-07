@@ -52,12 +52,12 @@ vruntime; it represents the __________; it’s unit is ______
 
 A. option 1
 
-8. On a modern Linux system with 4 CPU cores, there will be ___ runqueue(s) for
-SMP scalability; how many waitqueues can it have: __
- 1. 1, 4
- 2. 4, any number
- 3. 4, 1
- 4. any number of, any number
+8. On a modern Linux system with 4 CPU cores and 5 scheduler classes, there
+will be ___ runqueue(s) for SMP scalability.
+ 1. 4
+ 2. 20
+ 3. 40
+ 4. any number
 
 A. option 2
 
