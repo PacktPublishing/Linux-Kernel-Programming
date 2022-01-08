@@ -57,12 +57,12 @@ vruntime; it represents the ________. Its units are ____.
   c. per-cycle amount of time spent on the CPU by the task; milliseconds
   d. total runtime accumulated by all tasks in the runqueue; seconds
 
-8. On a modern Linux system with four CPU cores, there will be ___
-runqueue(s) for SMP scalability. How many waitqueues can it have?
-  a. 1; 4
-  b. 4; Any number
-  c. 4; 1
-  d. any number of; Any number
+8. On a modern Linux system with 4 CPU cores and 5 scheduler classes, there
+will be ___ runqueue(s) for SMP scalability.
+ 1. 4
+ 2. 20
+ 3. 40
+ 4. any number
 
 9. Consider a modern Linux system with one CPU core: user space process A,
 whose only code is while(1);. Thus, when it runs, no other process will
