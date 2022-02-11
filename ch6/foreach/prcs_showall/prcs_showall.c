@@ -48,6 +48,21 @@ static int show_prcs_in_tasklist(void)
 	char hdr[] = "     Name       |  TGID  |   PID  |  RUID |  EUID";
 
 	pr_info("%s\n", &hdr[0]);
+	/*
+	 * The for_each_process() is a macro that iterates over the task structures in memory.
+	 * The task structs are global of course; this implies we should hold a lock of some
+	 * sort while working on them (even if only reading!). So, doing
+	 *  read_lock(&tasklist_lock);
+	 *  [...]
+	 *  read_unlock(&tasklist_lock);
+	 * BUT, this lock - tasklist_lock - isn't exported and thus unavailable to modules.
+	 * So, using an RCU read lock is indicated here (this has been added later to this code).
+	 * FYI: a) Ch 12 and Ch 13 cover the details on kernel synchronization.
+	 *      b) Read Copy Update (RCU) is a complex synchronization mechanism; it's
+	 * conceptually explained really well within this blog article:
+	 *  https://reberhardt.com/blog/2020/11/18/my-first-kernel-module.html
+	 */
+	rcu_read_lock();
 	for_each_process(p) {
 		memset(tmp, 0, 128);
 		n = snprintf(tmp, 128, "%-16s|%8d|%8d|%7u|%7u\n", p->comm, p->tgid, p->pid,
@@ -64,6 +79,7 @@ static int show_prcs_in_tasklist(void)
 		cond_resched();
 		total++;
 	}			// for_each_process()
+	rcu_read_unlock();
 
 	return total;
 }

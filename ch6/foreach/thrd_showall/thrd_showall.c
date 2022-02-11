@@ -62,15 +62,25 @@ static int showthrds(void)
 "------------------------------------------------------------------------------------------\n";
 
 	pr_info("%s", hdr);
-#if 0
-	/* the tasklist_lock reader-writer spinlock for the task list 'should'
-	 * be used here, but, it's not exported, hence unavailable to our kernel module
-	 */
-	read_lock(&tasklist_lock);
-#endif
-
+		pr_info("%s\n", &hdr[0]);
 	disp_idle_thread();
 
+	/*
+	 * The do_each_thread() / while_each_thread() is a pair of macros that iterates over
+	 * _all_ task structures in memory.
+	 * The task structs are global of course; this implies we should hold a lock of some
+	 * sort while working on them (even if only reading!). So, doing
+	 *  read_lock(&tasklist_lock);
+	 *  [...]
+	 *  read_unlock(&tasklist_lock);
+	 * BUT, this lock - tasklist_lock - isn't exported and thus unavailable to modules.
+	 * So, using an RCU read lock is indicated here (this has been added later to this code).
+	 * FYI: a) Ch 12 and Ch 13 cover the details on kernel synchronization.
+	 *      b) Read Copy Update (RCU) is a complex synchronization mechanism; it's
+	 * conceptually explained really well within this blog article:
+	 *  https://reberhardt.com/blog/2020/11/18/my-first-kernel-module.html
+	 */
+	rcu_read_lock();
 	do_each_thread(g, t) {     /* 'g' : process ptr; 't': thread ptr */
 		task_lock(t);
 
@@ -121,10 +131,8 @@ static int showthrds(void)
 		memset(tmp, 0, sizeof(tmp));
 		task_unlock(t);
 	} while_each_thread(g, t);
-#if 0
-	/* <same as above, reg the reader-writer spinlock for the task list> */
-	read_unlock(&tasklist_lock);
-#endif
+	rcu_read_unlock();
+
 	return total;
 }
 
