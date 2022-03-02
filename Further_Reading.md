@@ -97,8 +97,9 @@ Very user-friendly – simply select and download the toolchain of choice.
 - A wiki page (from the SEALS project I maintain, see the following) with instructions on downloading and installing the latest ARM Linaro toolchain (a popular one) is available [here](https://github.com/kaiwan/seals/wiki/HOWTO-Install-required-packages-on-the-Host-for-SEALS)
 
 
-Some useful tooling, drivers, and so on, created exclusively by me:
+Some useful tooling, drivers, and so on, created by myself:
 
+- The *procmap* utility - view any process's virtual address space fully (both user+kernel VAS): [procmap](https://github.com/kaiwan/procmap)
 - Scripts, tools, utils, code : [usefulsnips](https://github.com/kaiwan/usefulsnips)
 - [SEALS](https://github.com/kaiwan/seals) : Simple Embedded Arm Linux System
 - [device-memory-readwrite](https://github.com/kaiwan/device-memory-readwrite) : Read/write pretty much any memory location (RAM or hardware IO memory) on a device or PC
