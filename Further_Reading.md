@@ -155,8 +155,8 @@ Code browsers
 
 - [Configuring the kernel](https://www.kernel.org/doc/html/latest/admin-guide/README.html#configuring-the-kernel)
 - Detailed article: [Exploring the Linux kernel: The secrets of Kconfig/kbuild](https://opensource.com/article/18/10/kbuild-and-kconfig)
-- Article: [How to compile a Linux kernel in the 21st century, S Kenlon, Aug 2019](https://opensource.com/article/19/8/linux-kernel-21stcentury)
-- Interesting: [Meet the contributor of the 1-millionth commit: Ricardo Neri, Swapnil Bharatiya, Sept 2020](https://www.linux.com/featured/meetthe-one-millionth-committer-to-linux-ricardo-neri/)
+- Article: [How to compile a Linux kernel in the 21st century, S Kenlon, Aug 2019](https://opensource.com/article/19/8/linux-kernel-21st-century)
+- Interesting: [Meet the contributor of the 1-millionth commit: Ricardo Neri, Swapnil Bharatiya, Sept 2020](https://www.linux.com/featured/meet-the-one-millionth-committer-to-linux-ricardo-neri/)
 
 <br>
 
