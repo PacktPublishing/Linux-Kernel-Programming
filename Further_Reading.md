@@ -63,7 +63,7 @@ and why-nots of using Linux on an embedded system, hardware and software design 
 
 - [Lowlevel programming University, gurugio](https://github.com/gurugio/lowlevelprogramming-university)
 
-- *Tip (reprodcued from Chapter 5)*:  
+- *Tip (reprodcued from Chapter 5)*: 
 "Is there a really practical hands-on tip, an almost guaranteed way to become a kernel hacker? Of course, keep reading this book! Ha ha, yes, besides, do partake in the [simply awesome Eudyptula Challenge](http://www.eudyptula-challenge.org/). Hang on, it's - very unfortuantely, and as of this writing - closed down.
 Fear not, [here's a site with all the challenges](https://github.com/agelastic/eudyptula) posted (and the solutions, don't cheat!); do check it out and try the challenges."
 
@@ -96,6 +96,7 @@ Very user-friendly – simply select and download the toolchain of choice.
 
 - A wiki page (from the SEALS project I maintain, see the following) with instructions on downloading and installing the latest ARM Linaro toolchain (a popular one) is available [here](https://github.com/kaiwan/seals/wiki/HOWTO-Install-required-packages-on-the-Host-for-SEALS)
 
+- Learn how to install many apps on Ubuntu/CentOS/Debian/etc via the [Installi web guide](https://installati.one/)
 
 Some useful tooling, drivers, and so on, created exclusively by me:
 
