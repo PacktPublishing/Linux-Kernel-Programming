@@ -98,8 +98,9 @@ Very user-friendly – simply select and download the toolchain of choice.
 
 - Learn how to install many apps on Ubuntu/CentOS/Debian/etc via the [Installi web guide](https://installati.one/)
 
-Some useful tooling, drivers, and so on, created exclusively by me:
+Some useful tooling, drivers, and so on, created by myself:
 
+- The *procmap* utility - view any process's virtual address space fully (both user+kernel VAS): [procmap](https://github.com/kaiwan/procmap)
 - Scripts, tools, utils, code : [usefulsnips](https://github.com/kaiwan/usefulsnips)
 - [SEALS](https://github.com/kaiwan/seals) : Simple Embedded Arm Linux System
 - [device-memory-readwrite](https://github.com/kaiwan/device-memory-readwrite) : Read/write pretty much any memory location (RAM or hardware IO memory) on a device or PC
@@ -134,7 +135,7 @@ Code browsers
     - [... and many more](https://www.google.com/search?q=learning+to+use+git)
 
 - [Linux Kernel Release Model, Greg Kroah-Hartman, Feb 2018](http://kroah.com/log/blog/2018/02/05/linux-kernel-release-model/)
-- [Civil Infrastructure Platform Announces New Super Long Term Support Kernel that Advances Automation, Machine Learning and Artificial Intelligence, LF, Feb 2019](https://www.linuxfoundation.org/press-release/2019/02/civil-infrastructure-platform-announces-new-super-long-termsupport-kernel-that-advances-automation-machine-learning-andartificial-intelligence/)
+- [Civil Infrastructure Platform Announces New Super Long Term Support Kernel that Advances Automation, Machine Learning and Artificial Intelligence, LF, Feb 2019](https://www.linuxfoundation.org/press-release/2019/02/civil-infrastructure-platform-announces-new-super-long-term-support-kernel-that-advances-automation-machine-learning-and-artificial-intelligence/)
 - [LTSI Project update - Long Term Support Initiative – slide deck, Open Source Summit Japan, June 2018](https://events19.linuxfoundation.org/wpcontent/uploads/2017/11/Using-Linux-for-Long-Term-Community-Status-and-the-Way-We-Go-OSS-Tsugikazu-Shibata.pdf)
 
     - [Working with the kernel development community](https://www.kernel.org/doc/html/latest/process/index.html#working-with-the-kernel-development-community)
@@ -155,8 +156,8 @@ Code browsers
 
 - [Configuring the kernel](https://www.kernel.org/doc/html/latest/admin-guide/README.html#configuring-the-kernel)
 - Detailed article: [Exploring the Linux kernel: The secrets of Kconfig/kbuild](https://opensource.com/article/18/10/kbuild-and-kconfig)
-- Article: [How to compile a Linux kernel in the 21st century, S Kenlon, Aug 2019](https://opensource.com/article/19/8/linux-kernel-21stcentury)
-- Interesting: [Meet the contributor of the 1-millionth commit: Ricardo Neri, Swapnil Bharatiya, Sept 2020](https://www.linux.com/featured/meetthe-one-millionth-committer-to-linux-ricardo-neri/)
+- Article: [How to compile a Linux kernel in the 21st century, S Kenlon, Aug 2019](https://opensource.com/article/19/8/linux-kernel-21st-century)
+- Interesting: [Meet the contributor of the 1-millionth commit: Ricardo Neri, Swapnil Bharatiya, Sept 2020](https://www.linux.com/featured/meet-the-one-millionth-committer-to-linux-ricardo-neri/)
 
 <br>
 
