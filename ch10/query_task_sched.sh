@@ -19,7 +19,7 @@
 #
 # For details, pl refer to the book Ch 10.
 i=1
-printf "  PID       TID            Name                     Sched Policy  Prio    *RT\n"
+printf "  PID       TID            Name                     Sched Policy  Prio *RT  CPU-affinity-mask\n"
 prev_pid=1
 
 IFS=$'\n'
@@ -54,13 +54,25 @@ do
 
      # 'Highlight', with 1 star, any real-time thread, and with 3 stars, those
      # that have an rtprio of 99 !
+	 rt3=0 ; rt1=0
      if [ "${policy}" = " SCHED_RR" -o "${policy}" = " SCHED_FIFO" ] ; then
         if [ ${prio} -eq 99 ] ; then
-	   printf "     ***"
-	else
-	   printf "     *"
-	fi
+	      printf "   ***"
+		  rt3=1
+	    else
+	      printf "     *"
+		  rt1=1
+	    fi
      fi
+
+	 # CPU affinity
+	 cpuaffinity=$(taskset -p ${pid} 2>/dev/null |cut -d':' -f2)
+	 if [ ${rt3} -eq 1 -o ${rt1} -eq 1 ]; then
+		printf "       ${cpuaffinity}"
+	 else
+		printf "             ${cpuaffinity}"
+	 fi
+	 #[ ${rt1} -eq 1 ] && printf "       ${cpuaffinity}"
   }
   printf "\n"
   prev_pid=${pid}
