@@ -49,7 +49,7 @@ struct myctx {
 };
 static struct kmem_cache *gctx_cachep;
 
-static void use_our_cache(void)
+static int use_our_cache(void)
 {
 	struct myctx *obj = NULL;
 
@@ -62,6 +62,7 @@ static void use_our_cache(void)
 	obj = kmem_cache_alloc(gctx_cachep, GFP_KERNEL);
 	if (!obj) {		/* pedantic warning printk below... */
 		pr_warn("kmem_cache_alloc() failed\n");
+		return -ENOMEM;
 	}
 
 	pr_info("Our cache object (@ %pK, actual=%px) size is %u bytes; actual ksize=%zu\n",
@@ -70,6 +71,7 @@ static void use_our_cache(void)
 
 	/* free it */
 	kmem_cache_free(gctx_cachep, obj);
+	return 0;
 }
 
 /* The parameter is the pointer to the just allocated memory 'object' from
