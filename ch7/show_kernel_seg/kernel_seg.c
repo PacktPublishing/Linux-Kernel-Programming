@@ -97,8 +97,7 @@ static void show_userspace_info(void)
 #else				// 32-bit
 		       "Above: TASK_SIZE         = %lu size of userland  [  %ld MB]\n"
 #endif
-		       " # userspace memory regions (VMAs) = %d\n"
-		       " Above statistics are wrt 'current' thread (see below):\n",
+		       " # userspace memory regions (VMAs) = %d\n",
 #if (BITS_PER_LONG == 64)
 		       TASK_SIZE, (TASK_SIZE >> 30),
 #else				// 32-bit
@@ -106,7 +105,10 @@ static void show_userspace_info(void)
 #endif
 		       current->mm->map_count);
 
+#ifdef DEBUG
+	pr_info(" Above statistics are wrt 'current' thread (see below):\n");
 	PRINT_CTX();		/* show which process is the one in context */
+#endif
 }
 
 /*
