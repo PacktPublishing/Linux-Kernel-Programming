@@ -58,6 +58,39 @@ With the following software and hardware list you can run all code files present
 
 We also provide a PDF file that has color images of the screenshots/diagrams used in this book. [Click here to download it](https://static.packt-cdn.com/downloads/9781789953435_ColorImages.pdf).
 
+### Known Errata
+Wrt the PDF doc:
+
+- pg 26:
+    - 'sudo apt install git fakeroot ...' ; corrections:
+        - change pstree to psmisc
+        - to install 'tuna' refer https://tuna.readthedocs.io/en/stable/installation.html 
+        - change hexdump to bsdmainutils (the package name)
+        - for 'openjdk-14-jre' installation refer https://java.tutorials24x7.com/blog/how-to-install-openjdk-14-on-ubuntu
+- pg 99:
+    - 'Chapter 9' should be 'Chapter 10'
+    - 'Chapter 10' should be 'Chapter 11'
+- pg 246:
+    - 'via the module_parm_cb() macro' should be 'via the module_param_cb() macro'
+- pg 291:
+    - '(The kernel-mode stack for ' - incomplete sentence; it should be deleted/ignored.
+- pg 307:
+    - the process view after the sentence '...  and a total of *nine threads*:'
+        - the first two columns are shown as 'PID  TGID'; the order is reversed, it should be 'TGID  PID'
+- pg 324: in *Figure 7.4*, the third column 'Addr Bits', last 3 rows have errors; the corrections are shown here:
+
+                          `AB    VM-split`
+
+`x86_64:  5 : 56 --> 57 :  64PB:64PB  : corrected (allows for total of 128 PB)`
+
+`Aarch64: 3 : 39 --> 40 : 512G:512G : corrected (allows for total of 1024 GB = 1 TB)`
+
+`Aarch64: 4 : 48 --> 49 : 256T:256T  : corrected (allows for total of 512 T)`
+
+- pg 388:
+    - '... the next available memory chunk is on order 7, of size 256 KB.' should be: '... the next available memory chunk is on order 6, of size 256 KB.
+
+
 ### Related products
 * Mastering Linux Device Driver Development [[Packt]](https://www.packtpub.com/product/Mastering-Linux-Device-Driver-Development/9781789342048) [[Amazon]](https://www.amazon.com/Mastering-Linux-Device-Driver-Development/dp/178934204X)
 
