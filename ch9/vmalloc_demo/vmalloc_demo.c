@@ -93,7 +93,7 @@ static int vmalloc_try(void)
 	/* #define WR2ROMEM_BUG */
 	/* 'Normal' usage: keep this commented out, else
 	 * we will crash! Read the book, Ch 9, for details  :-) */
-	vrx = __vmalloc(42 * PAGE_SIZE, GFP_KERNEL, PAGE_KERNEL_RO);
+	vrx = __vmalloc(42 * PAGE_SIZE, GFP_KERNEL);
 	if (!vrx) {
 		pr_warn("__vmalloc failed\n");
 		goto err_out5;
