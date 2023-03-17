@@ -81,6 +81,24 @@ Wrt the PDF doc:
 - pg 388:
     - '... the next available memory chunk is on order 7, of size 256 KB.' should be: '... the next available memory chunk is on order 6, of size 256 KB.
 
+- pg 661:
+    - '... there is a incorrect reference regarding a folder chp15/kthread_simple/kthread. The correct reference should be ch5/kthread_simple/kthread in part 2 of the book's GitHub [[Repository]](https://github.com/PacktPublishing/Linux-Kernel-Programming-Part-2)
+ 
+- pg 665:
+    - '...In info/Tip: 
+```
+"The material in this section assumes you have at least a base understanding of accessing 
+peripheral device (chip) memory and registers; we have covered this in detail in 
+Chapter 13, Working with Hardware I/O Memory. Please ensure that you understand it before moving forward. 
+```
+should be
+```
+"The material in this section assumes you have at least a base understanding of accessing 
+peripheral device (chip) memory and registers; we have covered this in detail in 
+Linux Kernel Programming Part 2 - Chapter 3, Working with Hardware I/O Memory. 
+Please ensure that you understand it before moving forward."
+```
+
 
 ### Related products
 * Mastering Linux Device Driver Development [[Packt]](https://www.packtpub.com/product/Mastering-Linux-Device-Driver-Development/9781789342048) [[Amazon]](https://www.amazon.com/Mastering-Linux-Device-Driver-Development/dp/178934204X)
