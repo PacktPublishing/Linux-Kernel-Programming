@@ -67,7 +67,7 @@ static int __init slab_ptr_array_init(void)
 
 	return 0;		/* success */
 cleanup:
-	for (j = i; j > 0; j--) {
+	for (j = i-1; j >= 0; j--) {
 		pr_debug(" freeing gkptr[%d]\n", j);
 		kfree(gkptr[j]);
 	}
