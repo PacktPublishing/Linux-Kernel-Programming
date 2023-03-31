@@ -61,7 +61,7 @@ static int use_our_cache(void)
 
 	obj = kmem_cache_alloc(gctx_cachep, GFP_KERNEL);
 	if (!obj) {		/* pedantic warning printk below... */
-		pr_warn("kmem_cache_alloc() failed\n");
+		pr_warn("[Pedantic] kmem_cache_alloc() failed\n");
 		return -ENOMEM;
 	}
 
@@ -84,8 +84,8 @@ static void our_ctor(void *new)
 	struct task_struct *p = current;
 
 	/* TIP: to see how exactly we got here, insert this call:
-     *  dump_stack();
-     * (read it bottom-up ignoring call frames that begin with '?')
+	 *  dump_stack();
+	 * (read it bottom-up ignoring call frames that begin with '?')
 	 */
 	pr_info("in ctor: just alloced mem object is @ 0x%px\n", ctx);	/* %pK in production */
 	memset(ctx, 0, sizeof(struct myctx));
@@ -137,8 +137,7 @@ static int __init slab_custom_init(void)
 {
 	pr_info("inserted\n");
 	create_our_cache();
-	use_our_cache();
-	return 0;		/* success */
+	return use_our_cache();
 }
 
 static void __exit slab_custom_exit(void)
