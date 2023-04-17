@@ -61,6 +61,9 @@ Wrt the PDF doc:
 - pg 99:
     - 'Chapter 9' should be 'Chapter 10'
     - 'Chapter 10' should be 'Chapter 11'
+- pg 155:
+    - the line '// ch4/helloworld_lkm/hellowworld_lkm.c' has the letter 'w' twice; it should be:
+     '// ch4/helloworld_lkm/helloworld_lkm.c'   (thanks to @xuhw21)
 - pg 246:
     - 'via the module_parm_cb() macro' should be 'via the module_param_cb() macro'
 - pg 291:
@@ -81,9 +84,15 @@ Wrt the PDF doc:
 - pg 388:
     - '... the next available memory chunk is on order 7, of size 256 KB.' should be: '... the next available memory chunk is on order 6, of size 256 KB.
 
+- pg 656: the line
+  'In place of atomic64_dec_if_positive(), use atomic64_dec_if_positive()'
+  should be
+  'In place of atomic_dec_if_positive(), use atomic64_dec_if_positive()'
+(thanks to @xuhw21)
+
 - pg 661:
     - '... there is a incorrect reference regarding a folder chp15/kthread_simple/kthread. The correct reference should be ch5/kthread_simple/kthread in part 2 of the book's GitHub [[Repository]](https://github.com/PacktPublishing/Linux-Kernel-Programming-Part-2)
- 
+
 - pg 665:
     - '...In info/Tip: 
 ```
