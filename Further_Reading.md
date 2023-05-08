@@ -175,7 +175,7 @@ Code browsers
 
 
 - [GRUB: How do I change the default boot kernel](https://askubuntu.com/questions/216398/set-older-kernel-as-default-grub-entry)
-- [How to Boot into Single User Mode in CentOS/RHEL 7, Kili, Tecmint, August 2017](https://www.tecmint. com/bootinto-single-user-mode-in-centos-7/)
+- [How to Boot into Single User Mode in CentOS/RHEL 7, Kili, Tecmint, August 2017](https://www.tecmint.com/boot-into-single-user-mode-in-centos-7/)
 - Article: [Linux Kernel Cross Compilation](https://gts3.org/2017/cross-kernel.html)
 - [SEALS - Simple Embedded ARM Linux System - project](https://github.com/kaiwan/seals)
 	- - [Wiki pages](https://github.com/kaiwan/seals/wiki)
@@ -361,8 +361,7 @@ Software Developer’s Manual. Volume 3 (3A, 3B & 3C): System Programming Guide]
 
 
 - OOM and VM Overcommit
-    - [Toward more predictable and reliable out-of-memory handling, LWN, Jon Corbet, December 2015](https://lwn.net/
-Articles/668126/)
+    - [Toward more predictable and reliable out-of-memory handling, LWN, Jon Corbet, December 2015](https://lwn.net/Articles/668126/)
     - [Quora: What are the disadvantages of disabling memory overcommit in Linux?](https://www.quora.com/What-are-the-disadvantages-of-disabling-memory-overcommit-in-Linux)
     - [Relevant Linux kernel documentation](https://www.kernel.org/doc/Documentation/vm/overcommit-accounting)
     - Blog article: ['Virtual memory settings in Linux - The Problem with Overcommit'](http://engineering.pivotal.io/post/virtual_memory_settings_in_linux_-_the_problem_with_overcommit/)
@@ -381,10 +380,10 @@ Articles/668126/)
 
 - perf:
    - [Linux perf examples, Brendan Gregg](http://www.brendangregg.com/perf.html)
-   - [The perf wiki page](https://perf.wiki.kernel.org/index.php/Main_ Page)
+   - [The perf wiki page](https://perf.wiki.kernel.org/index.php/Main_Page)
    - [perf tutorial](https://perf.wiki.kernel.org/index.php/)
    - Tutorial: [Playing around with perf](https://www.bernardi.cloud/2012/08/07/playing-around-with-perf/)
-   - [Memory Access Patterns Are Important](https://mechanical-sympathy.blogspot.com/2012/08/memoryaccess-patterns- are-important.html)
+   - [Memory Access Patterns Are Important](https://mechanical-sympathy.blogspot.com/2012/08/memory-access-patterns-are-important.html)
 
 - [Tuning the Task Scheduler, SuSe documentation](https://documentation.suse.com/sles/12-SP4/html/SLES-all/cha-tuning-taskscheduler.html)
 - [A real-world, useful case: Reducing latency spikes by tuning the CPU scheduler, T Gabriec, June 2016, Scylla]( https://www.scylladb.com/2016/06/10/read-latency-and-scylla-jmx-process/)
@@ -469,8 +468,8 @@ Articles/668126/)
 
 ## Chapter 13, Kernel Synchronization, Part 2 - Further Reading
 
-- Deeper details on the LKMM: [Explanation of the Linux-Kernel Memory Model](https://github.com/aparri/memory-model/ blob/master/Documentation/explanation. txt)
-- Reference Counting API: [kernsec: a summary](https://kernsec.org/wiki/index.php/Kernel_ Protections/refcount_ t)
+- Deeper details on the LKMM: [Explanation of the Linux-Kernel Memory Model](https://github.com/aparri/memory-model/blob/master/Documentation/explanation.txt)
+- Reference Counting API: [kernsec: a summary](https://kernsec.org/wiki/index.php/Kernel_Protections/refcount_t)
 
 - An extremely detailed take on concurrency topics, both hardware and software-wise: [Is Parallel Programming Hard, And, If So, What Can You Do About It?, Paul E.McKenney, December 2019](https://mirrors.edge.kernel.org/pub/linux/kernel/people/paulmck/perfbook/perfbook.2019.12.22a.pdf)
 
@@ -498,7 +497,7 @@ Articles/668126/)
 - kdump and crash:
     - Kernel documentation for kdump: [The kexec-based Crash Dumping Solution](https://www.kernel.org/doc/ocumentation/kdump/kdump.txt)
     - [Oops! Debugging Kernel Panics, Linux Journal, August 2019](https://www.linuxjournal.com/content/oopsdebugging-kernel-panics-0)
-    - Excellent resource for learning and using the crash app: [White paper: Red Hat Crash Utility, David Anderson](https://crash-utility.github.io/crash_ whitepaper.html)
+    - Excellent resource for learning and using the crash app: [White paper: Red Hat Crash Utility, David Anderson](https://crash-utility.github.io/crash_whitepaper.html)
     - [Analyzing Linux kernel crash dumps with crash - The one tutorial that has it all, Dedoimedo, June 2010]( http://www.dedoimedo.com/computers/crash-analyze.html)
 
 - Memory barriers:
