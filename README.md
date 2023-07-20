@@ -81,6 +81,15 @@ Wrt the PDF doc:
 
 `Aarch64: 4 : 48 --> 49 : 256T:256T  : corrected (allows for total of 512 T)`
 
+- pg 385:
+   - 'On high-end enterprise server class systems running the Itanium (IA-64) processor, MAX_ORDER can be as high as 17 (implying a
+largest chunk size on order (17-1), thus of 216 = 65,536 pages = 512 MB chunks of physically contiguous RAM on order 16 of the freelists, for
+a 4 KB page size).'
+should be:
+'On high-end enterprise server class systems running the Itanium (IA-64) processor, MAX_ORDER can be as high as 17 (implying a
+largest chunk size on order (17-1), thus of 216 = 65,536 pages = *256 MB* chunks of physically contiguous RAM on order 16 of the freelists, for
+a 4 KB page size).'
+
 - pg 388:
     - '... the next available memory chunk is on order 7, of size 256 KB.' should be: '... the next available memory chunk is on order 6, of size 256 KB.
 
