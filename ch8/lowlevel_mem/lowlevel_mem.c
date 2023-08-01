@@ -120,14 +120,14 @@ static int bsa_alloc(void)
 		" (struct page addr=%pK (%px))\n",
 		OURMODNAME, (void *)gptr4, (void *)gptr4, pg_ptr1, pg_ptr1);
 
-	/* 5. Allocate and init 2^5 = 32 pages with the alloc_pages() API.
+	/* 5. Allocate and init 2^3 = 8 pages with the alloc_pages() API.
 	 * < Same warning as above applies here too! >
 	 */
-	gptr5 = page_address(alloc_pages(GFP_KERNEL, 5));
+	gptr5 = page_address(alloc_pages(GFP_KERNEL, 3));
 	if (!gptr5)
 		goto out5;
 	pr_info("%s: 5. alloc_pages() alloc'ed %lld pages from the BSA @ %pK (%px)\n",
-		OURMODNAME, powerof(2, 5), (void *)gptr5, (void *)gptr5);
+		OURMODNAME, powerof(2, 3), (void *)gptr5, (void *)gptr5);
 
 	return 0;
  out5:
