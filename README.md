@@ -116,7 +116,7 @@ peripheral device (chip) memory and registers; we have covered this in detail in
 Linux Kernel Programming Part 2 - Chapter 3, Working with Hardware I/O Memory. 
 Please ensure that you understand it before moving forward."
 ```
-
+- pg 183 : **Wiring to the console** _should be_ **Writing to the console**
 
 ### Related products
 * Mastering Linux Device Driver Development [[Packt]](https://www.packtpub.com/product/Mastering-Linux-Device-Driver-Development/9781789342048) [[Amazon]](https://www.amazon.com/Mastering-Linux-Device-Driver-Development/dp/178934204X)
