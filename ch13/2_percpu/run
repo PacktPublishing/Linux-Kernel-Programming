@@ -1,0 +1,32 @@
+#!/bin/bash
+# Wrapper script to correctly load up the percpu_var.ko module.
+
+# !WARNING! This is considered a hack.
+# As sched_setaffinity() isn't exported, we don't have access to it
+# within this kernel module. So, here we resort to a hack: 
+# a) Until 5.7, we could directly use the kallsyms_lookup_name() function
+#    (which works when CONFIG_KALLSYMS is defined) to retrieve the function
+#    pointer, and subsequently call the function via it's pointer (with 'C'
+#    what you do is only limited by your imagination :).
+# b) From 5.7 on, the kernel devs unexported the kallsyms_lookup_name()!
+#    (Rationale: https://lwn.net/Articles/813350/). With it gone, we now
+#    simply use this approach: a helper script greps the kallsyms_lookup_name()
+#    address and passes it to the module! There, we equate it to the exepcted
+#    function signature - that of sched_setaffinity() - and use it.
+# *Not* pedantically right, but hey, it works. Don't do this in production.
+#
+KMOD=percpu_var
+KFUNC=sched_setaffinity
+KFUNC_PTR=0x$(sudo grep -w "T ${KFUNC}" /proc/kallsyms |awk '{print $1}')
+[[ -z "${KFUNC_PTR}" ]] && {
+  echo "${name}: lookup of kallsyms_lookup_name() failed, aborting..."
+  exit 1
+}
+echo "KFUNC_PTR=${KFUNC_PTR}"
+
+make clean
+make
+sudo rmmod ${KMOD} 2>/dev/null
+sudo dmesg -C
+sudo insmod ./${KMOD}.ko func_ptr=${KFUNC_PTR}
+sudo dmesg

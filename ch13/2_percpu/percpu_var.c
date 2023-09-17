@@ -35,6 +35,7 @@ MODULE_DESCRIPTION("LKP book:ch13/2_percpu: demo of using percpu variables");
 MODULE_LICENSE("Dual MIT/GPL");
 MODULE_VERSION("0.1");
 
+
 #define SHOW_CPU_CTX() do {                        \
 	pr_info("*** kthread PID %d on cpu %d now ***\n",\
 		current->pid, smp_processor_id()); \
@@ -44,7 +45,12 @@ MODULE_VERSION("0.1");
 #define THRD0_ITERS      3
 #define THRD1_ITERS      3
 
-static long (*ptr_sched_setaffinity)(pid_t, const struct cpumask *);
+static unsigned long func_ptr;
+module_param(func_ptr, ulong, 0);
+
+// schedsa_ptr is our function pointer to the sched_setaffinity() function
+unsigned long (*schedsa_ptr)(pid_t, const struct cpumask *) = NULL;
+
 static struct task_struct *arr_tsk[MAX_KTHRDS];
 
 /*--- The percpu variables, an integer 'pcpa' and a data structure --- */
@@ -79,12 +85,13 @@ static long set_cpuaffinity(unsigned int cpu)
 {
 	struct cpumask mask;
 	long ret = 0;
+
 	unsigned int euid = from_kuid(&init_user_ns, current_euid());
 	struct cred *new;
 
 	/*
 	 * Not root? get root! (hey, we're in kernel mode :)
-	 * This isn't really required; we're just showing how to...
+	 * This isn't really required; we're just showing off...
 	 */
 	if (unlikely(euid)) {
 		pr_info("%s(): before commit_creds(): uid=%u euid=%u\n",
@@ -109,8 +116,9 @@ static long set_cpuaffinity(unsigned int cpu)
 	cpumask_set_cpu(cpu, &mask); // 1st param is the CPU number, not bitmask
 	/* !HACK! sched_setaffinity() is NOT exported, we can't call it
          * sched_setaffinity(0, &mask);  // 0 => on self 
-	 * so we invoke it via it's function pointer */
-	ret = (*ptr_sched_setaffinity)(0, &mask);  // 0 => on self
+	 * so we invoke it via it's function pointer
+	 */
+	ret = (*schedsa_ptr)(0, &mask);  // 0 => on self
 
 	return ret;
 }
@@ -190,27 +198,34 @@ static int run_kthrd(char *kname, long thrdnum)
 	return 0;
 }
 
+
 static int __init init_percpu_var(void)
 {
 	int ret = 0;
 
 	pr_info("inserted\n");
 
-	/* WARNING! This is considered a hack.
+	/* !WARNING! This is considered a hack.
 	 * As sched_setaffinity() isn't exported, we don't have access to it
-	 * within this kernel module. So, here we resort to a hack: we use
-	 * kallsyms_lookup_name() (which works when CONFIG_KALLSYMS is defined)
-	 * to retrieve the function pointer, subsequently calling the function
-	 * via it's pointer (with 'C' what you do is only limited by your
-	 * imagination :). Not pedantically right, but hey, it works.
+	 * within this kernel module. So, here we resort to a hack: 
+	 * a) Until 5.7, we could directly use the kallsyms_lookup_name() function
+	 *    (which works when CONFIG_KALLSYMS is defined) to retrieve the function
+	 *    pointer, and subsequently call the function via it's pointer (with 'C'
+	 *    what you do is only limited by your imagination :).
+	 * b) From 5.7 on, the kernel devs unexported the kallsyms_lookup_name()!
+	 *    (Rationale: https://lwn.net/Articles/813350/). With it gone, we now
+	 *    simply use this approach: a helper script greps the kallsyms_lookup_name()
+	 *    address and passes it to this module! We equate it to the exepcted
+	 *    function signature - that of sched_setaffinity() - and use it.
+	 * *Not* pedantically right, but hey, it works. Don't do this in production.
 	 */
 	ret = -ENOSYS;
-	ptr_sched_setaffinity = (void *)kallsyms_lookup_name("sched_setaffinity");
-	if (!ptr_sched_setaffinity) {
+	if (!func_ptr) {
 		pr_warn("%s: couldn't obtain sched_setaffinity() addr via "
-			"kallsyms_lookup_name(), aborting ...\n", OURMODNAME);
+			"module param, aborting ...\n", OURMODNAME);
 		return ret;
 	}
+	schedsa_ptr = (unsigned long (*)(pid_t pid, const struct cpumask *in_mask))func_ptr;
 
 	/* Dynamically allocate the percpu structures */
 	ret = -ENOMEM;
