@@ -13,11 +13,18 @@
  * Brief Description:
  * This driver is built upon our previous ch12/1_miscdrv_rdwr_mutexlock/
  * misc driver.
- * The key difference: we use spinlocks in place of the mutex locks (this isn't
+ *
+ * The key difference: we use a spinlock in place of the mutex locks (this isn't
  * the case everywhere in the driver though; we keep the mutex as well for some
  * portions of the driver).
+ * The functionality (the get and set of the 'secret') remains identical to the
+ * original implementation.
  *
- * For details, please refer the book, Ch 12.
+ * Note: also do
+ *  make rdwr_test_secret
+ * to build the user space app for testing...
+ *
+ * For details, please refer both the books, Ch 12 and Ch 1 resp.
  */
 #define pr_fmt(fmt) "%s:%s(): " fmt, KBUILD_MODNAME, __func__
 
@@ -324,7 +331,7 @@ static int __init miscdrv_init_spinlock(void)
      * freeing the memory automatically upon driver 'detach' or when the driver
      * is unloaded from memory
      */
-	ctx = kzalloc(sizeof(struct drv_ctx), GFP_KERNEL);
+	ctx = devm_kzalloc(llkd_miscdev.this_device, sizeof(struct drv_ctx), GFP_KERNEL);
 	if (unlikely(!ctx))
 		return -ENOMEM;
 

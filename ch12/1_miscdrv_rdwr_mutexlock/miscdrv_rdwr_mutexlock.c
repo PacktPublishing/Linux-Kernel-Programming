@@ -11,7 +11,9 @@
  * From: Ch 12 : Kernel Synchronization - Part 1
  ****************************************************************
  * Brief Description:
- * This driver is built upon our previous ch12/miscdrv_rdwr/ misc driver.
+ * This driver is built upon the LKP Part 2 book's first chapter 'misc' driver here:
+ * https://github.com/PacktPublishing/Linux-Kernel-Programming-Part-2/tree/main/ch1/miscdrv_rdwr
+ *
  * The really important and key difference: previously, we used a few global data
  * items throughout *without* protection; this time, we fix this egregious error
  * by using a mutex lock to protect the critical sections - the places in the
@@ -19,7 +21,11 @@
  * The functionality (the get and set of the 'secret') remains identical to the
  * original implementation.
  *
- * For details, please refer the book, Ch 12.
+ * Note: also do
+ *  make rdwr_test_secret
+ * to build the user space app for testing...
+ *
+ * For details, please refer both the books, Ch 12 and Ch 1 resp.
  */
 #define pr_fmt(fmt) "%s:%s(): " fmt, KBUILD_MODNAME, __func__
 
@@ -286,7 +292,7 @@ static int __init miscdrv_init_mutexlock(void)
 	 * freeing the memory automatically upon driver 'detach' or when the driver
 	 * is unloaded from memory
 	 */
-	ctx = kzalloc(sizeof(struct drv_ctx), GFP_KERNEL);
+	ctx = devm_kzalloc(llkd_miscdev.this_device, sizeof(struct drv_ctx), GFP_KERNEL);
 	if (unlikely(!ctx))
 		return -ENOMEM;
 
