@@ -11,6 +11,9 @@
  * From: Ch 13 : Kernel Synchronization, Part 2
  ****************************************************************
  * Brief Description:
+ * FYI: we use a very hack-y approach to accessing the unexported symbol
+ * sched_setaffinity(); details follow. We get away with it here, but
+ * DON'T use this approach in production.
  *
  * For details, please refer the book, Ch 13.
  */
@@ -27,8 +30,6 @@
 #include <linux/cred.h>
 #include <linux/delay.h>
 #include "../../convenient.h"
-
-#define OURMODNAME   "percpu_var"
 
 MODULE_AUTHOR("Kaiwan N Billimoria");
 MODULE_DESCRIPTION("LKP book:ch13/2_percpu: demo of using percpu variables");
@@ -213,16 +214,17 @@ static int __init init_percpu_var(void)
 	 *    pointer, and subsequently call the function via it's pointer (with 'C'
 	 *    what you do is only limited by your imagination :).
 	 * b) From 5.7 on, the kernel devs unexported the kallsyms_lookup_name()!
-	 *    (Rationale: https://lwn.net/Articles/813350/). With it gone, we now
-	 *    simply use this approach: a helper script greps the kallsyms_lookup_name()
-	 *    address and passes it to this module! We equate it to the exepcted
-	 *    function signature - that of sched_setaffinity() - and use it.
+	 *    (Commit id 0bd476e6c671. Rationale: https://lwn.net/Articles/813350/).
+	 *    With it gone, we now simply use this approach: a helper script greps
+	 *    the kallsyms_lookup_name() address and passes it to this module! We
+	 *    equate it to the exepcted function signature - that of
+	 *    sched_setaffinity() - and use it.
 	 * *Not* pedantically right, but hey, it works. Don't do this in production.
 	 */
 	ret = -ENOSYS;
 	if (!func_ptr) {
 		pr_warn("%s: couldn't obtain sched_setaffinity() addr via "
-			"module param, aborting ...\n", OURMODNAME);
+			"module param, aborting ...\n", KBUILD_MODNAME);
 		return ret;
 	}
 	schedsa_ptr = (unsigned long (*)(pid_t pid, const struct cpumask *in_mask))func_ptr;
