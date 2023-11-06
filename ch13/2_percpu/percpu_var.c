@@ -227,6 +227,7 @@ static int __init init_percpu_var(void)
 			"module param, aborting ...\n", KBUILD_MODNAME);
 		return ret;
 	}
+	// set up the function pointer
 	schedsa_ptr = (unsigned long (*)(pid_t pid, const struct cpumask *in_mask))func_ptr;
 
 	/* Dynamically allocate the percpu structures */

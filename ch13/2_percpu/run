@@ -10,10 +10,14 @@
 #    what you do is only limited by your imagination :).
 # b) From 5.7 on, the kernel devs unexported the kallsyms_lookup_name()!
 #    (Rationale: https://lwn.net/Articles/813350/). With it gone, we now
-#    simply use this approach: a helper script greps the kallsyms_lookup_name()
-#    address and passes it to the module! There, we equate it to the exepcted
-#    function signature - that of sched_setaffinity() - and use it.
-# *Not* pedantically right, but hey, it works. Don't do this in production.
+#    simply use this approach: a helper script greps the sched_setaffinity()
+#    function's address and passes it to the module! There, we equate it to the
+#    exepected function signature and use it.
+# NOTE!
+#  a) This latter 5.7+ approach is *Not* pedantically right, but hey, it works.
+#     Don't do this in production.
+#  b) It works on a typical desktop-type distro... it likely won't on a locked-down
+#     and properly security-conscious installation.
 #
 KMOD=percpu_var
 KFUNC=sched_setaffinity
@@ -22,7 +26,7 @@ KFUNC_PTR=0x$(sudo grep -w "T ${KFUNC}" /proc/kallsyms |awk '{print $1}')
   echo "${name}: lookup of kallsyms_lookup_name() failed, aborting..."
   exit 1
 }
-echo "KFUNC_PTR=${KFUNC_PTR}"
+echo "sched_setaffinity(): KFUNC_PTR=${KFUNC_PTR}"
 
 make clean
 make
