@@ -40,7 +40,7 @@ MODULE_VERSION("0.1");
 
 /* Our 'demo' structure; one that (we imagine) is often allocated and freed;
  * hence, we create a custom slab cache to hold pre-allocated 'instances'
- * of it... It's size: 328 bytes.
+ * of it... Size of one structure instance: 328 bytes.
  */
 struct myctx {
 	u32 iarr[10];
